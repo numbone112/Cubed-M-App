@@ -1,6 +1,5 @@
 import 'package:e_fu/module/arrange.dart';
 import 'package:e_fu/pages/event/event.dart';
-import 'package:e_fu/pages/event/eventList.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 

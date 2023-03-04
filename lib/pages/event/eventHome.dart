@@ -18,6 +18,7 @@ class EventHomeState extends State<EventHome> {
   List<Arrange> _list = [];
   Arrange? selected_arrange;
   bool isBleOn = false;
+  bool isScan = false;
   FlutterBluePlus flutterBlue = FlutterBluePlus.instance;
   //沒連線的裝置
   List<BluetoothDevice> devicesList = <BluetoothDevice>[];
@@ -66,29 +67,16 @@ class EventHomeState extends State<EventHome> {
         });
       }
     });
-
     _scan();
   }
 
-  //印出可連結藍芽裝置
+  //偵測是否在列印裝置
   _scan() {
-    devicesList = [];
-    flutterBlue.startScan(timeout: Duration(seconds: 4));
-
-    var subscription = flutterBlue.scanResults.listen((results) {
-      for (ScanResult r in results) {
-        if (r.device.name != "") {
-          if (r.device.name.substring(0, 3) == "LED" &&
-              !devicesList.contains(r.device) &&
-              r.advertisementData.connectable) {
-            devicesList.add(r.device);
-            print('${r.device.name} found! rssi: ${r.rssi}');
-          }
-        }
-      }
+    FlutterBluePlus.instance.isScanning.listen((event) {
+      setState(() {
+        isScan = event;
+      });
     });
-
-    flutterBlue.stopScan();
   }
 
   @override
@@ -151,6 +139,11 @@ class EventHomeState extends State<EventHome> {
                             });
                             if (isBleOn) {
                               _scan();
+                              //沒在列印的時候再startScan
+                              if (!isScan) {
+                                flutterBlue.startScan(
+                                    timeout: Duration(seconds: 4));
+                              }
                               await showDialog(
                                 context: context,
                                 builder: (ctx) => AlertDialog(
@@ -158,29 +151,50 @@ class EventHomeState extends State<EventHome> {
                                   content: Container(
                                     width: double.minPositive,
                                     height: 200,
-                                    child: ListView.builder(
-                                      shrinkWrap: true,
-                                      itemCount: devicesList.length,
-                                      itemBuilder: (context, index) {
-                                        var d = devicesList[index];
-                                        return ListTile(
-                                          title: Text(d.name),
-                                          onTap: () {
-                                            d.connect().then((value) {
-                                              connectDeviec[p_index] =
-                                                  d.id.toString();
-                                              print("連接到" + d.name);
-                                              print(connectDeviec);
-                                            });
-                                            Navigator.of(context).pop();
-                                          },
-                                        );
-                                      },
-                                    ),
+                                    child: StreamBuilder<List<ScanResult>>(
+                                        stream: FlutterBluePlus
+                                            .instance.scanResults,
+                                        initialData: const [],
+                                        builder: (c, snapshot) => Column(
+                                              children: snapshot.data!.map((r) {
+                                                if (r.advertisementData
+                                                        .connectable &&
+                                                    r.device.name != "") {
+                                                  if (r.device.name
+                                                          .substring(0, 3) ==
+                                                      "LED") {
+                                                    return ListTile(
+                                                      title:
+                                                          Text(r.device.name),
+                                                      onTap: () {
+                                                        r.device
+                                                            .connect()
+                                                            .then((value) {
+                                                          connectDeviec[
+                                                                  p_index] =
+                                                              r.device.id
+                                                                  .toString();
+                                                          Navigator.of(context)
+                                                              .pop();
+                                                          print("連接到" +
+                                                              r.device.name);
+                                                          print(connectDeviec);
+                                                        });
+                                                      },
+                                                    );
+                                                  } else {
+                                                    return Container();
+                                                  }
+                                                } else {
+                                                  return Container();
+                                                }
+                                              }).toList(),
+                                            )),
                                   ),
                                   actions: <Widget>[
                                     TextButton(
                                       onPressed: () {
+                                        flutterBlue.stopScan();
                                         Navigator.of(context).pop();
                                       },
                                       child: Container(

@@ -90,7 +90,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                       Center(
                         child: ElevatedButton(
                           style:ElevatedButton.styleFrom(
-                            backgroundColor: MyTheme.dartColor
+                            backgroundColor: MyTheme.color
                           ), 
                           // ButtonStyle(
                           //   col: MyTheme.color

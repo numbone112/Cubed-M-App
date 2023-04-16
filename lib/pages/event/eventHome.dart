@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:e_fu/module/arrange.dart';
+import 'package:e_fu/myData.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -106,11 +107,11 @@ class EventHomeState extends State<EventHome> {
         stream: FlutterBluePlus.instance.scanResults,
         initialData: const [],
         builder: (c, snapshot) => Column(
-          children: <Widget>[Text(snapshot.data!.length.toString())] +
+          children: 
               snapshot.data!.map(
                 (r) {
                   if (r.advertisementData.connectable && r.device.name != "") {
-                    if (r.device.name.substring(0, 3) == "Ard") {
+                    if (r.device.name.substring(0, 4) == "e-fu") {
                       return ListTile(
                         title: Text(r.device.name),
                         onTap: () async {
@@ -131,7 +132,6 @@ class EventHomeState extends State<EventHome> {
                           // Navigator.of(context).pop();
                           print("連接到" + r.device.name);
                           print(connectDeviec);
-                          // r.device.connect().then((value) async {
                           for (BluetoothCharacteristic characteristic
                               in _services.first.characteristics) {
                             if (characteristic.uuid.toString() == "0000f1ff-0000-1000-8000-00805f9b34fb") {
@@ -232,7 +232,6 @@ class EventHomeState extends State<EventHome> {
                                         actions: <Widget>[
                                           TextButton(
                                             onPressed: () {
-                                              flutterBlue.stopScan();
                                               Navigator.of(context).pop();
                                             },
                                             child: Container(

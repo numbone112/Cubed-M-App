@@ -2,46 +2,46 @@ import 'package:flutter/material.dart';
 
 class TabIconData {
   TabIconData({
-    this.icon = Icons.offline_bolt_outlined,
+    this.imagePath = '',
     this.index = 0,
-    this.selectedIcon = Icons.offline_bolt,
+    this.selectedImagePath = '',
+    this.title = '',
     this.isSelected = true,
     this.animationController,
   });
 
-  // String imagePath;
-  IconData selectedIcon;
+  String imagePath;
+  String selectedImagePath;
+  String title;
   bool isSelected;
   int index;
-  IconData icon;
 
   AnimationController? animationController;
 
   static List<TabIconData> tabIconsList = <TabIconData>[
     TabIconData(
-      icon: Icons.hide_image_outlined,
-      
-      selectedIcon: Icons.hide_image,
+      imagePath: 'assets/images/f_user_outlined.png',
+      selectedImagePath: 'assets/images/f_user.png',
+      title:'復健者',
       index: 0,
       isSelected: false,
       animationController: null,
     ),
     TabIconData(
-      icon: Icons.home_outlined,
-      
-      selectedIcon: Icons.home,
+      imagePath: 'assets/images/home_outlined.png',
+      selectedImagePath: 'assets/images/home.png',
+      title:'首頁',
       index: 1,
       isSelected: false,
       animationController: null,
     ),
-     TabIconData(
-      icon: Icons.enhance_photo_translate_outlined,
-      
-      selectedIcon: Icons.enhance_photo_translate_sharp,
+    TabIconData(
+      imagePath: 'assets/images/e_user_outlined.png',
+      selectedImagePath: 'assets/images/e_user.png',
+      title:'復健師',
       index: 2,
       isSelected: false,
       animationController: null,
     ),
-   
   ];
 }

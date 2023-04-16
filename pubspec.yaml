@@ -29,3 +29,11 @@ flutter:
 
   uses-material-design: true
 
+  assets:
+      - assets/images/home_outlined.png
+      - assets/images/home.png
+      - assets/images/e_user_outlined.png
+      - assets/images/e_user.png
+      - assets/images/f_user_outlined.png
+      - assets/images/f_user.png
+      

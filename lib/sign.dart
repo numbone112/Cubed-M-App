@@ -94,7 +94,7 @@ class _LoginState extends State<Login> {
     SharedPreferences prefs;
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      backgroundColor: MyTheme.color,
+      backgroundColor: MyTheme.backgroudColor,
       body: Container(
         margin: const EdgeInsets.fromLTRB(20, 5, 20, 0),
         child: Center(

@@ -11,7 +11,7 @@ class People extends StatelessWidget {
       child: ListView(children: [
         const Text("各種復健者",style: TextStyle(fontSize: 30),),
         ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: MyTheme.dartColor),
+            style: ElevatedButton.styleFrom(backgroundColor: MyTheme.backgroudColor),
             onPressed: () {
              
             },

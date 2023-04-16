@@ -1,15 +1,10 @@
-import 'dart:math' as math;
-// import '../fitness_app_theme.dart';
-// import '../models/tabIcon_data.dart';
 import 'myData.dart';
-
 
 import 'package:flutter/material.dart';
 import 'module/tabIcon_data.dart';
 
 class BottomBarView extends StatefulWidget {
-  const BottomBarView(
-      {Key? key, this.tabIconsList, this.changeIndex})
+  const BottomBarView({Key? key, this.tabIconsList, this.changeIndex})
       : super(key: key);
 
   final Function(int index)? changeIndex;
@@ -42,56 +37,67 @@ class _BottomBarViewState extends State<BottomBarView>
           animation: animationController!,
           builder: (BuildContext context, Widget? child) {
             return Column(
-                  children: <Widget>[
-                    Container(
-                      color: Colors.green[50],
-                      child: SizedBox(
-                        height: 62,
-                        child: Padding(
-                          padding:
-                              const EdgeInsets.only(left: 8, right: 8, top: 4),
-                          child: Row(
-                            children: <Widget>[
-                              Expanded(
-                                child: TabIcons(
-                                    tabIconData: widget.tabIconsList?[0],
-                                    removeAllSelect: () {
-                                      setRemoveAllSelection(
-                                          widget.tabIconsList?[0]);
-                                      widget.changeIndex!(0);
-                                    }),
-                              ),
+              children: <Widget>[
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(MySize.circularSize),
+                        topRight: Radius.circular(MySize.circularSize)),
+                    //设置四周边框
+                    border: new Border.all(width: 1, color: Colors.white),
+                  ),
+                  child: SizedBox(
+                    height: 62,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 8, right: 8, top: 4),
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: Column(
+                              children: [
                                 Expanded(
-                                child: TabIcons(
-                                    tabIconData: widget.tabIconsList?[1],
-                                    removeAllSelect: () {
-                                      setRemoveAllSelection(
-                                          widget.tabIconsList?[1]);
-                                      widget.changeIndex!(1);
-                                    }),
-                              ),
-                              Expanded(
-                                child: TabIcons(
-                                    tabIconData: widget.tabIconsList?[2],
-                                    removeAllSelect: () {
-                                      setRemoveAllSelection(
-                                          widget.tabIconsList?[2]);
-                                      widget.changeIndex!(2);
-                                    }),
-                              ),
-                            ],
+                                  child: TabIcons(
+                                      tabIconData: widget.tabIconsList?[0],
+                                      removeAllSelect: () {
+                                        setRemoveAllSelection(
+                                            widget.tabIconsList?[0]);
+                                        widget.changeIndex!(0);
+                                      }),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
+                          Expanded(
+                            child: TabIcons(
+                                tabIconData: widget.tabIconsList?[1],
+                                removeAllSelect: () {
+                                  setRemoveAllSelection(
+                                      widget.tabIconsList?[1]);
+                                  widget.changeIndex!(1);
+                                }),
+                          ),
+                          Expanded(
+                            child: TabIcons(
+                                tabIconData: widget.tabIconsList?[2],
+                                removeAllSelect: () {
+                                  setRemoveAllSelection(
+                                      widget.tabIconsList?[2]);
+                                  widget.changeIndex!(2);
+                                }),
+                          ),
+                        ],
                       ),
                     ),
-                    SizedBox(
-                      height: MediaQuery.of(context).padding.bottom,
-                    )
-                  ],
-                );
+                  ),
+                ),
+                SizedBox(
+                  height: MediaQuery.of(context).padding.bottom,
+                )
+              ],
+            );
           },
         ),
-       
       ],
     );
   }
@@ -150,7 +156,6 @@ class _TabIconsState extends State<TabIcons> with TickerProviderStateMixin {
           highlightColor: Colors.transparent,
           hoverColor: Colors.transparent,
           onTap: () {
-            print(widget.tabIconData!.isSelected);
             if (!widget.tabIconData!.isSelected) {
               setAnimation();
             }
@@ -164,11 +169,23 @@ class _TabIconsState extends State<TabIcons> with TickerProviderStateMixin {
                   scale: Tween<double>(begin: 0.88, end: 1.0).animate(
                       CurvedAnimation(
                           parent: widget.tabIconData!.animationController!,
-                          curve:
-                              const Interval(0.1, 1.0, curve: Curves.fastOutSlowIn))),
-                  child: Icon((widget.tabIconData!.isSelected
-                      ? widget.tabIconData!.selectedIcon
-                      : widget.tabIconData!.icon)),
+                          curve: const Interval(0.1, 1.0,
+                              curve: Curves.fastOutSlowIn))),
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: Image.asset(
+                          widget.tabIconData!.isSelected
+                              ? widget.tabIconData!.selectedImagePath
+                              : widget.tabIconData!.imagePath,
+                          width: MySize.iconSize,
+                          height: MySize.iconSize,
+                        ),
+                      ),
+                      Text(widget.tabIconData!.title,
+                          style: TextStyle(color: MyTheme.color))
+                    ],
+                  ),
                 ),
                 Positioned(
                   top: 4,
@@ -241,5 +258,3 @@ class _TabIconsState extends State<TabIcons> with TickerProviderStateMixin {
     );
   }
 }
-
-

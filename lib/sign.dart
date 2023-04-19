@@ -23,7 +23,7 @@ class _LoginState extends State<Login> {
       controller: t,
       scrollPadding: EdgeInsets.only(
             bottom: MediaQuery.of(context).viewInsets.bottom + 25*4),
-      decoration: InputDecoration(
+      decoration: const InputDecoration(
         fillColor: Colors.white,
         filled: true,
         border: OutlineInputBorder(
@@ -74,7 +74,7 @@ class _LoginState extends State<Login> {
   Widget button_custom(String s, Function f) {
     return (TextButton(
       style: TextButton.styleFrom(
-          backgroundColor: Color.fromRGBO(10, 112, 41, 1),
+          backgroundColor: const Color.fromRGBO(10, 112, 41, 1),
           foregroundColor: Colors.white),
       onPressed: () {
         f.call();
@@ -106,11 +106,11 @@ class _LoginState extends State<Login> {
             children: <Widget>[
              
               Row(
-                children: [Icon(Icons.people), Text("帳號")],
+                children: const [Icon(Icons.people), Text("帳號")],
               ),
               accountField,
               Row(
-                children: [Icon(Icons.password), Text("密碼")],
+                children: const [Icon(Icons.password), Text("密碼")],
               ),
               passwordField,
               button_custom("登入", () async {

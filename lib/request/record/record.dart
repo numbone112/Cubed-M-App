@@ -3,29 +3,27 @@
 import 'dart:convert';
 
 import '../api.dart';
-import 'account_data.dart';
+import 'record_data.dart';
 
 import '../data.dart';
-abstract class AccountAPI {
-  //註冊會員
-  // Future<String> createUser();
+abstract class RecordAPI {
+  
 
   /// 登入
-  Future<Format> login(String user, String psw);
+  Future<Format> record(Arrange_date arrangeDate);
 
-  /// 編輯會員
-  // Future<String> updateUser(int id, User user);
+  
 }
 
-class AccountRepo extends API implements AccountAPI {
+class RecordRepo extends API implements RecordAPI {
   @override
-  Future<Format> login(String user, String psw) async {
+  Future<Format> record(Arrange_date arrangeDate) async {
     try {
-      final response = await client.post(Uri.parse('$domain/login'),
+      final response = await client.post(Uri.parse('$domain/record'),
           headers: {
             'Content-Type': 'application/json',
           },
-          body: jsonEncode(User(id: user, password: psw).toJson()));
+          body: jsonEncode(arrangeDate.toJson()));
           print(response.body);
       if (response.statusCode == 200) {
         print("200了");

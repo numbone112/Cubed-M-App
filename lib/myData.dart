@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 
 class MyTheme {
-  static Color color = Color(0xff4E707E);
-  static Color lightColor = Color(0xff9AADB5);
-  static Color backgroudColor = Color(0xffF4F5F7);
-  static Color titleColor = Color(0xff5C5C5C);
-  static Color hintColor = Color(0xff969696);
+  static Color color = const Color(0xff4E707E);
+  static Color lightColor = const Color(0xff9AADB5);
+  static Color backgroudColor = const Color(0xffF4F5F7);
+  static Color titleColor = const Color(0xff5C5C5C);
+  static Color hintColor = const Color(0xff969696);
+  static Color buttonColor=const Color(0xff023246);
 }
 
 class MySize {

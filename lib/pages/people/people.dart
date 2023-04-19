@@ -1,22 +1,82 @@
-
+import 'package:e_fu/module/people_box.dart';
 import 'package:flutter/material.dart';
 import '../../myData.dart';
+import 'package:paginated_search_bar/paginated_search_bar.dart';
 
-class People extends StatelessWidget {
-  const People({super.key});
- 
+class ExampleItem {
+  final String title;
+
+  ExampleItem({
+    required this.title,
+  });
+}
+
+class People extends StatefulWidget {
+  @override
+  _PeopleState createState() => _PeopleState();
+}
+
+class _PeopleState extends State<People> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: ListView(children: [
-        const Text("各種復健者",style: TextStyle(fontSize: 30),),
-        ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: MyTheme.backgroudColor),
-            onPressed: () {
-             
-            },
-            child: const Text("哈囉一號"))
+
+    return Scaffold(
+      backgroundColor: MyTheme.backgroudColor,
+      body: Column(children: [
+        const Text(
+          "復健者",
+          style: TextStyle(fontSize: 30),
+        ),
+        Card(
+            elevation: 4,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+            child: const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 8),
+              child: TextField(
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  prefixIcon: Icon(Icons.search),
+                  hintText: "Search",
+                ),
+              ),
+            )),
+        PeopleBox(
+                id: "id",
+                name: "name",
+                height: "height",
+                weight: "wight",
+                disease: [0, 1],
+                gender: "男")
+            .box(),
+              PeopleBox(
+                id: "id",
+                name: "name",
+                height: "height",
+                weight: "wight",
+                disease: [0, 1],
+                gender: "男")
+            .box()
       ]),
+      floatingActionButton: Container(
+        padding: const EdgeInsets.fromLTRB(20, 0, 20, 70),
+        width: MediaQuery.of(context).size.width,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+        child: FloatingActionButton.extended(
+          backgroundColor: MyTheme.buttonColor,
+          onPressed: () {},
+          elevation: 0,
+          label: const Text(
+            "新增復健者",
+            style: TextStyle(fontSize: 18.0),
+          ),
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }

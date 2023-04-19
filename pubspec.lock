@@ -57,6 +57,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.5"
+  endless:
+    dependency: transitive
+    description:
+      name: endless
+      sha256: "2016ce4df3cb44ac8ea505207b8954f46a3400ce8ba8026a914607499cae3bb2"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.6.3"
   fake_async:
     dependency: transitive
     description:
@@ -102,6 +110,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.3.1"
+  flutter_easyloading:
+    dependency: "direct main"
+    description:
+      name: flutter_easyloading
+      sha256: ba21a3c883544e582f9cc455a4a0907556714e1e9cf0eababfcb600da191d17c
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.5"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -110,6 +126,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.1"
+  flutter_spinkit:
+    dependency: transitive
+    description:
+      name: flutter_spinkit
+      sha256: "77a2117c0517ff909221f3160b8eb20052ab5216107581168af574ac1f05dff8"
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.1.0"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -176,6 +200,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.8.0"
+  paginated_search_bar:
+    dependency: "direct main"
+    description:
+      name: paginated_search_bar
+      sha256: "61ad88426b55586e688b7f650a57f560b04ea8f89fd57fbb52aafa62b007dd97"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.2"
   path:
     dependency: transitive
     description:
@@ -365,6 +397,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.11.0"
+  state_property:
+    dependency: transitive
+    description:
+      name: state_property
+      sha256: "9762a86f4f0c30c264734069cc10899a211ab4869a392289ac4eddb8f3dbf6dc"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.1"
   stream_channel:
     dependency: transitive
     description:

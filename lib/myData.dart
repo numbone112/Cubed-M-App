@@ -33,3 +33,7 @@ class HexColor extends Color {
     return int.parse(hexColor, radix: 16);
   }
 }
+
+TextStyle whiteText({double? fontsize}){
+  return TextStyle(color: Colors.white,fontSize: fontsize);
+}

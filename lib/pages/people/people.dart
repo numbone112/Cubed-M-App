@@ -1,7 +1,6 @@
 import 'package:e_fu/module/people_box.dart';
 import 'package:flutter/material.dart';
 import '../../myData.dart';
-import 'package:paginated_search_bar/paginated_search_bar.dart';
 
 class ExampleItem {
   final String title;
@@ -45,19 +44,20 @@ class _PeopleState extends State<People> {
             )),
         PeopleBox(
                 id: "id",
-                name: "name",
-                height: "height",
-                weight: "wight",
+                name: "王小明",
+                height: "166",
+                weight: "77",
                 disease: [0, 1],
-                gender: "男")
+                gender: "男",
+                birthday: DateTime(1988,1,2))
             .box(),
               PeopleBox(
                 id: "id",
-                name: "name",
-                height: "height",
-                weight: "wight",
+                name: "wang shi",
+                height: "187",
+                weight: "93",
                 disease: [0, 1],
-                gender: "男")
+                gender: "男",birthday: DateTime(1978,3,2))
             .box()
       ]),
       floatingActionButton: Container(

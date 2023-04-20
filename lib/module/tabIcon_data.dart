@@ -15,6 +15,7 @@ class TabIconData {
   String title;
   bool isSelected;
   int index;
+  // IconData icon;
 
   AnimationController? animationController;
 
@@ -26,6 +27,7 @@ class TabIconData {
       index: 0,
       isSelected: false,
       animationController: null,
+      
     ),
     TabIconData(
       imagePath: 'assets/images/home_outlined.png',
@@ -34,6 +36,7 @@ class TabIconData {
       index: 1,
       isSelected: false,
       animationController: null,
+      
     ),
     TabIconData(
       imagePath: 'assets/images/e_user_outlined.png',
@@ -42,6 +45,7 @@ class TabIconData {
       index: 2,
       isSelected: false,
       animationController: null,
+      
     ),
   ];
 }

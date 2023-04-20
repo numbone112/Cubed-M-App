@@ -10,16 +10,16 @@ class User extends Data {
   // User FromJson(String str) => User.fromJson(json.decode(str));
 
   User({
-    required this.account,
+    required this.id,
     required this.password,
   });
 
-  String account;
+  String id;
   String password;
   dynamic permissions;
 
   // factory User._fromJson(Map<String, dynamic> json) => User(
-  //       account: json["account"],
+  //       id: json["id"],
   //       password: json["password"],
   //       name: json["name"],
   //       pfpicId: json["pfpic_id"],
@@ -39,7 +39,7 @@ class User extends Data {
   static User fromJson(String str) {
     var d=json.decode(str);
     return User(
-        account: d["account"],
+        id: d["id"],
         password: d["password"],
       );
     
@@ -48,7 +48,7 @@ class User extends Data {
   @override
   Map<String, dynamic> toJson() =>
     {
-      'account': account,
+      'id': id,
       'password': password,
     };
   

@@ -40,9 +40,12 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      
         resizeToAvoidBottomInset: false,
-        // backgroundColor: Colors.transparent,
+        backgroundColor:MyTheme.backgroudColor,
+
         body: Stack(
+          
           children: <Widget>[
             
             tabBody,
@@ -51,13 +54,19 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
         ));
   }
 
+  
+
   Widget bottomBar() {
     return Column(
       children: <Widget>[
         const Expanded(
-          child: SizedBox(),
+          child: SizedBox(
+            height: 100,
+          //  child: ButtonBar(children: [Text("hello")],),
+          ),
         ),
         BottomBarView(
+          
           tabIconsList: tabIconsList,
        
           changeIndex: (int index) {
@@ -67,7 +76,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                 //   return;
                 // }
                 setState(() {
-                  tabBody =const People();
+                  tabBody = People();
                 });
               });
             }else if(index==1){

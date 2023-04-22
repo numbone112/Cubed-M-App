@@ -5,11 +5,11 @@ import 'package:age_calculator/age_calculator.dart';
 class PeopleBox {
   String id;
   String name;
-  String height;
+  double height;
   String weight;
   String gender;
   DateTime birthday;
-  List<int> disease;
+  List<String> disease;
   
   PeopleBox({
     required this.id,
@@ -28,7 +28,7 @@ class PeopleBox {
       child: Stack(
         children: [
           Container(
-            padding: EdgeInsets.fromLTRB(100, 8, 8, 8),
+            padding: const EdgeInsets.fromLTRB(100, 8, 8, 8),
             height: 100,
             width: 600,
             decoration: BoxDecoration(
@@ -39,12 +39,12 @@ class PeopleBox {
                 Column(
                   children: [
                     Text("年齡 : ${AgeCalculator.age(birthday).years}"),
-                    Text("身高 : ${this.height}"),
-                    Text("體重 : ${this.weight}"),
+                    Text("身高 : $height"),
+                    Text("體重 : $weight"),
                   ],
                 ),
                 Column(
-                  children: [Text("疾病"), Text("高血糖")],
+                  children: const [Text("疾病"), Text("高血糖")],
                 ),
               ],
             ),

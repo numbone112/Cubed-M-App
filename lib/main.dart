@@ -48,9 +48,9 @@ if(userName==""){
       ),
       debugShowCheckedModeBanner: false,
       routes: <String, WidgetBuilder>{
-        '/home': (_) => const Home(),
-        '/login': (_) => const Login(),
-        '/event': (_) => const Event(),
+        Home.routeName: (_) => const Home(),
+        Login.routeName: (_) => const Login(),
+        Event.routeName: (_) => const Event(),
      
       },
     );

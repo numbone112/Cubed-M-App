@@ -1,6 +1,8 @@
 
 import 'package:e_fu/pages/event/eventHome.dart';
-import 'package:e_fu/pages/people/people.dart';
+import 'package:e_fu/pages/people/peopleList.dart';
+import 'package:e_fu/pages/people/peoplePage.dart';
+import 'package:e_fu/pages/people/people_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -10,6 +12,7 @@ import 'myData.dart';
 
 
 class Home extends StatefulWidget {
+  static const routeName = '/home'; 
   const Home({super.key});
   // final String userName;
 
@@ -44,13 +47,16 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
         resizeToAvoidBottomInset: false,
         backgroundColor:MyTheme.backgroudColor,
 
-        body: Stack(
-          
-          children: <Widget>[
+        body: Container(
+          padding: EdgeInsets.fromLTRB(10, 3, 10, 0),
+          child: Stack(
             
-            tabBody,
-            bottomBar(),
-          ],
+            children: <Widget>[
+              
+              tabBody,
+              bottomBar(),
+            ],
+          ),
         ));
   }
 
@@ -58,6 +64,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
 
   Widget bottomBar() {
     return Column(
+      
       children: <Widget>[
         const Expanded(
           child: SizedBox(
@@ -76,7 +83,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                 //   return;
                 // }
                 setState(() {
-                  tabBody = People();
+                  tabBody = PeoplePage();
                 });
               });
             }else if(index==1){

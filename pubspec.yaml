@@ -20,8 +20,12 @@ dependencies:
   age_calculator: ^1.0.0
 
   cupertino_icons: ^1.0.2
+  json_annotation: ^4.8.0
 
 dev_dependencies:
+  build_runner: ^2.3.3
+  json_serializable: ^6.6.0
+
   flutter_test:
     sdk: flutter
 

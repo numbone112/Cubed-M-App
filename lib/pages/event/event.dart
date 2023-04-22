@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:e_fu/module/arrange.dart';
+import 'package:e_fu/request/e/e.dart';
+import 'package:e_fu/request/e/e_data.dart';
 import 'package:e_fu/request/record/record.dart';
 import 'package:e_fu/myData.dart';
 
@@ -10,10 +12,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
 import 'package:e_fu/request/data.dart';
-import 'package:e_fu/myData.dart';
 import 'package:e_fu/request/record/record_data.dart';
 
 class Event extends StatefulWidget {
+  static const routeName = '/event';
+
   const Event({super.key});
 
   @override
@@ -21,7 +24,7 @@ class Event extends StatefulWidget {
 }
 
 class EventState extends State<Event> {
-  Arrange? selected_arrange;
+  List<EAppointmentDetail> selected_arrange = [];
   bool isBleOn = false;
   bool isScan = false;
   FlutterBluePlus flutterBlue = FlutterBluePlus.instance;
@@ -34,8 +37,18 @@ class EventState extends State<Event> {
   AsciiDecoder asciiDecoder = const AsciiDecoder();
   String number = "0";
   List<String> exercise_item = ["左手", "右手"];
+  ERepo eRepo = ERepo();
+  bool notyet=true;
+
+  Future<List<EAppointmentDetail>> getData(EAppointment eAppointment) async {
+    Format d = await eRepo.getApDetail(
+        "11136008", eAppointment.id.start_date, eAppointment.id.time);
+    return parseEApointmentDetail(jsonEncode(d.D));
+  }
+
   @override
   void initState() {
+   
     print("this isis initstate");
     // FlutterBluePlus.instance.state.listen((state) {
     //   if (state == BluetoothState.on) {
@@ -94,7 +107,7 @@ class EventState extends State<Event> {
                         connectDeviec[pIndex] = r.device.id.toString();
                       });
 
-                      print("連接到" + r.device.name);
+                      print("連接到${r.device.name}");
                       print(connectDeviec);
                       for (BluetoothCharacteristic characteristic
                           in _services.first.characteristics) {
@@ -107,7 +120,7 @@ class EventState extends State<Event> {
                           characteristic.value.listen((value) {
                             print("enter heree");
                             try {
-                              print("from number:" + value.toString());
+                              print("from number:$value");
 
                               number = String.fromCharCodes(value);
                             } catch (e) {
@@ -128,7 +141,7 @@ class EventState extends State<Event> {
                                   double.parse(raw[4]),
                                   double.parse(raw[5])));
                             } catch (e) {
-                              print("error:" + e.toString());
+                              print("error:$e");
                             }
                           });
                           await characteristic.setNotifyValue(true);
@@ -161,7 +174,7 @@ class EventState extends State<Event> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          Text('${selected_arrange!.people![index].id}'),
+          Text('${selected_arrange[index].name}'),
           Row(
               children: List.generate(
                   exercise_item.length,
@@ -171,14 +184,17 @@ class EventState extends State<Event> {
                             Text(exercise_item[eIndex]),
                             Container(
                               width: 30,
+                              margin: EdgeInsets.all(5),
                               height: 30,
-                              decoration: const BoxDecoration(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(30)),
-                                  color: Colors.grey),
+                              decoration: BoxDecoration(
+                                  border:
+                                      Border.all(color: Colors.grey, width: 5),
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(30)),
+                                  color: Colors.white),
                               child: Center(
                                 child: Text(
-                                    '${selected_arrange!.people![index].items![eIndex].quota}'),
+                                    '${selected_arrange[index].item[eIndex]}'),
                               ),
                             )
                           ],
@@ -281,36 +297,18 @@ class EventState extends State<Event> {
 
   @override
   Widget build(BuildContext context) {
-    var _list = [
-      Arrange(time: "9:00", peopleNumber: 3, people: [
-        People(
-            id: "王小明",
-            items: [Items(typeId: 0, quota: 5), Items(typeId: 1, quota: 5)]),
-        People(
-            id: "王小明",
-            items: [Items(typeId: 0, quota: 5), Items(typeId: 1, quota: 5)]),
-        People(
-            id: "王小明",
-            items: [Items(typeId: 0, quota: 5), Items(typeId: 1, quota: 5)])
-      ]),
-      Arrange(time: "9:00", peopleNumber: 3, people: [
-        People(
-            id: "王小明",
-            items: [Items(typeId: 0, quota: 5), Items(typeId: 1, quota: 5)]),
-        People(
-            id: "王小明",
-            items: [Items(typeId: 0, quota: 5), Items(typeId: 1, quota: 5)]),
-        People(
-            id: "王小明",
-            items: [Items(typeId: 0, quota: 5), Items(typeId: 1, quota: 5)])
-      ]),
-      Arrange(time: "11:00", peopleNumber: 1, people: [
-        People(
-            id: "王小明",
-            items: [Items(typeId: 0, quota: 5), Items(typeId: 1, quota: 5)]),
-      ])
-    ];
-    selected_arrange = _list[1];
+     final args = ModalRoute.of(context)!.settings.arguments as EAppointment;
+    if(selected_arrange.isEmpty&notyet){
+      
+    getData(args).then(
+      (value) {
+       setState(() {
+          selected_arrange = value;
+       });
+        notyet=false;
+      },
+    );
+    }
     return (Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: MyTheme.backgroudColor,
@@ -345,125 +343,17 @@ class EventState extends State<Event> {
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
                   children: [
+                    selected_arrange.isEmpty?Text("error"):
                     SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.7,
-                        child: GridView.count(
-                          crossAxisCount: 2,
-                          children: List.generate(
-                              selected_arrange!.people!.length, (index) {
-                            return (exercise_box(index));
-                          }),
-                        )
-                        // ListView.builder(
-
-                        //   itemCount: selected_arrange?.peopleNumber,
-                        //   itemBuilder: (context, index) {
-                        //     int pIndex = index;
-                        //     return Container(
-                        //       decoration: BoxDecoration(
-                        //           borderRadius: BorderRadius.circular(30),
-                        //           color: Colors.white),
-                        //           width: 50,
-                        //           height: 50,
-                        //           child: Text('${selected_arrange?.people?[index].id}'),
-                        //     );
-                        //     return ListTile(
-                        //       trailing: connectDeviec.containsKey(index)
-                        //           ? const Text("已連接")
-                        //           : TextButton(
-                        //               child: const Text("連接"),
-                        //               onPressed: () async {
-                        //                 FlutterBluePlus.instance.state
-                        //                     .listen((state) {
-                        //                   if (state == BluetoothState.on) {
-                        //                     print('藍牙狀態爲開啓');
-                        //                     setState(() {
-                        //                       isBleOn = true;
-                        //                     });
-                        //                   } else if (state == BluetoothState.off) {
-                        //                     print('藍牙狀態爲關閉');
-                        //                     setState(() {
-                        //                       isBleOn = false;
-                        //                     });
-                        //                   }
-                        //                 });
-                        //                 if (isBleOn) {
-                        //                   _scan();
-                        //                   //沒在列印的時候再startScan
-                        //                   if (!isScan) {
-                        //                     flutterBlue.startScan(
-                        //                         timeout:
-                        //                             const Duration(seconds: 4));
-                        //                   }
-                        //                   await showDialog(
-                        //                     context: context,
-                        //                     builder: (ctx) => AlertDialog(
-                        //                       title: const Text("您已開啟藍芽"),
-                        //                       content: toPairDialog(pIndex),
-                        //                       actions: <Widget>[
-                        //                         TextButton(
-                        //                           onPressed: () {
-                        //                             Navigator.of(context).pop();
-                        //                           },
-                        //                           child: Container(
-                        //                             padding:
-                        //                                 const EdgeInsets.all(14),
-                        //                             child: const Text("關閉"),
-                        //                           ),
-                        //                         ),
-                        //                       ],
-                        //                     ),
-                        //                   );
-                        //                 } else {
-                        //                   await showDialog(
-                        //                       context: context,
-                        //                       builder: (ctx) =>
-                        //                           CupertinoAlertDialog(
-                        //                             content: Column(
-                        //                               children: [
-                        //                                 const SizedBox(
-                        //                                   height: 10,
-                        //                                 ),
-                        //                                 const Align(
-                        //                                   alignment:
-                        //                                       Alignment(0, 0),
-                        //                                   child: Text("是否要開啟藍芽？"),
-                        //                                 )
-                        //                               ],
-                        //                             ),
-                        //                             actions: [
-                        //                               CupertinoDialogAction(
-                        //                                 child: const Text('取消'),
-                        //                                 onPressed: () {
-                        //                                   Navigator.pop(context);
-                        //                                 },
-                        //                               ),
-                        //                               CupertinoDialogAction(
-                        //                                 child: const Text('開啟藍芽'),
-                        //                                 onPressed: () async {
-                        //                                   await FlutterBluePlus
-                        //                                       .instance
-                        //                                       .turnOn()
-                        //                                       .then((value) {
-                        //                                     setState(() {
-                        //                                       isBleOn = true;
-                        //                                     });
-                        //                                   });
-                        //                                   _scan();
-                        //                                   Navigator.pop(context);
-                        //                                 },
-                        //                               ),
-                        //                             ],
-                        //                           ));
-                        //                 }
-                        //               },
-                        //             ),
-                        //       leading: const Icon(Icons.people),
-                        //       title: Text('${selected_arrange?.people?[index].id}'),
-                        //     );
-                        //   },
-                        // ),
-                        ),
+                      height: MediaQuery.of(context).size.height * 0.7,
+                      child: GridView.count(
+                        crossAxisCount: 2,
+                        children:
+                            List.generate(selected_arrange.length, (index) {
+                          return (exercise_box(index));
+                        }),
+                      ),
+                    ),
                     GestureDetector(
                       child: Container(
                         width: 200,

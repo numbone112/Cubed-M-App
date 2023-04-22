@@ -1,5 +1,10 @@
+import 'dart:convert';
+import 'dart:math';
 
 import 'package:e_fu/module/arrange.dart';
+import 'package:e_fu/request/data.dart';
+import 'package:e_fu/request/e/e.dart';
+import 'package:e_fu/request/e/e_data.dart';
 import 'package:e_fu/request/record/record.dart';
 import 'package:e_fu/myData.dart';
 import 'package:flutter/material.dart';
@@ -12,60 +17,45 @@ class EventHome extends StatefulWidget {
 }
 
 class EventHomeState extends State<EventHome> {
-  List<Arrange> _list = [];
+  List<EAppointment> _list = [];
+  ERepo eRepo = ERepo();
+
+  Future<List<EAppointment>> getEAppointment() async {
+    Format d = await eRepo.getAps("11136008");
+    return parseEApointment(jsonEncode(d.D));
+  }
 
   @override
   void initState() {
     super.initState();
-    _list = [
-      Arrange(time: "9:00", peopleNumber: 3, people: [
-        People(
-            id: "555",
-            items: [Items(typeId: 0, quota: 5), Items(typeId: 1, quota: 5)]),
-        People(
-            id: "554",
-            items: [Items(typeId: 0, quota: 5), Items(typeId: 1, quota: 5)]),
-        People(
-            id: "553",
-            items: [Items(typeId: 0, quota: 5), Items(typeId: 1, quota: 5)])
-      ]),
-      Arrange(time: "9:00", peopleNumber: 3, people: [
-        People(
-            id: "555",
-            items: [Items(typeId: 0, quota: 5), Items(typeId: 1, quota: 5)]),
-        People(
-            id: "554",
-            items: [Items(typeId: 0, quota: 5), Items(typeId: 1, quota: 5)]),
-        People(
-            id: "553",
-            items: [Items(typeId: 0, quota: 5), Items(typeId: 1, quota: 5)])
-      ]),
-    ];
+    _list = [];
+    getEAppointment().then((value) {
+      // print(value.length);
+      setState(() {
+        _list = value;
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Column(
+        const Text(
+          "復健安排",
+          style: TextStyle(fontSize: 30),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            const Text(
-              "復健安排",
-              style: TextStyle(fontSize: 30),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                IconButton(
-                    onPressed: () {}, icon: const Icon(Icons.arrow_back_ios)),
-                const Text("今天"),
-                IconButton(
-                    onPressed: () {}, icon: const Icon(Icons.arrow_forward_ios))
-              ],
-            ),
-            getUI()
+            IconButton(
+                onPressed: () {}, icon: const Icon(Icons.arrow_back_ios)),
+            const Text("今天"),
+            IconButton(
+                onPressed: () {}, icon: const Icon(Icons.arrow_forward_ios))
           ],
         ),
+        getUI()
       ],
     );
   }
@@ -81,7 +71,7 @@ class EventHomeState extends State<EventHome> {
           itemBuilder: (context, index) {
             return GestureDetector(
               child: Container(
-                margin: const EdgeInsets.all(10),
+                margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
                 height: 100,
                 width: 600,
                 decoration: BoxDecoration(
@@ -92,7 +82,7 @@ class EventHomeState extends State<EventHome> {
                   children: [
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: [Text('${_list[index].time}')],
+                      children: [Text('${_list[index].id.time}')],
                     ),
                     Container(
                       alignment: Alignment.center,
@@ -102,7 +92,7 @@ class EventHomeState extends State<EventHome> {
                           borderRadius: BorderRadius.circular(30),
                           color: MyTheme.buttonColor),
                       child: Text(
-                        '${_list[index].peopleNumber}',
+                        '${_list[index].count}',
                         style: whiteText(),
                       ),
                     ),
@@ -112,7 +102,7 @@ class EventHomeState extends State<EventHome> {
                 ),
               ),
               onTap: () {
-                Navigator.pushNamed(context, "/event");
+                Navigator.pushNamed(context, "/event",arguments:_list[index] );
               },
             );
           },

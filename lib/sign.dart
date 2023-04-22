@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Login extends StatefulWidget {
+    static const routeName = '/login'; 
+
   const Login({super.key});
 
   @override
@@ -120,7 +122,7 @@ class _LoginState extends State<Login> {
                 if (a.message=="登入成功") {
                   prefs = await SharedPreferences.getInstance();
                   prefs.setString(Name.userName, accountC.text);
-                  Navigator.pushReplacementNamed(context, "home");
+                  Navigator.pushReplacementNamed(context, "/home");
                 }else{
                   print(a);
                 }

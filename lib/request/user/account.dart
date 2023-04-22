@@ -2,10 +2,10 @@
 
 import 'dart:convert';
 
-import '../api.dart';
+import 'package:e_fu/request/api.dart';
 import 'account_data.dart';
 
-import '../data.dart';
+import 'package:e_fu/request/data.dart';
 abstract class AccountAPI {
   //註冊會員
   // Future<String> createUser();

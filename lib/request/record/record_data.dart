@@ -1,11 +1,7 @@
 import 'dart:convert';
-import 'dart:ffi';
+import 'package:e_fu/request/data.dart';
 
-import 'package:e_fu/module/arrange.dart';
-
-import "../data.dart";
 class Record  extends Data{
-
 Record(this.ax,this.ay,this.az,this.gx,this.gy,this.gz);
 
 

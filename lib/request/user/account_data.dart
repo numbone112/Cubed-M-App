@@ -35,7 +35,6 @@ class User extends Data {
     // TODO: implement dataformJson
     throw UnimplementedError();
   }
-  @override
   static User fromJson(String str) {
     var d=json.decode(str);
     return User(

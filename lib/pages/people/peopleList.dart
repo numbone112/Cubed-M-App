@@ -30,6 +30,8 @@ class PeopleListState extends State<PeopleList> {
 
   Future<List<EPeople>> getData() async {
     Format a = await eRepo.getFus("11136008");
+    print(a.D);
+    if( a.D.runtimeType==String) return [];
     return parseEpeople(jsonEncode(a.D));
   }
 

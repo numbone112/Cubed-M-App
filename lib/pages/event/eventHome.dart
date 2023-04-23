@@ -22,6 +22,8 @@ class EventHomeState extends State<EventHome> {
 
   Future<List<EAppointment>> getEAppointment() async {
     Format d = await eRepo.getAps("11136008");
+    print(d.D);
+    if (d.D.runtimeType==String) return [];
     return parseEApointment(jsonEncode(d.D));
   }
 

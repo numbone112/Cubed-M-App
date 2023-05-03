@@ -22,6 +22,11 @@ List<EAppointmentDetail> parseEApointmentDetail(String responseBody) {
   return parsed.map<EAppointmentDetail>((json) => EAppointmentDetail.fromJson(json)).toList();
 }
 
+ProfileData parseProfile(dynamic responseBody){
+  // final parsed = jsonDecode(responseBody);
+  return ProfileData.fromJson(responseBody);
+}
+
 @JsonSerializable(explicitToJson: true)
 class EPeople {
   EPeople(
@@ -58,8 +63,9 @@ class TimeRange {
 
 @JsonSerializable(explicitToJson: true)
 class EAppointment {
-  EAppointment({required this.id, required this.count});
+  EAppointment({required this.id, required this.count,required this.tf_id});
   TimeRange id;
+  TimeRange tf_id;
   int count;
   factory EAppointment.fromJson(Map<String, dynamic> json) =>
       _$EAppointmentFromJson(json);
@@ -68,9 +74,9 @@ class EAppointment {
 
 @JsonSerializable(explicitToJson: true)
 class EAppointmentDetail{
-  EAppointmentDetail({required this.id,required this.done,required this.f_id,required this.item,required this.name,required this.remark});
+  EAppointmentDetail({required this.id,required this.done,required this.p_id,required this.item,required this.name,required this.remark});
   int id;
-  String f_id;
+  String p_id;
   List<int> item;
   List<Object> done;
   String remark;
@@ -79,3 +85,21 @@ class EAppointmentDetail{
       _$EAppointmentDetailFromJson(json);
   Map<String, dynamic> toJson() => _$EAppointmentDetailToJson(this);
 }
+
+
+@JsonSerializable(explicitToJson: true)
+class ProfileData {
+  ProfileData({required this.password, required this.birthday,required this.id, required this.phone,required this.sex,required this.name});
+  String password;
+  DateTime birthday;
+  String id;
+  String phone;
+  String sex;
+  String name;
+
+  factory ProfileData.fromJson(Map<String, dynamic> json) =>
+      _$ProfileDataFromJson(json);
+  Map<String, dynamic> toJson() => _$ProfileDataToJson(this);
+}
+
+

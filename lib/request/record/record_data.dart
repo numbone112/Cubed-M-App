@@ -40,7 +40,7 @@ class Arrange_date extends Data{
   
   @override
   Map<String, dynamic> toJson() =>{
-    "arrange_id":arrange_id,
+    "a_id":arrange_id,
     "raw":json.encode(raw)
   };
 

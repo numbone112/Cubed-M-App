@@ -1,4 +1,5 @@
 
+import 'package:e_fu/pages/e/e.dart';
 import 'package:e_fu/pages/event/eventHome.dart';
 import 'package:e_fu/pages/people/peopleList.dart';
 import 'package:e_fu/pages/people/peoplePage.dart';
@@ -42,22 +43,29 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Container(
+      color: Colors.white,
+      child: SafeArea(
+        top: false,
+        child: Scaffold(
+          
+            resizeToAvoidBottomInset: false,
+            backgroundColor:MyTheme.backgroudColor,
       
-        resizeToAvoidBottomInset: false,
-        backgroundColor:MyTheme.backgroudColor,
-
-        body: Container(
-          padding: EdgeInsets.fromLTRB(10, 3, 10, 0),
-          child: Stack(
-            
-            children: <Widget>[
+            body: Container(
               
-              tabBody,
-              bottomBar(),
-            ],
-          ),
-        ));
+              padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+              child: Stack(
+                
+                children: <Widget>[
+                  
+                  Padding(padding: EdgeInsets.fromLTRB(10, 0, 10, 0),child: tabBody,),
+                  bottomBar(),
+                ],
+              ),
+            )),
+      ),
+    );
   }
 
   
@@ -68,8 +76,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
       children: <Widget>[
         const Expanded(
           child: SizedBox(
-            height: 100,
-          //  child: ButtonBar(children: [Text("hello")],),
+            height: 1,
+          
           ),
         ),
         BottomBarView(
@@ -94,35 +102,34 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                   tabBody =const EventHome();
                 });
             }else if (index == 2) {
-              animationController?.reverse().then<dynamic>((data) {
-                // if (!mounted) {
-                //   return;
-                // }
-                setState(() {
-                  tabBody = Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-
-                      Center(
-                        child: ElevatedButton(
-                          style:ElevatedButton.styleFrom(
-                            backgroundColor: MyTheme.color
-                          ), 
-                          // ButtonStyle(
-                          //   col: MyTheme.color
-                          // ),
-                            onPressed: () async {
-                              SharedPreferences prefs =
-                                  await SharedPreferences.getInstance();
-                                  prefs.clear();
-                                  Navigator.popAndPushNamed(context, "welcome");
-                            },
-                            child: Text("登出")),
-                      )
-                    ],
-                  );
+              setState(() {
+                  tabBody =const Profile();
                 });
-              });
+              // animationController?.reverse().then<dynamic>((data) {
+               
+              //   setState(() {
+              //     tabBody = Column(
+              //       mainAxisAlignment: MainAxisAlignment.center,
+              //       children: [
+
+              //         Center(
+              //           child: ElevatedButton(
+              //             style:ElevatedButton.styleFrom(
+              //               backgroundColor: MyTheme.color
+              //             ), 
+                          
+              //               onPressed: () async {
+              //                 SharedPreferences prefs =
+              //                     await SharedPreferences.getInstance();
+              //                     prefs.clear();
+              //                     Navigator.popAndPushNamed(context, "welcome");
+              //               },
+              //               child: Text("登出")),
+              //         )
+              //       ],
+              //     );
+              //   });
+              // });
             }
           },
         ),

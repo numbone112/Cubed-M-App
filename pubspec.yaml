@@ -18,7 +18,10 @@ dependencies:
   # paginated_search_bar: ^1.1.2
   http: ^0.13.5
   age_calculator: ^1.0.0
-
+  syncfusion_flutter_gauges: ^21.1.41
+  ele_progress: ^0.0.1
+  table_calendar: ^3.0.9
+  intl: ^0.18.1
   cupertino_icons: ^1.0.2
   json_annotation: ^4.8.0
 

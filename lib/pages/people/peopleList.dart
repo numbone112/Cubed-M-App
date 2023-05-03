@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 import 'package:e_fu/module/page.dart';
 import 'package:e_fu/module/people_box.dart';
@@ -29,10 +30,19 @@ class PeopleListState extends State<PeopleList> {
   List<dynamic> peopleList = List.empty();
 
   Future<List<EPeople>> getData() async {
-    Format a = await eRepo.getFus("11136008");
-    print(a.D);
-    if( a.D.runtimeType==String) return [];
-    return parseEpeople(jsonEncode(a.D));
+    List<EPeople> res = [];
+    EasyLoading.show(status: "loading ...");
+    try {
+      Format a = await eRepo.getFus("11136008");
+
+      if (a.D.runtimeType == String) return [];
+      res = parseEpeople(jsonEncode(a.D));
+    } catch (e) {
+      print(e);
+    }finally{
+      EasyLoading.dismiss();
+      return res;
+    }
   }
 
   @override
@@ -49,24 +59,8 @@ class PeopleListState extends State<PeopleList> {
   Widget build(BuildContext context) {
     return CustomPage(
       title: "查詢復健者",
-      floatButton: Container(
-        padding: const EdgeInsets.fromLTRB(20, 0, 20, 70),
-        width: MediaQuery.of(context).size.width,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20.0),
-        ),
-        child: FloatingActionButton.extended(
-          backgroundColor: MyTheme.buttonColor,
-          onPressed: () {},
-          elevation: 0,
-          label: const Text(
-            "新增復健者",
-            style: TextStyle(fontSize: 18.0),
-          ),
-        ),
-      ),
       body: peopleList.isEmpty
-          ? const Text("wait")
+          ? Container()
           : Column(
               children: <Widget>[
                     Card(

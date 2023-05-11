@@ -1,9 +1,10 @@
-import 'package:e_fu/module/boxUI.dart';
+import 'package:e_fu/module/box_ui.dart';
 import 'package:e_fu/module/page.dart';
-import 'package:e_fu/myData.dart';
+import 'package:e_fu/my_data.dart';
 import 'package:e_fu/request/e/e.dart';
 import 'package:e_fu/request/e/e_data.dart';
 import 'package:intl/intl.dart';
+import 'package:logger/logger.dart';
 
 import 'package:flutter/material.dart';
 
@@ -22,6 +23,8 @@ class ProfileUpdateState extends State<ProfileUpdate> {
   TextEditingController nameinput = TextEditingController();
   DateFormat dateFormat = DateFormat('yyyy-MM-dd');
   ERepo eRepo = ERepo();
+    var logger = Logger();
+
   ProfileData? _profileData;
   @override
   Widget build(BuildContext context) {
@@ -52,7 +55,7 @@ class ProfileUpdateState extends State<ProfileUpdate> {
                     margin: const EdgeInsets.all(20),
                     padding: const EdgeInsets.all(25),
                     child: TextField(
-                      decoration: InputDecoration(labelText: "姓名"),
+                      decoration: const InputDecoration(labelText: "姓名"),
                       controller: nameinput,
                     ),
                   ),
@@ -60,7 +63,7 @@ class ProfileUpdateState extends State<ProfileUpdate> {
                     margin: const EdgeInsets.all(20),
                     padding: const EdgeInsets.all(25),
                     child: TextField(
-                      decoration: InputDecoration(labelText: "性別"),
+                      decoration: const InputDecoration(labelText: "性別"),
                       controller: sexinput,
                     ),
                   ),
@@ -88,7 +91,7 @@ class ProfileUpdateState extends State<ProfileUpdate> {
                         if (pickedDate != null) {
                           dateinput.text = dateFormat.format(pickedDate);
                         } else {
-                          print("Date is not selected");
+                          logger.v("Date is not selected");
                         }
                       },
                     ),
@@ -97,7 +100,7 @@ class ProfileUpdateState extends State<ProfileUpdate> {
                     margin: const EdgeInsets.all(20),
                     padding: const EdgeInsets.all(25),
                     child: TextField(
-                      decoration: InputDecoration(labelText: "手機號碼"),
+                      decoration: const InputDecoration(labelText: "手機號碼"),
                       controller: phoneinput,
                     ),
                   ),
@@ -134,9 +137,9 @@ class ProfileUpdateState extends State<ProfileUpdate> {
                               phone: phoneinput.text,
                               sex: sexinput.text,
                               name: nameinput.text);
-                            print(toSend.toJson());
+                            logger.v(toSend.toJson());
                             eRepo.updateProfile(toSend).then((value) {
-                              print(value.D);
+                              logger.v(value.D);
                             });
                         },
                         child: Text(

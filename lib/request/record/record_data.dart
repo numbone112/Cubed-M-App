@@ -2,7 +2,9 @@ import 'dart:convert';
 import 'package:e_fu/request/data.dart';
 
 class Record  extends Data{
-Record(this.ax,this.ay,this.az,this.gx,this.gy,this.gz);
+Record(this.ax,this.ay,this.az,this.gx,this.gy,this.gz,this.pitch){
+  dateTime=DateTime.now();
+}
 
 
 double ax;
@@ -11,6 +13,8 @@ double az;
 double gx;
 double gy;
 double gz;
+double pitch;
+late DateTime dateTime;
   @override
   String datatoJson(Data data) {
     var d = json.encode(data.toJson());
@@ -25,11 +29,11 @@ double gz;
 
 }
 
-class Arrange_date extends Data{
+class ArrangeDate extends Data{
   
   
-  Arrange_date(this.arrange_id,this.raw);
-  String arrange_id;
+  ArrangeDate(this.arrangeId,this.raw);
+  String arrangeId;
   List<Record> raw;
   
   @override
@@ -40,7 +44,7 @@ class Arrange_date extends Data{
   
   @override
   Map<String, dynamic> toJson() =>{
-    "a_id":arrange_id,
+    "a_id":arrangeId,
     "raw":json.encode(raw)
   };
 

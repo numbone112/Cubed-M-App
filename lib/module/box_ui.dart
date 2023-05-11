@@ -6,7 +6,7 @@ class BoxUI {
       double? height,
       double? width,
       required Widget child,
-      Color? backColor,
+      
       EdgeInsetsGeometry? margin,
       EdgeInsetsGeometry? padding}) {
     return Container(
@@ -17,9 +17,9 @@ class BoxUI {
           color: color ?? Colors.white),
       height: height,
       width: width,
-      child: child,
       margin: margin,
       padding: padding,
+      child: child,
     );
   }
 

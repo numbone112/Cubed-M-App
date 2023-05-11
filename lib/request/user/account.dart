@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'package:e_fu/request/api.dart';
 import 'account_data.dart';
+import 'package:logger/logger.dart';
 
 import 'package:e_fu/request/data.dart';
 abstract class AccountAPI {
@@ -18,6 +19,8 @@ abstract class AccountAPI {
 }
 
 class AccountRepo extends API implements AccountAPI {
+    var logger = Logger();
+
   @override
   Future<Format> login(String user, String psw) async {
     try {
@@ -26,9 +29,9 @@ class AccountRepo extends API implements AccountAPI {
             'Content-Type': 'application/json',
           },
           body: jsonEncode(User(id: user, password: psw).toJson()));
-          print(response.body);
+          logger.v(response.body);
       if (response.statusCode == 200) {
-        print("200了");
+        logger.v("200了");
         
         // Format f=;
         // User.fromJson(omg);
@@ -41,8 +44,8 @@ class AccountRepo extends API implements AccountAPI {
         return Format.fromJson(response.body);
       }
     } catch (e) {
-      print("error");
-      print(e.toString());
+      logger.v("error");
+      logger.v(e.toString());
       return Format.fromFields("error", false,"");
       
     }

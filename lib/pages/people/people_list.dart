@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:logger/logger.dart';
 
 import 'package:e_fu/module/page.dart';
 import 'package:e_fu/module/people_box.dart';
@@ -7,7 +8,6 @@ import 'package:e_fu/request/data.dart';
 import 'package:e_fu/request/e/e.dart';
 import 'package:e_fu/request/e/e_data.dart';
 import 'package:flutter/material.dart';
-import '../../myData.dart';
 
 class ExampleItem {
   final String title;
@@ -28,6 +28,7 @@ class PeopleList extends StatefulWidget {
 class PeopleListState extends State<PeopleList> {
   ERepo eRepo = ERepo();
   List<dynamic> peopleList = List.empty();
+  var logger = Logger();
 
   Future<List<EPeople>> getData() async {
     List<EPeople> res = [];
@@ -38,11 +39,11 @@ class PeopleListState extends State<PeopleList> {
       if (a.D.runtimeType == String) return [];
       res = parseEpeople(jsonEncode(a.D));
     } catch (e) {
-      print(e);
-    }finally{
+      logger.v(e);
+    } finally {
       EasyLoading.dismiss();
-      return res;
     }
+    return res;
   }
 
   @override

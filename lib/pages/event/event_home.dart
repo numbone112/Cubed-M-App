@@ -1,14 +1,14 @@
 import 'dart:convert';
 
-import 'package:e_fu/module/boxUI.dart';
+import 'package:e_fu/module/box_ui.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:intl/intl.dart';
+import 'package:logger/logger.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:e_fu/request/data.dart';
 import 'package:e_fu/request/e/e.dart';
 import 'package:e_fu/request/e/e_data.dart';
-import 'package:e_fu/request/record/record.dart';
-import 'package:e_fu/myData.dart';
+import 'package:e_fu/my_data.dart';
 import 'package:flutter/material.dart';
 
 class EventHome extends StatefulWidget {
@@ -24,6 +24,7 @@ class EventHomeState extends State<EventHome> {
   CalendarFormat? _calendarFormat;
   DateTime? _selectedDay;
   DateTime? _focusedDay;
+  Logger logger=Logger();
   late final ValueNotifier<List<EAppointment>> _selectedEvents;
 
   // List<EAppointment> _selectedEvents=[];
@@ -33,13 +34,16 @@ class EventHomeState extends State<EventHome> {
     try {
       EasyLoading.show(status: "loading ...");
       Format d = await eRepo.getAps("11136008");
-      print(d.D);
+      logger.v(d.D);
+      logger.v(d.D);
       if (d.D.runtimeType != String) res = parseEApointment(jsonEncode(d.D));
+      return res;
+
     } catch (e) {
-      print(e);
+      logger.v(e);
+      return [];
     } finally {
       EasyLoading.dismiss();
-      return res;
     }
   }
 
@@ -111,13 +115,13 @@ class EventHomeState extends State<EventHome> {
                final text = DateFormat.d().format(day);
 
               return BoxUI.boxHasRadius(
-                margin:EdgeInsets.all(3) ,
+                margin:const EdgeInsets.all(3) ,
                   color: MyTheme.lightColor,
                   child: Center(
                     
                     child: Text(
                       text,
-                      style: TextStyle(color: Colors.white),
+                      style: const TextStyle(color: Colors.white),
                     ),
                   ));
             },
@@ -125,13 +129,13 @@ class EventHomeState extends State<EventHome> {
               final text = DateFormat.d().format(day);
 
               return BoxUI.boxHasRadius(
-                margin:EdgeInsets.all(3) ,
+                margin:const EdgeInsets.all(3) ,
                   color: MyTheme.color,
                   child: Center(
                     
                     child: Text(
                       text,
-                      style: TextStyle(color: Colors.white),
+                      style: const TextStyle(color: Colors.white),
                     ),
                   ));
             },
@@ -142,9 +146,11 @@ class EventHomeState extends State<EventHome> {
                 return Center(
                   child: Text(
                     text,
-                    style: TextStyle(color: Colors.red),
+                    style: const TextStyle(color: Colors.red),
                   ),
                 );
+              }else{
+                return Container();
               }
             },
           ),
@@ -154,81 +160,60 @@ class EventHomeState extends State<EventHome> {
             child: ValueListenableBuilder<List<EAppointment>>(
                 valueListenable: _selectedEvents,
                 builder: ((context, value, child) {
-                  return _selectedEvents.value.length == 0
+                  return _selectedEvents.value.isEmpty
                       ? Container()
                       : ListView.builder(
                           itemCount: value.length,
                           itemBuilder: (context, index) {
-                            return Container(
-                              child: GestureDetector(
-                                child: Container(
-                                  margin:
-                                      const EdgeInsets.fromLTRB(0, 10, 0, 10),
-                                  height: 100,
-                                  width: 600,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(30),
-                                      color: Colors.white),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    children: [
-                                      Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text('${value[index].tf_id.time}')
-                                        ],
+                            return GestureDetector(
+                              child: Container(
+                                margin:
+                                    const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                                height: 100,
+                                width: 600,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(30),
+                                    color: Colors.white),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(value[index].tf_id.time)
+                                      ],
+                                    ),
+                                    Container(
+                                      alignment: Alignment.center,
+                                      width: 50,
+                                      height: 30,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(30),
+                                          color: MyTheme.buttonColor),
+                                      child: Text(
+                                        '${value[index].count}',
+                                        style: whiteText(),
                                       ),
-                                      Container(
-                                        alignment: Alignment.center,
-                                        width: 50,
-                                        height: 30,
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(30),
-                                            color: MyTheme.buttonColor),
-                                        child: Text(
-                                          '${value[index].count}',
-                                          style: whiteText(),
-                                        ),
-                                      ),
-                                      IconButton(
-                                          onPressed: () {},
-                                          icon: const Icon(Icons.edit_square))
-                                    ],
-                                  ),
+                                    ),
+                                    IconButton(
+                                        onPressed: () {},
+                                        icon: const Icon(Icons.edit_square))
+                                  ],
                                 ),
-                                onTap: () {
-                                  Navigator.pushNamed(context, "/event",
-                                      arguments: value[index]);
-                                },
                               ),
+                              onTap: () {
+                                Navigator.pushNamed(context, "/event",
+                                    arguments: value[index]);
+                              },
                             );
                           });
                 })))
       ],
     );
 
-    Column(
-      children: [
-        const Text(
-          "復健安排",
-          style: TextStyle(fontSize: 30),
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            IconButton(
-                onPressed: () {}, icon: const Icon(Icons.arrow_back_ios)),
-            const Text("今天"),
-            IconButton(
-                onPressed: () {}, icon: const Icon(Icons.arrow_forward_ios))
-          ],
-        ),
-        getUI()
-      ],
-    );
   }
 
   Widget getUI() {
@@ -253,7 +238,7 @@ class EventHomeState extends State<EventHome> {
                   children: [
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: [Text('${_list[index].tf_id.time}')],
+                      children: [Text(_list[index].tf_id.time)],
                     ),
                     Container(
                       alignment: Alignment.center,

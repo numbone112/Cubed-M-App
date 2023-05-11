@@ -1,4 +1,4 @@
-import 'myData.dart';
+import 'my_data.dart';
 
 import 'package:flutter/material.dart';
 import 'module/tabIcon_data.dart';
@@ -45,7 +45,7 @@ class _BottomBarViewState extends State<BottomBarView>
                         topLeft: Radius.circular(MySize.circularSize),
                         topRight: Radius.circular(MySize.circularSize)),
                     //设置四周边框
-                    border: new Border.all(width: 1, color: Colors.white),
+                    border: Border.all(width: 1, color: Colors.white),
                   ),
                   child: SizedBox(
                     height: 62,
@@ -196,7 +196,7 @@ class _TabIconsState extends State<TabIcons> with TickerProviderStateMixin {
                     scale: Tween<double>(begin: 0.0, end: 1.0).animate(
                         CurvedAnimation(
                             parent: widget.tabIconData!.animationController!,
-                            curve: Interval(0.2, 1.0,
+                            curve: const Interval(0.2, 1.0,
                                 curve: Curves.fastOutSlowIn))),
                     child: Container(
                       width: 8,
@@ -217,7 +217,7 @@ class _TabIconsState extends State<TabIcons> with TickerProviderStateMixin {
                     scale: Tween<double>(begin: 0.0, end: 1.0).animate(
                         CurvedAnimation(
                             parent: widget.tabIconData!.animationController!,
-                            curve: Interval(0.5, 0.8,
+                            curve: const Interval(0.5, 0.8,
                                 curve: Curves.fastOutSlowIn))),
                     child: Container(
                       width: 4,
@@ -238,7 +238,7 @@ class _TabIconsState extends State<TabIcons> with TickerProviderStateMixin {
                     scale: Tween<double>(begin: 0.0, end: 1.0).animate(
                         CurvedAnimation(
                             parent: widget.tabIconData!.animationController!,
-                            curve: Interval(0.5, 0.6,
+                            curve: const Interval(0.5, 0.6,
                                 curve: Curves.fastOutSlowIn))),
                     child: Container(
                       width: 6,

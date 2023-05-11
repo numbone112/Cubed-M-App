@@ -1,9 +1,9 @@
 import 'package:e_fu/module/page.dart';
 import 'package:e_fu/module/people_box.dart';
 import 'package:flutter/material.dart';
-import '../../myData.dart';
+import '../../my_data.dart';
 import 'package:age_calculator/age_calculator.dart';
-import 'package:e_fu/module/boxUI.dart';
+import 'package:e_fu/module/box_ui.dart';
 
 class PeopleDetail extends StatefulWidget {
   static const routeName = '/people/';
@@ -65,7 +65,7 @@ class PeopleDetailState extends State<PeopleDetail> {
                           // IconButton(onPressed: () {}, icon: Icon(Icons.info,size: 18,),)
                         ],
                       ),
-                      Text("疾病"),
+                      const Text("疾病"),
                     ],
                   ))
                 ]),

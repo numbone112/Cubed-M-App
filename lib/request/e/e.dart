@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:logger/logger.dart';
 
 import 'package:e_fu/request/api.dart';
 import 'package:e_fu/request/data.dart';
@@ -19,6 +20,8 @@ abstract class EAPI {
 }
 
 class ERepo extends API implements EAPI {
+    var logger = Logger();
+
   @override
   Future<Format> getFus(String eId) async {
      {
@@ -29,15 +32,15 @@ class ERepo extends API implements EAPI {
           },);
          
       if (response == 200) {
-        print("200了");
+        logger.v("200了");
         return Format.fromJson(response.body);
        
       } else {
         return Format.fromJson(response.body);
       }
     } catch (e) {
-      print("this is e.dart error");
-      print(e.toString());
+      logger.v("this is e.dart error");
+      logger.v(e.toString());
       return Format.fromFields("error", false,"");
       
     }
@@ -66,7 +69,7 @@ class ERepo extends API implements EAPI {
   @override
   Future<Format> getApDetail(String eId, DateTime startDate, String time) async{
     try {
-      final response = await client.get(Uri.parse('$domain/therapist/a/d?t_id=${eId}&start_date=${startDate.toIso8601String().substring(0,10)}&time=${time}'),
+      final response = await client.get(Uri.parse('$domain/therapist/a/d?t_id=$eId&start_date=${startDate.toIso8601String().substring(0,10)}&time=$time'),
           headers: {
             'Content-Type': 'application/json',
           },);
@@ -91,7 +94,7 @@ class ERepo extends API implements EAPI {
           },);
          
       if (response == 200) {
-        print(response.body);
+        logger.v(response.body);
         return Format.fromJson(response.body);
        
       } else {
@@ -114,11 +117,11 @@ class ERepo extends API implements EAPI {
         return Format.fromJson(response.body);
        
       } else {
-        print("not 200");
+        logger.v("not 200");
         return Format.fromJson(response.body);
       }
     } catch (e) {
-      print(e);
+      logger.v(e);
       return Format.fromFields("error", false,"");
     }
   }}

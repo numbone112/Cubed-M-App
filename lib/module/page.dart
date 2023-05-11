@@ -1,6 +1,5 @@
-import 'dart:ui';
 
-import 'package:e_fu/myData.dart';
+import 'package:e_fu/my_data.dart';
 import 'package:flutter/material.dart';
 
 class CustomPage extends StatefulWidget {
@@ -68,7 +67,7 @@ class CustomPageState extends State<CustomPage> {
                 ),
               ],
             ),
-            this.widget.body
+            widget.body
           ],
         ),
       ),

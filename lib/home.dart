@@ -1,15 +1,12 @@
 
 import 'package:e_fu/pages/e/e.dart';
-import 'package:e_fu/pages/event/eventHome.dart';
-import 'package:e_fu/pages/people/peopleList.dart';
-import 'package:e_fu/pages/people/peoplePage.dart';
-import 'package:e_fu/pages/people/people_detail.dart';
+import 'package:e_fu/pages/event/event_home.dart';
+import 'package:e_fu/pages/people/people_page.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'bottom_bar_view.dart';
 import 'module/tabIcon_data.dart';
-import 'myData.dart';
+import 'my_data.dart';
 
 
 class Home extends StatefulWidget {
@@ -25,7 +22,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   AnimationController? animationController;
 
   List<TabIconData> tabIconsList = TabIconData.tabIconsList;
-  Widget tabBody = EventHome();
+  Widget tabBody = const EventHome();
 
   @override
   void initState() {
@@ -59,7 +56,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                 
                 children: <Widget>[
                   
-                  Padding(padding: EdgeInsets.fromLTRB(10, 0, 10, 0),child: tabBody,),
+                  Padding(padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),child: tabBody,),
                   bottomBar(),
                 ],
               ),
@@ -91,7 +88,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                 //   return;
                 // }
                 setState(() {
-                  tabBody = PeoplePage();
+                  tabBody = const PeoplePage();
                 });
               });
             }else if(index==1){

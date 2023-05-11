@@ -1,11 +1,12 @@
-import 'package:e_fu/module/boxUI.dart';
+import 'package:e_fu/module/box_ui.dart';
 import 'package:e_fu/module/page.dart';
-import 'package:e_fu/myData.dart';
-import 'package:e_fu/pages/e/eUpdate.dart';
+import 'package:e_fu/my_data.dart';
+import 'package:e_fu/pages/e/e_update.dart';
 import 'package:e_fu/request/e/e.dart';
 import 'package:e_fu/request/e/e_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:logger/logger.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -17,20 +18,21 @@ class Profile extends StatefulWidget {
 class ProfileCreateState extends State<Profile> {
   ProfileData? profile;
   ERepo eRepo = ERepo();
+  var logger = Logger();
 
   getProfile() {
     EasyLoading.show(status: 'loading...');
     try {
       eRepo.getProfile("11136008").then((value) {
         setState(() {
-          print(value.D);
+          logger.v(value.D);
           profile = parseProfile(value.D);
         });
             EasyLoading.dismiss();
 
       });
     } catch (e) {
-      print(e);
+      logger.v(e);
     }
   }
 
@@ -54,7 +56,7 @@ class ProfileCreateState extends State<Profile> {
               children: [
                 BoxUI.boxHasRadius(
                   margin: const EdgeInsets.all(10),
-                  padding: EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
                   height: 70,
                   color: MyTheme.lightColor,
                   width: MediaQuery.of(context).size.width * 0.9,
@@ -74,21 +76,21 @@ class ProfileCreateState extends State<Profile> {
                   margin: const EdgeInsets.all(10),
                   height: 70,
                   width: MediaQuery.of(context).size.width * 0.9,
-                  padding: EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: [Text("性別"), Text(profile!.sex)],
+                    children: [const Text("性別"), Text(profile!.sex)],
                   ),
                 ),
                 BoxUI.boxHasRadius(
                   margin: const EdgeInsets.all(10),
                   height: 70,
                   width: MediaQuery.of(context).size.width * 0.9,
-                  padding: EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text("出生年月日"),
+                      const Text("出生年月日"),
                       Text(profile!.birthday.toIso8601String())
                     ],
                   ),
@@ -97,22 +99,22 @@ class ProfileCreateState extends State<Profile> {
                   margin: const EdgeInsets.all(10),
                   height: 70,
                   width: MediaQuery.of(context).size.width * 0.9,
-                  padding: EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: [Text("手機號碼"), Text(profile!.phone)],
+                    children: [const Text("手機號碼"), Text(profile!.phone)],
                   ),
                 ),
                 BoxUI.boxHasRadius(
                     margin: const EdgeInsets.all(10),
                     width: MediaQuery.of(context).size.width * 0.9,
                     height: 70,
-                    padding: EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(10),
                     child: GestureDetector(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text(
+                        children: const [
+                          Text(
                             "修改密碼",
                             textAlign: TextAlign.justify,
                           ),

@@ -11,17 +11,17 @@ class Arrange {
     if (json['people'] != null) {
       people = <People>[];
       json['people'].forEach((v) {
-        people!.add(new People.fromJson(v));
+        people!.add(People.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['time'] = this.time;
-    data['peopleNumber'] = this.peopleNumber;
-    if (this.people != null) {
-      data['people'] = this.people!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['time'] = time;
+    data['peopleNumber'] = peopleNumber;
+    if (people != null) {
+      data['people'] = people!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -38,7 +38,7 @@ class People {
     if (json['items'] != null) {
       items = <Items>[];
       json['items'].forEach((v) {
-        items!.add(new Items.fromJson(v));
+        items!.add(Items.fromJson(v));
       });
     }
     
@@ -46,10 +46,10 @@ class People {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    if (this.items != null) {
-      data['items'] = this.items!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    if (items != null) {
+      data['items'] = items!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -67,9 +67,9 @@ class Items {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['type_id'] = this.typeId;
-    data['quota'] = this.quota;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['type_id'] = typeId;
+    data['quota'] = quota;
     return data;
   }
 }

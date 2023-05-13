@@ -21,7 +21,6 @@ class Format {
       Map<String,dynamic> d = json.decode(str);
       message=d["message"];
       success=d['success'];
-      logger.v('this is form json');
       D=d["D"];
     
     // initializeFromJson(json) ;

@@ -1,6 +1,7 @@
 
 import 'package:e_fu/pages/e/e.dart';
 import 'package:e_fu/pages/event/event_home.dart';
+import 'package:e_fu/pages/event/event_result.dart';
 import 'package:e_fu/pages/people/people_page.dart';
 import 'package:flutter/material.dart';
 

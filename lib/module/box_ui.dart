@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class BoxUI {
-  static Widget boxHasRadius(
+  static Widget boxHasRadius( 
       {Color? color,
       double? height,
       double? width,

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:e_fu/pages/event/event_result.dart';
 import 'package:logger/logger.dart';
 
 import 'package:e_fu/module/box_ui.dart';
@@ -14,6 +15,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:ele_progress/ele_progress.dart';
+import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 
 import 'package:e_fu/request/data.dart';
 import 'package:e_fu/request/record/record_data.dart';
@@ -106,22 +108,33 @@ class EventState extends State<Event> {
     }
   }
 
-  @override
-  void initState() {
-    super.initState();
-    FlutterBluePlus.instance.state.listen((state) {
-      if (state == BluetoothState.on) {
+  void updateBleState() {
+    FlutterBluePlus.instance.state.listen((event) async {
+      if (event == BluetoothState.on) {
         logger.v('藍牙狀態爲開啓');
         setState(() {
           isBleOn = true;
         });
-      } else if (state == BluetoothState.off) {
+      } else if (event == BluetoothState.off) {
         logger.v('藍牙狀態爲關閉');
         setState(() {
           isBleOn = false;
         });
+      } else {
+        logger.v('updateBleState: $event');
+        await FlutterBluePlus.instance.turnOn().then((value) {
+          setState(() {
+            isBleOn = true;
+          });
+        });
       }
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    updateBleState();
   }
 
   //偵測是否在列印裝置
@@ -145,10 +158,12 @@ class EventState extends State<Event> {
             (r) {
               if (r.advertisementData.connectable && r.device.name != "") {
                 try {
-                  if (r.device.name.substring(0, 4) == "e-fu" ||
-                      r.device.name.substring(0, 4) == "Ardu") {
+                  String checkString = (Platform.isAndroid)
+                      ? r.device.name
+                      : r.advertisementData.localName;
+                  if (checkString.substring(0, 4) == "e-fu") {
                     return ListTile(
-                      title: Text(r.device.name),
+                      title: Text(checkString),
                       onTap: () async {
                         List<BluetoothService> services = [];
 
@@ -166,7 +181,7 @@ class EventState extends State<Event> {
                           connectDeviec[pIndex] = r.device.id.toString();
                         });
 
-                        logger.v("連接到${r.device.name}");
+                        logger.v("連接到${checkString}");
                         for (BluetoothCharacteristic characteristic
                             in services.first.characteristics) {
                           if (characteristic.uuid.toString() ==
@@ -178,11 +193,21 @@ class EventState extends State<Event> {
                               if (value.isEmpty) {
                                 logger.v("empty");
                               } else {
+                                FlutterRingtonePlayer.play(
+                                  android: AndroidSounds.notification,
+                                  ios: IosSounds.glass,
+                                  looping: true, // Android only - API >= 28
+                                  volume: 0.3, // Android only - API >= 28
+                                  asAlarm: false, // Android only - all APIs
+                                );
+                                // FlutterRingtonePlayer.playNotification();
+
                                 logger.v("結束$trainCount / $trainGoal");
+
                                 // logger.v(value);
                                 //結束後收到
                                 trainCount++;
-
+                                EasyLoading.dismiss();
                                 ForEvent forEvent = forEventList[pIndex];
                                 forEvent.data[forEvent.now]!.add(5);
                                 int p =
@@ -192,7 +217,15 @@ class EventState extends State<Event> {
                                             .item[forEvent.now] *
                                         100)
                                     .round();
-
+                                if (trainCount >= trainGoal) {
+                                  for (var element in hasPair) {
+                                    element.disconnect();
+                                  }
+                                  //全部結束
+                                  Navigator.pushNamed(
+                                      context, EventResult.routeName);
+                                  logger.v("enter else");
+                                }
                                 if (trainCount < 3) {
                                   //直接到下一個步驟
 
@@ -216,9 +249,6 @@ class EventState extends State<Event> {
                                   setState(() {
                                     forEventList[pIndex] = forEvent;
                                   });
-                                } else {
-                                  //全部結束
-                                  logger.v("enter else");
                                 }
                               }
                             });
@@ -242,7 +272,12 @@ class EventState extends State<Event> {
                                 logger.v("error:$e");
                               }
                             });
-                            await characteristic.setNotifyValue(true);
+                            try {
+                              await characteristic.setNotifyValue(true);
+                            } catch (e) {
+                              logger.v(e);
+                              logger.v("await char set notifyvalue");
+                            }
                           }
                         }
                         Navigator.of(context).pop();
@@ -428,32 +463,17 @@ class EventState extends State<Event> {
           connectDeviec.containsKey(index)
               ? const Text("已連接")
               : GestureDetector(
-                  child: Container(
-                      width: 50,
-                      margin: const EdgeInsets.all(3),
-                      decoration: BoxDecoration(
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(20)),
-                          color: MyTheme.color),
+                  child: BoxUI.boxHasRadius(
                       child: Text(
                         "連接",
                         style: whiteText(),
                         textAlign: TextAlign.center,
-                      )),
+                      ),
+                      margin: const EdgeInsets.all(3),
+                      padding: const EdgeInsets.all(10),
+                      color: MyTheme.color),
                   onTap: () async {
-                    FlutterBluePlus.instance.state.listen((state) {
-                      if (state == BluetoothState.on) {
-                        logger.v('藍牙狀態爲開啓');
-                        setState(() {
-                          isBleOn = true;
-                        });
-                      } else if (state == BluetoothState.off) {
-                        logger.v('藍牙狀態爲關閉');
-                        setState(() {
-                          isBleOn = false;
-                        });
-                      }
-                    });
+                    updateBleState();
                     if (isBleOn) {
                       _scan();
                       //沒在列印的時候再startScan
@@ -538,6 +558,8 @@ class EventState extends State<Event> {
         },
       );
     }
+    EasyLoading.instance.backgroundColor = Colors.amber;
+
     return (Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: MyTheme.backgroudColor,
@@ -575,7 +597,7 @@ class EventState extends State<Event> {
                 child: Column(
                   children: [
                     forEventList.isEmpty
-                        ? const Text("error")
+                        ? const Text(" ")
                         : SizedBox(
                             height: MediaQuery.of(context).size.height * 0.7,
                             child: ListView.builder(
@@ -585,23 +607,17 @@ class EventState extends State<Event> {
                               }),
                             ),
                           ),
+
                     GestureDetector(
                       child: Container(
                         width: 200,
+                        padding: EdgeInsets.all(10),
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(30),
                             color: MyTheme.lightColor),
                         child: Row(
                           children: [
-                            IconButton(
-                              onPressed: () {
-                                if (trainCount < 3) {}
-                                for (var element in characteristicList) {
-                                  element.write(utf8.encode("true"));
-                                }
-                              },
-                              icon: const Icon(Icons.not_started_rounded),
-                            ),
+                            Icon(Icons.not_started_rounded),
                             Text(
                               "全部開始",
                               style: whiteText(),
@@ -609,38 +625,47 @@ class EventState extends State<Event> {
                           ],
                         ),
                       ),
+                      onTap: () {
+                        logger.v("start");
+                        EasyLoading.show();
+
+                        if (trainCount < 3) {}
+                        for (var element in characteristicList) {
+                          element.write(utf8.encode("true"));
+                        }
+                      },
                     ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: TextButton(
-                            onPressed: () async {
-                              logger.v(toSave.length);
-                              Format a = await recordRepo
-                                  .record(ArrangeDate("t01", toSave));
-                              if (a.message == "ok") {
-                                logger.v("成功");
-                              }
-                            },
-                            child: const Text("傳送"),
-                          ),
-                        ),
-                        Expanded(
-                          child: TextButton(
-                            onPressed: () async {
-                              for (var element in hasPair) {
-                                element.disconnect();
-                              }
-                              setState(() {
-                                connectDeviec = {};
-                                hasPair = [];
-                              });
-                            },
-                            child: const Text("關閉"),
-                          ),
-                        ),
-                      ],
-                    )
+                    // Row(
+                    //   children: [
+                    //     Expanded(
+                    //       child: TextButton(
+                    //         onPressed: () async {
+                    //           logger.v(toSave.length);
+                    //           Format a = await recordRepo
+                    //               .record(ArrangeDate("t01", toSave));
+                    //           if (a.message == "ok") {
+                    //             logger.v("成功");
+                    //           }
+                    //         },
+                    //         child: const Text("傳送"),
+                    //       ),
+                    //     ),
+                    //     Expanded(
+                    //       child: TextButton(
+                    //         onPressed: () async {
+                    //           for (var element in hasPair) {
+                    //             element.disconnect();
+                    //           }
+                    //           setState(() {
+                    //             connectDeviec = {};
+                    //             hasPair = [];
+                    //           });
+                    //         },
+                    //         child: const Text("關閉"),
+                    //       ),
+                    //     ),
+                    //   ],
+                    // )
                   ],
                 ),
               ),

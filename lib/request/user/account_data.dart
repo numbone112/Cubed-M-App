@@ -32,8 +32,6 @@ class User extends Data {
   @override
   String datatoJson(Data data) {
     return json.encode(data.toJson());
-    // TODO: implement dataformJson
-    throw UnimplementedError();
   }
   static User fromJson(String str) {
     var d=json.decode(str);

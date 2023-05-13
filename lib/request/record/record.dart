@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print
 
 import 'dart:convert';
+import 'package:logger/logger.dart';
 
 import 'package:e_fu/request/api.dart';
 import 'package:e_fu/request/data.dart';
@@ -11,23 +12,25 @@ abstract class RecordAPI {
   
 
   /// 登入
-  Future<Format> record(Arrange_date arrangeDate);
+  Future<Format> record(ArrangeDate arrangeDate);
 
   
 }
 
 class RecordRepo extends API implements RecordAPI {
+    var logger = Logger();
+
   @override
-  Future<Format> record(Arrange_date arrangeDate) async {
+  Future<Format> record(ArrangeDate arrangeDate) async {
     try {
       final response = await client.post(Uri.parse('$domain/record'),
           headers: {
             'Content-Type': 'application/json',
           },
           body: jsonEncode(arrangeDate.toJson()));
-          print(response.body);
+          logger.v(response.body);
       if (response.statusCode == 200) {
-        print("200了");
+        logger.v("200了");
         
         // Format f=;
         // User.fromJson(omg);
@@ -40,8 +43,8 @@ class RecordRepo extends API implements RecordAPI {
         return Format.fromJson(response.body);
       }
     } catch (e) {
-      print("error");
-      print(e.toString());
+      logger.v("error");
+      logger.v(e.toString());
       return Format.fromFields("error", false,"");
       
     }

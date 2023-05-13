@@ -1,15 +1,21 @@
 import 'dart:convert';
+import 'dart:io';
+import 'package:e_fu/pages/event/event_result.dart';
+import 'package:logger/logger.dart';
 
-import 'package:e_fu/module/arrange.dart';
+import 'package:e_fu/module/box_ui.dart';
 import 'package:e_fu/request/e/e.dart';
 import 'package:e_fu/request/e/e_data.dart';
 import 'package:e_fu/request/record/record.dart';
-import 'package:e_fu/myData.dart';
+import 'package:e_fu/my_data.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:ele_progress/ele_progress.dart';
+import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 
 import 'package:e_fu/request/data.dart';
 import 'package:e_fu/request/record/record_data.dart';
@@ -23,46 +29,112 @@ class Event extends StatefulWidget {
   State<StatefulWidget> createState() => EventState();
 }
 
+class ForEvent {
+  ForEvent({required this.appointmentDetail}) {
+    int s = 0;
+    for (int i in appointmentDetail.item) {
+      s += i;
+    }
+    goal = s;
+  }
+  EAppointmentDetail appointmentDetail;
+  int now = 0;
+  int goal = 3;
+  Map<int, int> progress = {0: 0, 1: 0, 2: 0};
+  Map<int, List<int>> data = {0: [], 1: [], 2: []};
+  // void init() {
+  //   for (int i in appointmentDetail.item) {}
+  // }
+
+  void record(int count) {
+    data[now]!.add(count);
+  }
+
+  void change(int n) {
+    now = n;
+  }
+
+  static List<ForEvent> parseEventList(List<EAppointmentDetail> list) {
+    List<ForEvent> res = [];
+    for (EAppointmentDetail e in list) {
+      res.add(ForEvent(appointmentDetail: e));
+    }
+    return res;
+  }
+
+  static int getMax(List<ForEvent> data) {
+    int max = 0;
+    for (ForEvent fe in data) {
+      int sum = fe.appointmentDetail.item.fold(0, (a, b) => a + b);
+      if (sum > max) max = sum;
+    }
+    return max;
+  }
+}
+
 class EventState extends State<Event> {
-  List<EAppointmentDetail> selected_arrange = [];
+  List<EAppointmentDetail> selectedArrange = [];
+  List<EAppointmentDetail> doing = [];
+
   bool isBleOn = false;
   bool isScan = false;
   FlutterBluePlus flutterBlue = FlutterBluePlus.instance;
   //沒連線的裝置
   List<BluetoothDevice> devicesList = <BluetoothDevice>[];
   Map<int, String> connectDeviec = {};
-  List<BluetoothCharacteristic> characteristic_list = [];
-  List<Record> to_save = [];
+  List<BluetoothCharacteristic> characteristicList = [];
+  List<Record> toSave = [];
   List<BluetoothDevice> hasPair = [];
   AsciiDecoder asciiDecoder = const AsciiDecoder();
   String number = "0";
-  List<String> exercise_item = ["左手", "右手"];
+  List<String> exerciseItem = ["左手", "右手", "坐立"];
   ERepo eRepo = ERepo();
-  bool notyet=true;
+  bool notyet = true;
+  int trainCount = 0;
+  List<ForEvent> forEventList = [];
+  int trainGoal = 0;
+  var logger = Logger();
 
   Future<List<EAppointmentDetail>> getData(EAppointment eAppointment) async {
-    Format d = await eRepo.getApDetail(
-        "11136008", eAppointment.id.start_date, eAppointment.id.time);
-    return parseEApointmentDetail(jsonEncode(d.D));
+    EasyLoading.show(status: 'loading...');
+    try {
+      Format d = await eRepo.getApDetail(
+          "11136008", eAppointment.id.start_date, eAppointment.id.time);
+      return parseEApointmentDetail(jsonEncode(d.D));
+    } catch (e) {
+      return [];
+    } finally {
+      EasyLoading.dismiss();
+    }
+  }
+
+  void updateBleState() {
+    FlutterBluePlus.instance.state.listen((event) async {
+      if (event == BluetoothState.on) {
+        logger.v('藍牙狀態爲開啓');
+        setState(() {
+          isBleOn = true;
+        });
+      } else if (event == BluetoothState.off) {
+        logger.v('藍牙狀態爲關閉');
+        setState(() {
+          isBleOn = false;
+        });
+      } else {
+        logger.v('updateBleState: $event');
+        await FlutterBluePlus.instance.turnOn().then((value) {
+          setState(() {
+            isBleOn = true;
+          });
+        });
+      }
+    });
   }
 
   @override
   void initState() {
-   
-    print("this isis initstate");
-    // FlutterBluePlus.instance.state.listen((state) {
-    //   if (state == BluetoothState.on) {
-    //     print('藍牙狀態爲開啓');
-    //     setState(() {
-    //       isBleOn = true;
-    //     });
-    //   } else if (state == BluetoothState.off) {
-    //     print('藍牙狀態爲關閉');
-    //     setState(() {
-    //       isBleOn = false;
-    //     });
-    //   }
-    // });
+    super.initState();
+    updateBleState();
   }
 
   //偵測是否在列印裝置
@@ -85,72 +157,137 @@ class EventState extends State<Event> {
           children: snapshot.data!.map(
             (r) {
               if (r.advertisementData.connectable && r.device.name != "") {
-                if (r.device.name.substring(0, 4) == "e-fu" ||
-                    r.device.name.substring(0, 4) == "Ardu") {
-                  // print(r.device.services);
-                  return ListTile(
-                    title: Text(r.device.name),
-                    onTap: () async {
-                      List<BluetoothService> _services = [];
+                try {
+                  String checkString = (Platform.isAndroid)
+                      ? r.device.name
+                      : r.advertisementData.localName;
+                  if (checkString.substring(0, 4) == "e-fu") {
+                    return ListTile(
+                      title: Text(checkString),
+                      onTap: () async {
+                        List<BluetoothService> services = [];
 
-                      try {
-                        await r.device.connect();
-                      } on PlatformException catch (e) {
-                        if (e.code != 'already_connected') {
-                          rethrow;
+                        try {
+                          await r.device.connect();
+                        } on PlatformException catch (e) {
+                          if (e.code != 'already_connected') {
+                            rethrow;
+                          }
+                        } finally {
+                          services = await r.device.discoverServices();
                         }
-                      } finally {
-                        _services = await r.device.discoverServices();
-                      }
-                      setState(() {
-                        hasPair.add(r.device);
-                        connectDeviec[pIndex] = r.device.id.toString();
-                      });
+                        setState(() {
+                          hasPair.add(r.device);
+                          connectDeviec[pIndex] = r.device.id.toString();
+                        });
 
-                      print("連接到${r.device.name}");
-                      print(connectDeviec);
-                      for (BluetoothCharacteristic characteristic
-                          in _services.first.characteristics) {
-                        print(characteristic.uuid.toString());
-                        if (characteristic.uuid.toString() ==
-                            "0000ff00-0000-1000-8000-00805f9b34fb") {
-                          characteristic_list.add(characteristic);
-                        } else if (characteristic.uuid.toString() ==
-                            "0000ff01-0000-1000-8000-00805f9b34fb") {
-                          characteristic.value.listen((value) {
-                            print("enter heree");
-                            try {
-                              print("from number:$value");
+                        logger.v("連接到${checkString}");
+                        for (BluetoothCharacteristic characteristic
+                            in services.first.characteristics) {
+                          if (characteristic.uuid.toString() ==
+                              "0000ff00-0000-1000-8000-00805f9b34fb") {
+                            characteristicList.add(characteristic);
+                          } else if (characteristic.uuid.toString() ==
+                              "0000ff03-0000-1000-8000-00805f9b34fb") {
+                            characteristic.value.listen((value) {
+                              if (value.isEmpty) {
+                                logger.v("empty");
+                              } else {
+                                FlutterRingtonePlayer.play(
+                                  android: AndroidSounds.notification,
+                                  ios: IosSounds.glass,
+                                  looping: true, // Android only - API >= 28
+                                  volume: 0.3, // Android only - API >= 28
+                                  asAlarm: false, // Android only - all APIs
+                                );
+                                // FlutterRingtonePlayer.playNotification();
 
-                              number = String.fromCharCodes(value);
-                            } catch (e) {
-                              print("number char errors");
-                            }
-                          });
-                        } else {
-                          characteristic.value.listen((value) {
-                            try {
-                              String string = String.fromCharCodes(value);
-                              List<String> raw = string.split(",");
+                                logger.v("結束$trainCount / $trainGoal");
 
-                              to_save.add(Record(
+                                // logger.v(value);
+                                //結束後收到
+                                trainCount++;
+                                EasyLoading.dismiss();
+                                ForEvent forEvent = forEventList[pIndex];
+                                forEvent.data[forEvent.now]!.add(5);
+                                int p =
+                                    forEvent.data[forEvent.now]?.length ?? 1;
+                                forEvent.progress[forEvent.now] = (p /
+                                        forEvent.appointmentDetail
+                                            .item[forEvent.now] *
+                                        100)
+                                    .round();
+                                if (trainCount >= trainGoal) {
+                                  for (var element in hasPair) {
+                                    element.disconnect();
+                                  }
+                                  //全部結束
+                                  Navigator.pushNamed(
+                                      context, EventResult.routeName);
+                                  logger.v("enter else");
+                                }
+                                if (trainCount < 3) {
+                                  //直接到下一個步驟
+
+                                  forEvent.change(trainCount);
+
+                                  setState(() {
+                                    forEventList[pIndex] = forEvent;
+                                  });
+                                } else if (trainCount == 3) {
+                                  forEvent.change(0);
+
+                                  setState(() {
+                                    forEventList[pIndex] = forEvent;
+                                  });
+                                } else if (trainCount < forEvent.goal) {
+                                  if (forEvent.data[forEvent.now]!.length ==
+                                      forEvent.appointmentDetail
+                                          .item[forEvent.now]) {
+                                    forEvent.change(forEvent.now + 1);
+                                  }
+                                  setState(() {
+                                    forEventList[pIndex] = forEvent;
+                                  });
+                                }
+                              }
+                            });
+                            await characteristic.setNotifyValue(true);
+                          } else {
+                            characteristic.value.listen((value) {
+                              try {
+                                String string = String.fromCharCodes(value);
+                                List<String> raw = string.split(",");
+
+                                toSave.add(Record(
                                   double.parse(raw[0]),
                                   double.parse(raw[1]),
                                   double.parse(raw[2]),
                                   double.parse(raw[3]),
                                   double.parse(raw[4]),
-                                  double.parse(raw[5])));
+                                  double.parse(raw[5]),
+                                  double.parse(raw[6]),
+                                ));
+                              } catch (e) {
+                                logger.v("error:$e");
+                              }
+                            });
+                            try {
+                              await characteristic.setNotifyValue(true);
                             } catch (e) {
-                              print("error:$e");
+                              logger.v(e);
+                              logger.v("await char set notifyvalue");
                             }
-                          });
-                          await characteristic.setNotifyValue(true);
+                          }
                         }
-                      }
-                      Navigator.of(context).pop();
-                    },
-                  );
-                } else {
+                        Navigator.of(context).pop();
+                      },
+                    );
+                  } else {
+                    return Container();
+                  }
+                } catch (e) {
+                  logger.v(e);
                   return Container();
                 }
               } else {
@@ -163,102 +300,213 @@ class EventState extends State<Event> {
     );
   }
 
-  var recordRepo = RecordRepo();
+  editDialog(EAppointmentDetail detail) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          insetPadding: const EdgeInsets.symmetric(
+            horizontal: 50.0,
+            vertical: 100.0,
+          ),
+          //shape 可以改變形狀
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(24.0))),
+          title: Text(detail.name),
+          actions: <Widget>[
+            Row(
+              children: [
+                Expanded(
+                    child: Center(
+                  child: GestureDetector(
+                    child: const Text("確認"),
+                    onTap: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                )),
+                Expanded(
+                  child: Center(
+                    child: GestureDetector(
+                      child: const Text(
+                        "取消",
+                        style: TextStyle(color: Colors.redAccent),
+                      ),
+                      onTap: () => Navigator.of(context).pop(),
+                    ),
+                  ),
+                )
+              ],
+            )
+          ],
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: List.generate(
+              exerciseItem.length,
+              (index) {
+                TextEditingController controller = TextEditingController();
+                controller.text = detail.item[index].toString();
+                return Column(
+                  children: [
+                    Text(exerciseItem[index]),
+                    TextField(
+                        controller: controller,
+                        decoration: const InputDecoration(hintText: '復健組數'),
+                        keyboardType: Platform.isIOS
+                            ? const TextInputType.numberWithOptions(
+                                signed: true, decimal: true)
+                            : TextInputType.number)
+                  ],
+                );
+              },
+              growable: false,
+            ),
+          ),
+        );
+      },
+    );
+  }
 
-  Widget exercise_box(index) {
+  var recordRepo = RecordRepo();
+  Widget optional(ForEvent forEvent) {
+    return Row(
+      children: [
+        Expanded(
+          flex: 1,
+          child: Container(),
+        ),
+        Expanded(
+          flex: 2,
+          child: Text(
+            forEvent.appointmentDetail.name,
+            textAlign: TextAlign.center,
+          ),
+        ),
+        Expanded(
+          flex: 1,
+          child: PopupMenuButton(
+            itemBuilder: (content) {
+              return const [
+                PopupMenuItem(
+                  value: '/edit',
+                  child: Text("編輯"),
+                ),
+                PopupMenuItem(
+                  value: '/del',
+                  child: Text("刪除"),
+                )
+              ];
+            },
+            onSelected: (value) {
+              if (value == "/edit") {
+                editDialog(forEvent.appointmentDetail);
+              }
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget exerciseBox(index) {
+    ForEvent forEvent = forEventList[index];
     return Container(
-      margin: const EdgeInsets.all(10),
+      height: 250,
+      padding: const EdgeInsets.all(3),
+      margin: const EdgeInsets.all(3),
       decoration: const BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(30)),
           color: Colors.white),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          Text('${selected_arrange[index].name}'),
+          optional(forEvent),
           Row(
-              children: List.generate(
-                  exercise_item.length,
-                  (eIndex) => Expanded(
-                        child: Column(
-                          children: [
-                            Text(exercise_item[eIndex]),
-                            Container(
-                              width: 30,
-                              margin: EdgeInsets.all(5),
-                              height: 30,
-                              decoration: BoxDecoration(
-                                  border:
-                                      Border.all(color: Colors.grey, width: 5),
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(30)),
-                                  color: Colors.white),
-                              child: Center(
-                                child: Text(
-                                    '${selected_arrange[index].item[eIndex]}'),
+            children: List.generate(
+              exerciseItem.length,
+              (eIndex) => Expanded(
+                child: Column(
+                  children: [
+                    (forEvent.now == eIndex)
+                        ? BoxUI.boxHasRadius(
+                            child: Text(
+                              exerciseItem[eIndex],
+                              style: whiteText(),
+                            ),
+                            color: MyTheme.buttonColor,
+                            padding: const EdgeInsets.all(5))
+                        : Text(
+                            exerciseItem[eIndex],
+                          ),
+                    SizedBox(
+                      height: 100,
+                      width: 100,
+                      child: EProgress(
+                        progress: forEvent.progress[eIndex] ?? 0,
+                        showText: true,
+                        format: (progress) {
+                          return '${forEvent.appointmentDetail.item[eIndex]}';
+                        },
+                        textStyle: TextStyle(
+                            color: forEvent.now == eIndex
+                                ? MyTheme.buttonColor
+                                : Colors.black),
+                        type: ProgressType.dashboard,
+                        backgroundColor: Colors.grey,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ),
+          connectDeviec.containsKey(index)
+              ? const Text("已連接")
+              : GestureDetector(
+                  child: BoxUI.boxHasRadius(
+                      child: Text(
+                        "連接",
+                        style: whiteText(),
+                        textAlign: TextAlign.center,
+                      ),
+                      margin: const EdgeInsets.all(3),
+                      padding: const EdgeInsets.all(10),
+                      color: MyTheme.color),
+                  onTap: () async {
+                    updateBleState();
+                    if (isBleOn) {
+                      _scan();
+                      //沒在列印的時候再startScan
+                      if (!isScan) {
+                        flutterBlue.startScan(
+                            timeout: const Duration(seconds: 4));
+                      }
+                      await showDialog(
+                        context: context,
+                        builder: (ctx) => AlertDialog(
+                          title: const Text("您已開啟藍芽"),
+                          content: toPairDialog(index),
+                          actions: <Widget>[
+                            TextButton(
+                              onPressed: () => Navigator.of(context).pop(),
+                              child: Container(
+                                padding: const EdgeInsets.all(14),
+                                child: const Text("關閉"),
                               ),
-                            )
+                            ),
                           ],
                         ),
-                      ))),
-          GestureDetector(
-            child: Container(
-                width: 50,
-                decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.all(Radius.circular(20)),
-                    color: MyTheme.color),
-                child: Text(
-                  "連接",
-                  style: whiteText(),
-                  textAlign: TextAlign.center,
-                )),
-            onTap: () async {
-              FlutterBluePlus.instance.state.listen((state) {
-                if (state == BluetoothState.on) {
-                  print('藍牙狀態爲開啓');
-                  setState(() {
-                    isBleOn = true;
-                  });
-                } else if (state == BluetoothState.off) {
-                  print('藍牙狀態爲關閉');
-                  setState(() {
-                    isBleOn = false;
-                  });
-                }
-              });
-              if (isBleOn) {
-                _scan();
-                //沒在列印的時候再startScan
-                if (!isScan) {
-                  flutterBlue.startScan(timeout: const Duration(seconds: 4));
-                }
-                await showDialog(
-                  context: context,
-                  builder: (ctx) => AlertDialog(
-                    title: const Text("您已開啟藍芽"),
-                    content: toPairDialog(index),
-                    actions: <Widget>[
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.all(14),
-                          child: const Text("關閉"),
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              } else {
-                await showDialog(
-                    context: context,
-                    builder: (ctx) => CupertinoAlertDialog(
+                      );
+                    } else {
+                      await showDialog(
+                        context: context,
+                        builder: (ctx) => CupertinoAlertDialog(
                           content: Column(
-                            children: [
-                              const SizedBox(
+                            children: const [
+                              SizedBox(
                                 height: 10,
                               ),
-                              const Align(
+                              Align(
                                 alignment: Alignment(0, 0),
                                 child: Text("是否要開啟藍芽？"),
                               )
@@ -286,10 +534,11 @@ class EventState extends State<Event> {
                               },
                             ),
                           ],
-                        ));
-              }
-            },
-          )
+                        ),
+                      );
+                    }
+                  },
+                )
         ],
       ),
     );
@@ -297,79 +546,78 @@ class EventState extends State<Event> {
 
   @override
   Widget build(BuildContext context) {
-     final args = ModalRoute.of(context)!.settings.arguments as EAppointment;
-    if(selected_arrange.isEmpty&notyet){
-      
-    getData(args).then(
-      (value) {
-       setState(() {
-          selected_arrange = value;
-       });
-        notyet=false;
-      },
-    );
+    final args = ModalRoute.of(context)!.settings.arguments as EAppointment;
+    if (selectedArrange.isEmpty & notyet) {
+      getData(args).then(
+        (value) {
+          setState(() {
+            forEventList = ForEvent.parseEventList(value);
+            trainGoal = ForEvent.getMax(forEventList);
+          });
+          notyet = false;
+        },
+      );
     }
+    EasyLoading.instance.backgroundColor = Colors.amber;
+
     return (Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: MyTheme.backgroudColor,
       body: SafeArea(
-        child: Column(children: [
-          Row(
-            children: [
-              Expanded(
-                flex: 1,
-                child: IconButton(
-                  icon: const Icon(Icons.arrow_back_ios),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: IconButton(
+                    icon: const Icon(Icons.arrow_back_ios),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
                 ),
-              ),
-              const Expanded(
+                const Expanded(
                   flex: 2,
                   child: Text(
                     "復健",
                     style: TextStyle(fontSize: 30),
                     textAlign: TextAlign.center,
-                  )),
-              Expanded(
-                flex: 1,
-                child: Container(),
-              ),
-            ],
-          ),
-          SizedBox(
-            child: Padding(
+                  ),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: Container(),
+                ),
+              ],
+            ),
+            SizedBox(
+              child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
                   children: [
-                    selected_arrange.isEmpty?Text("error"):
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.7,
-                      child: GridView.count(
-                        crossAxisCount: 2,
-                        children:
-                            List.generate(selected_arrange.length, (index) {
-                          return (exercise_box(index));
-                        }),
-                      ),
-                    ),
+                    forEventList.isEmpty
+                        ? const Text(" ")
+                        : SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.7,
+                            child: ListView.builder(
+                              itemCount: forEventList.length,
+                              itemBuilder: ((context, index) {
+                                return (exerciseBox(index));
+                              }),
+                            ),
+                          ),
+
                     GestureDetector(
                       child: Container(
                         width: 200,
+                        padding: EdgeInsets.all(10),
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(30),
                             color: MyTheme.lightColor),
                         child: Row(
                           children: [
-                            IconButton(
-                              onPressed: () {
-                                characteristic_list.forEach((element) {
-                                  element.write(utf8.encode("true"));
-                                });
-                              },
-                              icon: const Icon(Icons.not_started_rounded),
-                            ),
+                            Icon(Icons.not_started_rounded),
                             Text(
                               "全部開始",
                               style: whiteText(),
@@ -377,34 +625,53 @@ class EventState extends State<Event> {
                           ],
                         ),
                       ),
-                    ),
-                    TextButton(
-                      onPressed: () async {
-                        print(to_save.length);
-                        Format a = await recordRepo
-                            .record(Arrange_date("t01", to_save));
-                        if (a.message == "ok") {
-                          print("成功");
+                      onTap: () {
+                        logger.v("start");
+                        EasyLoading.show();
+
+                        if (trainCount < 3) {}
+                        for (var element in characteristicList) {
+                          element.write(utf8.encode("true"));
                         }
                       },
-                      child: const Text("傳送"),
                     ),
-                    TextButton(
-                      onPressed: () async {
-                        for (var element in hasPair) {
-                          element.disconnect();
-                        }
-                        setState(() {
-                          connectDeviec = {};
-                          hasPair = [];
-                        });
-                      },
-                      child: const Text("關閉"),
-                    ),
+                    // Row(
+                    //   children: [
+                    //     Expanded(
+                    //       child: TextButton(
+                    //         onPressed: () async {
+                    //           logger.v(toSave.length);
+                    //           Format a = await recordRepo
+                    //               .record(ArrangeDate("t01", toSave));
+                    //           if (a.message == "ok") {
+                    //             logger.v("成功");
+                    //           }
+                    //         },
+                    //         child: const Text("傳送"),
+                    //       ),
+                    //     ),
+                    //     Expanded(
+                    //       child: TextButton(
+                    //         onPressed: () async {
+                    //           for (var element in hasPair) {
+                    //             element.disconnect();
+                    //           }
+                    //           setState(() {
+                    //             connectDeviec = {};
+                    //             hasPair = [];
+                    //           });
+                    //         },
+                    //         child: const Text("關閉"),
+                    //       ),
+                    //     ),
+                    //   ],
+                    // )
                   ],
-                )),
-          )
-        ]),
+                ),
+              ),
+            )
+          ],
+        ),
       ),
     ));
   }

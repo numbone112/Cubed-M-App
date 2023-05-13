@@ -1,6 +1,7 @@
 import 'package:e_fu/request/data.dart';
+import 'package:logger/logger.dart';
 
-import 'myData.dart';
+import 'my_data.dart';
 import 'request/user/account.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -73,7 +74,7 @@ class _LoginState extends State<Login> {
     ));
   }
 
-  Widget button_custom(String s, Function f) {
+  Widget buttonCustom(String s, Function f) {
     return (TextButton(
       style: TextButton.styleFrom(
           backgroundColor: const Color.fromRGBO(10, 112, 41, 1),
@@ -85,6 +86,7 @@ class _LoginState extends State<Login> {
     ));
   }
 
+  var logger = Logger();
   var accountRepo = AccountRepo();
 
   @override
@@ -115,8 +117,8 @@ class _LoginState extends State<Login> {
                 children: const [Icon(Icons.password), Text("密碼")],
               ),
               passwordField,
-              button_custom("登入", () async {
-                print("login button");
+              buttonCustom("登入", () async {
+                logger.v("login button");
 
                 Format a = await accountRepo.login(accountC.text, pswC.text);
                 if (a.message=="登入成功") {
@@ -124,10 +126,10 @@ class _LoginState extends State<Login> {
                   prefs.setString(Name.userName, accountC.text);
                   Navigator.pushReplacementNamed(context, "/home");
                 }else{
-                  print(a);
+                  logger.v(a);
                 }
               }),
-              button_custom("Ｇoogle 登入", () => {print("test")}),
+              buttonCustom("Ｇoogle 登入", () => {logger.v("test")}),
             ],
           ),
         )),

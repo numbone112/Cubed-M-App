@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'dart:convert';
 import 'package:e_fu/request/data.dart';
 
@@ -36,8 +38,9 @@ late DateTime timestream;
 class ArrangeDate extends Data{
   
   
-  ArrangeDate(this.arrangeId,this.raw);
+  ArrangeDate(this.arrangeId,this.raw,this.done);
   String arrangeId;
+  List<int> done;
   List<Record> raw;
   
   @override
@@ -49,6 +52,7 @@ class ArrangeDate extends Data{
   @override
   Map<String, dynamic> toJson() =>{
     "a_id":arrangeId,
+    "done":json.encode(done),
     "raw":json.encode(raw)
   };
 

@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:e_fu/module/page.dart';
 import 'package:e_fu/module/people_box.dart';
+import 'package:e_fu/request/e/e_data.dart';
 import 'package:flutter/material.dart';
 import '../../my_data.dart';
 import 'package:age_calculator/age_calculator.dart';
@@ -8,23 +11,29 @@ import 'package:e_fu/module/box_ui.dart';
 class PeopleDetail extends StatefulWidget {
   static const routeName = '/people/';
 
-  const PeopleDetail({super.key, required this.function});
-  final Function(int a) function;
+  PeopleDetail({super.key, required this.function, required this.ePeople});
+  Function(int a) function;
+  EPeople ePeople;
+
   @override
-  PeopleDetailState createState() => PeopleDetailState();
+  PeopleDetailState createState() => PeopleDetailState(ePeople);
 }
 
 class PeopleDetailState extends State<PeopleDetail> {
-  PeopleBox p = PeopleBox(
-      id: "id",
-      name: "王小明",
-      height: 166,
-      weight: "77",
-      disease: ["0", "1"],
-      gender: "男",
-      birthday: DateTime(1988, 1, 2));
+  EPeople ePeople;
+  
+      
+  PeopleDetailState(this.ePeople);
   @override
   Widget build(BuildContext context) {
+    PeopleBox p = PeopleBox(
+      
+      name: ePeople.name,
+      height: ePeople.height,
+      weight: "155",
+      disease: ["0", "1"],
+      gender: ePeople.sex,
+      birthday: ePeople.birthday);
     return (CustomPage(
         change: () => widget.function(1),
         floatButton: Container(

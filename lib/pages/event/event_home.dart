@@ -12,9 +12,7 @@ import 'package:e_fu/request/e/e.dart';
 import 'package:e_fu/request/e/e_data.dart';
 import 'package:e_fu/my_data.dart';
 import 'package:flutter/material.dart';
-import 'package:timeline_tile/timeline_tile.dart';
 
-import 'event_test.dart';
 
 class EventHome extends StatefulWidget {
   const EventHome({super.key});

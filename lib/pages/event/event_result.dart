@@ -18,7 +18,9 @@ class EventResult extends StatefulWidget {
 }
 
 class PersonResult extends StatelessWidget {
-  Logger logger = Logger();
+  final Logger logger = Logger();
+
+  PersonResult({super.key});
   @override
   Widget build(BuildContext context) {
     Map<String, List<int>> data = {
@@ -71,7 +73,7 @@ class PersonResult extends StatelessWidget {
       },
     );
     return SizedBox(
-        child: Column(children: <Widget>[Text("復健者：貓咪")] + results));
+        child: Column(children: <Widget>[const Text("復健者：貓咪")] + results));
   }
 }
 
@@ -115,7 +117,7 @@ class EventResultState extends State<EventResult> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: List.generate(reulstList.length, (i) {
                     return Container(
-                      margin: EdgeInsets.symmetric(horizontal: 5),
+                      margin: const EdgeInsets.symmetric(horizontal: 5),
                       width: 10,
                       height: 10,
                       decoration: BoxDecoration(

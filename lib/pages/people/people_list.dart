@@ -19,7 +19,7 @@ class ExampleItem {
 
 class PeopleList extends StatefulWidget {
   const PeopleList({super.key, required this.function});
-  final Function(int a) function;
+  final Function(EPeople ePeople) function;
 
   @override
   PeopleListState createState() => PeopleListState();
@@ -27,7 +27,7 @@ class PeopleList extends StatefulWidget {
 
 class PeopleListState extends State<PeopleList> {
   ERepo eRepo = ERepo();
-  List<dynamic> peopleList = List.empty();
+  List<EPeople> peopleList = List.empty();
   var logger = Logger();
 
   Future<List<EPeople>> getData() async {
@@ -91,12 +91,12 @@ class PeopleListState extends State<PeopleList> {
                         disease: peopleList[index].disease,
                         gender: peopleList[index].sex,
                         height: peopleList[index].height,
-                        id: peopleList[index].id,
+                     
                         name: peopleList[index].name,
                         weight: '55',
                       ).box(),
                       onTap: () {
-                        widget.function(2);
+                        widget.function(peopleList[index]);
                       },
                     ),
                   ),

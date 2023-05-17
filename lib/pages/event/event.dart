@@ -70,6 +70,11 @@ class ForEvent {
     }
     return max;
   }
+
+  void changeProgress() {
+    int p = data[now]?.length ?? 1;
+    progress[now] = (p / appointmentDetail.item[now] * 100).round();
+  }
 }
 
 class EventState extends State<Event> {
@@ -146,6 +151,17 @@ class EventState extends State<Event> {
     });
   }
 
+  Future<void> finish() async {
+    //傳送資料給後端
+    Format a = await recordRepo.record(toSave);
+    if (a.message == "ok") {
+      logger.v("成功");
+      if (context.mounted) {
+        Navigator.pushReplacementNamed(context, EventResult.routeName);
+      }
+    }
+  }
+
   Widget toPairDialog(int pIndex) {
     ForEvent forEvent = forEventList[pIndex];
     return SizedBox(
@@ -182,7 +198,7 @@ class EventState extends State<Event> {
                           connectDeviec[pIndex] = r.device.id.toString();
                         });
 
-                        logger.v("連接到${checkString}");
+                        logger.v("連接到$checkString");
                         for (BluetoothCharacteristic characteristic
                             in services.first.characteristics) {
                           if (characteristic.uuid.toString() ==
@@ -286,7 +302,9 @@ class EventState extends State<Event> {
                             }
                           }
                         }
-                        Navigator.of(context).pop();
+                        if (context.mounted) {
+                          Navigator.of(context).pop();
+                        }
                       },
                     );
                   } else {
@@ -538,7 +556,9 @@ class EventState extends State<Event> {
                                   });
                                 });
                                 _scan();
-                                Navigator.pop(context);
+                                if (context.mounted) {
+                                  Navigator.pop(context);
+                                }
                               },
                             ),
                           ],
@@ -625,7 +645,6 @@ class EventState extends State<Event> {
                               }),
                             ),
                           ),
-
                     GestureDetector(
                       child: Container(
                         width: 200,
@@ -665,7 +684,6 @@ class EventState extends State<Event> {
                                 ]),
                           );
 
-                          logger.v("start");
                           EasyLoading.show();
 
                           if (trainCount < 3) {}

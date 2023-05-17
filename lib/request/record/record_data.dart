@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'package:e_fu/request/data.dart';
 
 class Record  extends Data{
-Record(this.ax,this.ay,this.az,this.gx,this.gy,this.gz,this.pitch){
-  dateTime=DateTime.now();
+Record(this.ax,this.ay,this.az,this.gx,this.gy,this.gz,this.pitch,this.times,this.sets_no,this.item_id,this.a_id){
+  timestream=DateTime.now();
 }
 
 
@@ -14,7 +14,11 @@ double gx;
 double gy;
 double gz;
 double pitch;
-late DateTime dateTime;
+double times;
+double sets_no;
+double item_id;
+int a_id;
+late DateTime timestream;
   @override
   String datatoJson(Data data) {
     var d = json.encode(data.toJson());

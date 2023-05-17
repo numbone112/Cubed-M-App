@@ -8,8 +8,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
-
-
 class EventResult extends StatefulWidget {
   static const routeName = '/event/result';
 
@@ -24,9 +22,15 @@ class PersonResult extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Map<String, List<int>> data = {
-      "左手": [12,],
-      "右手": [12,],
-      "坐立": [0,]
+      "左手": [
+        12,
+      ],
+      "右手": [
+        12,
+      ],
+      "坐立": [
+        0,
+      ]
     };
     List<Widget> results = [];
     data.forEach(
@@ -42,20 +46,23 @@ class PersonResult extends StatelessWidget {
                       padding: const EdgeInsets.all(3),
                       height: 35 + 30 * ((value.length / 5.0).ceil() | 1) * 1.0,
                       child: GridView(
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 5, childAspectRatio: 1),
-                          children: List.generate(
-                              value.length,
-                              (index) => BoxUI.boxHasRadius(
-                                    margin: const EdgeInsets.all(10),
-                                    child: Center(
-                                        child: Text(
-                                      "${value[index]}",
-                                      style: whiteText(),
-                                    )),
-                                    color: MyTheme.color,
-                                  ))),
+                        shrinkWrap: true,
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 5, childAspectRatio: 1),
+                        children: List.generate(
+                          value.length,
+                          (index) => BoxUI.boxHasRadius(
+                            margin: const EdgeInsets.all(10),
+                            child: Center(
+                                child: Text(
+                              "${value[index]}",
+                              style: whiteText(),
+                            )),
+                            color: MyTheme.color,
+                          ),
+                        ),
+                      ),
                     )
                   ],
                 )
@@ -76,15 +83,14 @@ class EventResultState extends State<EventResult> {
   Widget build(BuildContext context) {
     final PageController controller = PageController();
     List<PersonResult> reulstList = [];
-    
-      reulstList.add(PersonResult());
-    
 
-      
+    reulstList.add(PersonResult());
+
     return CustomPage(
+        buildContext: context,
         body: Column(children: [
           const Text("復健師"),
-          const Text("復健日期"),
+          const Text("復健日期: 2023年 5月 14日"),
           Stack(
             children: [
               SizedBox(
@@ -97,30 +103,28 @@ class EventResultState extends State<EventResult> {
                       currentPageIndex = index;
                     });
                   },
-                  children: reulstList,
                   controller: controller,
+                  children: reulstList,
                 ),
               ),
               Positioned(
                 bottom: 10,
                 left: 0,
                 right: 0,
-                child: Container(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: List.generate(reulstList.length, (i) {
-                      return Container(
-                        margin: EdgeInsets.symmetric(horizontal: 5),
-                        width: 10,
-                        height: 10,
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: currentPageIndex == i
-                                ? MyTheme.color
-                                : MyTheme.lightColor),
-                      );
-                    }).toList(),
-                  ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List.generate(reulstList.length, (i) {
+                    return Container(
+                      margin: EdgeInsets.symmetric(horizontal: 5),
+                      width: 10,
+                      height: 10,
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: currentPageIndex == i
+                              ? MyTheme.color
+                              : MyTheme.lightColor),
+                    );
+                  }).toList(),
                 ),
               ),
             ],

@@ -11,7 +11,7 @@ import 'record_data.dart';
 abstract class RecordAPI {
   
 
-  /// 登入
+  /// 傳送資料
   Future<Format> record(ArrangeDate arrangeDate);
 
   

@@ -6,8 +6,11 @@ PODS:
   - flutter_blue_plus/Protos (0.0.1):
     - Flutter
     - Protobuf (~> 3.11)
-  - permission_handler_apple (9.0.4):
+  - flutter_ringtone_player (0.0.1):
     - Flutter
+  - path_provider_foundation (0.0.1):
+    - Flutter
+    - FlutterMacOS
   - Protobuf (3.21.12)
   - shared_preferences_foundation (0.0.1):
     - Flutter
@@ -16,8 +19,9 @@ PODS:
 DEPENDENCIES:
   - Flutter (from `Flutter`)
   - flutter_blue_plus (from `.symlinks/plugins/flutter_blue_plus/ios`)
-  - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
-  - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/ios`)
+  - flutter_ringtone_player (from `.symlinks/plugins/flutter_ringtone_player/ios`)
+  - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
+  - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
 
 SPEC REPOS:
   trunk:
@@ -28,15 +32,18 @@ EXTERNAL SOURCES:
     :path: Flutter
   flutter_blue_plus:
     :path: ".symlinks/plugins/flutter_blue_plus/ios"
-  permission_handler_apple:
-    :path: ".symlinks/plugins/permission_handler_apple/ios"
+  flutter_ringtone_player:
+    :path: ".symlinks/plugins/flutter_ringtone_player/ios"
+  path_provider_foundation:
+    :path: ".symlinks/plugins/path_provider_foundation/darwin"
   shared_preferences_foundation:
-    :path: ".symlinks/plugins/shared_preferences_foundation/ios"
+    :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
 
 SPEC CHECKSUMS:
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
   flutter_blue_plus: 6787777145d615de01828f3a9fa423c3c702f0b3
-  permission_handler_apple: 44366e37eaf29454a1e7b1b7d736c2cceaeb17ce
+  flutter_ringtone_player: 15eba85187230b87b2512f0e1b92225618bc03e7
+  path_provider_foundation: eaf5b3e458fc0e5fbb9940fb09980e853fe058b8
   Protobuf: 120350fc38646e2dedc26f49ecba778184ea1de2
   shared_preferences_foundation: 986fc17f3d3251412d18b0265f9c64113a8c2472
 

@@ -1,3 +1,4 @@
+import 'package:e_fu/home.dart';
 import 'package:e_fu/request/data.dart';
 import 'package:logger/logger.dart';
 
@@ -7,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Login extends StatefulWidget {
-    static const routeName = '/login'; 
+  static const routeName = '/login';
 
   const Login({super.key});
 
@@ -25,7 +26,7 @@ class _LoginState extends State<Login> {
     return (TextField(
       controller: t,
       scrollPadding: EdgeInsets.only(
-            bottom: MediaQuery.of(context).viewInsets.bottom + 25*4),
+          bottom: MediaQuery.of(context).viewInsets.bottom + 25 * 4),
       decoration: const InputDecoration(
         fillColor: Colors.white,
         filled: true,
@@ -102,13 +103,10 @@ class _LoginState extends State<Login> {
       body: Container(
         margin: const EdgeInsets.fromLTRB(20, 5, 20, 0),
         child: Center(
-          
-            child:
-             SingleChildScrollView(
+            child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-             
               Row(
                 children: const [Icon(Icons.people), Text("帳號")],
               ),
@@ -121,11 +119,13 @@ class _LoginState extends State<Login> {
                 logger.v("login button");
 
                 Format a = await accountRepo.login(accountC.text, pswC.text);
-                if (a.message=="登入成功") {
+                if (a.message == "登入成功") {
                   prefs = await SharedPreferences.getInstance();
                   prefs.setString(Name.userName, accountC.text);
-                  Navigator.pushReplacementNamed(context, "/home");
-                }else{
+                  if (context.mounted) {
+                    Navigator.pushReplacementNamed(context, Home.routeName);
+                  }
+                } else {
                   logger.v(a);
                 }
               }),

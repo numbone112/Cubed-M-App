@@ -50,10 +50,32 @@ Map<String, dynamic> _$EAppointmentToJson(EAppointment instance) =>
       'count': instance.count,
     };
 
+EAppointmentDetailBase _$EAppointmentDetailBaseFromJson(
+        Map<String, dynamic> json) =>
+    EAppointmentDetailBase(
+      id: json['id'] as int,
+      done: (json['done'] as List<dynamic>).map((e) => e as Object).toList(),
+      tf_time: DateTime.parse(json['tf_time'] as String),
+      item: (json['item'] as List<dynamic>).map((e) => e as int).toList(),
+      remark: json['remark'] as String,
+    );
+
+Map<String, dynamic> _$EAppointmentDetailBaseToJson(
+        EAppointmentDetailBase instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'item': instance.item,
+      'done': instance.done,
+      'remark': instance.remark,
+      'tf_time': instance.tf_time.toIso8601String(),
+    };
+
 EAppointmentDetail _$EAppointmentDetailFromJson(Map<String, dynamic> json) =>
     EAppointmentDetail(
       id: json['id'] as int,
-      done: (json['done'] as List<dynamic>).map((e) => e as Object).toList(),
+      done: (json['done'] as List<dynamic>)
+          .map((e) => (e as List<dynamic>).map((e) => e as int).toList())
+          .toList(),
       p_id: json['p_id'] as String,
       item: (json['item'] as List<dynamic>).map((e) => e as int).toList(),
       name: json['name'] as String,
@@ -87,4 +109,45 @@ Map<String, dynamic> _$ProfileDataToJson(ProfileData instance) =>
       'phone': instance.phone,
       'sex': instance.sex,
       'name': instance.name,
+    };
+
+PatientInside _$PatientInsideFromJson(Map<String, dynamic> json) =>
+    PatientInside(
+      height: (json['height'] as num).toDouble(),
+      disease:
+          (json['disease'] as List<dynamic>).map((e) => e as String).toList(),
+      sets: (json['sets'] as List<dynamic>).map((e) => e as int).toList(),
+    );
+
+Map<String, dynamic> _$PatientInsideToJson(PatientInside instance) =>
+    <String, dynamic>{
+      'height': instance.height,
+      'disease': instance.disease,
+      'sets': instance.sets,
+    };
+
+PatientData _$PatientDataFromJson(Map<String, dynamic> json) => PatientData(
+      password: json['password'],
+      birthday: json['birthday'],
+      id: json['id'],
+      phone: json['phone'],
+      sex: json['sex'],
+      name: json['name'],
+      patient: PatientInside.fromJson(json['patient'] as Map<String, dynamic>),
+      appointment: (json['appointment'] as List<dynamic>)
+          .map(
+              (e) => EAppointmentDetailBase.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
+
+Map<String, dynamic> _$PatientDataToJson(PatientData instance) =>
+    <String, dynamic>{
+      'password': instance.password,
+      'birthday': instance.birthday.toIso8601String(),
+      'id': instance.id,
+      'phone': instance.phone,
+      'sex': instance.sex,
+      'name': instance.name,
+      'patient': instance.patient.toJson(),
+      'appointment': instance.appointment.map((e) => e.toJson()).toList(),
     };

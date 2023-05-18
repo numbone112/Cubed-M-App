@@ -1,6 +1,11 @@
+import 'dart:math';
+
 import 'package:e_fu/module/page.dart';
 import 'package:e_fu/module/people_box.dart';
+import 'package:e_fu/request/e/e.dart';
+import 'package:e_fu/request/e/e_data.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import '../../my_data.dart';
 import 'package:age_calculator/age_calculator.dart';
 import 'package:e_fu/module/box_ui.dart';
@@ -8,23 +13,40 @@ import 'package:e_fu/module/box_ui.dart';
 class PeopleDetail extends StatefulWidget {
   static const routeName = '/people/';
 
-  const PeopleDetail({super.key, required this.function});
-  final Function(int a) function;
+  PeopleDetail({super.key, required this.function, required this.ePeople});
+  Function(int a) function;
+  EPeople ePeople;
+
   @override
   PeopleDetailState createState() => PeopleDetailState();
 }
 
 class PeopleDetailState extends State<PeopleDetail> {
-  PeopleBox p = PeopleBox(
-      id: "id",
-      name: "王小明",
-      height: 166,
-      weight: "77",
-      disease: ["0", "1"],
-      gender: "男",
-      birthday: DateTime(1988, 1, 2));
+  ERepo eRepo = ERepo();
+  Logger logger = Logger();
+  PatientData? patientData;
+  void getDetail() {
+    eRepo.getFuDatil(widget.ePeople.id).then((value) {
+      logger.v(value.D);
+      PatientData patient = PatientData.fromJson(value.D);
+      setState(() {
+        patientData = patient;
+      });
+      logger.v(patient.patient.height);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    getDetail();
+    EPeople ePeople = widget.ePeople;
+    PeopleBox p = PeopleBox(
+        name: ePeople.name,
+        height: ePeople.height,
+        weight: "155",
+        disease: ["0", "1"],
+        gender: ePeople.sex,
+        birthday: ePeople.birthday);
     return (CustomPage(
         change: () => widget.function(1),
         floatButton: Container(
@@ -87,7 +109,7 @@ class PeopleDetailState extends State<PeopleDetail> {
                                           MainAxisAlignment.spaceAround,
                                       children: [
                                         Text(
-                                          "2023",
+                                          '${patientData?.appointment.last.tf_time.year}',
                                           style: whiteText(),
                                         ),
                                         Text(

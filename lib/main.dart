@@ -21,7 +21,7 @@ void main() {
     ..maskType = EasyLoadingMaskType.custom
     // ..displayDuration = const Duration(seconds: 2)
     // ..indicatorType = EasyLoadingIndicatorType.fadingCircle
-    ..maskColor = Colors.white.withOpacity(0.5)
+    ..maskColor = Colors.grey.withOpacity(0.5)
     ..userInteractions = true
     ..backgroundColor = MyTheme.backgroudColor
     ..indicatorWidget = SpinKitWaveSpinner(

@@ -11,8 +11,8 @@ import 'record_data.dart';
 abstract class RecordAPI {
   
 
-  /// 登入
-  Future<Format> record(ArrangeDate arrangeDate);
+  /// 傳送資料
+  Future<Format> record(List<Record> list);
 
   
 }
@@ -21,13 +21,13 @@ class RecordRepo extends API implements RecordAPI {
     var logger = Logger();
 
   @override
-  Future<Format> record(ArrangeDate arrangeDate) async {
+  Future<Format> record(List<Record> list) async {
     try {
       final response = await client.post(Uri.parse('$domain/record'),
           headers: {
             'Content-Type': 'application/json',
           },
-          body: jsonEncode(arrangeDate.toJson()));
+          body: jsonEncode(list));
           logger.v(response.body);
       if (response.statusCode == 200) {
         logger.v("200了");

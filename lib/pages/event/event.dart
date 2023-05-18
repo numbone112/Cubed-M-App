@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:e_fu/pages/event/event_result.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:logger/logger.dart';
-
 import 'package:e_fu/module/box_ui.dart';
 import 'package:e_fu/request/e/e.dart';
 import 'package:e_fu/request/e/e_data.dart';
@@ -42,6 +42,7 @@ class ForEvent {
   int goal = 3;
   Map<int, int> progress = {0: 0, 1: 0, 2: 0};
   Map<int, List<int>> data = {0: [], 1: [], 2: []};
+  bool unReadable = false;
   // void init() {
   //   for (int i in appointmentDetail.item) {}
   // }
@@ -69,6 +70,11 @@ class ForEvent {
       if (sum > max) max = sum;
     }
     return max;
+  }
+
+  void changeProgress() {
+    int p = data[now]?.length ?? 1;
+    progress[now] = (p / appointmentDetail.item[now] * 100).round();
   }
 }
 
@@ -146,7 +152,19 @@ class EventState extends State<Event> {
     });
   }
 
+  Future<void> finish() async {
+    //傳送資料給後端
+    Format a = await recordRepo.record(toSave);
+    if (a.message == "ok") {
+      logger.v("成功");
+      if (context.mounted) {
+        Navigator.pushReplacementNamed(context, EventResult.routeName);
+      }
+    }
+  }
+
   Widget toPairDialog(int pIndex) {
+    ForEvent forEvent = forEventList[pIndex];
     return SizedBox(
       width: double.minPositive,
       height: 200,
@@ -161,6 +179,7 @@ class EventState extends State<Event> {
                   String checkString = (Platform.isAndroid)
                       ? r.device.name
                       : r.advertisementData.localName;
+                  logger.v(checkString);
                   if (checkString.substring(0, 4) == "e-fu") {
                     return ListTile(
                       title: Text(checkString),
@@ -181,7 +200,7 @@ class EventState extends State<Event> {
                           connectDeviec[pIndex] = r.device.id.toString();
                         });
 
-                        logger.v("連接到${checkString}");
+                        logger.v("連接到$checkString");
                         for (BluetoothCharacteristic characteristic
                             in services.first.characteristics) {
                           if (characteristic.uuid.toString() ==
@@ -193,6 +212,10 @@ class EventState extends State<Event> {
                               if (value.isEmpty) {
                                 logger.v("empty");
                               } else {
+                                logger.v(value);
+
+                                EasyLoading.dismiss();
+
                                 FlutterRingtonePlayer.play(
                                   android: AndroidSounds.notification,
                                   ios: IosSounds.glass,
@@ -200,30 +223,29 @@ class EventState extends State<Event> {
                                   volume: 0.3, // Android only - API >= 28
                                   asAlarm: false, // Android only - all APIs
                                 );
-                                // FlutterRingtonePlayer.playNotification();
+
+                                // String string = String.fromCharCodes(value);
+                                // logger.v(string);
+                                // List<String> raw = string.split(",");
 
                                 logger.v("結束$trainCount / $trainGoal");
 
                                 // logger.v(value);
                                 //結束後收到
                                 trainCount++;
-                                EasyLoading.dismiss();
-                                ForEvent forEvent = forEventList[pIndex];
-                                forEvent.data[forEvent.now]!.add(5);
-                                int p =
-                                    forEvent.data[forEvent.now]?.length ?? 1;
-                                forEvent.progress[forEvent.now] = (p /
-                                        forEvent.appointmentDetail
-                                            .item[forEvent.now] *
-                                        100)
-                                    .round();
+
+                                forEvent.data[forEvent.now]!
+                                    .add(toSave.last.times.toInt());
+                                forEvent.changeProgress();
+
                                 if (trainCount >= trainGoal) {
                                   for (var element in hasPair) {
                                     element.disconnect();
                                   }
                                   //全部結束
-                                  Navigator.pushNamed(
-                                      context, EventResult.routeName);
+                                  Navigator.pushReplacementNamed(
+                                      context, EventResult.routeName,
+                                      arguments: forEventList);
                                   logger.v("enter else");
                                 }
                                 if (trainCount < 3) {
@@ -254,20 +276,24 @@ class EventState extends State<Event> {
                             });
                             await characteristic.setNotifyValue(true);
                           } else {
+                            //一直接收
                             characteristic.value.listen((value) {
                               try {
                                 String string = String.fromCharCodes(value);
                                 List<String> raw = string.split(",");
 
                                 toSave.add(Record(
-                                  double.parse(raw[0]),
-                                  double.parse(raw[1]),
-                                  double.parse(raw[2]),
-                                  double.parse(raw[3]),
-                                  double.parse(raw[4]),
-                                  double.parse(raw[5]),
-                                  double.parse(raw[6]),
-                                ));
+                                    double.parse(raw[0]),
+                                    double.parse(raw[1]),
+                                    double.parse(raw[2]),
+                                    double.parse(raw[3]),
+                                    double.parse(raw[4]),
+                                    double.parse(raw[5]),
+                                    double.parse(raw[6]),
+                                    double.parse(raw[7]),
+                                    trainCount.toDouble(),
+                                    forEvent.now.toDouble(),
+                                    forEvent.appointmentDetail.id));
                               } catch (e) {
                                 logger.v("error:$e");
                               }
@@ -280,7 +306,9 @@ class EventState extends State<Event> {
                             }
                           }
                         }
-                        Navigator.of(context).pop();
+                        if (context.mounted) {
+                          Navigator.of(context).pop();
+                        }
                       },
                     );
                   } else {
@@ -411,14 +439,13 @@ class EventState extends State<Event> {
   Widget exerciseBox(index) {
     ForEvent forEvent = forEventList[index];
     return Container(
-      height: 250,
-      padding: const EdgeInsets.all(3),
+      height: 225,
       margin: const EdgeInsets.all(3),
       decoration: const BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(30)),
           color: Colors.white),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           optional(forEvent),
           Row(
@@ -426,6 +453,7 @@ class EventState extends State<Event> {
               exerciseItem.length,
               (eIndex) => Expanded(
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     (forEvent.now == eIndex)
                         ? BoxUI.boxHasRadius(
@@ -438,11 +466,13 @@ class EventState extends State<Event> {
                         : Text(
                             exerciseItem[eIndex],
                           ),
+                    const Padding(padding: EdgeInsets.all(5)),
                     SizedBox(
-                      height: 100,
-                      width: 100,
+                      height: 50,
+                      width: 50,
                       child: EProgress(
                         progress: forEvent.progress[eIndex] ?? 0,
+                        colors: [MyTheme.buttonColor],
                         showText: true,
                         format: (progress) {
                           return '${forEvent.appointmentDetail.item[eIndex]}';
@@ -530,7 +560,9 @@ class EventState extends State<Event> {
                                   });
                                 });
                                 _scan();
-                                Navigator.pop(context);
+                                if (context.mounted) {
+                                  Navigator.pop(context);
+                                }
                               },
                             ),
                           ],
@@ -538,9 +570,20 @@ class EventState extends State<Event> {
                       );
                     }
                   },
-                )
+                ),
+          const Padding(padding: EdgeInsets.all(2))
         ],
       ),
+    );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    EasyLoading.instance.indicatorWidget = SpinKitWaveSpinner(
+      color: MyTheme.backgroudColor,
+      trackColor: MyTheme.color,
+      waveColor: MyTheme.buttonColor,
     );
   }
 
@@ -558,7 +601,6 @@ class EventState extends State<Event> {
         },
       );
     }
-    EasyLoading.instance.backgroundColor = Colors.amber;
 
     return (Scaffold(
       resizeToAvoidBottomInset: true,
@@ -607,17 +649,14 @@ class EventState extends State<Event> {
                               }),
                             ),
                           ),
-
                     GestureDetector(
-                      child: Container(
+                      child: BoxUI.boxHasRadius(
                         width: 200,
-                        padding: EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30),
-                            color: MyTheme.lightColor),
+                        padding: const EdgeInsets.all(10),
+                        color: MyTheme.lightColor,
                         child: Row(
                           children: [
-                            Icon(Icons.not_started_rounded),
+                            const Icon(Icons.not_started_rounded),
                             Text(
                               "全部開始",
                               style: whiteText(),
@@ -626,12 +665,34 @@ class EventState extends State<Event> {
                         ),
                       ),
                       onTap: () {
-                        logger.v("start");
-                        EasyLoading.show();
+                        if (connectDeviec.isEmpty) {
+                          showDialog(
+                            context: context,
+                            builder: (ctx) => const AlertDialog(
+                              content: Text("尚未連接裝置"),
+                            ),
+                          );
+                        } else {
+                          EasyLoading.instance.indicatorWidget = SizedBox(
+                            width: 75,
+                            height: 75,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                SpinKitPouringHourGlassRefined(
+                                  color: MyTheme.color,
+                                ),
+                                const Text("復健中")
+                              ],
+                            ),
+                          );
 
-                        if (trainCount < 3) {}
-                        for (var element in characteristicList) {
-                          element.write(utf8.encode("true"));
+                          EasyLoading.show();
+
+                          if (trainCount < 3) {}
+                          for (var element in characteristicList) {
+                            element.write(utf8.encode("E-fu"));
+                          }
                         }
                       },
                     ),

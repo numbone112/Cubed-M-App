@@ -2,8 +2,10 @@ import 'dart:math';
 
 import 'package:e_fu/module/page.dart';
 import 'package:e_fu/module/people_box.dart';
+import 'package:e_fu/request/e/e.dart';
 import 'package:e_fu/request/e/e_data.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import '../../my_data.dart';
 import 'package:age_calculator/age_calculator.dart';
 import 'package:e_fu/module/box_ui.dart';
@@ -16,24 +18,35 @@ class PeopleDetail extends StatefulWidget {
   EPeople ePeople;
 
   @override
-  PeopleDetailState createState() => PeopleDetailState(ePeople);
+  PeopleDetailState createState() => PeopleDetailState();
 }
 
 class PeopleDetailState extends State<PeopleDetail> {
-  EPeople ePeople;
-  
-      
-  PeopleDetailState(this.ePeople);
+  ERepo eRepo = ERepo();
+  Logger logger = Logger();
+  PatientData? patientData;
+  void getDetail() {
+    eRepo.getFuDatil(widget.ePeople.id).then((value) {
+      logger.v(value.D);
+      PatientData patient = PatientData.fromJson(value.D);
+      setState(() {
+        patientData = patient;
+      });
+      logger.v(patient.patient.height);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    getDetail();
+    EPeople ePeople = widget.ePeople;
     PeopleBox p = PeopleBox(
-      
-      name: ePeople.name,
-      height: ePeople.height,
-      weight: "155",
-      disease: ["0", "1"],
-      gender: ePeople.sex,
-      birthday: ePeople.birthday);
+        name: ePeople.name,
+        height: ePeople.height,
+        weight: "155",
+        disease: ["0", "1"],
+        gender: ePeople.sex,
+        birthday: ePeople.birthday);
     return (CustomPage(
         change: () => widget.function(1),
         floatButton: Container(
@@ -96,7 +109,7 @@ class PeopleDetailState extends State<PeopleDetail> {
                                           MainAxisAlignment.spaceAround,
                                       children: [
                                         Text(
-                                          "2023",
+                                          '${patientData?.appointment.last.tf_time.year}',
                                           style: whiteText(),
                                         ),
                                         Text(

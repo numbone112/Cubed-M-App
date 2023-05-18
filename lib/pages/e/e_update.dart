@@ -3,6 +3,7 @@ import 'package:e_fu/module/page.dart';
 import 'package:e_fu/my_data.dart';
 import 'package:e_fu/request/e/e.dart';
 import 'package:e_fu/request/e/e_data.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 
@@ -23,17 +24,16 @@ class ProfileUpdateState extends State<ProfileUpdate> {
   TextEditingController nameinput = TextEditingController();
   DateFormat dateFormat = DateFormat('yyyy-MM-dd');
   ERepo eRepo = ERepo();
-    var logger = Logger();
+  var logger = Logger();
 
   ProfileData? _profileData;
   @override
   Widget build(BuildContext context) {
     if (_profileData == null) {
       setState(() {
-       _profileData =
-          ModalRoute.of(context)!.settings.arguments as ProfileData; 
+        _profileData =
+            ModalRoute.of(context)!.settings.arguments as ProfileData;
       });
-       
 
       dateinput.text = dateFormat.format(_profileData!.birthday);
       phoneinput.text = _profileData!.phone;
@@ -119,7 +119,7 @@ class ProfileUpdateState extends State<ProfileUpdate> {
                           style: whiteText(),
                           textAlign: TextAlign.center,
                         ),
-                        onTap: () => Navigator.pop(context),
+                        onTap: () => Navigator.pop(context,null),
                       ),
                     ),
                   ),
@@ -130,6 +130,7 @@ class ProfileUpdateState extends State<ProfileUpdate> {
                       color: MyTheme.buttonColor,
                       child: GestureDetector(
                         onTap: () {
+                          EasyLoading.show(status: "loading...");
                           ProfileData toSend = ProfileData(
                               password: "",
                               birthday: DateTime.parse(dateinput.text),
@@ -137,10 +138,13 @@ class ProfileUpdateState extends State<ProfileUpdate> {
                               phone: phoneinput.text,
                               sex: sexinput.text,
                               name: nameinput.text);
-                            logger.v(toSend.toJson());
-                            eRepo.updateProfile(toSend).then((value) {
-                              logger.v(value.D);
-                            });
+                          logger.v(toSend.toJson());
+                          eRepo.updateProfile(toSend).then((value) {
+                            EasyLoading.dismiss();
+                            if(value.D=="good"){
+                              Navigator.pop(context,toSend);
+                            }
+                          });
                         },
                         child: Text(
                           "送出",

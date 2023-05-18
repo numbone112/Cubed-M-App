@@ -42,6 +42,7 @@ class ForEvent {
   int goal = 3;
   Map<int, int> progress = {0: 0, 1: 0, 2: 0};
   Map<int, List<int>> data = {0: [], 1: [], 2: []};
+  bool unReadable = false;
   // void init() {
   //   for (int i in appointmentDetail.item) {}
   // }
@@ -178,6 +179,7 @@ class EventState extends State<Event> {
                   String checkString = (Platform.isAndroid)
                       ? r.device.name
                       : r.advertisementData.localName;
+                  logger.v(checkString);
                   if (checkString.substring(0, 4) == "e-fu") {
                     return ListTile(
                       title: Text(checkString),
@@ -210,7 +212,10 @@ class EventState extends State<Event> {
                               if (value.isEmpty) {
                                 logger.v("empty");
                               } else {
-                                
+                                logger.v(value);
+
+                                EasyLoading.dismiss();
+
                                 FlutterRingtonePlayer.play(
                                   android: AndroidSounds.notification,
                                   ios: IosSounds.glass,
@@ -218,30 +223,29 @@ class EventState extends State<Event> {
                                   volume: 0.3, // Android only - API >= 28
                                   asAlarm: false, // Android only - all APIs
                                 );
-                                
+
+                                // String string = String.fromCharCodes(value);
+                                // logger.v(string);
+                                // List<String> raw = string.split(",");
 
                                 logger.v("結束$trainCount / $trainGoal");
 
                                 // logger.v(value);
                                 //結束後收到
                                 trainCount++;
-                                EasyLoading.dismiss();
 
-                                forEvent.data[forEvent.now]!.add(5);
-                                int p =
-                                    forEvent.data[forEvent.now]?.length ?? 1;
-                                forEvent.progress[forEvent.now] = (p /
-                                        forEvent.appointmentDetail
-                                            .item[forEvent.now] *
-                                        100)
-                                    .round();
+                                forEvent.data[forEvent.now]!
+                                    .add(toSave.last.times.toInt());
+                                forEvent.changeProgress();
+
                                 if (trainCount >= trainGoal) {
                                   for (var element in hasPair) {
                                     element.disconnect();
                                   }
                                   //全部結束
                                   Navigator.pushReplacementNamed(
-                                      context, EventResult.routeName);
+                                      context, EventResult.routeName,
+                                      arguments: forEventList);
                                   logger.v("enter else");
                                 }
                                 if (trainCount < 3) {
@@ -646,12 +650,10 @@ class EventState extends State<Event> {
                             ),
                           ),
                     GestureDetector(
-                      child: Container(
+                      child: BoxUI.boxHasRadius(
                         width: 200,
                         padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30),
-                            color: MyTheme.lightColor),
+                        color: MyTheme.lightColor,
                         child: Row(
                           children: [
                             const Icon(Icons.not_started_rounded),
@@ -665,30 +667,31 @@ class EventState extends State<Event> {
                       onTap: () {
                         if (connectDeviec.isEmpty) {
                           showDialog(
-                              context: context,
-                              builder: (ctx) => const AlertDialog(
-                                    content: Text("尚未連接裝置"),
-                                  ));
+                            context: context,
+                            builder: (ctx) => const AlertDialog(
+                              content: Text("尚未連接裝置"),
+                            ),
+                          );
                         } else {
                           EasyLoading.instance.indicatorWidget = SizedBox(
                             width: 75,
                             height: 75,
                             child: Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  SpinKitPouringHourGlassRefined(
-                                    color: MyTheme.color,
-                                  ),
-                                  const Text("復健中")
-                                ]),
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                SpinKitPouringHourGlassRefined(
+                                  color: MyTheme.color,
+                                ),
+                                const Text("復健中")
+                              ],
+                            ),
                           );
 
                           EasyLoading.show();
 
                           if (trainCount < 3) {}
                           for (var element in characteristicList) {
-                            element.write(utf8.encode("true"));
+                            element.write(utf8.encode("E-fu"));
                           }
                         }
                       },

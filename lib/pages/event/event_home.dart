@@ -13,7 +13,6 @@ import 'package:e_fu/request/e/e_data.dart';
 import 'package:e_fu/my_data.dart';
 import 'package:flutter/material.dart';
 
-
 class EventHome extends StatefulWidget {
   const EventHome({super.key});
 
@@ -207,12 +206,14 @@ class EventHomeState extends State<EventHome> {
                                 ],
                               )),
                           onTap: () {
-                            Navigator.pushNamed(
-                                context,
-                                overTime
-                                    ? Event.routeName
-                                    : EventResult.routeName,
-                                arguments: value[index]);
+                            if (overTime) {
+                              Navigator.pushNamed(context, Event.routeName,
+                                  arguments: value[index]);
+                            } else {
+                              Navigator.pushNamed(
+                                  context, EventResult.routeName,
+                                  arguments: value[index]);
+                            }
                           },
                         );
                       },

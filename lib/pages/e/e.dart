@@ -25,11 +25,9 @@ class ProfileCreateState extends State<Profile> {
     try {
       eRepo.getProfile("11136008").then((value) {
         setState(() {
-          logger.v(value.D);
           profile = parseProfile(value.D);
         });
-            EasyLoading.dismiss();
-
+        EasyLoading.dismiss();
       });
     } catch (e) {
       logger.v(e);
@@ -42,14 +40,26 @@ class ProfileCreateState extends State<Profile> {
       getProfile();
     }
     return (profile == null)
-        ? Container(
-            
-          )
+        ? Container()
         : CustomPage(
             rightButton: GestureDetector(
               child: const Text("編輯"),
-              onTap: () {
-                Navigator.pushNamed(context, ProfileUpdate.routeName,arguments: profile);
+              onTap: () async {
+                await Navigator.pushNamed(context, ProfileUpdate.routeName,
+                        arguments: profile)
+                    .then((value) {
+                  logger.v("after await $value");
+                  if (value != null) {
+                    try {
+                      ProfileData p = value as ProfileData;
+                      setState(() {
+                        profile = p;
+                      });
+                    } catch (e) {
+                      logger.v("after await catch :$e");
+                    }
+                  }
+                });
               },
             ),
             body: Column(
@@ -77,9 +87,8 @@ class ProfileCreateState extends State<Profile> {
                   height: 70,
                   width: MediaQuery.of(context).size.width * 0.9,
                   padding: const EdgeInsets.all(10),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [const Text("性別"), Text(profile!.sex)],
+                  child: Center(
+                    child: Text("性別 : ${profile?.sex}"),
                   ),
                 ),
                 BoxUI.boxHasRadius(
@@ -91,7 +100,7 @@ class ProfileCreateState extends State<Profile> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Text("出生年月日"),
-                      Text(profile!.birthday.toIso8601String())
+                      Text(profile!.birthday.toIso8601String().substring(0,10))
                     ],
                   ),
                 ),

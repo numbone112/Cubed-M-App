@@ -1,4 +1,3 @@
-import 'dart:math';
 
 import 'package:e_fu/module/page.dart';
 import 'package:e_fu/module/people_box.dart';
@@ -28,11 +27,11 @@ class PeopleDetailState extends State<PeopleDetail> {
   void getDetail() {
     eRepo.getFuDatil(widget.ePeople.id).then((value) {
       logger.v(value.D);
-      PatientData patient = PatientData.fromJson(value.D);
+      PatientData patient = PatientData.fromJson(value.D[0]);
+      logger.v('getDetail: ${patient.appointment.length}');
       setState(() {
         patientData = patient;
       });
-      logger.v(patient.patient.height);
     });
   }
 
@@ -141,24 +140,36 @@ class PeopleDetailState extends State<PeopleDetail> {
                           ],
                         )),
                   )),
+              // BoxUI.boxWithTitle(
+              //     "復健分析",
+              //     Container(
+              //       child: BoxUI.boxHasRadius(
+              //           height: 100,
+              //           child: Row(
+              //             children: const [],
+              //           )),
+              //     )),
               BoxUI.boxWithTitle(
-                  "復健分析",
-                  Container(
-                    child: BoxUI.boxHasRadius(
-                        height: 100,
-                        child: Row(
-                          children: const [],
-                        )),
-                  )),
-              BoxUI.boxWithTitle(
-                  "歷史復健紀錄",
-                  Container(
-                    child: BoxUI.boxHasRadius(
-                        height: 300,
-                        child: Row(
-                          children: const [],
-                        )),
-                  )),
+                "歷史復健紀錄",
+                Container(
+                  child: BoxUI.boxHasRadius(
+                    height: 300,
+                    child: Row(
+                      children: patientData==null
+                          ? [Container()]
+                          : patientData!.appointment.isEmpty
+                              ? [Container()]
+                              : List.generate(patientData!.appointment.length,
+                                  (index) {
+                                  EAppointmentDetailBase eBase =
+                                      patientData!.appointment[index];
+
+                                  return (Text('${eBase.id}'));
+                                }),
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
         ),

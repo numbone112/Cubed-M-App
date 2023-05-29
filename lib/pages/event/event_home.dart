@@ -85,143 +85,146 @@ class EventHomeState extends State<EventHome> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        const Text(
-          "復健安排",
-          style: TextStyle(fontSize: 30),
-        ),
-        (TableCalendar(
-          calendarFormat: _calendarFormat ?? CalendarFormat.week,
-          firstDay: DateTime.utc(2020, 10, 16),
-          lastDay: DateTime.utc(2030, 3, 14),
-          focusedDay: _focusedDay ?? DateTime.now(),
-          onFormatChanged: (format) {
-            if (_calendarFormat != format) {
-              setState(() {
-                _calendarFormat = format;
-              });
-            }
-          },
-          selectedDayPredicate: (day) {
-            return isSameDay(_selectedDay, day);
-          },
-          onDaySelected: _onDaySelected,
-          eventLoader: (day) {
-            return _getEventsForDay(day);
-          },
-          calendarBuilders: CalendarBuilders(
-            todayBuilder: (context, day, focusedDay) {
-              final text = DateFormat.d().format(day);
-
-              return BoxUI.boxHasRadius(
-                margin: const EdgeInsets.all(3),
-                color: MyTheme.lightColor,
-                child: Center(
-                  child: Text(
-                    text,
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                ),
-              );
-            },
-            selectedBuilder: (context, day, focusedDay) {
-              final text = DateFormat.d().format(day);
-
-              return BoxUI.boxHasRadius(
-                margin: const EdgeInsets.all(3),
-                color: MyTheme.color,
-                child: Center(
-                  child: Text(
-                    text,
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                ),
-              );
-            },
-            dowBuilder: (context, day) {
-              if (day.weekday == DateTime.sunday) {
-                final text = DateFormat.E().format(day);
-
-                return Center(
-                  child: Text(
-                    text,
-                    style: const TextStyle(color: Colors.red),
-                  ),
-                );
-              } else {
-                return Container();
+    return Padding(
+      padding: const EdgeInsets.only(top: 20, bottom: 10, left: 20, right: 20),
+      child: Column(
+        children: <Widget>[
+          const Text(
+            "復健安排",
+            style: TextStyle(fontSize: 30),
+          ),
+          (TableCalendar(
+            calendarFormat: _calendarFormat ?? CalendarFormat.week,
+            firstDay: DateTime.utc(2020, 10, 16),
+            lastDay: DateTime.utc(2030, 3, 14),
+            focusedDay: _focusedDay ?? DateTime.now(),
+            onFormatChanged: (format) {
+              if (_calendarFormat != format) {
+                setState(() {
+                  _calendarFormat = format;
+                });
               }
             },
-          ),
-        )),
-        const SizedBox(height: 8.0),
-        Expanded(
-          child: ValueListenableBuilder<List<EAppointment>>(
-            valueListenable: _selectedEvents,
-            builder: ((context, value, child) {
-              return _selectedEvents.value.isEmpty
-                  ? Container()
-                  : ListView.builder(
-                      itemCount: value.length,
-                      itemBuilder: (context, index) {
-                        EAppointment appointment = value[index];
-                        List<String> splitTime =
-                            appointment.tf_id.time.split(":");
-
-                        bool overTime = appointment.tf_id.start_date
-                            .add(Duration(hours: int.parse(splitTime[0])))
-                            .isAfter(DateTime.now());
-
-                        return GestureDetector(
-                          child: BoxUI.boxHasRadius(
-                              height: 100,
-                              width: 600,
-                              margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [Text(value[index].tf_id.time)],
-                                  ),
-                                  BoxUI.boxHasRadius(
-                                    width: 50,
-                                    height: 30,
-                                    color: MyTheme.buttonColor,
-                                    child: Center(
-                                      child: Text(
-                                        '${value[index].count}',
-                                        style: whiteText(),
+            selectedDayPredicate: (day) {
+              return isSameDay(_selectedDay, day);
+            },
+            onDaySelected: _onDaySelected,
+            eventLoader: (day) {
+              return _getEventsForDay(day);
+            },
+            calendarBuilders: CalendarBuilders(
+              todayBuilder: (context, day, focusedDay) {
+                final text = DateFormat.d().format(day);
+    
+                return BoxUI.boxHasRadius(
+                  margin: const EdgeInsets.all(3),
+                  color: MyTheme.lightColor,
+                  child: Center(
+                    child: Text(
+                      text,
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  ),
+                );
+              },
+              selectedBuilder: (context, day, focusedDay) {
+                final text = DateFormat.d().format(day);
+    
+                return BoxUI.boxHasRadius(
+                  margin: const EdgeInsets.all(3),
+                  color: MyTheme.color,
+                  child: Center(
+                    child: Text(
+                      text,
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  ),
+                );
+              },
+              dowBuilder: (context, day) {
+                if (day.weekday == DateTime.sunday) {
+                  final text = DateFormat.E().format(day);
+    
+                  return Center(
+                    child: Text(
+                      text,
+                      style: const TextStyle(color: Colors.red),
+                    ),
+                  );
+                } else {
+                  return Container();
+                }
+              },
+            ),
+          )),
+          const SizedBox(height: 8.0),
+          Expanded(
+            child: ValueListenableBuilder<List<EAppointment>>(
+              valueListenable: _selectedEvents,
+              builder: ((context, value, child) {
+                return _selectedEvents.value.isEmpty
+                    ? Container()
+                    : ListView.builder(
+                        itemCount: value.length,
+                        itemBuilder: (context, index) {
+                          EAppointment appointment = value[index];
+                          List<String> splitTime =
+                              appointment.tf_id.time.split(":");
+    
+                          bool overTime = appointment.tf_id.start_date
+                              .add(Duration(hours: int.parse(splitTime[0])))
+                              .isAfter(DateTime.now());
+    
+                          return GestureDetector(
+                            child: BoxUI.boxHasRadius(
+                                height: 100,
+                                width: 600,
+                                margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [Text(value[index].tf_id.time)],
+                                    ),
+                                    BoxUI.boxHasRadius(
+                                      width: 50,
+                                      height: 30,
+                                      color: MyTheme.buttonColor,
+                                      child: Center(
+                                        child: Text(
+                                          '${value[index].count}',
+                                          style: whiteText(),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  IconButton(
-                                      onPressed: () {},
-                                      icon: (overTime)
-                                          ? const Icon(Icons.edit_square)
-                                          : const Icon(Icons
-                                              .check_circle_outline_rounded))
-                                ],
-                              )),
-                          onTap: () {
-                            if (overTime) {
-                              Navigator.pushNamed(context, Event.routeName,
-                                  arguments: value[index]);
-                            } else {
-                              Navigator.pushNamed(
-                                  context, EventResult.routeName,
-                                  arguments: value[index]);
-                            }
-                          },
-                        );
-                      },
-                    );
-            }),
-          ),
-        )
-      ],
+                                    IconButton(
+                                        onPressed: () {},
+                                        icon: (overTime)
+                                            ? const Icon(Icons.edit_square)
+                                            : const Icon(Icons
+                                                .check_circle_outline_rounded))
+                                  ],
+                                )),
+                            onTap: () {
+                              if (overTime) {
+                                Navigator.pushNamed(context, Event.routeName,
+                                    arguments: value[index]);
+                              } else {
+                                Navigator.pushNamed(
+                                    context, EventResult.routeName,
+                                    arguments: value[index]);
+                              }
+                            },
+                          );
+                        },
+                      );
+              }),
+            ),
+          )
+        ],
+      ),
     );
   }
 }

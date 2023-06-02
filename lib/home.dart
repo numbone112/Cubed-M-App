@@ -48,13 +48,9 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
             resizeToAvoidBottomInset: false,
             backgroundColor: MyTheme.backgroudColor,
             body: Container(
-              padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
               child: Stack(
                 children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                    child: tabBody,
-                  ),
+                  tabBody,
                   bottomBar(),
                 ],
               ),

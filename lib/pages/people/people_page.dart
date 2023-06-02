@@ -5,9 +5,9 @@ import 'package:e_fu/request/e/e_data.dart';
 import 'package:flutter/material.dart';
 
 class PeoplePage extends StatefulWidget {
-  // int page = 1;
 
-  const PeoplePage({super.key});
+  PeoplePage({super.key,required this.userName});
+  String userName;
 
   @override
   PeoplePageState createState() => PeoplePageState();
@@ -32,7 +32,7 @@ class PeoplePageState extends State<PeoplePage> {
   Widget build(BuildContext context) {
     return Container(
       child: (page == 1)
-          ? PeopleList(function: toDetail)
+          ? PeopleList(function: toDetail,userName: widget.userName,)
           : (page == 2)
               ? PeopleDetail(
                   function: toChange,

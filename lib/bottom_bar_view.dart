@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'module/tabIcon_data.dart';
 
 class BottomBarView extends StatefulWidget {
-  const BottomBarView({Key? key, this.tabIconsList, this.changeIndex})
+  const BottomBarView({Key? key, required this.tabIconsList, this.changeIndex})
       : super(key: key);
 
   final Function(int index)? changeIndex;
-  final List<TabIconData>? tabIconsList;
+  final List<TabIconData> tabIconsList;
   @override
   State<BottomBarView> createState() => _BottomBarViewState();
 }
@@ -25,7 +25,7 @@ class _BottomBarViewState extends State<BottomBarView>
     );
     animationController?.forward();
     super.initState();
-    setRemoveAllSelection(widget.tabIconsList?[1]);
+    setRemoveAllSelection(widget.tabIconsList?[0]);
   }
 
   @override
@@ -52,41 +52,61 @@ class _BottomBarViewState extends State<BottomBarView>
                     child: Padding(
                       padding: const EdgeInsets.only(left: 8, right: 8, top: 4),
                       child: Row(
-                        children: <Widget>[
-                          Expanded(
-                            child: Column(
-                              children: [
-                                Expanded(
-                                  child: TabIcons(
-                                      tabIconData: widget.tabIconsList?[0],
-                                      removeAllSelect: () {
-                                        setRemoveAllSelection(
-                                            widget.tabIconsList?[0]);
-                                        widget.changeIndex!(0);
-                                      }),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Expanded(
-                            child: TabIcons(
-                                tabIconData: widget.tabIconsList?[1],
+                        children: 
+                        List.generate(widget.tabIconsList!.length, (index) {
+                           return(Expanded( child: TabIcons(
+                                tabIconData: widget.tabIconsList?[index],
                                 removeAllSelect: () {
                                   setRemoveAllSelection(
-                                      widget.tabIconsList?[1]);
-                                  widget.changeIndex!(1);
-                                }),
-                          ),
-                          Expanded(
-                            child: TabIcons(
-                                tabIconData: widget.tabIconsList?[2],
-                                removeAllSelect: () {
-                                  setRemoveAllSelection(
-                                      widget.tabIconsList?[2]);
-                                  widget.changeIndex!(2);
-                                }),
-                          ),
-                        ],
+                                      widget.tabIconsList?[index]);
+                                  widget.changeIndex!(index);
+                                }),));
+                        })
+                        // <Widget>[
+                          
+                        //   Expanded(
+                        //     child: Column(
+                        //       children: [
+                        //         Expanded(
+                        //           child: TabIcons(
+                        //               tabIconData: widget.tabIconsList?[0],
+                        //               removeAllSelect: () {
+                        //                 setRemoveAllSelection(
+                        //                     widget.tabIconsList?[0]);
+                        //                 widget.changeIndex!(0);
+                        //               }),
+                        //         ),
+                        //       ],
+                        //     ),
+                        //   ),
+                        //   Expanded(
+                        //     child: TabIcons(
+                        //         tabIconData: widget.tabIconsList?[1],
+                        //         removeAllSelect: () {
+                        //           setRemoveAllSelection(
+                        //               widget.tabIconsList?[1]);
+                        //           widget.changeIndex!(1);
+                        //         }),
+                        //   ),
+                        //   Expanded(
+                        //     child: TabIcons(
+                        //         tabIconData: widget.tabIconsList?[2],
+                        //         removeAllSelect: () {
+                        //           setRemoveAllSelection(
+                        //               widget.tabIconsList?[2]);
+                        //           widget.changeIndex!(2);
+                        //         }),
+                        //   ),
+                        //     Expanded(
+                        //     child: TabIcons(
+                        //         tabIconData: widget.tabIconsList?[3],
+                        //         removeAllSelect: () {
+                        //           setRemoveAllSelection(
+                        //               widget.tabIconsList?[3]);
+                        //           widget.changeIndex!(3);
+                        //         }),
+                        //   ),
+                        // ],
                       ),
                     ),
                   ),
@@ -105,7 +125,7 @@ class _BottomBarViewState extends State<BottomBarView>
   void setRemoveAllSelection(TabIconData? tabIconData) {
     if (!mounted) return;
     setState(() {
-      widget.tabIconsList?.forEach((TabIconData tab) {
+      widget.tabIconsList.forEach((TabIconData tab) {
         tab.isSelected = false;
         if (tabIconData!.index == tab.index) {
           tab.isSelected = true;

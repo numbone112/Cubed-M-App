@@ -1,3 +1,4 @@
+import 'package:e_fu/n_home.dart';
 import 'package:e_fu/pages/e/e.dart';
 import 'package:e_fu/pages/event/event_home.dart';
 import 'package:e_fu/pages/event/event_result.dart';
@@ -10,8 +11,8 @@ import 'my_data.dart';
 
 class Home extends StatefulWidget {
   static const routeName = '/home';
-  const Home({super.key});
-  // final String userName;
+   Home({super.key,required this.userName});
+   String userName;
 
   @override
   State<Home> createState() => _HomeState();
@@ -21,7 +22,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   AnimationController? animationController;
 
   List<TabIconData> tabIconsList = TabIconData.tabIconsList;
-  Widget tabBody = const EventHome();
+  late Widget tabBody ;
 
   @override
   void initState() {
@@ -34,7 +35,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
         duration: const Duration(milliseconds: 600), vsync: this);
 
     super.initState();
-    // tabBody = EventScreen(animationController: animationController);
+    tabBody = EventHome(userName: widget.userName,);
   }
 
   @override
@@ -79,7 +80,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                 //   return;
                 // }
                 setState(() {
-                  tabBody = const PeoplePage();
+                  tabBody =  PeoplePage(userName: widget.userName,);
                 });
               });
             } else if (index == 1) {
@@ -87,11 +88,11 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
               //   return;
               // }
               setState(() {
-                tabBody = const EventHome();
+                tabBody =  EventHome(userName: widget.userName,);
               });
             } else if (index == 2) {
               setState(() {
-                tabBody = const Profile();
+                tabBody =  Profile(userName: widget.userName,);
               });
               // animationController?.reverse().then<dynamic>((data) {
 
@@ -118,6 +119,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
               //     );
               //   });
               // });
+            } else if (index == 3) {
+              Navigator.pushNamed(context, NewHome.routeName);
             }
           },
         ),

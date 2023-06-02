@@ -16,8 +16,9 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class EventResult extends StatefulWidget {
   static const routeName = '/event/result';
+  String userName;
 
-  const EventResult({super.key});
+   EventResult({super.key,required this.userName});
 
   @override
   State<StatefulWidget> createState() => EventResultState();
@@ -25,23 +26,11 @@ class EventResult extends StatefulWidget {
 
 class PersonResult extends StatelessWidget {
   final Logger logger = Logger();
-  // final ForEvent forEvent;
   final EAppointmentDetail appointmentDetail;
 
   PersonResult(this.appointmentDetail, {super.key});
   @override
   Widget build(BuildContext context) {
-    Map<String, List<int>> data = {
-      "左手": [
-        12,
-      ],
-      "右手": [
-        12,
-      ],
-      "坐立": [
-        0,
-      ]
-    };
     Map<int, String> table = {0: "左手", 1: "右手", 2: "坐立"};
     List<Widget> results = [];
 
@@ -97,15 +86,15 @@ class EventResultState extends State<EventResult> {
   List<PersonResult> reulstList = [];
 
   Future<List<EAppointmentDetail>> getData(EAppointment eAppointment) async {
-    // EasyLoading.show(status: 'loading...');
+    EasyLoading.show(status: 'loading...');
     try {
       Format d = await eRepo.getApDetail(
-          "11136008", eAppointment.id.start_date, eAppointment.id.time);
+         widget.userName, eAppointment.id.start_date, eAppointment.id.time);
       return parseEApointmentDetail(jsonEncode(d.D));
     } catch (e) {
       return [];
     } finally {
-      // EasyLoading.dismiss();
+      EasyLoading.dismiss();
     }
   }
 
@@ -115,12 +104,12 @@ class EventResultState extends State<EventResult> {
       try {
         final args = ModalRoute.of(context)!.settings.arguments as EAppointment;
 
-        logger.v("args${args.id.start_date}，${args.id.time}");
+        logger.v("args${args.id.start_date},${args.id.time}");
         getData(args).then((value) {
-          logger.v("biuld getdata ${value}");
+          logger.v("biuld getdata $value");
           List<PersonResult> tempList = [];
           for (var element in value) {
-            logger.v("element: ${element}");
+            logger.v("element: $element");
             tempList.add(PersonResult(element));
           }
           setState(() {
@@ -128,13 +117,11 @@ class EventResultState extends State<EventResult> {
           });
         });
       } catch (e) {
-        logger.v("event result build ${e}");
+        logger.v("event result build $e");
       }
     }
 
     final PageController controller = PageController();
-
-    // reulstList.add(PersonResult());
 
     return CustomPage(
         buildContext: context,

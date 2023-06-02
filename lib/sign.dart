@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:e_fu/home.dart';
+import 'package:e_fu/main.dart';
 import 'package:e_fu/request/data.dart';
 import 'package:logger/logger.dart';
+import 'package:crypto/crypto.dart';
 
 import 'my_data.dart';
 import 'request/user/account.dart';
@@ -22,8 +26,9 @@ class _LoginState extends State<Login> {
   TextEditingController accountC = TextEditingController();
   TextEditingController pswC = TextEditingController();
 
-  TextField te(TextEditingController t) {
+  TextField te(TextEditingController t,bool h) {
     return (TextField(
+      obscureText: h,
       controller: t,
       scrollPadding: EdgeInsets.only(
           bottom: MediaQuery.of(context).viewInsets.bottom + 25 * 4),
@@ -92,9 +97,9 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    TextField accountField = te(accountC);
+    TextField accountField = te(accountC,false);
 
-    TextField passwordField = te(pswC);
+    TextField passwordField = te(pswC,true);
 
     SharedPreferences prefs;
     return Scaffold(
@@ -107,23 +112,33 @@ class _LoginState extends State<Login> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-              Row(
-                children: const [Icon(Icons.people), Text("帳號")],
+              const Row(
+                children: [Icon(Icons.people), Text("帳號")],
               ),
               accountField,
-              Row(
-                children: const [Icon(Icons.password), Text("密碼")],
+              const Row(
+                children: [Icon(Icons.password), Text("密碼")],
               ),
               passwordField,
               buttonCustom("登入", () async {
                 logger.v("login button");
+                final utf = utf8.encode(pswC.text);
+                final digest = sha256.convert(utf);
+                final encryptStr = digest.toString().toUpperCase();
+                logger.v("encryptStr $encryptStr");
+                logger.v("digest $digest");
 
-                Format a = await accountRepo.login(accountC.text, pswC.text);
+                Format a = await accountRepo.login(accountC.text,encryptStr);
                 if (a.message == "登入成功") {
                   prefs = await SharedPreferences.getInstance();
                   prefs.setString(Name.userName, accountC.text);
                   if (context.mounted) {
-                    Navigator.pushReplacementNamed(context, Home.routeName);
+                     Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute<void>(
+                            builder: (BuildContext context) => const MyApp(),
+                          ),
+                        );
                   }
                 } else {
                   logger.v(a);

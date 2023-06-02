@@ -11,16 +11,18 @@ import 'package:flutter/material.dart';
 
 class ExampleItem {
   final String title;
+ 
 
   ExampleItem({
     required this.title,
+   
   });
 }
 
 class PeopleList extends StatefulWidget {
-  const PeopleList({super.key, required this.function});
+   PeopleList({super.key, required this.function, required this.userName});
   final Function(EPeople ePeople) function;
-
+ String userName;
   @override
   PeopleListState createState() => PeopleListState();
 }
@@ -34,8 +36,7 @@ class PeopleListState extends State<PeopleList> {
     List<EPeople> res = [];
     EasyLoading.show(status: "loading ...");
     try {
-      Format a = await eRepo.getFus("11136008");
-
+      Format a = await eRepo.getFus(widget.userName);
       if (a.D.runtimeType == String) return [];
       res = parseEpeople(jsonEncode(a.D));
     } catch (e) {
@@ -91,7 +92,6 @@ class PeopleListState extends State<PeopleList> {
                         disease: peopleList[index].disease,
                         gender: peopleList[index].sex,
                         height: peopleList[index].height,
-                     
                         name: peopleList[index].name,
                         weight: '55',
                       ).box(),

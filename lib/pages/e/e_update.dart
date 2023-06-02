@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:e_fu/module/box_ui.dart';
 import 'package:e_fu/module/page.dart';
 import 'package:e_fu/my_data.dart';
@@ -6,6 +8,7 @@ import 'package:e_fu/request/e/e_data.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
+import 'package:flutter_picker/flutter_picker.dart';
 
 import 'package:flutter/material.dart';
 
@@ -65,6 +68,25 @@ class ProfileUpdateState extends State<ProfileUpdate> {
                     child: TextField(
                       decoration: const InputDecoration(labelText: "性別"),
                       controller: sexinput,
+                      readOnly: true,
+                      onTap: () {
+                        logger.v("on tap sex");
+
+                        // showPicker(BuildContext context) {
+                        //   Picker picker = Picker(
+                        //       adapter: PickerDataAdapter<String>(
+                        //           pickerData: new JsonDecoder()
+                        //               .convert('["Male","Female"]')),
+                        //       changeToFirst: true,
+                        //       textAlign: TextAlign.left,
+                        //       columnPadding: const EdgeInsets.all(8.0),
+                        //       onConfirm: (Picker picker, List value) {
+                        //         print(value.toString());
+                        //         print(picker.getSelectedValues());
+                        //       });
+                        //   picker.showModal(context);
+                        // }
+                      },
                     ),
                   ),
                   BoxUI.boxHasRadius(
@@ -119,7 +141,7 @@ class ProfileUpdateState extends State<ProfileUpdate> {
                           style: whiteText(),
                           textAlign: TextAlign.center,
                         ),
-                        onTap: () => Navigator.pop(context,null),
+                        onTap: () => Navigator.pop(context, null),
                       ),
                     ),
                   ),
@@ -141,8 +163,8 @@ class ProfileUpdateState extends State<ProfileUpdate> {
                           logger.v(toSend.toJson());
                           eRepo.updateProfile(toSend).then((value) {
                             EasyLoading.dismiss();
-                            if(value.D=="good"){
-                              Navigator.pop(context,toSend);
+                            if (value.D == "good") {
+                              Navigator.pop(context, toSend);
                             }
                           });
                         },

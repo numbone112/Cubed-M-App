@@ -1,3 +1,4 @@
+import 'package:e_fu/main.dart';
 import 'package:e_fu/module/box_ui.dart';
 import 'package:e_fu/module/page.dart';
 import 'package:e_fu/my_data.dart';
@@ -7,9 +8,11 @@ import 'package:e_fu/request/e/e_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:logger/logger.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Profile extends StatefulWidget {
-  const Profile({super.key});
+  Profile({super.key, required this.userName});
+  String userName = "";
 
   @override
   ProfileCreateState createState() => ProfileCreateState();
@@ -23,7 +26,7 @@ class ProfileCreateState extends State<Profile> {
   getProfile() {
     EasyLoading.show(status: 'loading...');
     try {
-      eRepo.getProfile("11136008").then((value) {
+      eRepo.getProfile(widget.userName).then((value) {
         setState(() {
           profile = parseProfile(value.D);
         });
@@ -100,7 +103,7 @@ class ProfileCreateState extends State<Profile> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Text("出生年月日"),
-                      Text(profile!.birthday.toIso8601String().substring(0,10))
+                      Text(profile!.birthday.toIso8601String().substring(0, 10))
                     ],
                   ),
                 ),
@@ -115,21 +118,52 @@ class ProfileCreateState extends State<Profile> {
                   ),
                 ),
                 BoxUI.boxHasRadius(
-                    margin: const EdgeInsets.all(10),
-                    width: MediaQuery.of(context).size.width * 0.9,
-                    height: 70,
-                    padding: const EdgeInsets.all(10),
-                    child: GestureDetector(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
-                          Text(
-                            "修改密碼",
-                            textAlign: TextAlign.justify,
+                  margin: const EdgeInsets.all(10),
+                  width: MediaQuery.of(context).size.width * 0.9,
+                  height: 70,
+                  padding: const EdgeInsets.all(10),
+                  child: GestureDetector(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        Text(
+                          "修改密碼",
+                          textAlign: TextAlign.justify,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                BoxUI.boxHasRadius(
+                  margin: const EdgeInsets.all(10),
+                  width: MediaQuery.of(context).size.width * 0.9,
+                  height: 70,
+                  padding: const EdgeInsets.all(10),
+                  child: GestureDetector(
+                    onTap: () async {
+                      SharedPreferences prefs =
+                          await SharedPreferences.getInstance();
+                      prefs.remove(Name.userName);
+                      if (context.mounted) {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute<void>(
+                            builder: (BuildContext context) => const MyApp(),
                           ),
-                        ],
-                      ),
-                    ))
+                        );
+                      }
+                    },
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        Text(
+                          "登出",
+                          textAlign: TextAlign.justify,
+                        ),
+                      ],
+                    ),
+                  ),
+                )
               ],
             ),
             title: "個人資料");

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:e_fu/pages/event/ble_device.dart';
 import 'package:e_fu/pages/event/event_result.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:logger/logger.dart';
@@ -23,7 +24,8 @@ import 'package:e_fu/request/record/record_data.dart';
 class Event extends StatefulWidget {
   static const routeName = '/event';
 
-  const Event({super.key});
+  Event({super.key, required this.userName});
+  String userName;
 
   @override
   State<StatefulWidget> createState() => EventState();
@@ -43,9 +45,6 @@ class ForEvent {
   Map<int, int> progress = {0: 0, 1: 0, 2: 0};
   Map<int, List<int>> data = {0: [], 1: [], 2: []};
   bool unReadable = false;
-  // void init() {
-  //   for (int i in appointmentDetail.item) {}
-  // }
 
   void record(int count) {
     data[now]!.add(count);
@@ -100,14 +99,17 @@ class EventState extends State<Event> {
   List<ForEvent> forEventList = [];
   int trainGoal = 0;
   var logger = Logger();
+  late EAppointment eAppointment;
 
   Future<List<EAppointmentDetail>> getData(EAppointment eAppointment) async {
     EasyLoading.show(status: 'loading...');
     try {
       Format d = await eRepo.getApDetail(
-          "11136008", eAppointment.id.start_date, eAppointment.id.time);
+          widget.userName, eAppointment.id.start_date, eAppointment.id.time);
+      logger.v(d.D);
       return parseEApointmentDetail(jsonEncode(d.D));
     } catch (e) {
+      logger.v("getData error $e");
       return [];
     } finally {
       EasyLoading.dismiss();
@@ -204,96 +206,96 @@ class EventState extends State<Event> {
                         for (BluetoothCharacteristic characteristic
                             in services.first.characteristics) {
                           if (characteristic.uuid.toString() ==
-                              "0000ff00-0000-1000-8000-00805f9b34fb") {
+                              BleDevice.start) {
                             characteristicList.add(characteristic);
                           } else if (characteristic.uuid.toString() ==
-                              "0000ff03-0000-1000-8000-00805f9b34fb") {
+                              BleDevice.endSign) {
                             characteristic.value.listen((value) {
                               if (value.isEmpty) {
                                 logger.v("empty");
                               } else {
                                 logger.v(value);
-
-                                EasyLoading.dismiss();
-
-                                FlutterRingtonePlayer.play(
-                                  android: AndroidSounds.notification,
-                                  ios: IosSounds.glass,
-                                  looping: true, // Android only - API >= 28
-                                  volume: 0.3, // Android only - API >= 28
-                                  asAlarm: false, // Android only - all APIs
-                                );
-
-                                // String string = String.fromCharCodes(value);
-                                // logger.v(string);
-                                // List<String> raw = string.split(",");
-
-                                logger.v("結束$trainCount / $trainGoal");
-
-                                // logger.v(value);
-                                //結束後收到
-                                trainCount++;
-
-                                forEvent.data[forEvent.now]!
-                                    .add(toSave.last.times.toInt());
-                                forEvent.changeProgress();
-
-                                if (trainCount >= trainGoal) {
-                                  for (var element in hasPair) {
-                                    element.disconnect();
-                                  }
-                                  //全部結束
-                                  Navigator.pushReplacementNamed(
-                                      context, EventResult.routeName,
-                                      arguments: forEventList);
-                                  logger.v("enter else");
-                                }
-                                if (trainCount < 3) {
-                                  //直接到下一個步驟
-
-                                  forEvent.change(trainCount);
-
-                                  setState(() {
-                                    forEventList[pIndex] = forEvent;
-                                  });
-                                } else if (trainCount == 3) {
-                                  forEvent.change(0);
-
-                                  setState(() {
-                                    forEventList[pIndex] = forEvent;
-                                  });
-                                } else if (trainCount < forEvent.goal) {
-                                  if (forEvent.data[forEvent.now]!.length ==
-                                      forEvent.appointmentDetail
-                                          .item[forEvent.now]) {
-                                    forEvent.change(forEvent.now + 1);
-                                  }
-                                  setState(() {
-                                    forEventList[pIndex] = forEvent;
-                                  });
-                                }
                               }
                             });
                             await characteristic.setNotifyValue(true);
-                          } else {
+                          } else if (characteristic.uuid.toString() ==
+                              BleDevice.record) {
                             //一直接收
                             characteristic.value.listen((value) {
                               try {
                                 String string = String.fromCharCodes(value);
+                                logger.v(string);
                                 List<String> raw = string.split(",");
+                                if (string ==
+                                    "0.00,0.00,0.00,0.00,0.00,0.00,0.00,0") {
+                                  logger.v("end here");
+                                  EasyLoading.dismiss();
+                                  FlutterRingtonePlayer.play(
+                                    android: AndroidSounds.notification,
+                                    ios: IosSounds.glass,
+                                    looping: true, // Android only - API >= 28
+                                    volume: 0.3, // Android only - API >= 28
+                                    asAlarm: false, // Android only - all APIs
+                                  );
+                                  logger.v("結束$trainCount / $trainGoal");
 
-                                toSave.add(Record(
-                                    double.parse(raw[0]),
-                                    double.parse(raw[1]),
-                                    double.parse(raw[2]),
-                                    double.parse(raw[3]),
-                                    double.parse(raw[4]),
-                                    double.parse(raw[5]),
-                                    double.parse(raw[6]),
-                                    double.parse(raw[7]),
-                                    trainCount.toDouble(),
-                                    forEvent.now.toDouble(),
-                                    forEvent.appointmentDetail.id));
+                                  //結束後收到
+                                  trainCount++;
+                                  forEvent.data[forEvent.now]!
+                                      .add(toSave.last.times.toInt());
+                                  forEvent.changeProgress();
+
+                                  //全部結束
+                                  if (trainCount >= trainGoal) {
+                                    //關閉所有連線
+                                    for (var element in hasPair) {
+                                      element.disconnect();
+                                    }
+                                    try {} catch (e) {
+                                      logger.v("event all done $e");
+                                    }
+                                    Navigator.pushReplacementNamed(
+                                        context, EventResult.routeName,
+                                        arguments: eAppointment);
+                                    logger.v("enter else");
+                                  }
+                                  if (trainCount < 3) {
+                                    //直接到下一個步驟
+                                    forEvent.change(trainCount);
+
+                                    setState(() {
+                                      forEventList[pIndex] = forEvent;
+                                    });
+                                  } else if (trainCount == 3) {
+                                    forEvent.change(0);
+
+                                    setState(() {
+                                      forEventList[pIndex] = forEvent;
+                                    });
+                                  } else if (trainCount < forEvent.goal) {
+                                    if (forEvent.data[forEvent.now]!.length ==
+                                        forEvent.appointmentDetail
+                                            .item[forEvent.now]) {
+                                      forEvent.change(forEvent.now + 1);
+                                    }
+                                    setState(() {
+                                      forEventList[pIndex] = forEvent;
+                                    });
+                                  }
+                                } else {
+                                  toSave.add(Record(
+                                      double.parse(raw[0]),
+                                      double.parse(raw[1]),
+                                      double.parse(raw[2]),
+                                      double.parse(raw[3]),
+                                      double.parse(raw[4]),
+                                      double.parse(raw[5]),
+                                      double.parse(raw[6]),
+                                      double.parse(raw[7]),
+                                      trainCount.toDouble(),
+                                      forEvent.now.toDouble(),
+                                      forEvent.appointmentDetail.id));
+                                }
                               } catch (e) {
                                 logger.v("error:$e");
                               }
@@ -531,8 +533,8 @@ class EventState extends State<Event> {
                       await showDialog(
                         context: context,
                         builder: (ctx) => CupertinoAlertDialog(
-                          content: Column(
-                            children: const [
+                          content: const Column(
+                            children: [
                               SizedBox(
                                 height: 10,
                               ),
@@ -590,6 +592,7 @@ class EventState extends State<Event> {
   @override
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context)!.settings.arguments as EAppointment;
+    eAppointment = args;
     if (selectedArrange.isEmpty & notyet) {
       getData(args).then(
         (value) {
@@ -696,37 +699,6 @@ class EventState extends State<Event> {
                         }
                       },
                     ),
-                    // Row(
-                    //   children: [
-                    //     Expanded(
-                    //       child: TextButton(
-                    //         onPressed: () async {
-                    //           logger.v(toSave.length);
-                    //           Format a = await recordRepo
-                    //               .record(ArrangeDate("t01", toSave));
-                    //           if (a.message == "ok") {
-                    //             logger.v("成功");
-                    //           }
-                    //         },
-                    //         child: const Text("傳送"),
-                    //       ),
-                    //     ),
-                    //     Expanded(
-                    //       child: TextButton(
-                    //         onPressed: () async {
-                    //           for (var element in hasPair) {
-                    //             element.disconnect();
-                    //           }
-                    //           setState(() {
-                    //             connectDeviec = {};
-                    //             hasPair = [];
-                    //           });
-                    //         },
-                    //         child: const Text("關閉"),
-                    //       ),
-                    //     ),
-                    //   ],
-                    // )
                   ],
                 ),
               ),

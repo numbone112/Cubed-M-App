@@ -1,27 +1,26 @@
-import 'package:e_fu/n_home.dart';
-import 'package:e_fu/pages/e/e.dart';
 import 'package:e_fu/pages/event/event_home.dart';
-import 'package:e_fu/pages/event/event_result.dart';
-import 'package:e_fu/pages/people/people_page.dart';
+import 'package:e_fu/pages/home/home_page.dart';
+import 'package:e_fu/pages/mo/mo.dart';
+import 'package:e_fu/pages/profile/profile.dart';
 import 'package:flutter/material.dart';
 
 import 'bottom_bar_view.dart';
 import 'module/tabIcon_data.dart';
 import 'my_data.dart';
 
-class Home extends StatefulWidget {
-  static const routeName = '/home';
-   Home({super.key,required this.userName});
-   String userName;
+class NewHome extends StatefulWidget {
+  static const routeName = '/newhome';
+  NewHome({super.key,required this.userName});
+  String userName;
 
   @override
-  State<Home> createState() => _HomeState();
+  State<NewHome> createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> with TickerProviderStateMixin {
+class _HomeState extends State<NewHome> with TickerProviderStateMixin {
   AnimationController? animationController;
 
-  List<TabIconData> tabIconsList = TabIconData.tabIconsList;
+  List<TabIconData> tabIconsList = TabIconData.newAppList;
   late Widget tabBody ;
 
   @override
@@ -35,7 +34,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
         duration: const Duration(milliseconds: 600), vsync: this);
 
     super.initState();
-    tabBody = EventHome(userName: widget.userName,);
+    tabBody = HomePage();
   }
 
   @override
@@ -45,16 +44,21 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
       child: SafeArea(
         top: false,
         child: Scaffold(
-            resizeToAvoidBottomInset: false,
-            backgroundColor: MyTheme.backgroudColor,
-            body: Container(
-              child: Stack(
-                children: <Widget>[
-                  tabBody,
-                  bottomBar(),
-                ],
-              ),
-            )),
+          resizeToAvoidBottomInset: false,
+          backgroundColor: MyTheme.backgroudColor,
+          body: Container(
+            padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+            child: Stack(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                  child: tabBody,
+                ),
+                bottomBar(),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -76,7 +80,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                 //   return;
                 // }
                 setState(() {
-                  tabBody =  PeoplePage(userName: widget.userName,);
+                  tabBody = const HomePage();
                 });
               });
             } else if (index == 1) {
@@ -84,11 +88,11 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
               //   return;
               // }
               setState(() {
-                tabBody =  EventHome(userName: widget.userName,);
+                tabBody =  Mo();
               });
             } else if (index == 2) {
               setState(() {
-                tabBody =  Profile(userName: widget.userName,);
+                // tabBody = const Profile();
               });
               // animationController?.reverse().then<dynamic>((data) {
 
@@ -115,8 +119,10 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
               //     );
               //   });
               // });
-            } else if (index == 3) {
-              Navigator.pushNamed(context, NewHome.routeName);
+            }else if(index==3){
+              setState(() {
+                tabBody=ProfileInfo(userName: widget.userName,);
+              });
             }
           },
         ),

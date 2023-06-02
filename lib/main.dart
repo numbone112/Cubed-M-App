@@ -1,3 +1,4 @@
+import 'package:e_fu/n_home.dart';
 import 'package:e_fu/home.dart';
 import 'package:e_fu/pages/event/event_result.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -40,7 +41,7 @@ class MyApp extends StatefulWidget {
 }
 
 class MyappState extends State<MyApp> {
-  String userName = "11136000";
+  String userName = "";
 
   _loadUser() async {
     if (userName == "") {
@@ -48,7 +49,7 @@ class MyappState extends State<MyApp> {
       // prefs.clear();
       setState(() {
         if (prefs.containsKey(Name.userName)) {
-          userName = prefs.getString(Name.userName) ?? "11136000";
+          userName = prefs.getString(Name.userName) ??"";
         }
       });
     }
@@ -69,16 +70,18 @@ class MyappState extends State<MyApp> {
         color: MyTheme.backgroudColor,
         child: SafeArea(
           bottom: false,
-          child: userName == "" ? const Login() : const Home(),
+          child: userName == "" ? const Login() :  Home(userName: userName,),
         ),
       ),
       debugShowCheckedModeBanner: false,
       routes: <String, WidgetBuilder>{
-        Home.routeName: (_) => const Home(),
+        Home.routeName: (_) =>  Home(userName: userName,),
         Login.routeName: (_) => const Login(),
-        Event.routeName: (_) => const Event(),
+        Event.routeName: (_) =>  Event(userName: userName,),
         ProfileUpdate.routeName: (_) => const ProfileUpdate(),
-        EventResult.routeName:(_)=>const EventResult()
+        EventResult.routeName:(_)=> EventResult(userName: userName,),
+        NewHome.routeName:(_)=> NewHome(userName: userName,),
+
       },
     );
   }

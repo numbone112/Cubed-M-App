@@ -42,7 +42,7 @@ class PeopleBox {
                   ],
                 ),
                 Column(
-                  children: <Widget>[Text("疾病")]+List.generate(disease.length, (index) => Text(disease[index])),
+                  children: <Widget>[const Text("疾病")]+List.generate(disease.length, (index) => Text(disease[index])),
                 ),
               ],
             ),

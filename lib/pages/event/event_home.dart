@@ -14,7 +14,8 @@ import 'package:e_fu/my_data.dart';
 import 'package:flutter/material.dart';
 
 class EventHome extends StatefulWidget {
-  const EventHome({super.key});
+   EventHome({super.key,required this.userName});
+   String userName;
 
   @override
   State<StatefulWidget> createState() => EventHomeState();
@@ -35,7 +36,7 @@ class EventHomeState extends State<EventHome> {
     List<EAppointment> res = [];
     try {
       EasyLoading.show(status: "loading ...");
-      Format d = await eRepo.getAps("11136008");
+      Format d = await eRepo.getAps(widget.userName);
       logger.v(d.D);
       logger.v(d.D);
       if (d.D.runtimeType != String) res = parseEApointment(jsonEncode(d.D));
@@ -85,8 +86,7 @@ class EventHomeState extends State<EventHome> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 20, bottom: 10, left: 20, right: 20),
+    return SafeArea(
       child: Column(
         children: <Widget>[
           const Text(

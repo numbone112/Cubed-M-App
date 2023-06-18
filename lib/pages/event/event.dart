@@ -1,7 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:e_fu/pages/event/ble_device.dart';
-import 'package:e_fu/pages/event/event_result.dart';
+import 'package:e_fu/pages/event/event_now_result.dart';
+// import 'package:e_fu/pages/event/event_result.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:logger/logger.dart';
 import 'package:e_fu/module/box_ui.dart';
@@ -156,12 +157,12 @@ class EventState extends State<Event> {
 
   Future<void> finish() async {
     //傳送資料給後端
-    Format a = await recordRepo.record(toSave);
+    Format a = await recordRepo.record(ArrangeDate(
+        forEventList.first.appointmentDetail.id.toString(),
+        toSave,
+        forEventList.first.data));
     if (a.message == "ok") {
       logger.v("成功");
-      if (context.mounted) {
-        Navigator.pushReplacementNamed(context, EventResult.routeName);
-      }
     }
   }
 
@@ -244,19 +245,29 @@ class EventState extends State<Event> {
                                   forEvent.data[forEvent.now]!
                                       .add(toSave.last.times.toInt());
                                   forEvent.changeProgress();
-
+                                  setState(() {
+                                    forEventList[pIndex] = forEvent;
+                                  });
                                   //全部結束
                                   if (trainCount >= trainGoal) {
                                     //關閉所有連線
                                     for (var element in hasPair) {
                                       element.disconnect();
                                     }
-                                    try {} catch (e) {
+                                    try {
+                                      logger.v("end done${forEvent.data}");
+                                      finish();
+                                    } catch (e) {
                                       logger.v("event all done $e");
                                     }
-                                    Navigator.pushReplacementNamed(
-                                        context, EventResult.routeName,
-                                        arguments: eAppointment);
+                                    if (context.mounted) {
+                                      Navigator.pushReplacementNamed(
+                                          context, EventNowResult.routeName,
+                                          arguments: [
+                                            [forEvent],
+                                            eAppointment
+                                          ]);
+                                    }
                                     logger.v("enter else");
                                   }
                                   if (trainCount < 3) {

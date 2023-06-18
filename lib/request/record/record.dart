@@ -12,7 +12,7 @@ abstract class RecordAPI {
   
 
   /// 傳送資料
-  Future<Format> record(List<Record> list);
+  Future<Format> record(ArrangeDate arrangeDate);
 
   
 }
@@ -21,13 +21,13 @@ class RecordRepo extends API implements RecordAPI {
     var logger = Logger();
 
   @override
-  Future<Format> record(List<Record> list) async {
+  Future<Format> record(ArrangeDate arrangeDate) async {
     try {
       final response = await client.post(Uri.parse('$domain/record'),
           headers: {
             'Content-Type': 'application/json',
           },
-          body: jsonEncode(list));
+          body: jsonEncode(arrangeDate.toJson()));
           logger.v(response.body);
       if (response.statusCode == 200) {
         logger.v("200了");

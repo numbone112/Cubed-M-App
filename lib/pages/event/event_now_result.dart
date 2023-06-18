@@ -1,11 +1,11 @@
 import 'dart:convert';
-// import 'dart:js_interop';
+import 'package:intl/intl.dart';
 
 import 'package:e_fu/module/page.dart';
+import 'package:e_fu/pages/event/event.dart';
 import 'package:e_fu/request/data.dart';
 import 'package:e_fu/request/e/e.dart';
 import 'package:e_fu/request/e/e_data.dart';
-import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 
 import 'package:e_fu/module/box_ui.dart';
@@ -15,35 +15,35 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
-class EventResult extends StatefulWidget {
-  static const routeName = '/event/result';
-  final String userName;
+class EventNowResult extends StatefulWidget {
+  static const routeName = '/event/result/now';
+  String userName;
 
-  const EventResult({super.key, required this.userName});
+  EventNowResult({super.key, required this.userName});
 
   @override
-  State<StatefulWidget> createState() => EventResultState();
+  State<StatefulWidget> createState() => EventNowResultState();
 }
 
 class PersonResult extends StatelessWidget {
   final Logger logger = Logger();
   final EAppointmentDetail appointmentDetail;
+  final Map<int, List<int>> done;
 
-  PersonResult(this.appointmentDetail, {super.key});
+  PersonResult(this.appointmentDetail, {super.key, required this.done});
   @override
   Widget build(BuildContext context) {
     Map<int, String> table = {0: "左手", 1: "右手", 2: "坐立"};
     List<Widget> results = [];
 
-    results = List.generate(appointmentDetail.done.length, (index) {
-      List<int> value = appointmentDetail.done[index];
-      return (BoxUI.boxHasRadius(
+    done.forEach((key, value) {
+      results.add(BoxUI.boxHasRadius(
         margin: const EdgeInsets.all(10),
         child: Column(
           children: [
             Column(
               children: [
-                Text(table[index]!),
+                Text(table[key]!),
                 Container(
                   padding: const EdgeInsets.all(3),
                   height: 35 + 30 * ((value.length / 5.0).ceil() | 1) * 1.0,
@@ -80,7 +80,7 @@ class PersonResult extends StatelessWidget {
   }
 }
 
-class EventResultState extends State<EventResult> {
+class EventNowResultState extends State<EventNowResult> {
   Logger logger = Logger();
   ERepo eRepo = ERepo();
   int currentPageIndex = 0;
@@ -104,23 +104,22 @@ class EventResultState extends State<EventResult> {
   Widget build(BuildContext context) {
     if (reulstList.isEmpty) {
       try {
-        final args = ModalRoute.of(context)!.settings.arguments as EAppointment;
-        eAppointment = args;
-        logger.v("args${args.id.start_date},${args.id.time}");
-        getData(args).then((value) {
-          logger.v("biuld getdata $value");
-          List<PersonResult> tempList = [];
-          for (var element in value) {
-            logger.v("element: $element");
-            tempList.add(PersonResult(element));
-          }
-          setState(() {
-            reulstList = tempList;
+        final args = ModalRoute.of(context)!.settings.arguments as List<Object>;
+        logger.v("args length ${args.length}");
+        final forEvnetList = args[0] as List<ForEvent>;
+        eAppointment = args[1] as EAppointment;
+        logger.v('done data${forEvnetList[0].data}');
+        setState(() {
+          reulstList = List.generate(forEvnetList.length, (index) {
+            return PersonResult(forEvnetList[index].appointmentDetail,
+                done: forEvnetList[index].data);
           });
         });
       } catch (e) {
         logger.v("event result build $e");
       }
+    } else {
+      logger.v('else ${reulstList.length}');
     }
 
     final PageController controller = PageController();

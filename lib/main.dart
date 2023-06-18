@@ -1,5 +1,6 @@
 import 'package:e_fu/n_home.dart';
 import 'package:e_fu/home.dart';
+import 'package:e_fu/pages/event/event_now_result.dart';
 import 'package:e_fu/pages/event/event_result.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import './pages/e/e_update.dart';
@@ -81,6 +82,7 @@ class MyappState extends State<MyApp> {
         ProfileUpdate.routeName: (_) => const ProfileUpdate(),
         EventResult.routeName:(_)=> EventResult(userName: userName,),
         NewHome.routeName:(_)=> NewHome(userName: userName,),
+        EventNowResult.routeName:(_)=> EventNowResult(userName: userName,),
 
       },
     );

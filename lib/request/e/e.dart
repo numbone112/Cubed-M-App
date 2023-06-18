@@ -32,7 +32,7 @@ class ERepo extends API implements EAPI {
         );
 
         if (response == 200) {
-          logger.v("200了");
+          logger.v("200");
           return Format.fromJson(response.body);
         } else {
           return Format.fromJson(response.body);

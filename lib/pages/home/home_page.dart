@@ -4,15 +4,20 @@ import 'package:e_fu/module/box_ui.dart';
 import 'package:e_fu/my_data.dart';
 import 'package:flutter/material.dart';
 
-
-class Invite{
-  Invite({required this.host,required this.remark,required this.name,required this.dateTime,required this.accept});
+class Invite {
+  Invite(
+      {required this.host,
+      required this.remark,
+      required this.name,
+      required this.dateTime,
+      required this.accept});
   String host;
   String remark;
   String name;
   DateTime dateTime;
   String accept;
 }
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -40,14 +45,12 @@ class HomePageState extends State<HomePage> {
     super.dispose();
   }
 
-  
-
   Widget inviteBox(Invite invite) {
-
     return BoxUI.boxHasRadius(
       padding: const EdgeInsets.all(10),
+      margin: const EdgeInsets.all(10),
       height: 200,
-      child:  Column(
+      child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           Text(
@@ -58,8 +61,8 @@ class HomePageState extends State<HomePage> {
             invite.name,
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),
-          Text(invite.dateTime.toIso8601String().substring(0,10)),
-          Text(invite.dateTime.toIso8601String().substring(11,16)),
+          Text(invite.dateTime.toIso8601String().substring(0, 10)),
+          Text(invite.dateTime.toIso8601String().substring(11, 16)),
           Text(
             "備註：${invite.remark}",
             style: const TextStyle(color: Colors.grey),
@@ -75,8 +78,9 @@ class HomePageState extends State<HomePage> {
       // width: MediaQuery.of(context).size.width * 0.8,
       height: MediaQuery.of(context).size.height * 0.8,
       child: (Column(
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          const Padding(padding: EdgeInsets.all(20)),
+          // const Padding(padding: ),
           Container(
             alignment: Alignment.centerLeft,
             child: Text(
@@ -88,8 +92,8 @@ class HomePageState extends State<HomePage> {
             alignment: Alignment.centerLeft,
             child: const Text("今天一起來運動吧!"),
           ),
-          
-          BoxUI.titleText("運動等級", 15),
+
+          BoxUI.titleText("運動等級", 15, fontSize: 20),
           SizedBox(
             // width: MediaQuery.of(context).size.width * 0.8,
             child: Row(
@@ -103,10 +107,19 @@ class HomePageState extends State<HomePage> {
                         width: 150,
                         child: ListView(
                           controller: _letters,
-                          children: const [
-                            Text("左手二頭肌"),
-                            Text("右手二頭肌"),
-                            Text("下肢肌力"),
+                          children: [
+                            Text(
+                              "左手二頭肌",
+                              style: myText(height: 3),
+                            ),
+                            Text(
+                              "右手二頭肌",
+                              style: myText(height: 3),
+                            ),
+                            Text(
+                              "下肢肌力",
+                              style: myText(height: 3),
+                            ),
                           ],
                         ),
                       ),
@@ -122,15 +135,15 @@ class HomePageState extends State<HomePage> {
                             children: [
                               Text(
                                 "好",
-                                style: whiteText(),
+                                style: myText(color: Colors.white, height: 3),
                               ),
                               Text(
                                 "不好",
-                                style: whiteText(),
+                                style: myText(color: Colors.white, height: 3),
                               ),
                               Text(
                                 "普通",
-                                style: whiteText(),
+                                style: myText(color: Colors.white, height: 3),
                               ),
                             ],
                           ),
@@ -145,15 +158,18 @@ class HomePageState extends State<HomePage> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      BoxUI.titleText("運動訓練", 0,
-                          alignment: AlignmentDirectional.center),
+                      BoxUI.titleText(
+                        "運動訓練",
+                        0,
+                        alignment: AlignmentDirectional.center,
+                      ),
                       BoxUI.boxHasRadius(
                           padding: const EdgeInsets.all(5),
                           color: Colors.black,
                           child: GestureDetector(
                             child: Text(
                               '開始',
-                              style: whiteText(),
+                              style: myText(color: Colors.white),
                             ),
                           )),
                       BoxUI.boxHasRadius(
@@ -162,7 +178,7 @@ class HomePageState extends State<HomePage> {
                         child: GestureDetector(
                           child: Text(
                             '分析',
-                            style: whiteText(),
+                            style: myText(color: Colors.white),
                           ),
                         ),
                       )
@@ -172,8 +188,39 @@ class HomePageState extends State<HomePage> {
               ],
             ),
           ),
-          BoxUI.titleText("運動邀約", 15),
-          inviteBox(Invite(host: "羅真", remark: "活動中心集合", name: "運動小隊", dateTime: DateTime.now(), accept: "接受"))
+          Row(
+            children: [
+              BoxUI.titleText("運動邀約", 15, fontSize: 20),
+              const Padding(padding: EdgeInsets.all(10)),
+              BoxUI.boxHasRadius(
+                  padding: const EdgeInsets.all(7),
+                  color: MyTheme.mygray,
+                  child: GestureDetector(
+                    child: BoxUI.titleText("新增", 0, color: Colors.white),
+                  ))
+            ],
+          ),
+          SizedBox(
+            height: 300,
+            width: MediaQuery.of(context).size.width*0.7,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: [
+                inviteBox(Invite(
+                    host: "羅真",
+                    remark: "活動中心集合",
+                    name: "運動小隊",
+                    dateTime: DateTime.now(),
+                    accept: "接受")),
+                inviteBox(Invite(
+                    host: "羅真",
+                    remark: "活動中心集合",
+                    name: "運動小隊",
+                    dateTime: DateTime.now(),
+                    accept: "接受"))
+              ],
+            ),
+          )
         ],
       )),
     );

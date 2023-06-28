@@ -10,9 +10,9 @@ class BoxUI {
       EdgeInsetsGeometry? padding}) {
     return Container(
       decoration: BoxDecoration(
-          borderRadius: const BorderRadius.all(Radius.circular(30)),
-          
-          color: color ?? Colors.white,),
+        borderRadius: const BorderRadius.all(Radius.circular(30)),
+        color: color ?? Colors.white,
+      ),
       height: height,
       width: width,
       margin: margin,
@@ -26,15 +26,17 @@ class BoxUI {
       children: [Text(title), const Padding(padding: EdgeInsets.all(5)), child],
     ));
   }
-  static Widget titleText(String title, double gap, {AlignmentGeometry? alignment}) {
+
+  static Widget titleText(String title, double gap,
+      {AlignmentGeometry? alignment, double? fontSize,
+      Color? color
+      }) {
     return Container(
       alignment: alignment ?? Alignment.centerLeft,
       padding: EdgeInsets.fromLTRB(0, gap, 0, gap),
       child: Text(
         title,
-        style: const TextStyle(
-          fontWeight: FontWeight.bold,
-        ),
+        style: TextStyle(fontWeight: FontWeight.bold, fontSize: fontSize,color: color),
         textAlign: TextAlign.left,
       ),
     );

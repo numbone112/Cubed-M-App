@@ -195,7 +195,7 @@ class EventHomeState extends State<EventHome> {
                                       child: Center(
                                         child: Text(
                                           '${value[index].count}',
-                                          style: whiteText(),
+                                          style: myText(color: Colors.white),
                                         ),
                                       ),
                                     ),

@@ -138,7 +138,7 @@ class ProfileUpdateState extends State<ProfileUpdate> {
                       child: GestureDetector(
                         child: Text(
                           "取消",
-                          style: whiteText(),
+                          style: myText(color: Colors.white),
                           textAlign: TextAlign.center,
                         ),
                         onTap: () => Navigator.pop(context, null),
@@ -170,7 +170,7 @@ class ProfileUpdateState extends State<ProfileUpdate> {
                         },
                         child: Text(
                           "送出",
-                          style: whiteText(),
+                          style: myText(color: Colors.white),
                           textAlign: TextAlign.center,
                         ),
                       ),
@@ -192,7 +192,7 @@ class ProfileUpdateState extends State<ProfileUpdate> {
             child: GestureDetector(
               child: Text(
                 "取消",
-                style: whiteText(),
+                style: myText(color: Colors.white),
                 textAlign: TextAlign.center,
               ),
               onTap: () => Navigator.pop(context, null),
@@ -223,7 +223,7 @@ class ProfileUpdateState extends State<ProfileUpdate> {
                 },
                 child: Text(
                   "送出",
-                  style: whiteText(),
+                  style: myText(color: Colors.white),
                   textAlign: TextAlign.center,
                 ),
               ),

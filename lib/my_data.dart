@@ -7,6 +7,7 @@ class MyTheme {
   static Color titleColor = const Color(0xff5C5C5C);
   static Color hintColor = const Color(0xff969696);
   static Color buttonColor=const Color(0xff023246);
+  static Color mygray =HexColor("5c5c5c");
 }
 
 class MySize {
@@ -34,6 +35,8 @@ class HexColor extends Color {
   }
 }
 
-TextStyle whiteText({double? fontsize}){
-  return TextStyle(color: Colors.white,fontSize: fontsize);
+TextStyle myText({double? fontsize,Color? color,double? height}){
+  return TextStyle(color: color??Colors.black,fontSize: fontsize,height: height);
 }
+
+

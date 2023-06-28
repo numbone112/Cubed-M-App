@@ -59,7 +59,7 @@ class PersonResult extends StatelessWidget {
                         child: Center(
                             child: Text(
                           "${value[index]}",
-                          style: whiteText(),
+                          style: myText(color: Colors.white),
                         )),
                         color: MyTheme.color,
                       ),

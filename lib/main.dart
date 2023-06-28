@@ -1,4 +1,3 @@
-import 'package:e_fu/n_home.dart';
 import 'package:e_fu/home.dart';
 import 'package:e_fu/pages/event/event_now_result.dart';
 import 'package:e_fu/pages/event/event_result.dart';
@@ -81,7 +80,6 @@ class MyappState extends State<MyApp> {
         Event.routeName: (_) =>  Event(userName: userName,),
         ProfileUpdate.routeName: (_) => const ProfileUpdate(),
         EventResult.routeName:(_)=> EventResult(userName: userName,),
-        NewHome.routeName:(_)=> NewHome(userName: userName,),
         EventNowResult.routeName:(_)=> EventNowResult(userName: userName,),
 
       },

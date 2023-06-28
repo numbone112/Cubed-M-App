@@ -472,7 +472,7 @@ class EventState extends State<Event> {
                         ? BoxUI.boxHasRadius(
                             child: Text(
                               exerciseItem[eIndex],
-                              style: whiteText(),
+                              style: myText(color: Colors.white),
                             ),
                             color: MyTheme.buttonColor,
                             padding: const EdgeInsets.all(5))
@@ -509,7 +509,7 @@ class EventState extends State<Event> {
                   child: BoxUI.boxHasRadius(
                       child: Text(
                         "連接",
-                        style: whiteText(),
+                        style: myText(color: Colors.white),
                         textAlign: TextAlign.center,
                       ),
                       margin: const EdgeInsets.all(3),
@@ -673,7 +673,7 @@ class EventState extends State<Event> {
                             const Icon(Icons.not_started_rounded),
                             Text(
                               "全部開始",
-                              style: whiteText(),
+                              style: myText(color: Colors.white),
                             )
                           ],
                         ),

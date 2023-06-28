@@ -109,15 +109,15 @@ class PeopleDetailState extends State<PeopleDetail> {
                                       children: [
                                         Text(
                                           '${patientData?.appointment.last.tf_time.year}',
-                                          style: whiteText(),
+                                          style: myText(color: Colors.white),
                                         ),
                                         Text(
                                           "3/21",
-                                          style: whiteText(),
+                                          style: myText(color: Colors.white),
                                         ),
                                         Text(
                                           "9:00-10:00",
-                                          style: whiteText(),
+                                          style: myText(color: Colors.white),
                                         )
                                       ],
                                     ))),

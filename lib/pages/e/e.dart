@@ -80,7 +80,7 @@ class ProfileCreateState extends State<Profile> {
                         profile!.name,
                         // textAlign: TextAlign.center,
 
-                        style: whiteText(),
+                        style: myText(color: Colors.white),
                       )
                     ],
                   ),

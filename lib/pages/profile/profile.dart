@@ -1,7 +1,6 @@
 import 'package:e_fu/module/box_ui.dart';
 import 'package:e_fu/module/page.dart';
 import 'package:e_fu/my_data.dart';
-import 'package:e_fu/pages/e/e_update.dart';
 import 'package:e_fu/request/e/e.dart';
 import 'package:e_fu/request/e/e_data.dart';
 import 'package:flutter/material.dart';
@@ -10,8 +9,8 @@ import 'package:logger/logger.dart';
 import 'package:fl_chart/fl_chart.dart';
 
 class ProfileInfo extends StatefulWidget {
-  ProfileInfo({super.key, required this.userName});
-  String userName;
+  const ProfileInfo({super.key, required this.userName});
+  final String userName;
 
   @override
   ProfileCreateState createState() => ProfileCreateState();
@@ -48,6 +47,8 @@ class ProfileCreateState extends State<ProfileInfo> {
       });
     } catch (e) {
       logger.v(e);
+    } finally {
+      EasyLoading.dismiss();
     }
   }
 
@@ -66,59 +67,38 @@ class ProfileCreateState extends State<ProfileInfo> {
                   BoxUI.boxHasRadius(
                     margin: const EdgeInsets.all(10),
                     padding: const EdgeInsets.all(10),
-                    height: 70,
+                    height: 200,
                     color: MyTheme.lightColor,
                     width: MediaQuery.of(context).size.width * 0.9,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Text(
-                          profile!.name,
-                          // textAlign: TextAlign.center,
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              profile!.name,
+                              // textAlign: TextAlign.center,
 
-                          style: whiteText(),
-                        )
-                      ],
-                    ),
-                  ),
-                  BoxUI.boxHasRadius(
-                    margin: const EdgeInsets.all(10),
-                    height: 70,
-                    width: MediaQuery.of(context).size.width * 0.9,
-                    padding: const EdgeInsets.all(10),
-                    child: Center(
-                      child: Text("性別 : ${profile?.sex}"),
-                    ),
-                  ),
-                  BoxUI.boxHasRadius(
-                    margin: const EdgeInsets.all(10),
-                    height: 70,
-                    width: MediaQuery.of(context).size.width * 0.9,
-                    padding: const EdgeInsets.all(10),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text("出生年月日"),
-                        Text(profile!.birthday
-                            .toIso8601String()
-                            .substring(0, 10))
-                      ],
-                    ),
-                  ),
-                  BoxUI.boxHasRadius(
-                    margin: const EdgeInsets.all(10),
-                    height: 300,
-                    width: MediaQuery.of(context).size.width * 0.9,
-                    padding: const EdgeInsets.all(10),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text("復健分析"),
-                        const SizedBox(
-                          height: 15,
+                              style: myText(color: Colors.white),
+                            ),
+                            Text(
+                              "性別",
+                              // textAlign: TextAlign.center,
+
+                              style: myText(color: Colors.white),
+                            ),
+                            Text(
+                              "age",
+                              // textAlign: TextAlign.center,
+
+                              style: myText(color: Colors.white),
+                            )
+                          ],
                         ),
                         SizedBox(
-                          height: 200,
+                          width: 150,
+                          height: 150,
                           child: RadarChart(
                             RadarChartData(
                                 getTitle: (index, angle) {
@@ -170,6 +150,46 @@ class ProfileCreateState extends State<ProfileInfo> {
                       ],
                     ),
                   ),
+                  BoxUI.boxHasRadius(
+                      margin: const EdgeInsets.all(10),
+                      height: 70,
+                      width: MediaQuery.of(context).size.width * 0.9,
+                      padding: const EdgeInsets.all(10),
+                      child: GestureDetector(
+                        child: Center(child: Text("個人檔案")),
+                      )),
+                  BoxUI.boxHasRadius(
+                      margin: const EdgeInsets.all(10),
+                      height: 70,
+                      width: MediaQuery.of(context).size.width * 0.9,
+                      padding: const EdgeInsets.all(10),
+                      child: GestureDetector(
+                        child: Center(child: Text("管理目標")),
+                      )),
+                  BoxUI.boxHasRadius(
+                      margin: const EdgeInsets.all(10),
+                      height: 70,
+                      width: MediaQuery.of(context).size.width * 0.9,
+                      padding: const EdgeInsets.all(10),
+                      child: GestureDetector(
+                        child: Center(child: Text("Mo伴管理")),
+                      )),
+                  BoxUI.boxHasRadius(
+                      margin: const EdgeInsets.all(10),
+                      height: 70,
+                      width: MediaQuery.of(context).size.width * 0.9,
+                      padding: const EdgeInsets.all(10),
+                      child: GestureDetector(
+                        child: Center(child: Text("設定檔案")),
+                      )),
+                  BoxUI.boxHasRadius(
+                      margin: const EdgeInsets.all(10),
+                      height: 70,
+                      width: MediaQuery.of(context).size.width * 0.9,
+                      padding: const EdgeInsets.all(10),
+                      child: GestureDetector(
+                        child: Center(child: Text("登出")),
+                      )),
                 ],
               ),
             ),

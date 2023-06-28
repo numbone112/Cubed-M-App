@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:e_fu/home.dart';
 import 'package:e_fu/main.dart';
 import 'package:e_fu/request/data.dart';
 import 'package:logger/logger.dart';

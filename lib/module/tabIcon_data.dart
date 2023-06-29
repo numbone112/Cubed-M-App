@@ -21,8 +21,8 @@ class TabIconData {
 
   static List<TabIconData> tabIconsList = <TabIconData>[
     TabIconData(
-      imagePath: 'assets/images/f_user_outlined.png',
-      selectedImagePath: 'assets/images/f_user.png',
+      imagePath: 'assets/images/friend_outlined.png',
+      selectedImagePath: 'assets/images/friend.png',
       title:'復健者',
       index: 0,
       isSelected: false,
@@ -39,8 +39,8 @@ class TabIconData {
       
     ),
     TabIconData(
-      imagePath: 'assets/images/e_user_outlined.png',
-      selectedImagePath: 'assets/images/e_user.png',
+      imagePath: 'assets/images/user_outlined.png',
+      selectedImagePath: 'assets/images/user.png',
       title:'復健師',
       index: 2,
       isSelected: false,
@@ -48,8 +48,8 @@ class TabIconData {
       
     ),
      TabIconData(
-      imagePath: 'assets/images/e_user_outlined.png',
-      selectedImagePath: 'assets/images/e_user.png',
+      imagePath: 'assets/images/user_outlined.png',
+      selectedImagePath: 'assets/images/user.png',
       title:'New',
       index: 3,
       isSelected: false,
@@ -68,8 +68,8 @@ static List<TabIconData> newAppList = <TabIconData>[
       animationController: null,
     ),
     TabIconData(
-      imagePath: 'assets/images/f_user_outlined.png',
-      selectedImagePath: 'assets/images/f_user.png',
+      imagePath: 'assets/images/friend_outlined.png',
+      selectedImagePath: 'assets/images/friend.png',
       title: 'MO伴',
       index: 1,
       isSelected: false,
@@ -77,7 +77,7 @@ static List<TabIconData> newAppList = <TabIconData>[
     ),
     TabIconData(
       imagePath: 'assets/images/exercise_outline.png',
-      selectedImagePath: 'assets/images/exercise_outline.png',
+      selectedImagePath: 'assets/images/exercise.png',
       title: '運動',
       index: 2,
       isSelected: false,
@@ -85,8 +85,8 @@ static List<TabIconData> newAppList = <TabIconData>[
     ),
    
     TabIconData(
-      imagePath: 'assets/images/e_user_outlined.png',
-      selectedImagePath: 'assets/images/e_user.png',
+      imagePath: 'assets/images/user_outlined.png',
+      selectedImagePath: 'assets/images/user.png',
       title: '其他',
       index: 3,
       isSelected: false,

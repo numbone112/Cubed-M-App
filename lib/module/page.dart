@@ -36,41 +36,43 @@ class CustomPageState extends State<CustomPage> {
           behavior: CusBehavior(),
           child: ListView(
             children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 20, bottom: 10),
-                child: Row(
-                  children: [
-                    Expanded(
-                      flex: 1,
-                      child: (widget.buildContext != null)
-                          ? IconButton(
-                              icon: const Icon(Icons.arrow_back_ios),
-                              onPressed: () {
-                                Navigator.pop(widget.buildContext!);
-                              },
-                            )
-                          : (widget.change != null)
-                              ? IconButton(
-                                  icon: const Icon(Icons.arrow_back_ios),
-                                  onPressed: () => widget.change!.call(),
-                                )
-                              : Container(),
-                    ),
-                    Expanded(
-                        flex: 2,
-                        child: Text(
-                          widget.title,
-                          style: const TextStyle(fontSize: 25),
-                          maxLines: 1,
-                          textAlign: TextAlign.center,
-                        )),
-                    Expanded(
-                      flex: 1,
-                      child: Container(
-                        child: widget.rightButton,
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 20, bottom: 10),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        flex: 1,
+                        child: (widget.buildContext != null)
+                            ? IconButton(
+                                icon: const Icon(Icons.arrow_back_ios),
+                                onPressed: () {
+                                  Navigator.pop(widget.buildContext!);
+                                },
+                              )
+                            : (widget.change != null)
+                                ? IconButton(
+                                    icon: const Icon(Icons.arrow_back_ios),
+                                    onPressed: () => widget.change!.call(),
+                                  )
+                                : Container(),
                       ),
-                    ),
-                  ],
+                      Expanded(
+                          flex: 2,
+                          child: Text(
+                            widget.title,
+                            style: const TextStyle(fontSize: 25),
+                            maxLines: 1,
+                            textAlign: TextAlign.center,
+                          )),
+                      Expanded(
+                        flex: 1,
+                        child: Container(
+                          child: widget.rightButton,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               widget.body

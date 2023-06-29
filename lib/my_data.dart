@@ -13,6 +13,8 @@ class MyTheme {
 class MySize {
   static double iconSize = 25;
   static double circularSize = 30;
+  static double titleSize = 20;
+  static double subtitleSize = 15;
 }
 
 class Name {

@@ -11,7 +11,7 @@ import 'my_data.dart';
 
 class Home extends StatefulWidget {
   static const routeName = '/home';
-  const Home({super.key,required this.userName});
+  const Home({super.key, required this.userName});
   final String userName;
 
   @override
@@ -22,7 +22,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   AnimationController? animationController;
 
   List<TabIconData> tabIconsList = TabIconData.newAppList;
-  late Widget tabBody ;
+  late Widget tabBody;
 
   @override
   void initState() {
@@ -43,89 +43,92 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     return Container(
       color: Colors.white,
       child: SafeArea(
-        top: false,
-        child: Scaffold(
-          resizeToAvoidBottomInset: false,
-          backgroundColor: MyTheme.backgroudColor,
-          body: Container(
-            padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
-            child: Stack(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                  child: tabBody,
-                ),
-                bottomBar(),
-              ],
-            ),
-          ),
-        ),
-      ),
+          top: false,
+          child: Scaffold(
+            backgroundColor: MyTheme.backgroudColor,
+            body: bottomBar(),
+            // body: Container(
+            //   padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+            //   child: tabBody,
+            // child: Stack(
+            //   children: <Widget>[
+            //     Padding(
+            //       padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+            //       child: tabBody,
+            //     ),
+            //   ],
+
+            // ),
+            // ),
+          )),
     );
   }
 
   Widget bottomBar() {
     return Column(
-      children: <Widget>[
-        const Expanded(
-          child: SizedBox(
-            height: 1,
-          ),
+      children: [
+        Expanded(
+            child: tabBody,
         ),
-        BottomBarView(
-          tabIconsList: tabIconsList,
-          changeIndex: (int index) {
-            if (index == 0) {
-              animationController?.reverse().then<dynamic>((data) {
+        Container(
+          height: 64,
+          child: BottomBarView(
+            tabIconsList: tabIconsList,
+            changeIndex: (int index) {
+              if (index == 0) {
+                animationController?.reverse().then<dynamic>((data) {
+                  // if (!mounted) {
+                  //   return;
+                  // }
+                  setState(() {
+                    tabBody = const HomePage();
+                  });
+                });
+              } else if (index == 1) {
                 // if (!mounted) {
                 //   return;
                 // }
                 setState(() {
-                  tabBody = const HomePage();
+                  tabBody = Mo();
                 });
-              });
-            } else if (index == 1) {
-              // if (!mounted) {
-              //   return;
-              // }
-              setState(() {
-                tabBody =  Mo();
-              });
-            } else if (index == 2) {
-              setState(() {
-                tabBody = const ExerciseHome();
-              });
-              // animationController?.reverse().then<dynamic>((data) {
+              } else if (index == 2) {
+                setState(() {
+                  tabBody = const ExerciseHome();
+                });
+                // animationController?.reverse().then<dynamic>((data) {
 
-              //   setState(() {
-              //     tabBody = Column(
-              //       mainAxisAlignment: MainAxisAlignment.center,
-              //       children: [
+                //   setState(() {
+                //     tabBody = Column(
+                //       mainAxisAlignment: MainAxisAlignment.center,
+                //       children: [
 
-              //         Center(
-              //           child: ElevatedButton(
-              //             style:ElevatedButton.styleFrom(
-              //               backgroundColor: MyTheme.color
-              //             ),
+                //         Center(
+                //           child: ElevatedButton(
+                //             style:ElevatedButton.styleFrom(
+                //               backgroundColor: MyTheme.color
+                //             ),
 
-              //               onPressed: () async {
-              //                 SharedPreferences prefs =
-              //                     await SharedPreferences.getInstance();
-              //                     prefs.clear();
-              //                     Navigator.popAndPushNamed(context, "welcome");
-              //               },
-              //               child: Text("登出")),
-              //         )
-              //       ],
-              //     );
-              //   });
-              // });
-            }else if(index==3){
-              setState(() {
-                tabBody=ProfileInfo(userName: widget.userName,);
-              });
-            }
-          },
+                //               onPressed: () async {
+                //                 SharedPreferences prefs =
+                //                     await SharedPreferences.getInstance();
+                //                     prefs.clear();
+                //                     Navigator.popAndPushNamed(context, "welcome");
+                //               },
+                //               child: Text("登出")),
+                //         )
+                //       ],
+                //     );
+                //   });
+                // });
+              } else if (index == 3) {
+                setState(() {
+                  tabBody = ProfileInfo(
+                    userName: widget.userName,
+                  );
+                });
+              }
+            },
+          ),
         ),
       ],
     );

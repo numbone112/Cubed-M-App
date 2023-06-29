@@ -111,11 +111,11 @@ class _LoginState extends State<Login> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-              const Row(
+              Row(
                 children: [Icon(Icons.people), Text("帳號")],
               ),
               accountField,
-              const Row(
+              Row(
                 children: [Icon(Icons.password), Text("密碼")],
               ),
               passwordField,

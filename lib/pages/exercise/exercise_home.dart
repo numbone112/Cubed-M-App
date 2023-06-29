@@ -33,23 +33,23 @@ class ExerciseHomeState extends State<ExerciseHome>
         child: SizedBox(
             child: Column(
           children: [
-            TabBar(
-              controller: tabController,
-              tabs: [
+            TabBar(controller: tabController, tabs: [
               Tab(
                 child: BoxUI.boxHasRadius(
-                    child: BoxUI.titleText("邀約", 0, color: Colors.black,alignment: Alignment.center),
+                    child: BoxUI.titleText("邀約", 0,
+                        color: Colors.black, alignment: Alignment.center),
                     color: Colors.white),
               ),
               Tab(
-               child: BoxUI.boxHasRadius(
-                    child: BoxUI.titleText("歷史運動", 0, color: Colors.black,alignment: Alignment.center),
+                child: BoxUI.boxHasRadius(
+                    child: BoxUI.titleText("歷史運動", 0,
+                        color: Colors.black, alignment: Alignment.center),
                     color: Colors.white),
               )
             ]),
             SizedBox(
-              height: MediaQuery.of(context).size.height*0.7,
-              width: MediaQuery.of(context).size.width*0.7,
+              height: MediaQuery.of(context).size.height * 0.7,
+              width: MediaQuery.of(context).size.width * 0.7,
               child: TabBarView(
                 controller: tabController,
                 children: [Text("邀約"), Text("歷史運動")],

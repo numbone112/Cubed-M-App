@@ -1,6 +1,7 @@
 import 'package:e_fu/module/box_ui.dart';
 import 'package:e_fu/module/page.dart';
 import 'package:e_fu/my_data.dart';
+import 'package:e_fu/pages/profile/mo_list.dart';
 import 'package:e_fu/request/e/e.dart';
 import 'package:e_fu/request/e/e_data.dart';
 import 'package:flutter/material.dart';
@@ -195,43 +196,49 @@ class ProfileCreateState extends State<ProfileInfo> {
                             ],
                           ),
                         )),
+                    GestureDetector(
+                      child: BoxUI.boxHasRadius(
+                          margin: const EdgeInsets.fromLTRB(0, 10, 0, 5),
+                          height: 70,
+                          width: MediaQuery.of(context).size.width * 0.9,
+                          padding: const EdgeInsets.all(10),
+                          child: GestureDetector(
+                            child: Row(
+                              children: [
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(20, 0, 15, 0),
+                                  child: Image.asset(
+                                      'assets/images/setting_friend.png',
+                                      scale: 2.0),
+                                ),
+                                Text("管理Mo伴", style: TextStyle(fontSize: 16)),
+                              ],
+                            ),
+                          )),
+                      onTap: () {
+                        Navigator.pushNamed(context, MoList.routeName,
+                            arguments: widget.userName);
+                      },
+                    ),
                     BoxUI.boxHasRadius(
-                        margin: const EdgeInsets.fromLTRB(0, 10, 0, 5),
-                        height: 70,
-                        width: MediaQuery.of(context).size.width * 0.9,
-                        padding: const EdgeInsets.all(10),
-                        child: GestureDetector(
-                          child: Row(
-                            children: [
-                              Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(20, 0, 15, 0),
-                                child: Image.asset(
-                                    'assets/images/setting_friend.png',
-                                    scale: 2.0),
-                              ),
-                              Text("Mo伴管理", style: TextStyle(fontSize: 16)),
-                            ],
-                          ),
-                        )),
-                    BoxUI.boxHasRadius(
-                        margin: const EdgeInsets.fromLTRB(0, 10, 0, 5),
-                        height: 70,
-                        width: MediaQuery.of(context).size.width * 0.9,
-                        padding: const EdgeInsets.all(10),
-                        child: GestureDetector(
-                          child: Row(
-                            children: [
-                              Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(20, 0, 15, 0),
-                                child: Image.asset('assets/images/setting.png',
-                                    scale: 2.0),
-                              ),
-                              Text("設定", style: TextStyle(fontSize: 16)),
-                            ],
-                          ),
-                        )),
+                      margin: const EdgeInsets.fromLTRB(0, 10, 0, 5),
+                      height: 70,
+                      width: MediaQuery.of(context).size.width * 0.9,
+                      padding: const EdgeInsets.all(10),
+                      child: GestureDetector(
+                        child: Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(20, 0, 15, 0),
+                              child: Image.asset('assets/images/setting.png',
+                                  scale: 2.0),
+                            ),
+                            Text("設定", style: TextStyle(fontSize: 16)),
+                          ],
+                        ),
+                      ),
+                    ),
                     BoxUI.boxHasRadius(
                         margin: const EdgeInsets.fromLTRB(0, 10, 0, 5),
                         height: 70,

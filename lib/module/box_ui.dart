@@ -1,3 +1,4 @@
+import 'package:e_fu/request/invite/invite_data.dart';
 import 'package:flutter/material.dart';
 
 class BoxUI {
@@ -41,4 +42,19 @@ class BoxUI {
       ),
     );
   }
+  static Widget inviteBox(Invite invite){
+  return (BoxUI.boxHasRadius(child: Row(
+    children: [
+      Column(children: [
+        Text(invite.name),
+        Text(invite.time.toString()),
+        Text(invite.people),
+        Text(invite.remark)
+      ],),
+      GestureDetector(child: Icon(Icons.cancel_sharp),),
+      GestureDetector(child: Icon(Icons.check),),
+    ],
+  )));
 }
+}
+

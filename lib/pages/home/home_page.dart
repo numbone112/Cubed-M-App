@@ -1,3 +1,4 @@
+import 'package:e_fu/pages/exercise/insert.dart';
 import 'package:linked_scroll_controller/linked_scroll_controller.dart';
 
 import 'package:e_fu/module/box_ui.dart';
@@ -210,6 +211,9 @@ class HomePageState extends State<HomePage> {
                       padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
                       color: MyTheme.hintColor,
                       child: GestureDetector(
+                        onTap: () {
+                          Navigator.pushNamed(context, Insert_invite.routeName);
+                        },
                         child: BoxUI.titleText("新增", 0, color: Colors.white),
                       ))
                 ],

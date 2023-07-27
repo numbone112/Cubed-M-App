@@ -1,8 +1,8 @@
-import 'package:e_fu/module/page.dart';
-import 'package:linked_scroll_controller/linked_scroll_controller.dart';
-
 import 'package:e_fu/module/box_ui.dart';
 import 'package:e_fu/my_data.dart';
+import 'package:e_fu/request/exercise/history_data.dart';
+import 'package:e_fu/request/exercise/invite_data.dart';
+
 import 'package:flutter/material.dart';
 
 class ExerciseHome extends StatefulWidget {
@@ -26,6 +26,16 @@ class ExerciseHomeState extends State<ExerciseHome>
 
   @override
   Widget build(BuildContext context) {
+    var array = [
+      Invite(
+          name: "name",
+          time: DateTime.now(),
+          people: "people",
+          remark: "remark")
+    ];
+    var history = [
+      History(name: "name", time: DateTime.now(), people: "people", remark: "remark", avgScore: 4.5, isGroup: true, items: [3,2,1], score: 5.0,peopleCount: 3)
+    ];
     return (Scaffold(
       backgroundColor: MyTheme.backgroudColor,
       resizeToAvoidBottomInset: true,
@@ -35,11 +45,12 @@ class ExerciseHomeState extends State<ExerciseHome>
           children: [
             TabBar(controller: tabController, tabs: [
               Tab(
-                child: BoxUI.boxHasRadius(
-                    child: BoxUI.titleText("邀約", 0,
-                        color: Colors.black, alignment: Alignment.center),
-                    color: Colors.white),
-              ),
+                  child: BoxUI.boxHasRadius(
+                      child: BoxUI.titleText("邀約", 0,
+                          color: Colors.black, alignment: Alignment.center),
+                      color: Colors.white)
+                 
+                  ),
               Tab(
                 child: BoxUI.boxHasRadius(
                     child: BoxUI.titleText("歷史運動", 0,
@@ -48,11 +59,29 @@ class ExerciseHomeState extends State<ExerciseHome>
               )
             ]),
             SizedBox(
+              
               height: MediaQuery.of(context).size.height * 0.7,
               width: MediaQuery.of(context).size.width * 0.7,
               child: TabBarView(
                 controller: tabController,
-                children: [Text("邀約"), Text("歷史運動")],
+                children: [
+                  BoxUI.boxHasRadius(
+                    
+                      child: ListView.builder(
+                          itemCount: array.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return (BoxUI.inviteBox(array[index]));
+                          }),
+                      color: HexColor("F4F5F7")),
+                    BoxUI.boxHasRadius(
+                    
+                      child: ListView.builder(
+                          itemCount: history.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return (BoxUI.history(history[index]));
+                          }),
+                      color: HexColor("F4F5F7")),
+                ],
               ),
             ),
           ],

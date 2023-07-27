@@ -96,6 +96,9 @@ class MyappState extends State<MyApp> {
               userName: userName,
             ),
         MoList.routeName: (_) => MoList(userName: userName),
+        Insert_invite.routeName: (_) => Insert_invite(
+              userName: userName,
+            ),
       },
     );
   }

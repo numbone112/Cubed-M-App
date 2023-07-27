@@ -2,6 +2,7 @@ import 'package:e_fu/home.dart';
 import 'package:e_fu/pages/event/event_now_result.dart';
 import 'package:e_fu/pages/event/event_result.dart';
 import 'package:e_fu/pages/exercise/insert.dart';
+import 'package:e_fu/pages/profile/mo_list.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import './pages/e/e_update.dart';
 import 'package:e_fu/pages/event/event.dart';
@@ -50,7 +51,7 @@ class MyappState extends State<MyApp> {
       // prefs.clear();
       setState(() {
         if (prefs.containsKey(Name.userName)) {
-          userName = prefs.getString(Name.userName) ??"";
+          userName = prefs.getString(Name.userName) ?? "";
         }
       });
     }
@@ -71,19 +72,30 @@ class MyappState extends State<MyApp> {
         color: MyTheme.backgroudColor,
         child: SafeArea(
           bottom: false,
-          child: userName == "" ? const Login() :  Home(userName: userName,),
+          child: userName == ""
+              ? const Login()
+              : Home(
+                  userName: userName,
+                ),
         ),
       ),
       debugShowCheckedModeBanner: false,
       routes: <String, WidgetBuilder>{
-        Home.routeName: (_) =>  Home(userName: userName,),
+        Home.routeName: (_) => Home(
+              userName: userName,
+            ),
         Login.routeName: (_) => const Login(),
-        Event.routeName: (_) =>  Event(userName: userName,),
+        Event.routeName: (_) => Event(
+              userName: userName,
+            ),
         ProfileUpdate.routeName: (_) => const ProfileUpdate(),
-        EventResult.routeName:(_)=> EventResult(userName: userName,),
-        EventNowResult.routeName:(_)=> EventNowResult(userName: userName,),
-        Insert_invite.routeName:(_)=> Insert_invite(userName: userName,),
-
+        EventResult.routeName: (_) => EventResult(
+              userName: userName,
+            ),
+        EventNowResult.routeName: (_) => EventNowResult(
+              userName: userName,
+            ),
+        MoList.routeName: (_) => MoList(userName: userName),
       },
     );
   }

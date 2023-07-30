@@ -24,11 +24,13 @@ class MoRepo extends API implements MoAPI {
           },
         );
 
-        if (response == 200) {
-          logger.v("200");
-          return Format.fromJson(response.body);
+        Map responseBody = json.decode(utf8.decode(response.bodyBytes));
+        if (response.statusCode == 200) {
+          logger.v(response.body);
+          return Format.fromJson(responseBody);
         } else {
-          return Format.fromJson(response.body);
+          logger.v("not 200");
+          return Format.fromJson(responseBody);
         }
       } catch (e) {
         logger.v("this is mo.dart error");

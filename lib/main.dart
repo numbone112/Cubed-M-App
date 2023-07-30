@@ -2,7 +2,7 @@ import 'package:e_fu/home.dart';
 import 'package:e_fu/pages/event/event_now_result.dart';
 import 'package:e_fu/pages/event/event_result.dart';
 import 'package:e_fu/pages/exercise/insert.dart';
-import 'package:e_fu/pages/profile/mo_list.dart';
+import 'package:e_fu/pages/mo/mo_list.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import './pages/e/e_update.dart';
 import 'package:e_fu/pages/event/event.dart';

@@ -17,8 +17,7 @@ class Format {
     var logger = Logger();
 
   Format.fromFields(this.message,this.success,this.D);
-  Format.fromJson(String str) {
-      Map<String,dynamic> d = json.decode(str);
+  Format.fromJson(Map<dynamic,dynamic> d) {
       message=d["message"];
       success=d['success'];
       D=d["D"];

@@ -2,11 +2,11 @@ import 'dart:convert';
 
 import 'package:e_fu/main.dart';
 import 'package:e_fu/request/data.dart';
+import 'package:e_fu/request/user/account.dart';
 import 'package:logger/logger.dart';
 import 'package:crypto/crypto.dart';
 
 import 'my_data.dart';
-import 'request/user/account.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -92,7 +92,7 @@ class _LoginState extends State<Login> {
   }
 
   var logger = Logger();
-  var accountRepo = AccountRepo();
+  var userRepo = UserRepo();
 
   @override
   Widget build(BuildContext context) {
@@ -127,7 +127,7 @@ class _LoginState extends State<Login> {
                 logger.v("encryptStr $encryptStr");
                 logger.v("digest $digest");
 
-                Format a = await accountRepo.login(accountC.text,encryptStr);
+                Format a = await userRepo.login(accountC.text,encryptStr);
                 if (a.message == "登入成功") {
                   prefs = await SharedPreferences.getInstance();
                   prefs.setString(Name.userName, accountC.text);

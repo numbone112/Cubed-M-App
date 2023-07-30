@@ -34,7 +34,7 @@ class Insert_invitestate extends State<Insert_invite> {
     return CustomPage(
         body: Column(
           children: [
-            const Row(
+            Row(
               children: [
                 Text("邀約名稱："),
                 Expanded(
@@ -43,7 +43,7 @@ class Insert_invitestate extends State<Insert_invite> {
                 ))
               ],
             ),
-            const Row(
+            Row(
               children: [
                 Text("運動日期："),
                 Expanded(
@@ -53,7 +53,7 @@ class Insert_invitestate extends State<Insert_invite> {
                 ))
               ],
             ),
-            const Row(
+            Row(
               children: [
                 Text("運動時段："),
                 Expanded(

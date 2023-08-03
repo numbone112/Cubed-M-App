@@ -6,8 +6,9 @@ class MyTheme {
   static Color backgroudColor = const Color(0xffF9F9F9);
   static Color titleColor = const Color(0xff5C5C5C);
   static Color hintColor = const Color(0xff969696);
-  static Color buttonColor=const Color(0xff023246);
+  static Color buttonColor=HexColor("ff023246");
   static Color black =HexColor("575757");
+  static Color pink =HexColor("ED9F8E");
 }
 
 class MySize {

@@ -47,7 +47,6 @@ class ProfileCreateState extends State<ProfileInfo> {
         setState(() {
           profile = value;
         });
-        String sex = profile!.d.sex;
         EasyLoading.dismiss();
       });
     } catch (e) {
@@ -67,7 +66,7 @@ class ProfileCreateState extends State<ProfileInfo> {
             color: MyTheme.backgroudColor,
             child: Center(
                 child: CircularProgressIndicator(
-              color: MyTheme.color,
+              color: MyTheme.lightColor,
             )),
           )
         : ScrollConfiguration(

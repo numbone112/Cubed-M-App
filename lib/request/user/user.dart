@@ -3,7 +3,7 @@
 import 'dart:convert';
 
 import 'package:e_fu/request/api.dart';
-import 'package:e_fu/request/user/get_profile_model.dart';
+import 'package:e_fu/request/user/get_user_model.dart';
 import 'login_data.dart';
 import 'package:logger/logger.dart';
 
@@ -20,7 +20,7 @@ abstract class UserAPI {
   // Future<String> updateUser(int id, User user);
 
   //查詢使用者
-  Future<GetProfileDataModel> getUser(String eId);
+  Future<GetUserModel> getUser(String eId);
 
   // Future<Format> updateProfile(ProfileData profileData);
   // Future<Format> getFuDatil(String pId);
@@ -66,15 +66,15 @@ class UserRepo extends API implements UserAPI {
       Map responseBody = json.decode(utf8.decode(response.bodyBytes));
       if (response.statusCode == 200) {
         logger.v(responseBody);
-        return GetProfileDataModel.fromJson(responseBody);
+        return GetUserModel.fromJson(responseBody);
       } else {
         logger.v("not 200");
-        return GetProfileDataModel.fromJson(responseBody);
+        return GetUserModel.fromJson(responseBody);
       }
     } catch (e) {
       Map error = {"D": {}, "message": "error", "success": false};
       logger.v(e);
-      return GetProfileDataModel.fromJson(error);
+      return GetUserModel.fromJson(error);
     }
   }
 }

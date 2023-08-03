@@ -20,7 +20,7 @@ abstract class UserAPI {
   // Future<String> updateUser(int id, User user);
 
   //查詢使用者
-  Future<GetUserModel> getUser(String id);
+  Future<GetUserModel> getUser(String eId);
 
   // Future<Format> updateProfile(ProfileData profileData);
   // Future<Format> getFuDatil(String pId);
@@ -54,10 +54,10 @@ class UserRepo extends API implements UserAPI {
   }
 
   @override
-  getUser(String id) async {
+  getUser(String eId) async {
     try {
       dynamic response = await client.get(
-        Uri.parse('$domain/therapist/$id'),
+        Uri.parse('$domain/therapist/$eId'),
         headers: {
           'Content-Type': 'application/json',
         },

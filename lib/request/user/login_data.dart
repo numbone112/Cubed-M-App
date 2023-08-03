@@ -4,7 +4,7 @@
 
 import 'dart:convert';
 
-import "../data.dart";
+import '../data.dart';
 
 class User extends Data {
   // User FromJson(String str) => User.fromJson(json.decode(str));

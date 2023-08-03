@@ -7,18 +7,13 @@ import 'package:e_fu/request/api.dart';
 import 'package:e_fu/request/data.dart';
 import 'record_data.dart';
 
-
 abstract class RecordAPI {
-  
-
   /// 傳送資料
   Future<Format> record(ArrangeDate arrangeDate);
-
-  
 }
 
 class RecordRepo extends API implements RecordAPI {
-    var logger = Logger();
+  var logger = Logger();
 
   @override
   Future<Format> record(ArrangeDate arrangeDate) async {
@@ -28,26 +23,19 @@ class RecordRepo extends API implements RecordAPI {
             'Content-Type': 'application/json',
           },
           body: jsonEncode(arrangeDate.toJson()));
-          logger.v(response.body);
+          
+      Map responseBody = json.decode(utf8.decode(response.bodyBytes));
       if (response.statusCode == 200) {
-        logger.v("200了");
-        
-        // Format f=;
-        // User.fromJson(omg);
-        // var oomg = omg['data']['data'][0];
-
-        // var ooomg = User.fromJson(json.encode(oomg));
-        return Format.fromJson(response.body);
-       
+        logger.v(response.body);
+        return Format.fromJson(responseBody);
       } else {
-        return Format.fromJson(response.body);
+        logger.v("not 200");
+        return Format.fromJson(responseBody);
       }
     } catch (e) {
       logger.v("error");
       logger.v(e.toString());
-      return Format.fromFields("error", false,"");
-      
+      return Format.fromFields("error", false, "");
     }
-   
   }
 }

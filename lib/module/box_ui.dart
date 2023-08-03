@@ -88,7 +88,7 @@ class BoxUI {
     if (history.isGroup) {
       item = Row(
         children: [
-          const Column(
+          Column(
             children: [
               Padding(padding: EdgeInsets.all(5),child: Text("我"),), 
               Padding(padding: EdgeInsets.all(5),child: Text("平均"),), 

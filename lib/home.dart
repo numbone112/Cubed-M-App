@@ -1,8 +1,10 @@
 import 'package:e_fu/pages/event/event_home.dart';
 import 'package:e_fu/pages/exercise/exercise_home.dart';
 import 'package:e_fu/pages/home/home_page.dart';
+import 'package:e_fu/pages/mo/hide_mo_list.dart';
 import 'package:e_fu/pages/mo/mo.dart';
-import 'package:e_fu/pages/profile/profile.dart';
+import 'package:e_fu/pages/mo/mo_list.dart';
+import 'package:e_fu/pages/user/profile_info.dart';
 import 'package:flutter/material.dart';
 
 import 'bottom_bar_view.dart';
@@ -68,7 +70,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     return Column(
       children: [
         Expanded(
-            child: tabBody,
+          child: tabBody,
         ),
         Container(
           height: 64,

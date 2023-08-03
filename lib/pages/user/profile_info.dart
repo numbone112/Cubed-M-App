@@ -1,15 +1,16 @@
+import 'dart:developer';
+
 import 'package:e_fu/module/box_ui.dart';
-import 'package:e_fu/module/page.dart';
 import 'package:e_fu/my_data.dart';
-import 'package:e_fu/pages/profile/mo_list.dart';
-import 'package:e_fu/request/e/e.dart';
-import 'package:e_fu/request/e/e_data.dart';
+import 'package:e_fu/pages/mo/mo_list.dart';
+import 'package:e_fu/request/user/account.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:logger/logger.dart';
 import 'package:fl_chart/fl_chart.dart';
 
 import '../../module/cusbehiver.dart';
+import '../../request/user/get_user_model.dart';
 
 class ProfileInfo extends StatefulWidget {
   const ProfileInfo({super.key, required this.userName});
@@ -32,8 +33,8 @@ class RawDataSet {
 }
 
 class ProfileCreateState extends State<ProfileInfo> {
-  ProfileData? profile;
-  ERepo eRepo = ERepo();
+  GetUserModel? profile;
+  UserRepo userRepo = UserRepo();
   var logger = Logger();
   List<RawDataSet> rawDataSetList = [
     RawDataSet(title: "復健者", color: Colors.blue, values: [5, 3, 1])
@@ -42,9 +43,9 @@ class ProfileCreateState extends State<ProfileInfo> {
   getProfile() {
     EasyLoading.show(status: 'loading...');
     try {
-      eRepo.getProfile(widget.userName).then((value) {
+      userRepo.getUser(widget.userName).then((value) {
         setState(() {
-          profile = parseProfile(value.D);
+          profile = value;
         });
         EasyLoading.dismiss();
       });
@@ -61,7 +62,13 @@ class ProfileCreateState extends State<ProfileInfo> {
       getProfile();
     }
     return (profile == null)
-        ? Center(child: Text("等待中"))
+        ? Container(
+            color: MyTheme.backgroudColor,
+            child: Center(
+                child: CircularProgressIndicator(
+              color: MyTheme.lightColor,
+            )),
+          )
         : ScrollConfiguration(
             behavior: CusBehavior(),
             child: SingleChildScrollView(
@@ -84,20 +91,20 @@ class ProfileCreateState extends State<ProfileInfo> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                profile!.name,
+                                profile!.d.name,
                                 // textAlign: TextAlign.center,
                                 style: myText(
                                     color: Colors.white,
                                     fontsize: MySize.subtitleSize),
                               ),
                               Text(
-                                "性別",
+                                "性別：${profile!.d.sex != "female" ? "男" : "女"}",
                                 // textAlign: TextAlign.center,
 
                                 style: myText(color: Colors.white),
                               ),
                               Text(
-                                "age",
+                                "年齡：${DateTime.now().year - profile!.d.birthday.year}",
                                 // textAlign: TextAlign.center,
 
                                 style: myText(color: Colors.white),

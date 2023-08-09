@@ -4,13 +4,14 @@ import 'package:e_fu/request/exercise/invite_data.dart';
 import 'package:flutter/material.dart';
 
 class BoxUI {
-  static Widget boxHasRadius(
-      {Color? color,
-      double? height,
-      double? width,
-      required Widget child,
-      EdgeInsetsGeometry? margin,
-      EdgeInsetsGeometry? padding}) {
+  static Widget boxHasRadius({
+    Color? color,
+    double? height,
+    double? width,
+    required Widget child,
+    EdgeInsetsGeometry? margin,
+    EdgeInsetsGeometry? padding,
+  }) {
     return Container(
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.all(Radius.circular(30)),
@@ -31,14 +32,19 @@ class BoxUI {
   }
 
   static Widget titleText(String title, double gap,
-      {AlignmentGeometry? alignment, double? fontSize, Color? color}) {
+      {AlignmentGeometry? alignment,
+      double? fontSize,
+      Color? color,
+      FontWeight? fontWeight}) {
     return Container(
       alignment: alignment ?? Alignment.centerLeft,
       padding: EdgeInsets.fromLTRB(0, gap, 0, gap),
       child: Text(
         title,
         style: TextStyle(
-            fontWeight: FontWeight.bold, fontSize: fontSize, color: color),
+            fontWeight: fontWeight ?? FontWeight.bold,
+            fontSize: fontSize,
+            color: color),
         textAlign: TextAlign.left,
       ),
     );
@@ -54,7 +60,6 @@ class BoxUI {
             Expanded(
                 child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              // mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Text(
                   invite.name,
@@ -64,11 +69,11 @@ class BoxUI {
                 ),
                 Text(invite.time.toString().substring(0, 10)),
                 Text(
-                  invite.people,
+                  '召集人：${invite.people}',
                   style: const TextStyle(color: Colors.grey),
                 ),
                 Text(
-                  invite.remark,
+                  '備註：${invite.remark}',
                   style: const TextStyle(color: Colors.grey),
                 )
               ],
@@ -88,49 +93,104 @@ class BoxUI {
     if (history.isGroup) {
       item = Row(
         children: [
+          const Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Padding(
+              padding: EdgeInsets.all(5),
+              child: Text("我"),
+            ),
+            Padding(padding: EdgeInsets.all(5)),
+            Padding(
+              padding: EdgeInsets.all(5),
+              child: Text("平均"),
+            ),
+          ]),
           Column(
             children: [
-              Padding(padding: EdgeInsets.all(5),child: Text("我"),), 
-              Padding(padding: EdgeInsets.all(5),child: Text("平均"),), 
-            ]
-          ),
-          Column(
-            children: [
-              BoxUI.boxHasRadius(
-                padding: EdgeInsets.all(5),
-                  child: Text(
-                    history.score.toString(),
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  color: MyTheme.buttonColor),
-              BoxUI.boxHasRadius(
-                padding: EdgeInsets.all(5),
-                  child: Text(
-                    history.avgScore.toString(),
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  color: MyTheme.lightColor)
+              Container(
+                alignment: const Alignment(0, 0),
+                height: 25,
+                width: 50,
+                decoration: BoxDecoration(
+                  color: MyTheme.buttonColor,
+                  borderRadius: const BorderRadius.all(Radius.circular(25.0)),
+                ),
+                child: Text(history.score.toString(),
+                    style: const TextStyle(color: Colors.white)),
+              ),
+               const Padding(padding: EdgeInsets.all(5)),
+              Container(
+                alignment: const Alignment(0, 0),
+                height: 25,
+                width: 50,
+                decoration: BoxDecoration(
+                  color: MyTheme.lightColor,
+                  borderRadius: const BorderRadius.all(Radius.circular(25.0)),
+                ),
+                child: Text(history.avgScore.toString(),
+                    style: const TextStyle(color: Colors.white)),
+              )
             ],
           )
         ],
       );
-      label = boxHasRadius(child: const Text("團體"));
+      label = Container(
+        margin: const EdgeInsets.only(
+          right: 5,
+        ),
+        alignment: const Alignment(0, 0),
+        height: 25,
+        width: 50,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: const BorderRadius.all(Radius.circular(25.0)),
+          border: Border.all(width: 1, color: HexColor("C6AC78")),
+        ),
+        child: Text(
+          "團體",
+          style: TextStyle(color: HexColor("C6AC78")),
+        ),
+      );
     } else {
-      item = BoxUI.boxHasRadius(child: Text(history.score.toString()));
-      label = boxHasRadius(child: const Text("個人"));
+      item = Container(
+        alignment: const Alignment(0, 0),
+        height: 25,
+        width: 50,
+        decoration: BoxDecoration(
+          color: MyTheme.buttonColor,
+          borderRadius: const BorderRadius.all(Radius.circular(25.0)),
+        ),
+        child: Text(history.score.toString(),
+            style: const TextStyle(color: Colors.white)),
+      );
+
+      label = Container(
+        alignment: const Alignment(0, 0),
+        height: 25,
+        width: 50,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: const BorderRadius.all(Radius.circular(25.0)),
+          border: Border.all(width: 1, color: Colors.black45),
+        ),
+        child: const Text("個人"),
+      );
     }
 
     return BoxUI.boxHasRadius(
-        height: 100,
+      margin: const EdgeInsets.all(5),
+        height: 120,
         padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Expanded(
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     children: [
+                      label,
                       history.isGroup
                           ? Text(
                               history.name,
@@ -138,8 +198,7 @@ class BoxUI {
                                   color: MyTheme.buttonColor,
                                   fontWeight: FontWeight.bold),
                             )
-                          : Container(),
-                      label
+                          : Container()
                     ],
                   ),
                   Text(history.time.toString().substring(0, 10)),
@@ -154,7 +213,9 @@ class BoxUI {
                 ],
               ),
             ),
-            Column(children: [const Text("運動評分"), item])
+            Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [const Text("運動評分"), item])
           ],
         ));
   }

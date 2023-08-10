@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:e_fu/module/box_ui.dart';
 import 'package:e_fu/my_data.dart';
@@ -140,7 +139,6 @@ class ProfileCreateState extends State<ProfileInfo> {
                                       .asMap()
                                       .entries
                                       .map((entry) {
-                                    final index = entry.key;
                                     final rawDataSet = entry.value;
 
                                     final isSelected = true;

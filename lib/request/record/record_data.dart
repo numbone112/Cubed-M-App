@@ -1,8 +1,5 @@
 // ignore_for_file: non_constant_identifier_names
 
-import 'dart:convert';
-import 'package:e_fu/request/data.dart';
-import 'dart:convert';
 
 import 'package:json_annotation/json_annotation.dart';
 

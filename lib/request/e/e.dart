@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:e_fu/request/user/get_user_model.dart';
 import 'package:logger/logger.dart';
 
 import 'package:e_fu/request/api.dart';
@@ -120,7 +119,7 @@ class ERepo extends API implements EAPI {
   Future<Format> getFuDatil(String pId) async {
     try {
       final response = await client
-          .get(Uri.parse('$domain/people/user_id/${pId}'), headers: {
+          .get(Uri.parse('$domain/people/user_id/$pId'), headers: {
         'Content-Type': 'application/json',
       });
 

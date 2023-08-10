@@ -13,8 +13,8 @@ import 'package:e_fu/request/mo/mo.dart';
 
 class MoList extends StatefulWidget {
   static const routeName = '/mo';
-  String userName;
-  MoList({super.key, required this.userName});
+  final String userName;
+  const MoList({super.key, required this.userName});
 
   @override
   _MoListPageState createState() => _MoListPageState();
@@ -123,7 +123,7 @@ class _MoListPageState extends State<MoList> {
           title: const Text("管理Mo伴"),
           backgroundColor: MyTheme.lightColor,
           leading: GestureDetector(
-            child: Icon(Icons.chevron_left),
+            child: const Icon(Icons.chevron_left),
             onTap: () {
               Navigator.of(context).pop();
             },
@@ -170,7 +170,7 @@ class _MoListPageState extends State<MoList> {
                     ),
                     Expanded(
                       child: Padding(
-                        padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
+                        padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
                         child: TextField(
                           cursorColor: MyTheme.lightColor,
                           decoration: InputDecoration(
@@ -190,7 +190,7 @@ class _MoListPageState extends State<MoList> {
                     child: (moList == null)
                         ? Container(
                             color: MyTheme.backgroudColor,
-                            margin: EdgeInsets.fromLTRB(0, 0, 0, 64),
+                            margin: const EdgeInsets.fromLTRB(0, 0, 0, 64),
                             child: Center(
                                 child: CircularProgressIndicator(
                               color: MyTheme.lightColor,

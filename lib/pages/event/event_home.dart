@@ -14,8 +14,8 @@ import 'package:e_fu/my_data.dart';
 import 'package:flutter/material.dart';
 
 class EventHome extends StatefulWidget {
-   EventHome({super.key,required this.userName});
-   String userName;
+   const EventHome({super.key,required this.userName});
+   final String userName;
 
   @override
   State<StatefulWidget> createState() => EventHomeState();

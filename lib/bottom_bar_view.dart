@@ -25,7 +25,7 @@ class _BottomBarViewState extends State<BottomBarView>
     );
     animationController?.forward();
     super.initState();
-    setRemoveAllSelection(widget.tabIconsList?[0]);
+    setRemoveAllSelection(widget.tabIconsList[0]);
   }
 
   @override
@@ -53,12 +53,12 @@ class _BottomBarViewState extends State<BottomBarView>
                       padding: const EdgeInsets.only(left: 8, right: 8, top: 4),
                       child: Row(
                         children: 
-                        List.generate(widget.tabIconsList!.length, (index) {
+                        List.generate(widget.tabIconsList.length, (index) {
                            return(Expanded( child: TabIcons(
-                                tabIconData: widget.tabIconsList?[index],
+                                tabIconData: widget.tabIconsList[index],
                                 removeAllSelect: () {
                                   setRemoveAllSelection(
-                                      widget.tabIconsList?[index]);
+                                      widget.tabIconsList[index]);
                                   widget.changeIndex!(index);
                                 }),));
                         })
@@ -125,12 +125,12 @@ class _BottomBarViewState extends State<BottomBarView>
   void setRemoveAllSelection(TabIconData? tabIconData) {
     if (!mounted) return;
     setState(() {
-      widget.tabIconsList.forEach((TabIconData tab) {
+      for (var tab in widget.tabIconsList) {
         tab.isSelected = false;
         if (tabIconData!.index == tab.index) {
           tab.isSelected = true;
         }
-      });
+      }
     });
   }
 }

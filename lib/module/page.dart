@@ -3,7 +3,7 @@ import 'package:e_fu/my_data.dart';
 import 'package:flutter/material.dart';
 
 class CustomPage extends StatefulWidget {
-  CustomPage(
+  const CustomPage(
       {super.key,
       required this.body,
       this.buildContext,
@@ -12,15 +12,17 @@ class CustomPage extends StatefulWidget {
       this.change,
       this.rightButton,
       this.headColor,
-      this.headTextColor});
-  Widget body;
-  BuildContext? buildContext;
-  String title;
-  Widget? floatButton;
-  Function? change;
-  GestureDetector? rightButton;
-  Color? headColor;
-  Color? headTextColor;
+      this.headTextColor,
+      this.prevColor});
+  final Widget body;
+  final BuildContext? buildContext;
+  final String title;
+  final Widget? floatButton;
+  final Function? change;
+  final GestureDetector? rightButton;
+  final Color? headColor;
+  final Color? headTextColor;
+  final Color? prevColor;
 
   @override
   State<StatefulWidget> createState() => CustomPageState();
@@ -41,45 +43,55 @@ class CustomPageState extends State<CustomPage> {
             children: [
               Container(
                 color: widget.headColor,
-                child: Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 20, bottom: 10),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          flex: 1,
-                          child: (widget.buildContext != null)
-                              ? IconButton(
-                                  icon: const Icon(Icons.arrow_back_ios),
-                                  onPressed: () {
-                                    Navigator.pop(widget.buildContext!);
-                                  },
-                                )
-                              : (widget.change != null)
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 20, bottom: 10),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              flex: 1,
+                              child: (widget.buildContext != null)
                                   ? IconButton(
-                                      icon: const Icon(Icons.arrow_back_ios),
-                                      onPressed: () => widget.change!.call(),
+                                      icon: Icon(
+                                        Icons.arrow_back_ios,
+                                        color: widget.prevColor,
+                                      ),
+                                      onPressed: () {
+                                        Navigator.pop(widget.buildContext!);
+                                      },
                                     )
-                                  : Container(),
+                                  : (widget.change != null)
+                                      ? IconButton(
+                                          icon:
+                                              const Icon(Icons.arrow_back_ios),
+                                          onPressed: () =>
+                                              widget.change!.call(),
+                                        )
+                                      : Container(),
+                            ),
+                            Expanded(
+                                flex: 2,
+                                child: Text(
+                                  widget.title,
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      color: widget.headTextColor),
+                                  maxLines: 1,
+                                  textAlign: TextAlign.center,
+                                )),
+                            Expanded(
+                              flex: 1,
+                              child: Container(
+                                child: widget.rightButton,
+                              ),
+                            ),
+                          ],
                         ),
-                        Expanded(
-                            flex: 2,
-                            child: Text(
-                              widget.title,
-                              style: TextStyle(
-                                  fontSize: 25, color: widget.headTextColor),
-                              maxLines: 1,
-                              textAlign: TextAlign.center,
-                            )),
-                        Expanded(
-                          flex: 1,
-                          child: Container(
-                            child: widget.rightButton,
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
-                  ),
+                  ],
                 ),
               ),
               widget.body

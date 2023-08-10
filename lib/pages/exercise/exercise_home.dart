@@ -20,7 +20,7 @@ class ExerciseHomeState extends State<ExerciseHome>
   @override
   void initState() {
     // 建立 TabController，vsync 接受的型態是 TickerProvider
-    tabController = new TabController(length: 2, vsync: this);
+    tabController = TabController(length: 2, vsync: this);
     super.initState();
   }
 
@@ -28,64 +28,107 @@ class ExerciseHomeState extends State<ExerciseHome>
   Widget build(BuildContext context) {
     var array = [
       Invite(
-          name: "name",
+          name: "運動Easy",
           time: DateTime.now(),
-          people: "people",
+          m_id: "people",
           remark: "remark")
     ];
     var history = [
-      History(name: "name", time: DateTime.now(), people: "people", remark: "remark", avgScore: 4.5, isGroup: true, items: [3,2,1], score: 5.0,peopleCount: 3)
+      History(
+          name: "我們要運動",
+          time: DateTime.now(),
+          people: "people",
+          remark: "remark",
+          avgScore: 4.5,
+          isGroup: true,
+          items: [3, 2, 1],
+          score: 5.0,
+          peopleCount: 3),
+      History(
+          name: "我要運動",
+          time: DateTime.now(),
+          people: "people",
+          remark: "remark",
+          avgScore: 4.5,
+          isGroup: false,
+          items: [3, 2, 1],
+          score: 5.0,
+          peopleCount: 3)
     ];
     return (Scaffold(
       backgroundColor: MyTheme.backgroudColor,
       resizeToAvoidBottomInset: true,
       body: SafeArea(
-        child: SizedBox(
-            child: Column(
+        child: Column(
           children: [
-            TabBar(controller: tabController, tabs: [
-              Tab(
-                  child: BoxUI.boxHasRadius(
-                      child: BoxUI.titleText("邀約", 0,
-                          color: Colors.black, alignment: Alignment.center),
-                      color: Colors.white)
-                 
-                  ),
-              Tab(
-                child: BoxUI.boxHasRadius(
-                    child: BoxUI.titleText("歷史運動", 0,
-                        color: Colors.black, alignment: Alignment.center),
-                    color: Colors.white),
-              )
-            ]),
+            TabBar(
+              indicatorColor: MyTheme.buttonColor,
+              labelStyle: TextStyle(color: MyTheme.buttonColor),
+              unselectedLabelStyle: const TextStyle(color: Colors.black12),
+              labelColor: MyTheme.buttonColor,
+              controller: tabController,
+              tabs: [
+                Tab(
+                  child: BoxUI.titleText("邀約", 0, alignment: Alignment.center),
+                ),
+                Tab(
+                  child:
+                      BoxUI.titleText("歷史運動", 0, alignment: Alignment.center),
+                ),
+              ],
+            ),
             SizedBox(
-              
-              height: MediaQuery.of(context).size.height * 0.7,
-              width: MediaQuery.of(context).size.width * 0.7,
+              height: MediaQuery.of(context).size.height * 0.75,
+              width: MediaQuery.of(context).size.width * 0.8,
               child: TabBarView(
                 controller: tabController,
                 children: [
-                  BoxUI.boxHasRadius(
-                    
-                      child: ListView.builder(
-                          itemCount: array.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return (BoxUI.inviteBox(array[index]));
-                          }),
-                      color: HexColor("F4F5F7")),
+                  Column(
+                    children: [
+                      Row(
+                        children: [
+                          BoxUI.textRadiusBorder("已接受"),
+                          BoxUI.textRadiusBorder("未接受")
+                        ],
+                      ),
+                      BoxUI.boxHasRadius(
+                          child: SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.6,
+                            width: MediaQuery.of(context).size.width * 0.8,
+                            child: ListView.builder(
+                                itemCount: array.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return (BoxUI.inviteBox(array[index]));
+                                }),
+                          ),
+                          color: MyTheme.backgroudColor),
+                    ],
+                  ),
+                  Column(children: [
+                    const Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text("篩選"),
+                      ],
+                    ),
                     BoxUI.boxHasRadius(
-                    
-                      child: ListView.builder(
-                          itemCount: history.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return (BoxUI.history(history[index]));
-                          }),
-                      color: HexColor("F4F5F7")),
+                        child: SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.6,
+                      width: MediaQuery.of(context).size.width * 0.8,
+                      child: BoxUI.boxHasRadius(
+                          child: ListView.builder(
+                              itemCount: history.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return (BoxUI.history(history[index]));
+                              }),
+                          color: MyTheme.backgroudColor),
+                    ))
+                  ]),
                 ],
               ),
             ),
           ],
-        )),
+        ),
       ),
     ));
   }

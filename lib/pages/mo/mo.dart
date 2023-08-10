@@ -6,8 +6,8 @@ import '../../module/cusbehiver.dart';
 
 class Mo extends StatefulWidget {
   static const routeName = '/newhome';
-  int i = 1;
-  Mo({super.key});
+  final int first = 1;
+  const Mo({super.key});
   // final String userName;
 
   @override
@@ -44,7 +44,7 @@ class _MoState extends State<Mo> {
               Center(
                 child: BoxUI.boxHasRadius(
                   child: DataTable(
-                      columns: [
+                      columns: const [
                         DataColumn(label: Text("排名")),
                         DataColumn(label: Text("姓名")),
                         DataColumn(label: Text("分數"))
@@ -52,7 +52,7 @@ class _MoState extends State<Mo> {
                       rows: List.generate(rankList.length, (index) {
                         Rank r = rankList[index];
                         return DataRow(
-                            color: index == widget.i
+                            color: index == widget.first
                                 ? MaterialStateProperty.all(MyTheme.lightColor)
                                 : null,
                             cells: [
@@ -63,33 +63,7 @@ class _MoState extends State<Mo> {
                       })),
                 ),
               ),
-              // SizedBox(
-              //   width: MediaQuery.of(context).size.width * 0.8,
-              //   height: 300,
-              //   child: BoxUI.boxHasRadius(
-              //       child: ListView.builder(
-              //           itemBuilder: (content, index) {
-              //             if (index == 0) {
-              //               return const Row(
-              //                 children: [
-              //                   Expanded(child: Text("排名")),
-              //                   Expanded(child: Text("姓名")),
-              //                   Expanded(child: Text("分數"))
-              //                 ],
-              //               );
-              //             } else {
-              //               Rank r = rankList[index - 1];
-              //               return Row(
-              //                 children: [
-              //                   Expanded(child: Text(r.rank.toString())),
-              //                   Expanded(child: Text(r.name)),
-              //                   Expanded(child: Text(r.score.toString()))
-              //                 ],
-              //               );
-              //             }
-              //           },
-              //           itemCount: rankList.length + 1)),
-              // ),
+             
               BoxUI.titleText("Mo伴是什麼？", 10, fontSize: MySize.subtitleSize),
               Text("曾一起運動的朋友。", style: myText(color: MyTheme.hintColor)),
               BoxUI.titleText("運動綜合評分如何計算？", 10, fontSize: MySize.subtitleSize),

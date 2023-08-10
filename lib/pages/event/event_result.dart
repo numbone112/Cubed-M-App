@@ -11,7 +11,6 @@ import 'package:logger/logger.dart';
 import 'package:e_fu/module/box_ui.dart';
 import 'package:e_fu/my_data.dart';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 

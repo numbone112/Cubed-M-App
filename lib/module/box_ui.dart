@@ -32,16 +32,20 @@ class BoxUI {
   }
 
   static Widget textRadiusBorder(String text,
-      {Color? font, Color? border, double? width, EdgeInsets? margin}) {
+      {Color? font,
+      Color? border,
+      double? width,
+      EdgeInsets? margin,
+      Color? filling}) {
     return Container(
       margin: margin ?? const EdgeInsets.all(10),
       alignment: const Alignment(0, 0),
       height: 25,
       width: width ?? 50,
       decoration: BoxDecoration(
-        color: border ?? MyTheme.buttonColor,
-        borderRadius: const BorderRadius.all(Radius.circular(25.0)),
-      ),
+          color: filling ?? MyTheme.buttonColor,
+          borderRadius: const BorderRadius.all(Radius.circular(25.0)),
+          border: Border.all(color: border ?? Colors.white)),
       child: Text(text, style: TextStyle(color: font ?? Colors.white)),
     );
   }
@@ -113,7 +117,7 @@ class BoxUI {
               padding: EdgeInsets.all(5),
               child: Text("我"),
             ),
-            Padding(padding: EdgeInsets.all(5)),
+            Padding(padding: EdgeInsets.all(2.5)),
             Padding(
               padding: EdgeInsets.all(5),
               child: Text("平均"),
@@ -121,13 +125,15 @@ class BoxUI {
           ]),
           Column(
             children: [
-              BoxUI.textRadiusBorder(history.score.toString()),
+              BoxUI.textRadiusBorder(history.score.toString(),
+                  margin: const EdgeInsets.all(5)),
               const Padding(
-                padding: EdgeInsets.all(5),
+                padding: EdgeInsets.all(2.5),
               ),
               BoxUI.textRadiusBorder(
                 history.avgScore.toString(),
-                border: MyTheme.lightColor,
+                filling: MyTheme.lightColor,
+                margin: const EdgeInsets.all(5),
               ),
             ],
           )
@@ -136,23 +142,22 @@ class BoxUI {
       label = BoxUI.textRadiusBorder(
         "團體",
         font: HexColor("C6AC78"),
+        filling: Colors.white,
         border: HexColor("C6AC78"),
-        margin: const EdgeInsets.only(
-          right: 5,
-        ),
+       
       );
     } else {
       item = BoxUI.textRadiusBorder(history.score.toString(),
           margin: EdgeInsets.zero);
 
       label = BoxUI.textRadiusBorder('個人',
-          border: Colors.black45, font: Colors.black45);
+          filling: Colors.white, border: Colors.black45, font: Colors.black45);
     }
 
     return BoxUI.boxHasRadius(
         margin: const EdgeInsets.all(5),
         height: 120,
-        padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
+        padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -179,10 +184,12 @@ class BoxUI {
                     "召集人: ${history.name}",
                     style: const TextStyle(color: Colors.grey),
                   ),
-                  Text(
-                    "共 ${history.peopleCount} 人",
-                    style: const TextStyle(color: Colors.grey),
-                  ),
+                  history.isGroup
+                      ? Text(
+                          "共 ${history.peopleCount} 人",
+                          style: const TextStyle(color: Colors.grey),
+                        )
+                      : Container(),
                 ],
               ),
             ),
@@ -191,5 +198,26 @@ class BoxUI {
                 children: [const Text("運動評分"), item])
           ],
         ));
+  }
+}
+
+class TextInput {
+  static Widget radius(String text) {
+    return Container(
+      margin: const EdgeInsets.all(10),
+      padding: const EdgeInsets.all(0),
+      decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20.0),
+          border: Border.all(color: MyTheme.lightColor)),
+      child: TextFormField(
+        obscureText: true,
+        decoration: InputDecoration(
+          border: InputBorder.none,
+          labelText: text,
+          floatingLabelStyle: TextStyle(color: MyTheme.lightColor),
+        ),
+      ),
+    );
   }
 }

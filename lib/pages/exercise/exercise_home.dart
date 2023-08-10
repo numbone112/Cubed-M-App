@@ -113,7 +113,7 @@ class ExerciseHomeState extends State<ExerciseHome>
                     ),
                     BoxUI.boxHasRadius(
                         child: SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.7,
+                      height: MediaQuery.of(context).size.height * 0.6,
                       width: MediaQuery.of(context).size.width * 0.8,
                       child: BoxUI.boxHasRadius(
                           child: ListView.builder(

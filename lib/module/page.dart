@@ -12,7 +12,8 @@ class CustomPage extends StatefulWidget {
       this.change,
       this.rightButton,
       this.headColor,
-      this.headTextColor});
+      this.headTextColor,
+      this.prevColor});
   final Widget body;
   final BuildContext? buildContext;
   final String title;
@@ -21,6 +22,7 @@ class CustomPage extends StatefulWidget {
   final GestureDetector? rightButton;
   final Color? headColor;
   final Color? headTextColor;
+  final Color? prevColor;
 
   @override
   State<StatefulWidget> createState() => CustomPageState();
@@ -52,15 +54,20 @@ class CustomPageState extends State<CustomPage> {
                               flex: 1,
                               child: (widget.buildContext != null)
                                   ? IconButton(
-                                      icon: const Icon(Icons.arrow_back_ios),
+                                      icon: Icon(
+                                        Icons.arrow_back_ios,
+                                        color: widget.prevColor,
+                                      ),
                                       onPressed: () {
                                         Navigator.pop(widget.buildContext!);
                                       },
                                     )
                                   : (widget.change != null)
                                       ? IconButton(
-                                          icon: const Icon(Icons.arrow_back_ios),
-                                          onPressed: () => widget.change!.call(),
+                                          icon:
+                                              const Icon(Icons.arrow_back_ios),
+                                          onPressed: () =>
+                                              widget.change!.call(),
                                         )
                                       : Container(),
                             ),
@@ -69,7 +76,8 @@ class CustomPageState extends State<CustomPage> {
                                 child: Text(
                                   widget.title,
                                   style: TextStyle(
-                                      fontSize: 25, color: widget.headTextColor),
+                                      fontSize: 25,
+                                      color: widget.headTextColor),
                                   maxLines: 1,
                                   textAlign: TextAlign.center,
                                 )),

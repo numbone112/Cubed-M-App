@@ -212,7 +212,7 @@ class HomePageState extends State<HomePage> {
                       color: MyTheme.hintColor,
                       child: GestureDetector(
                         onTap: () {
-                          Navigator.pushNamed(context, Insert_invite.routeName);
+                          Navigator.pushNamed(context, InsertInvite.routeName);
                         },
                         child: BoxUI.titleText("新增", 0, color: Colors.white),
                       ))

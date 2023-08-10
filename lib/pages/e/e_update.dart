@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:e_fu/module/box_ui.dart';
 import 'package:e_fu/module/page.dart';
@@ -8,7 +7,6 @@ import 'package:e_fu/request/e/e_data.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
-import 'package:flutter_picker/flutter_picker.dart';
 
 import 'package:flutter/material.dart';
 

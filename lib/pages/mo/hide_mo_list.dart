@@ -11,8 +11,8 @@ import 'package:e_fu/request/mo/mo.dart';
 
 class HindMoList extends StatefulWidget {
   static const routeName = '/mo/hind';
-  String userName;
-  HindMoList({super.key, required this.userName});
+  final String userName;
+  const HindMoList({super.key, required this.userName});
 
   @override
   _HindMoListState createState() => _HindMoListState();
@@ -121,7 +121,7 @@ class _HindMoListState extends State<HindMoList> {
           title: const Text("隱藏Mo伴"),
           backgroundColor: MyTheme.lightColor,
           leading: GestureDetector(
-            child: Icon(Icons.chevron_left),
+            child: const Icon(Icons.chevron_left),
             onTap: () {
               Navigator.of(context).pop();
             },
@@ -135,7 +135,7 @@ class _HindMoListState extends State<HindMoList> {
                 child: (hindMoList == null)
                     ? Container(
                         color: MyTheme.backgroudColor,
-                        margin: EdgeInsets.fromLTRB(0, 0, 0, 64),
+                        margin: const EdgeInsets.fromLTRB(0, 0, 0, 64),
                         child: Center(
                             child: CircularProgressIndicator(
                           color: MyTheme.lightColor,

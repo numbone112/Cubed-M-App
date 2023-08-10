@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 
 class PeoplePage extends StatefulWidget {
 
-  PeoplePage({super.key,required this.userName});
-  String userName;
+  const PeoplePage({super.key,required this.userName});
+  final String userName;
 
   @override
   PeoplePageState createState() => PeoplePageState();

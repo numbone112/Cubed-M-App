@@ -4,24 +4,24 @@ import 'package:flutter/material.dart';
 
 import '../../module/page.dart';
 
-class Insert_invite extends StatefulWidget {
-  String userName;
+class InsertInvite extends StatefulWidget {
+  final String userName;
 
-  Insert_invite({super.key, required this.userName});
+  const InsertInvite({super.key, required this.userName});
   static const routeName = '/invite/insert';
 
   @override
-  State<StatefulWidget> createState() => Insert_invitestate();
+  State<StatefulWidget> createState() => InsertInvitestate();
 }
 
-class Insert_invitestate extends State<Insert_invite> {
+class InsertInvitestate extends State<InsertInvite> {
   Widget peopleItem(String id, String name) {
     return BoxUI.boxHasRadius(
         child: Column(
       children: [
         Text(
           id,
-          style: TextStyle(color: Colors.grey),
+          style: const TextStyle(color: Colors.grey),
         ),
         Text(name)
       ],
@@ -30,11 +30,11 @@ class Insert_invitestate extends State<Insert_invite> {
 
   @override
   Widget build(BuildContext context) {
-    var invited_people = ["sodiffi"];
+    var invitedPeople = ["sodiffi"];
     return CustomPage(
         body: Column(
           children: [
-            Row(
+            const Row(
               children: [
                 Text("邀約名稱："),
                 Expanded(
@@ -43,7 +43,7 @@ class Insert_invitestate extends State<Insert_invite> {
                 ))
               ],
             ),
-            Row(
+            const Row(
               children: [
                 Text("運動日期："),
                 Expanded(
@@ -53,7 +53,7 @@ class Insert_invitestate extends State<Insert_invite> {
                 ))
               ],
             ),
-            Row(
+            const Row(
               children: [
                 Text("運動時段："),
                 Expanded(
@@ -72,9 +72,9 @@ class Insert_invitestate extends State<Insert_invite> {
               width: MediaQuery.of(context).size.width,
               height: 400,
               child: ListView.builder(
-                itemCount: invited_people.length,
+                itemCount: invitedPeople.length,
                 itemBuilder: (context, index) {
-                return peopleItem(invited_people[index], invited_people[index]);
+                return peopleItem(invitedPeople[index], invitedPeople[index]);
               }),
             )
           ],

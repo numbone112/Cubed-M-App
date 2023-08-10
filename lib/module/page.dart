@@ -3,7 +3,7 @@ import 'package:e_fu/my_data.dart';
 import 'package:flutter/material.dart';
 
 class CustomPage extends StatefulWidget {
-  CustomPage(
+  const CustomPage(
       {super.key,
       required this.body,
       this.buildContext,
@@ -13,14 +13,14 @@ class CustomPage extends StatefulWidget {
       this.rightButton,
       this.headColor,
       this.headTextColor});
-  Widget body;
-  BuildContext? buildContext;
-  String title;
-  Widget? floatButton;
-  Function? change;
-  GestureDetector? rightButton;
-  Color? headColor;
-  Color? headTextColor;
+  final Widget body;
+  final BuildContext? buildContext;
+  final String title;
+  final Widget? floatButton;
+  final Function? change;
+  final GestureDetector? rightButton;
+  final Color? headColor;
+  final Color? headTextColor;
 
   @override
   State<StatefulWidget> createState() => CustomPageState();

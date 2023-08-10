@@ -25,8 +25,8 @@ import 'package:e_fu/request/record/record_data.dart';
 class Event extends StatefulWidget {
   static const routeName = '/event';
 
-  Event({super.key, required this.userName});
-  String userName;
+  const Event({super.key, required this.userName});
+  final String userName;
 
   @override
   State<StatefulWidget> createState() => EventState();
@@ -544,7 +544,7 @@ class EventState extends State<Event> {
                       await showDialog(
                         context: context,
                         builder: (ctx) => CupertinoAlertDialog(
-                          content: Column(
+                          content: const Column(
                             children: [
                               SizedBox(
                                 height: 10,

@@ -31,6 +31,21 @@ class BoxUI {
     ));
   }
 
+  static Widget textRadiusBorder(String text,
+      {Color? font, Color? border, double? width, EdgeInsets? margin}) {
+    return Container(
+      margin: margin ?? const EdgeInsets.all(10),
+      alignment: const Alignment(0, 0),
+      height: 25,
+      width: width ?? 50,
+      decoration: BoxDecoration(
+        color: border ?? MyTheme.buttonColor,
+        borderRadius: const BorderRadius.all(Radius.circular(25.0)),
+      ),
+      child: Text(text, style: TextStyle(color: font ?? Colors.white)),
+    );
+  }
+
   static Widget titleText(String title, double gap,
       {AlignmentGeometry? alignment,
       double? fontSize,
@@ -69,7 +84,7 @@ class BoxUI {
                 ),
                 Text(invite.time.toString().substring(0, 10)),
                 Text(
-                  '召集人：${invite.people}',
+                  '召集人：${invite.m_id}',
                   style: const TextStyle(color: Colors.grey),
                 ),
                 Text(
@@ -106,78 +121,36 @@ class BoxUI {
           ]),
           Column(
             children: [
-              Container(
-                alignment: const Alignment(0, 0),
-                height: 25,
-                width: 50,
-                decoration: BoxDecoration(
-                  color: MyTheme.buttonColor,
-                  borderRadius: const BorderRadius.all(Radius.circular(25.0)),
-                ),
-                child: Text(history.score.toString(),
-                    style: const TextStyle(color: Colors.white)),
+              BoxUI.textRadiusBorder(history.score.toString()),
+              const Padding(
+                padding: EdgeInsets.all(5),
               ),
-               const Padding(padding: EdgeInsets.all(5)),
-              Container(
-                alignment: const Alignment(0, 0),
-                height: 25,
-                width: 50,
-                decoration: BoxDecoration(
-                  color: MyTheme.lightColor,
-                  borderRadius: const BorderRadius.all(Radius.circular(25.0)),
-                ),
-                child: Text(history.avgScore.toString(),
-                    style: const TextStyle(color: Colors.white)),
-              )
+              BoxUI.textRadiusBorder(
+                history.avgScore.toString(),
+                border: MyTheme.lightColor,
+              ),
             ],
           )
         ],
       );
-      label = Container(
+      label = BoxUI.textRadiusBorder(
+        "團體",
+        font: HexColor("C6AC78"),
+        border: HexColor("C6AC78"),
         margin: const EdgeInsets.only(
           right: 5,
         ),
-        alignment: const Alignment(0, 0),
-        height: 25,
-        width: 50,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: const BorderRadius.all(Radius.circular(25.0)),
-          border: Border.all(width: 1, color: HexColor("C6AC78")),
-        ),
-        child: Text(
-          "團體",
-          style: TextStyle(color: HexColor("C6AC78")),
-        ),
       );
     } else {
-      item = Container(
-        alignment: const Alignment(0, 0),
-        height: 25,
-        width: 50,
-        decoration: BoxDecoration(
-          color: MyTheme.buttonColor,
-          borderRadius: const BorderRadius.all(Radius.circular(25.0)),
-        ),
-        child: Text(history.score.toString(),
-            style: const TextStyle(color: Colors.white)),
-      );
+      item = BoxUI.textRadiusBorder(history.score.toString(),
+          margin: EdgeInsets.zero);
 
-      label = Container(
-        alignment: const Alignment(0, 0),
-        height: 25,
-        width: 50,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: const BorderRadius.all(Radius.circular(25.0)),
-          border: Border.all(width: 1, color: Colors.black45),
-        ),
-        child: const Text("個人"),
-      );
+      label = BoxUI.textRadiusBorder('個人',
+          border: Colors.black45, font: Colors.black45);
     }
 
     return BoxUI.boxHasRadius(
-      margin: const EdgeInsets.all(5),
+        margin: const EdgeInsets.all(5),
         height: 120,
         padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
         child: Row(

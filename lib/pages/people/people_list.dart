@@ -20,9 +20,9 @@ class ExampleItem {
 }
 
 class PeopleList extends StatefulWidget {
-   PeopleList({super.key, required this.function, required this.userName});
+   const PeopleList({super.key, required this.function, required this.userName});
   final Function(EPeople ePeople) function;
- String userName;
+ final String userName;
   @override
   PeopleListState createState() => PeopleListState();
 }

@@ -20,7 +20,7 @@ class ExerciseHomeState extends State<ExerciseHome>
   @override
   void initState() {
     // 建立 TabController，vsync 接受的型態是 TickerProvider
-    tabController = new TabController(length: 2, vsync: this);
+    tabController = TabController(length: 2, vsync: this);
     super.initState();
   }
 
@@ -30,7 +30,7 @@ class ExerciseHomeState extends State<ExerciseHome>
       Invite(
           name: "運動Easy",
           time: DateTime.now(),
-          people: "people",
+          m_id: "people",
           remark: "remark")
     ];
     var history = [
@@ -62,20 +62,21 @@ class ExerciseHomeState extends State<ExerciseHome>
         child: Column(
           children: [
             TabBar(
-                indicatorColor: MyTheme.buttonColor,
-                labelStyle: TextStyle(color: MyTheme.buttonColor),
-                unselectedLabelStyle: const TextStyle(color: Colors.black12),
-                labelColor: MyTheme.buttonColor,
-                controller: tabController,
-                tabs: [
-                  Tab(
-                      child: BoxUI.titleText("邀約", 0,
-                          alignment: Alignment.center)),
-                  Tab(
-                    child:
-                        BoxUI.titleText("歷史運動", 0, alignment: Alignment.center),
-                  )
-                ]),
+              indicatorColor: MyTheme.buttonColor,
+              labelStyle: TextStyle(color: MyTheme.buttonColor),
+              unselectedLabelStyle: const TextStyle(color: Colors.black12),
+              labelColor: MyTheme.buttonColor,
+              controller: tabController,
+              tabs: [
+                Tab(
+                  child: BoxUI.titleText("邀約", 0, alignment: Alignment.center),
+                ),
+                Tab(
+                  child:
+                      BoxUI.titleText("歷史運動", 0, alignment: Alignment.center),
+                ),
+              ],
+            ),
             SizedBox(
               height: MediaQuery.of(context).size.height * 0.75,
               width: MediaQuery.of(context).size.width * 0.8,
@@ -84,34 +85,12 @@ class ExerciseHomeState extends State<ExerciseHome>
                 children: [
                   Column(
                     children: [
-                      Row(children: [
-                        Container(
-                          margin: const EdgeInsets.all(10),
-                          alignment: const Alignment(0, 0),
-                          height: 25,
-                          width: 50,
-                          decoration: BoxDecoration(
-                            color: MyTheme.buttonColor,
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(25.0)),
-                          ),
-                          child: const Text("已接受",
-                              style: TextStyle(color: Colors.white)),
-                        ),
-                        Container(
-                          margin: const EdgeInsets.all(10),
-                          alignment: const Alignment(0, 0),
-                          height: 25,
-                          width: 50,
-                          decoration: BoxDecoration(
-                            color: MyTheme.buttonColor,
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(25.0)),
-                          ),
-                          child: const Text("未接受",
-                              style: TextStyle(color: Colors.white)),
-                        ),
-                      ]),
+                      Row(
+                        children: [
+                          BoxUI.textRadiusBorder("已接受"),
+                          BoxUI.textRadiusBorder("未接受")
+                        ],
+                      ),
                       BoxUI.boxHasRadius(
                           child: SizedBox(
                             height: MediaQuery.of(context).size.height * 0.6,

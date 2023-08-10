@@ -41,45 +41,49 @@ class CustomPageState extends State<CustomPage> {
             children: [
               Container(
                 color: widget.headColor,
-                child: Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 20, bottom: 10),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          flex: 1,
-                          child: (widget.buildContext != null)
-                              ? IconButton(
-                                  icon: const Icon(Icons.arrow_back_ios),
-                                  onPressed: () {
-                                    Navigator.pop(widget.buildContext!);
-                                  },
-                                )
-                              : (widget.change != null)
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 20, bottom: 10),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              flex: 1,
+                              child: (widget.buildContext != null)
                                   ? IconButton(
                                       icon: const Icon(Icons.arrow_back_ios),
-                                      onPressed: () => widget.change!.call(),
+                                      onPressed: () {
+                                        Navigator.pop(widget.buildContext!);
+                                      },
                                     )
-                                  : Container(),
+                                  : (widget.change != null)
+                                      ? IconButton(
+                                          icon: const Icon(Icons.arrow_back_ios),
+                                          onPressed: () => widget.change!.call(),
+                                        )
+                                      : Container(),
+                            ),
+                            Expanded(
+                                flex: 2,
+                                child: Text(
+                                  widget.title,
+                                  style: TextStyle(
+                                      fontSize: 25, color: widget.headTextColor),
+                                  maxLines: 1,
+                                  textAlign: TextAlign.center,
+                                )),
+                            Expanded(
+                              flex: 1,
+                              child: Container(
+                                child: widget.rightButton,
+                              ),
+                            ),
+                          ],
                         ),
-                        Expanded(
-                            flex: 2,
-                            child: Text(
-                              widget.title,
-                              style: TextStyle(
-                                  fontSize: 25, color: widget.headTextColor),
-                              maxLines: 1,
-                              textAlign: TextAlign.center,
-                            )),
-                        Expanded(
-                          flex: 1,
-                          child: Container(
-                            child: widget.rightButton,
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
-                  ),
+                  ],
                 ),
               ),
               widget.body

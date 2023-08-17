@@ -1,7 +1,11 @@
+import 'dart:math';
+
 import 'package:e_fu/my_data.dart';
+import 'package:e_fu/pages/exercise/history.dart';
 import 'package:e_fu/request/exercise/history_data.dart';
-import 'package:e_fu/request/exercise/invite_data.dart';
+import 'package:e_fu/request/invite/invite_data.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 
 class BoxUI {
   static Widget boxHasRadius({
@@ -107,7 +111,8 @@ class BoxUI {
         )));
   }
 
-  static Widget history(History history) {
+  static Widget history(
+      History history, BuildContext context, String userName) {
     Widget item, label;
     if (history.isGroup) {
       item = Row(
@@ -144,7 +149,6 @@ class BoxUI {
         font: HexColor("C6AC78"),
         filling: Colors.white,
         border: HexColor("C6AC78"),
-       
       );
     } else {
       item = BoxUI.textRadiusBorder(history.score.toString(),
@@ -158,51 +162,65 @@ class BoxUI {
         margin: const EdgeInsets.all(5),
         height: 120,
         padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      label,
-                      history.isGroup
-                          ? Text(
-                              history.name,
-                              style: TextStyle(
-                                  color: MyTheme.buttonColor,
-                                  fontWeight: FontWeight.bold),
-                            )
-                          : Container()
-                    ],
-                  ),
-                  Text(history.time.toString().substring(0, 10)),
-                  Text(
-                    "召集人: ${history.name}",
-                    style: const TextStyle(color: Colors.grey),
-                  ),
-                  history.isGroup
-                      ? Text(
-                          "共 ${history.peopleCount} 人",
-                          style: const TextStyle(color: Colors.grey),
-                        )
-                      : Container(),
-                ],
+        child: GestureDetector(
+          onTap: () {
+            Logger logger=Logger();
+            logger.v("this is push");
+            Navigator.push(
+              context,
+              MaterialPageRoute<void>(
+                builder: (BuildContext context) =>
+                    HistoryDetail(userName: userName, history: history),
               ),
-            ),
-            Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [const Text("運動評分"), item])
-          ],
+            );
+          },
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        label,
+                        history.isGroup
+                            ? Text(
+                                history.name,
+                                style: TextStyle(
+                                    color: MyTheme.buttonColor,
+                                    fontWeight: FontWeight.bold),
+                              )
+                            : Container()
+                      ],
+                    ),
+                    Text(history.time.toString().substring(0, 10)),
+                    Text(
+                      "召集人: ${history.name}",
+                      style: const TextStyle(color: Colors.grey),
+                    ),
+                    history.isGroup
+                        ? Text(
+                            "共 ${history.peopleCount} 人",
+                            style: const TextStyle(color: Colors.grey),
+                          )
+                        : Container(),
+                  ],
+                ),
+              ),
+              Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [const Text("運動評分"), item])
+            ],
+          ),
         ));
   }
 }
 
 class TextInput {
-  static Widget radius(String text) {
+  static Widget radius(String text, TextEditingController controller,
+      {TextField? textField}) {
     return Container(
       margin: const EdgeInsets.all(10),
       padding: const EdgeInsets.all(0),
@@ -210,14 +228,16 @@ class TextInput {
           color: Colors.white,
           borderRadius: BorderRadius.circular(20.0),
           border: Border.all(color: MyTheme.lightColor)),
-      child: TextFormField(
-        obscureText: true,
-        decoration: InputDecoration(
-          border: InputBorder.none,
-          labelText: text,
-          floatingLabelStyle: TextStyle(color: MyTheme.lightColor),
-        ),
-      ),
+      child: textField ??
+          TextFormField(
+            controller: controller,
+            // obscureText: true,
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              labelText: text,
+              floatingLabelStyle: TextStyle(color: MyTheme.lightColor),
+            ),
+          ),
     );
   }
 }

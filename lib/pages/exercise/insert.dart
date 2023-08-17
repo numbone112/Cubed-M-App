@@ -1,6 +1,11 @@
 import 'package:e_fu/module/box_ui.dart';
 import 'package:e_fu/my_data.dart';
+import 'package:e_fu/request/invite/invite.dart';
+import 'package:e_fu/request/invite/invite_data.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:intl/intl.dart';
+import 'package:logger/logger.dart';
 
 import '../../module/page.dart';
 
@@ -15,6 +20,16 @@ class InsertInvite extends StatefulWidget {
 }
 
 class InsertInvitestate extends State<InsertInvite> {
+  InviteAPI api = InviteRepo();
+  TextEditingController nameInput = TextEditingController();
+  TextEditingController remarkInput = TextEditingController();
+  TextEditingController quaryInput = TextEditingController();
+  TextEditingController dateInput = TextEditingController();
+  TextEditingController timeInput = TextEditingController();
+
+  DateFormat dateFormat = DateFormat('yyyy-MM-dd ');
+  TimeOfDayFormat timeFormat = TimeOfDayFormat.HH_colon_mm;
+
   Widget peopleItem(String id, String name) {
     return BoxUI.boxHasRadius(
       margin: const EdgeInsets.only(right: 30, left: 30),
@@ -44,45 +59,82 @@ class InsertInvitestate extends State<InsertInvite> {
   @override
   Widget build(BuildContext context) {
     var invitedPeople = ["sodiffi"];
+    var friend = [widget.userName];
+    var logger = Logger();
+
     return SizedBox(
       width: MediaQuery.of(context).size.width * 0.8,
       height: MediaQuery.of(context).size.height,
       child: CustomPage(
-        body: Column(
+        body: ListView(
           children: [
             Row(
               children: [
                 const Text("邀約名稱："),
                 Expanded(
-                  child: TextInput.radius(' 請輸入邀約名稱'),
+                  child: TextInput.radius(' 請輸入邀約名稱', nameInput),
                 )
               ],
             ),
-            const Row(
+            Row(
               children: [
-                Text("運動日期："),
+                const Text("運動日期："),
                 Expanded(
-                    child: TextField(
-                  enabled: false,
-                  decoration: InputDecoration(hintText: "請輸入邀約名稱"),
-                ))
+                    child: TextInput.radius("請選擇運動日期",dateInput,
+                    textField: TextField(
+                  controller: dateInput, //editing controller of this TextField
+                  decoration: const InputDecoration(hintText: "請選擇運動日期",
+                   border: InputBorder.none,),
+                  readOnly:
+                      true, //set it true, so that user will not able to edit text
+                  onTap: () async {
+                    DateTime? pickedDate = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime(
+                            2000), //DateTime.now() - not to allow to choose before today.
+                        lastDate: DateTime(2101));
+
+                    if (pickedDate != null) {
+                      dateInput.text = dateFormat.format(pickedDate);
+                    } else {
+                      logger.v("Date is not selected");
+                    }
+                  },
+                )
+                    ))
               ],
             ),
-            const Row(
+            Row(
               children: [
-                Text("運動時段："),
+                const Text("運動時段："),
                 Expanded(
-                    child: TextField(
-                  enabled: false,
-                  decoration: InputDecoration(hintText: "請輸入邀約名稱"),
-                ))
+                    child: TextInput.radius("請選擇運動時段", timeInput,
+                    textField: TextField(
+                  controller: timeInput, //editing controller of this TextField
+                  decoration: const InputDecoration(hintText: "請選擇運動時段",
+                   border: InputBorder.none,
+                  ),
+                  readOnly:
+                      true, //set it true, so that user will not able to edit text
+                  onTap: () async {
+                    TimeOfDay? pickedTime = await showTimePicker(
+                        context: context, initialTime: TimeOfDay.now());
+
+                    if (pickedTime != null) {
+                      timeInput.text = pickedTime.format(context) ;
+                    } else {
+                      logger.v("Date is not selected");
+                    }
+                  },
+                )))
               ],
             ),
             Row(
               children: [
                 const Text("備註："),
                 Expanded(
-                  child: TextInput.radius(' 例如：地點'),
+                  child: TextInput.radius(' 例如：地點', remarkInput),
                 )
               ],
             ),
@@ -99,14 +151,14 @@ class InsertInvitestate extends State<InsertInvite> {
               child: Row(
                 children: [
                   Expanded(
-                    child: TextInput.radius(' 請搜尋姓名或ID'),
+                    child: TextInput.radius(' 請搜尋姓名或ID', quaryInput),
                   )
                 ],
               ),
             ),
             SizedBox(
               width: MediaQuery.of(context).size.width,
-              height: 300,
+              height: 250,
               child: ListView.builder(
                   itemCount: invitedPeople.length,
                   itemBuilder: (context, index) {
@@ -117,10 +169,34 @@ class InsertInvitestate extends State<InsertInvite> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-              
-              BoxUI.boxHasRadius(child: GestureDetector(child: BoxUI.textRadiusBorder('取消',border: MyTheme.lightColor)),color: MyTheme.lightColor),
-              BoxUI.boxHasRadius(child: GestureDetector(child: BoxUI.textRadiusBorder('確認'),),color: MyTheme.buttonColor)
-            ],)
+                BoxUI.boxHasRadius(
+                    child: GestureDetector(
+                        child: BoxUI.textRadiusBorder('取消',
+                            border: MyTheme.lightColor,
+                            filling: MyTheme.lightColor)),
+                    color: MyTheme.lightColor),
+                BoxUI.boxHasRadius(
+                  child: GestureDetector(
+                    child: BoxUI.textRadiusBorder('確認',
+                        border: MyTheme.buttonColor),
+                    onTap: () {
+                      EasyLoading.show(status: "loading...");
+                      Invite invite = Invite(
+                          m_id: widget.userName,
+                          name: nameInput.text,
+                          time: DateTime.now(),
+                          remark: remarkInput.text,
+                          friend: friend);
+                      api.createInvite(invite).then((value) => {
+                            EasyLoading.dismiss(),
+                            if (value.success!) {Navigator.pop(context)} else {}
+                          });
+                    },
+                  ),
+                  color: MyTheme.buttonColor,
+                )
+              ],
+            )
           ],
         ),
         buildContext: context,

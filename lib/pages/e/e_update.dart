@@ -91,7 +91,6 @@ class ProfileUpdateState extends State<ProfileUpdate> {
                     margin: const EdgeInsets.all(20),
                     padding: const EdgeInsets.all(25),
                     child: TextField(
-                      // controller: TextEditingController(text: args.birthday.toIso8601String()),
                       controller:
                           dateinput, //editing controller of this TextField
                       decoration: const InputDecoration(

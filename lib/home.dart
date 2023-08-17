@@ -46,19 +46,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
           child: Scaffold(
             backgroundColor: MyTheme.backgroudColor,
             body: bottomBar(),
-            // body: Container(
-            //   padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
-            //   child: tabBody,
-            // child: Stack(
-            //   children: <Widget>[
-            //     Padding(
-            //       padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-            //       child: tabBody,
-            //     ),
-            //   ],
-
-            // ),
-            // ),
           )),
     );
   }
@@ -92,33 +79,10 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                 });
               } else if (index == 2) {
                 setState(() {
-                  tabBody = const ExerciseHome();
+                  tabBody = ExerciseHome(
+                    userNmae: widget.userName,
+                  );
                 });
-                // animationController?.reverse().then<dynamic>((data) {
-
-                //   setState(() {
-                //     tabBody = Column(
-                //       mainAxisAlignment: MainAxisAlignment.center,
-                //       children: [
-
-                //         Center(
-                //           child: ElevatedButton(
-                //             style:ElevatedButton.styleFrom(
-                //               backgroundColor: MyTheme.color
-                //             ),
-
-                //               onPressed: () async {
-                //                 SharedPreferences prefs =
-                //                     await SharedPreferences.getInstance();
-                //                     prefs.clear();
-                //                     Navigator.popAndPushNamed(context, "welcome");
-                //               },
-                //               child: Text("登出")),
-                //         )
-                //       ],
-                //     );
-                //   });
-                // });
               } else if (index == 3) {
                 setState(() {
                   tabBody = ProfileInfo(

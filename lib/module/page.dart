@@ -39,7 +39,7 @@ class CustomPageState extends State<CustomPage> {
       body: SafeArea(
         child: ScrollConfiguration(
           behavior: CusBehavior(),
-          child: ListView(
+          child: Column(
             children: [
               Container(
                 color: widget.headColor,
@@ -94,7 +94,11 @@ class CustomPageState extends State<CustomPage> {
                   ],
                 ),
               ),
-              widget.body
+              SizedBox(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height * 0.8,
+                child: widget.body,
+              )
             ],
           ),
         ),

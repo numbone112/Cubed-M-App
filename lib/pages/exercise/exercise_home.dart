@@ -1,12 +1,13 @@
 import 'package:e_fu/module/box_ui.dart';
 import 'package:e_fu/my_data.dart';
 import 'package:e_fu/request/exercise/history_data.dart';
-import 'package:e_fu/request/exercise/invite_data.dart';
+import 'package:e_fu/request/invite/invite_data.dart';
 
 import 'package:flutter/material.dart';
 
 class ExerciseHome extends StatefulWidget {
-  const ExerciseHome({super.key});
+  final String userNmae;
+  const ExerciseHome({super.key,required this.userNmae});
 
   @override
   State<StatefulWidget> createState() => ExerciseHomeState();
@@ -31,7 +32,8 @@ class ExerciseHomeState extends State<ExerciseHome>
           name: "運動Easy",
           time: DateTime.now(),
           m_id: "people",
-          remark: "remark")
+          remark: "remark",
+          friend: [])
     ];
     var history = [
       History(
@@ -119,7 +121,7 @@ class ExerciseHomeState extends State<ExerciseHome>
                           child: ListView.builder(
                               itemCount: history.length,
                               itemBuilder: (BuildContext context, int index) {
-                                return (BoxUI.history(history[index]));
+                                return (BoxUI.history(history[index],context,widget.userNmae));
                               }),
                           color: MyTheme.backgroudColor),
                     ))

@@ -48,7 +48,7 @@ ArrangeDate _$ArrangeDateFromJson(Map<String, dynamic> json) => ArrangeDate(
 
 Map<String, dynamic> _$ArrangeDateToJson(ArrangeDate instance) =>
     <String, dynamic>{
-      'a_id': instance.arrangeId,
+      'arrangeId': instance.arrangeId,
       'done': instance.done.map((k, e) => MapEntry(k.toString(), e)),
       'raw': instance.raw.map((e) => e.toJson()).toList(),
     };

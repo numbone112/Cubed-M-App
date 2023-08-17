@@ -1,6 +1,7 @@
 import 'package:e_fu/home.dart';
 import 'package:e_fu/pages/event/event_now_result.dart';
 import 'package:e_fu/pages/event/event_result.dart';
+import 'package:e_fu/pages/exercise/history.dart';
 import 'package:e_fu/pages/exercise/insert.dart';
 import 'package:e_fu/pages/mo/hide_mo_list.dart';
 import 'package:e_fu/pages/mo/mo_list.dart';
@@ -101,6 +102,7 @@ class MyappState extends State<MyApp> {
         InsertInvite.routeName: (_) => InsertInvite(
               userName: userName,
             ),
+      
       },
     );
   }

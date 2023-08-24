@@ -1,10 +1,9 @@
+import 'package:e_fu/module/page.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:logger/logger.dart';
 
 import 'package:e_fu/request/mo/get_hind_mo_list_model.dart';
 import 'package:e_fu/module/box_ui.dart';
-import 'package:e_fu/module/cusbehiver.dart';
 import 'package:e_fu/module/toast.dart';
 import 'package:e_fu/my_data.dart';
 import 'package:e_fu/request/mo/mo.dart';
@@ -31,7 +30,6 @@ class _HindMoListState extends State<HindMoList> {
   }
 
   getHindMoList() {
-    EasyLoading.show(status: 'loading...');
     try {
       moRepo.getHindMoList(widget.userName).then((value) {
         setState(() {
@@ -41,12 +39,9 @@ class _HindMoListState extends State<HindMoList> {
             hindMoListWidget.add(hindMoWiget(i));
           }
         });
-        EasyLoading.dismiss();
       });
     } catch (e) {
       logger.v(e);
-    } finally {
-      EasyLoading.dismiss();
     }
   }
 
@@ -115,36 +110,24 @@ class _HindMoListState extends State<HindMoList> {
       getHindMoList();
     }
 
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text("隱藏Mo伴"),
-          backgroundColor: MyTheme.lightColor,
-          leading: GestureDetector(
-            child: const Icon(Icons.chevron_left),
-            onTap: () {
-              Navigator.of(context).pop();
-            },
-          ),
-        ),
-        body: Container(
-            margin: const EdgeInsets.fromLTRB(10, 20, 10, 0),
-            color: MyTheme.backgroudColor,
-            child: ScrollConfiguration(
-                behavior: CusBehavior(),
-                child: (hindMoList == null)
-                    ? Container(
-                        color: MyTheme.backgroudColor,
-                        margin: const EdgeInsets.fromLTRB(0, 0, 0, 64),
-                        child: Center(
-                            child: CircularProgressIndicator(
-                          color: MyTheme.lightColor,
-                        )),
-                      )
-                    : ListView(
-                        children: hindMoListWidget,
-                      ))),
-      ),
+    return CustomPage(
+      body: (hindMoList == null)
+          ? Container(
+              color: MyTheme.backgroudColor,
+              margin: const EdgeInsets.fromLTRB(0, 0, 0, 64),
+              child: Center(
+                  child: CircularProgressIndicator(
+                color: MyTheme.lightColor,
+              )),
+            )
+          : ListView(
+              children: hindMoListWidget,
+            ),
+      title: "隱藏Mo伴",
+      headColor: MyTheme.lightColor,
+      buildContext: context,
+      headTextColor: Colors.white,
+      prevColor: Colors.white,
     );
   }
 }

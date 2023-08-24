@@ -3,13 +3,13 @@ import 'package:e_fu/module/box_ui.dart';
 import 'package:e_fu/my_data.dart';
 import 'package:e_fu/pages/mo/mo_list.dart';
 import 'package:e_fu/request/user/account.dart';
+import 'package:e_fu/request/user/get_user_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:logger/logger.dart';
 import 'package:fl_chart/fl_chart.dart';
 
 import '../../module/cusbehiver.dart';
-import '../../request/user/get_user_model.dart';
 
 class ProfileInfo extends StatefulWidget {
   const ProfileInfo({super.key, required this.userName});
@@ -32,7 +32,7 @@ class RawDataSet {
 }
 
 class ProfileCreateState extends State<ProfileInfo> {
-  GetUserModel? profile;
+  GetUser? profile;
   UserRepo userRepo = UserRepo();
   var logger = Logger();
   List<RawDataSet> rawDataSetList = [
@@ -40,26 +40,30 @@ class ProfileCreateState extends State<ProfileInfo> {
   ];
 
   getProfile() {
-    EasyLoading.show(status: 'loading...');
+    
     try {
       userRepo.getUser(widget.userName).then((value) {
         setState(() {
-          profile = value;
+          print(value.D);
+          profile = GetUser.fromJson(value.D);
+          logger.v(value.D);
         });
-        EasyLoading.dismiss();
+        
       });
     } catch (e) {
       logger.v(e);
-    } finally {
-      EasyLoading.dismiss();
-    }
+    } 
+  }
+  
+  @override
+  void initState() {
+    
+    super.initState();
+    getProfile();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (profile == null) {
-      getProfile();
-    }
     return (profile == null)
         ? Container(
             color: MyTheme.backgroudColor,
@@ -90,20 +94,20 @@ class ProfileCreateState extends State<ProfileInfo> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                profile!.d.name,
+                                profile!.name,
                                 // textAlign: TextAlign.center,
                                 style: myText(
                                     color: Colors.white,
                                     fontsize: MySize.subtitleSize),
                               ),
                               Text(
-                                "性別：${profile!.d.sex != "female" ? "男" : "女"}",
+                                "性別：${profile!.sex != "female" ? "男" : "女"}",
                                 // textAlign: TextAlign.center,
 
                                 style: myText(color: Colors.white),
                               ),
                               Text(
-                                "年齡：${DateTime.now().year - profile!.d.birthday.year}",
+                                "年齡：${DateTime.now().year - profile!.birthday.year}",
                                 // textAlign: TextAlign.center,
 
                                 style: myText(color: Colors.white),

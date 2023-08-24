@@ -35,7 +35,7 @@ class GetMoListModel {
 class D {
     String name;
     String sex;
-    int phone;
+    String phone;
     DateTime birthday;
     int role;
     List<String> weight;

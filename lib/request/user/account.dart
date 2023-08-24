@@ -3,6 +3,7 @@
 import 'dart:convert';
 
 import 'package:e_fu/request/api.dart';
+import 'package:e_fu/request/user/get_user_data.dart';
 import 'package:e_fu/request/user/get_user_model.dart';
 import 'login_data.dart';
 import 'package:logger/logger.dart';
@@ -20,7 +21,7 @@ abstract class UserAPI {
   // Future<String> updateUser(int id, User user);
 
   //查詢使用者
-  Future<GetUserModel> getUser(String id);
+  Future<Format> getUser(String id);
 
   // Future<Format> updateProfile(ProfileData profileData);
   // Future<Format> getFuDatil(String pId);
@@ -55,6 +56,7 @@ class UserRepo extends API implements UserAPI {
 
   @override
   getUser(String id) async {
+    Map result;
     try {
       dynamic response = await client.get(
         Uri.parse('$domain/therapist/$id'),
@@ -63,18 +65,22 @@ class UserRepo extends API implements UserAPI {
         },
       );
 
-      Map responseBody = json.decode(utf8.decode(response.bodyBytes));
+      result = json.decode(utf8.decode(response.bodyBytes));
       if (response.statusCode == 200) {
-        logger.v(responseBody);
-        return GetUserModel.fromJson(responseBody);
+        logger.v(result);
+        return Format.fromJson(result);
       } else {
         logger.v("not 200");
-        return GetUserModel.fromJson(responseBody);
+        return Format.fromJson(result);
       }
     } catch (e) {
-      Map error = {"D": {}, "message": "error", "success": false};
+      result = {"D": {}, "message": "error", "success": false};
       logger.v(e);
-      return GetUserModel.fromJson(error);
+      return Format.fromJson(result);
+    } finally {
+      // logger.v(result);
     }
+    
+    // return Form.fromJson(result);
   }
 }

@@ -159,62 +159,77 @@ class BoxUI {
     }
 
     return BoxUI.boxHasRadius(
-        margin: const EdgeInsets.all(5),
-        height: 120,
-        padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
-        child: GestureDetector(
-          onTap: () {
-            Logger logger=Logger();
-            logger.v("this is push");
-            Navigator.push(
-              context,
-              MaterialPageRoute<void>(
-                builder: (BuildContext context) =>
-                    HistoryDetail(userName: userName, history: history),
+      margin: const EdgeInsets.all(5),
+      height: 120,
+      padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
+      child: GestureDetector(
+        onTap: () {
+          Logger logger = Logger();
+          logger.v("this is push");
+          Navigator.push(
+            context,
+            MaterialPageRoute<void>(
+              builder: (BuildContext context) =>
+                  HistoryDetail(userName: userName, history: history),
+            ),
+          );
+        },
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      label,
+                      history.isGroup
+                          ? Text(
+                              history.name,
+                              style: TextStyle(
+                                  color: MyTheme.buttonColor,
+                                  fontWeight: FontWeight.bold),
+                            )
+                          : Container()
+                    ],
+                  ),
+                  Text(history.time.toString().substring(0, 10)),
+                  Text(
+                    "召集人: ${history.name}",
+                    style: const TextStyle(color: Colors.grey),
+                  ),
+                  history.isGroup
+                      ? Text(
+                          "共 ${history.peopleCount} 人",
+                          style: const TextStyle(color: Colors.grey),
+                        )
+                      : Container(),
+                ],
               ),
-            );
-          },
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        label,
-                        history.isGroup
-                            ? Text(
-                                history.name,
-                                style: TextStyle(
-                                    color: MyTheme.buttonColor,
-                                    fontWeight: FontWeight.bold),
-                              )
-                            : Container()
-                      ],
-                    ),
-                    Text(history.time.toString().substring(0, 10)),
-                    Text(
-                      "召集人: ${history.name}",
-                      style: const TextStyle(color: Colors.grey),
-                    ),
-                    history.isGroup
-                        ? Text(
-                            "共 ${history.peopleCount} 人",
-                            style: const TextStyle(color: Colors.grey),
-                          )
-                        : Container(),
-                  ],
-                ),
-              ),
-              Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [const Text("運動評分"), item])
-            ],
-          ),
-        ));
+            ),
+            Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [const Text("運動評分"), item])
+          ],
+        ),
+      ),
+    );
+  }
+
+  static Widget twoinfo(String title, String describe) {
+    return BoxUI.boxHasRadius(
+      padding: const EdgeInsets.fromLTRB(30, 10, 10, 10),
+      margin: const EdgeInsets.all(10),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(title,style: const TextStyle(fontWeight: FontWeight.bold)),
+        Text(describe),
+      ],
+    ));
   }
 }
 

@@ -1,7 +1,7 @@
-
 import 'package:e_fu/module/box_ui.dart';
 import 'package:e_fu/my_data.dart';
 import 'package:e_fu/pages/mo/mo_list.dart';
+import 'package:e_fu/pages/user/profile.dart';
 import 'package:e_fu/request/user/account.dart';
 import 'package:e_fu/request/user/get_user_data.dart';
 import 'package:flutter/material.dart';
@@ -40,24 +40,19 @@ class ProfileCreateState extends State<ProfileInfo> {
   ];
 
   getProfile() {
-    
     try {
       userRepo.getUser(widget.userName).then((value) {
         setState(() {
-          print(value.D);
           profile = GetUser.fromJson(value.D);
-          logger.v(value.D);
         });
-        
       });
     } catch (e) {
       logger.v(e);
-    } 
+    }
   }
-  
+
   @override
   void initState() {
-    
     super.initState();
     getProfile();
   }
@@ -175,15 +170,21 @@ class ProfileCreateState extends State<ProfileInfo> {
                         width: MediaQuery.of(context).size.width * 0.9,
                         padding: const EdgeInsets.all(10),
                         child: GestureDetector(
+                          onTap: ()=>Navigator.pushNamed(context, Profile.routeName,arguments: profile),
                           child: Row(
                             children: [
                               Padding(
                                 padding:
                                     const EdgeInsets.fromLTRB(20, 0, 15, 0),
-                                child: Image.asset('assets/images/profile.png',
-                                    scale: 2.0),
+                                child: Image.asset(
+                                  'assets/images/profile.png',
+                                  scale: 2.0,
+                                ),
                               ),
-                              Text("個人檔案", style: TextStyle(fontSize: 16)),
+                              const Text(
+                                "個人檔案",
+                                style: TextStyle(fontSize: 16),
+                              ),
                             ],
                           ),
                         )),
@@ -201,30 +202,33 @@ class ProfileCreateState extends State<ProfileInfo> {
                                 child: Image.asset('assets/images/target.png',
                                     scale: 2.0),
                               ),
-                              Text("管理目標", style: TextStyle(fontSize: 16)),
+                              const Text("管理目標",
+                                  style: TextStyle(fontSize: 16)),
                             ],
                           ),
                         )),
                     GestureDetector(
                       child: BoxUI.boxHasRadius(
-                          margin: const EdgeInsets.fromLTRB(0, 10, 0, 5),
-                          height: 70,
-                          width: MediaQuery.of(context).size.width * 0.9,
-                          padding: const EdgeInsets.all(10),
-                          child: GestureDetector(
-                            child: Row(
-                              children: [
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(20, 0, 15, 0),
-                                  child: Image.asset(
-                                      'assets/images/setting_friend.png',
-                                      scale: 2.0),
-                                ),
-                                Text("管理Mo伴", style: TextStyle(fontSize: 16)),
-                              ],
-                            ),
-                          )),
+                        margin: const EdgeInsets.fromLTRB(0, 10, 0, 5),
+                        height: 70,
+                        width: MediaQuery.of(context).size.width * 0.9,
+                        padding: const EdgeInsets.all(10),
+                        child: GestureDetector(
+                          child: Row(
+                            children: [
+                              Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(20, 0, 15, 0),
+                                child: Image.asset(
+                                    'assets/images/setting_friend.png',
+                                    scale: 2.0),
+                              ),
+                              const Text("管理Mo伴",
+                                  style: TextStyle(fontSize: 16)),
+                            ],
+                          ),
+                        ),
+                      ),
                       onTap: () {
                         Navigator.pushNamed(context, MoList.routeName,
                             arguments: widget.userName);
@@ -243,7 +247,7 @@ class ProfileCreateState extends State<ProfileInfo> {
                               child: Image.asset('assets/images/setting.png',
                                   scale: 2.0),
                             ),
-                            Text("設定", style: TextStyle(fontSize: 16)),
+                            const Text("設定", style: TextStyle(fontSize: 16)),
                           ],
                         ),
                       ),
@@ -262,7 +266,7 @@ class ProfileCreateState extends State<ProfileInfo> {
                                 child: Image.asset('assets/images/logout.png',
                                     scale: 2.0),
                               ),
-                              Text("登出", style: TextStyle(fontSize: 16)),
+                              const Text("登出", style: TextStyle(fontSize: 16)),
                             ],
                           ),
                         )),

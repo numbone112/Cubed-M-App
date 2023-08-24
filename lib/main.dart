@@ -1,10 +1,10 @@
 import 'package:e_fu/home.dart';
 import 'package:e_fu/pages/event/event_now_result.dart';
 import 'package:e_fu/pages/event/event_result.dart';
-import 'package:e_fu/pages/exercise/history.dart';
 import 'package:e_fu/pages/exercise/insert.dart';
 import 'package:e_fu/pages/mo/hide_mo_list.dart';
 import 'package:e_fu/pages/mo/mo_list.dart';
+import 'package:e_fu/pages/user/profile.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import './pages/e/e_update.dart';
 import 'package:e_fu/pages/event/event.dart';
@@ -38,7 +38,6 @@ void main() {
 }
 
 class MyApp extends StatefulWidget {
-  // final String userName;
   const MyApp({super.key});
   @override
   State<StatefulWidget> createState() => MyappState();
@@ -50,7 +49,6 @@ class MyappState extends State<MyApp> {
   _loadUser() async {
     if (userName == "") {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      // prefs.clear();
       setState(() {
         if (prefs.containsKey(Name.userName)) {
           userName = prefs.getString(Name.userName) ?? "";
@@ -83,26 +81,16 @@ class MyappState extends State<MyApp> {
       ),
       debugShowCheckedModeBanner: false,
       routes: <String, WidgetBuilder>{
-        Home.routeName: (_) => Home(
-              userName: userName,
-            ),
+        Home.routeName: (_) => Home(userName: userName),
         Login.routeName: (_) => const Login(),
-        Event.routeName: (_) => Event(
-              userName: userName,
-            ),
+        Event.routeName: (_) => Event(userName: userName),
         ProfileUpdate.routeName: (_) => const ProfileUpdate(),
-        EventResult.routeName: (_) => EventResult(
-              userName: userName,
-            ),
-        EventNowResult.routeName: (_) => EventNowResult(
-              userName: userName,
-            ),
+        EventResult.routeName: (_) => EventResult(userName: userName),
+        EventNowResult.routeName: (_) => EventNowResult(userName: userName),
         MoList.routeName: (_) => MoList(userName: userName),
         HindMoList.routeName: (_) => HindMoList(userName: userName),
-        InsertInvite.routeName: (_) => InsertInvite(
-              userName: userName,
-            ),
-      
+        InsertInvite.routeName: (_) => InsertInvite(userName: userName),
+        Profile.routeName:(_) => Profile(userName: userName),
       },
     );
   }

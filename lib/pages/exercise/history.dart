@@ -1,5 +1,6 @@
 import 'package:e_fu/module/box_ui.dart';
 import 'package:e_fu/my_data.dart';
+import 'package:e_fu/pages/exercise/detail.dart';
 import 'package:e_fu/request/exercise/history_data.dart';
 import 'package:e_fu/request/invite/invite_data.dart';
 import 'package:flutter/material.dart';
@@ -37,7 +38,7 @@ class HistoryDetailstate extends State<HistoryDetail> {
               children: [
                 const Text("平均"),
                 BoxUI.textRadiusBorder(widget.history.avgScore.toString(),
-                    font: Colors.white, filling: MyTheme.buttonColor)
+                    font: Colors.white, filling: MyTheme.lightColor)
               ],
             )
           ],
@@ -47,12 +48,11 @@ class HistoryDetailstate extends State<HistoryDetail> {
           height: MediaQuery.of(context).size.height - 300,
           child: Stack(
             children: [
-             
               BoxUI.boxHasRadius(
-                padding: EdgeInsets.only(left: 80),
-                margin: EdgeInsets.only(left: 100),
+                  padding: EdgeInsets.only(left: 80),
+                  margin: EdgeInsets.only(left: 100),
                   color: Colors.white,
-                  height: 150,
+                  height: 120,
                   width: 250,
                   child: Row(
                     children: [
@@ -63,17 +63,17 @@ class HistoryDetailstate extends State<HistoryDetail> {
                           children: [
                             Text(
                               "左手*3",
-                              style: myText( height: 1.5),
+                              style: myText(height: 1.5),
                               textAlign: TextAlign.center,
                             ),
                             Text(
                               "右手*5",
-                              style: myText( height: 1.5),
+                              style: myText(height: 1.5),
                               textAlign: TextAlign.center,
                             ),
                             Text(
                               "椅子坐立*1",
-                              style: myText( height: 1.5),
+                              style: myText(height: 1.5),
                               textAlign: TextAlign.center,
                             ),
                           ],
@@ -82,23 +82,33 @@ class HistoryDetailstate extends State<HistoryDetail> {
                       BoxUI.textRadiusBorder("4.1")
                     ],
                   )),
-             BoxUI.boxHasRadius(
-              margin: EdgeInsets.only(left: 50),
-              color: MyTheme.buttonColor,
-                height: 150,
-                width: 80,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "召集人",
-                      style: myText(height: 3,color: Colors.white),
-                    ),
-                    Text(
-                      "王昭昭",
-                      style: myText(height: 3,color: Colors.white),
-                    ),
-                  ],
+              BoxUI.boxHasRadius(
+                margin: EdgeInsets.only(left: 50),
+                color: MyTheme.buttonColor,
+                height: 120,
+                width: 120,
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (BuildContext context) =>
+                                HistoryDetailPerson(
+                                    userName: widget.userName)));
+                  },
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "召集人",
+                        style: myText(height: 3, color: Colors.white),
+                      ),
+                      Text(
+                        "王昭昭",
+                        style: myText(height: 3, color: Colors.white),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],

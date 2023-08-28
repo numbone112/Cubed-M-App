@@ -34,7 +34,7 @@ class HistoryDetailPersonstate extends State<HistoryDetailPerson> {
             Column(
               children: [
                 const Text("評分"),
-                BoxUI.textRadiusBorder('4.1',
+                Box.textRadiusBorder('4.1',
                     font: Colors.white, filling: MyTheme.lightColor)
               ],
             )
@@ -43,13 +43,13 @@ class HistoryDetailPersonstate extends State<HistoryDetailPerson> {
         //各運動項目
         Row(
           children: [
-            BoxUI.textRadiusBorder("左手",
+            Box.textRadiusBorder("左手",
                 font: Colors.white, filling: MyTheme.buttonColor),
-            BoxUI.textRadiusBorder("右手",
+            Box.textRadiusBorder("右手",
                 font: MyTheme.buttonColor,
                 filling: Colors.white,
                 border: MyTheme.buttonColor),
-            BoxUI.textRadiusBorder("椅子坐立",
+            Box.textRadiusBorder("椅子坐立",
                 width: 75,
                 font: MyTheme.buttonColor,
                 filling: Colors.white,
@@ -61,7 +61,7 @@ class HistoryDetailPersonstate extends State<HistoryDetailPerson> {
           height: MediaQuery.of(context).size.height - 300,
           child: ListView(
             children: [
-              BoxUI.boxHasRadius(
+              Box.boxHasRadius(
                 height: 50,
                 margin: EdgeInsets.only(top: 15,bottom: 15),
                 child: Row(
@@ -70,7 +70,7 @@ class HistoryDetailPersonstate extends State<HistoryDetailPerson> {
                   children: [Text("1"), Text("25次"), Text("好")],
                 ),
               ),
-              BoxUI.boxHasRadius(
+              Box.boxHasRadius(
                 height: 50,
                 margin: EdgeInsets.only(top: 15,bottom: 15),
                 child: Row(

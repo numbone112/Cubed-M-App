@@ -2,6 +2,7 @@ import 'package:e_fu/module/box_ui.dart';
 import 'package:e_fu/my_data.dart';
 import 'package:e_fu/pages/mo/mo_list.dart';
 import 'package:e_fu/pages/user/profile.dart';
+import 'package:e_fu/pages/user/profile_goal.dart';
 import 'package:e_fu/request/user/account.dart';
 import 'package:e_fu/request/user/get_user_data.dart';
 import 'package:flutter/material.dart';
@@ -75,8 +76,8 @@ class ProfileCreateState extends State<ProfileInfo> {
                 child: (Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    BoxUI.titleText("個人資訊", 15, fontSize: MySize.titleSize),
-                    BoxUI.boxHasRadius(
+                    Box.titleText("個人資訊", 15, fontSize: MySize.titleSize),
+                    Box.boxHasRadius(
                       margin: const EdgeInsets.fromLTRB(0, 5, 0, 5),
                       padding: const EdgeInsets.all(10),
                       height: 200,
@@ -164,7 +165,7 @@ class ProfileCreateState extends State<ProfileInfo> {
                         ],
                       ),
                     ),
-                    BoxUI.boxHasRadius(
+                    Box.boxHasRadius(
                         margin: const EdgeInsets.fromLTRB(0, 10, 0, 5),
                         height: 70,
                         width: MediaQuery.of(context).size.width * 0.9,
@@ -188,12 +189,13 @@ class ProfileCreateState extends State<ProfileInfo> {
                             ],
                           ),
                         )),
-                    BoxUI.boxHasRadius(
+                    Box.boxHasRadius(
                         margin: const EdgeInsets.fromLTRB(0, 10, 0, 5),
                         height: 70,
                         width: MediaQuery.of(context).size.width * 0.9,
                         padding: const EdgeInsets.all(10),
                         child: GestureDetector(
+                          onTap: ()=>Navigator.pushNamed(context, ProfileGoal.routeName,arguments: profile),
                           child: Row(
                             children: [
                               Padding(
@@ -208,7 +210,7 @@ class ProfileCreateState extends State<ProfileInfo> {
                           ),
                         )),
                     GestureDetector(
-                      child: BoxUI.boxHasRadius(
+                      child: Box.boxHasRadius(
                         margin: const EdgeInsets.fromLTRB(0, 10, 0, 5),
                         height: 70,
                         width: MediaQuery.of(context).size.width * 0.9,
@@ -234,7 +236,7 @@ class ProfileCreateState extends State<ProfileInfo> {
                             arguments: widget.userName);
                       },
                     ),
-                    BoxUI.boxHasRadius(
+                    Box.boxHasRadius(
                       margin: const EdgeInsets.fromLTRB(0, 10, 0, 5),
                       height: 70,
                       width: MediaQuery.of(context).size.width * 0.9,
@@ -252,7 +254,7 @@ class ProfileCreateState extends State<ProfileInfo> {
                         ),
                       ),
                     ),
-                    BoxUI.boxHasRadius(
+                    Box.boxHasRadius(
                         margin: const EdgeInsets.fromLTRB(0, 10, 0, 5),
                         height: 70,
                         width: MediaQuery.of(context).size.width * 0.9,

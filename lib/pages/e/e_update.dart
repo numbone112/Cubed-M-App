@@ -4,6 +4,7 @@ import 'package:e_fu/module/page.dart';
 import 'package:e_fu/my_data.dart';
 import 'package:e_fu/request/e/e.dart';
 import 'package:e_fu/request/e/e_data.dart';
+import 'package:e_fu/request/user/get_user_data.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
@@ -27,13 +28,13 @@ class ProfileUpdateState extends State<ProfileUpdate> {
   ERepo eRepo = ERepo();
   var logger = Logger();
 
-  ProfileData? _profileData;
+  GetUser? _profileData;
   @override
   Widget build(BuildContext context) {
     if (_profileData == null) {
       setState(() {
         _profileData =
-            ModalRoute.of(context)!.settings.arguments as ProfileData;
+            ModalRoute.of(context)!.settings.arguments as GetUser;
       });
 
       dateinput.text = dateFormat.format(_profileData!.birthday);
@@ -50,9 +51,9 @@ class ProfileUpdateState extends State<ProfileUpdate> {
           body: Column(
             children: [
               SizedBox(
-                height: MediaQuery.of(context).size.height * 0.7,
+                height: MediaQuery.of(context).size.height * 0.6,
                 child: ListView(children: [
-                  BoxUI.boxHasRadius(
+                  Box.boxHasRadius(
                     margin: const EdgeInsets.all(20),
                     padding: const EdgeInsets.all(25),
                     child: TextField(
@@ -60,7 +61,7 @@ class ProfileUpdateState extends State<ProfileUpdate> {
                       controller: nameinput,
                     ),
                   ),
-                  BoxUI.boxHasRadius(
+                  Box.boxHasRadius(
                     margin: const EdgeInsets.all(20),
                     padding: const EdgeInsets.all(25),
                     child: TextField(
@@ -87,7 +88,7 @@ class ProfileUpdateState extends State<ProfileUpdate> {
                       },
                     ),
                   ),
-                  BoxUI.boxHasRadius(
+                  Box.boxHasRadius(
                     margin: const EdgeInsets.all(20),
                     padding: const EdgeInsets.all(25),
                     child: TextField(
@@ -115,7 +116,7 @@ class ProfileUpdateState extends State<ProfileUpdate> {
                       },
                     ),
                   ),
-                  BoxUI.boxHasRadius(
+                  Box.boxHasRadius(
                     margin: const EdgeInsets.all(20),
                     padding: const EdgeInsets.all(25),
                     child: TextField(
@@ -128,7 +129,7 @@ class ProfileUpdateState extends State<ProfileUpdate> {
               Row(
                 children: [
                   Expanded(
-                    child: BoxUI.boxHasRadius(
+                    child: Box.boxHasRadius(
                       color: MyTheme.lightColor,
                       margin: const EdgeInsets.all(30),
                       padding: const EdgeInsets.all(20),
@@ -143,7 +144,7 @@ class ProfileUpdateState extends State<ProfileUpdate> {
                     ),
                   ),
                   Expanded(
-                    child: BoxUI.boxHasRadius(
+                    child: Box.boxHasRadius(
                       margin: const EdgeInsets.all(30),
                       padding: const EdgeInsets.all(20),
                       color: MyTheme.buttonColor,

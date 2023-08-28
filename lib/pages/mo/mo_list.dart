@@ -48,7 +48,7 @@ class _MoListPageState extends State<MoList> {
   }
 
   Widget moWiget(int i) {
-    return BoxUI.boxHasRadius(
+    return Box.boxHasRadius(
       color: Colors.white,
       margin: const EdgeInsets.fromLTRB(0, 10, 0, 5),
       height: 80,

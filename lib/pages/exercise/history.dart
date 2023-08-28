@@ -37,7 +37,7 @@ class HistoryDetailstate extends State<HistoryDetail> {
             Column(
               children: [
                 const Text("平均"),
-                BoxUI.textRadiusBorder(widget.history.avgScore.toString(),
+                Box.textRadiusBorder(widget.history.avgScore.toString(),
                     font: Colors.white, filling: MyTheme.lightColor)
               ],
             )
@@ -48,7 +48,7 @@ class HistoryDetailstate extends State<HistoryDetail> {
           height: MediaQuery.of(context).size.height - 300,
           child: Stack(
             children: [
-              BoxUI.boxHasRadius(
+              Box.boxHasRadius(
                   padding: EdgeInsets.only(left: 80),
                   margin: EdgeInsets.only(left: 100),
                   color: Colors.white,
@@ -79,10 +79,10 @@ class HistoryDetailstate extends State<HistoryDetail> {
                           ],
                         ),
                       ),
-                      BoxUI.textRadiusBorder("4.1")
+                      Box.textRadiusBorder("4.1")
                     ],
                   )),
-              BoxUI.boxHasRadius(
+              Box.boxHasRadius(
                 margin: EdgeInsets.only(left: 50),
                 color: MyTheme.buttonColor,
                 height: 120,

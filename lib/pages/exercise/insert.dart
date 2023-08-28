@@ -31,7 +31,7 @@ class InsertInvitestate extends State<InsertInvite> {
   TimeOfDayFormat timeFormat = TimeOfDayFormat.HH_colon_mm;
 
   Widget peopleItem(String id, String name) {
-    return BoxUI.boxHasRadius(
+    return Box.boxHasRadius(
       margin: const EdgeInsets.only(right: 30, left: 30),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -169,15 +169,15 @@ class InsertInvitestate extends State<InsertInvite> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                BoxUI.boxHasRadius(
+                Box.boxHasRadius(
                     child: GestureDetector(
-                        child: BoxUI.textRadiusBorder('取消',
+                        child: Box.textRadiusBorder('取消',
                             border: MyTheme.lightColor,
                             filling: MyTheme.lightColor)),
                     color: MyTheme.lightColor),
-                BoxUI.boxHasRadius(
+                Box.boxHasRadius(
                   child: GestureDetector(
-                    child: BoxUI.textRadiusBorder('確認',
+                    child: Box.textRadiusBorder('確認',
                         border: MyTheme.buttonColor),
                     onTap: () {
                       EasyLoading.show(status: "loading...");

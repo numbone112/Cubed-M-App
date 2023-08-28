@@ -7,7 +7,7 @@ import 'package:e_fu/request/invite/invite_data.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
-class BoxUI {
+class Box {
   static Widget boxHasRadius({
     Color? color,
     double? height,
@@ -74,7 +74,7 @@ class BoxUI {
   }
 
   static Widget inviteBox(Invite invite) {
-    return (BoxUI.boxHasRadius(
+    return (Box.boxHasRadius(
         padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
         height: 100,
         child: Row(
@@ -130,12 +130,12 @@ class BoxUI {
           ]),
           Column(
             children: [
-              BoxUI.textRadiusBorder(history.score.toString(),
+              Box.textRadiusBorder(history.score.toString(),
                   margin: const EdgeInsets.all(5)),
               const Padding(
                 padding: EdgeInsets.all(2.5),
               ),
-              BoxUI.textRadiusBorder(
+              Box.textRadiusBorder(
                 history.avgScore.toString(),
                 filling: MyTheme.lightColor,
                 margin: const EdgeInsets.all(5),
@@ -144,21 +144,21 @@ class BoxUI {
           )
         ],
       );
-      label = BoxUI.textRadiusBorder(
+      label = Box.textRadiusBorder(
         "團體",
         font: HexColor("C6AC78"),
         filling: Colors.white,
         border: HexColor("C6AC78"),
       );
     } else {
-      item = BoxUI.textRadiusBorder(history.score.toString(),
+      item = Box.textRadiusBorder(history.score.toString(),
           margin: EdgeInsets.zero);
 
-      label = BoxUI.textRadiusBorder('個人',
+      label = Box.textRadiusBorder('個人',
           filling: Colors.white, border: Colors.black45, font: Colors.black45);
     }
 
-    return BoxUI.boxHasRadius(
+    return Box.boxHasRadius(
       margin: const EdgeInsets.all(5),
       height: 120,
       padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
@@ -218,18 +218,42 @@ class BoxUI {
     );
   }
 
-  static Widget twoinfo(String title, String describe) {
-    return BoxUI.boxHasRadius(
+  static Widget twoinfo(String title, String describe, {List<Widget>? widget}) {
+    return Box.boxHasRadius(
       padding: const EdgeInsets.fromLTRB(30, 10, 10, 10),
       margin: const EdgeInsets.all(10),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: widget ??
+            [
+              Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+              Text(describe),
+            ],
+      ),
+    );
+  }
+
+  static Widget twoinfoWithInput(
+      String title,  TextEditingController controller) {
+    return Box.boxHasRadius(
+        padding: const EdgeInsets.fromLTRB(30, 10, 10, 10),
+        margin: const EdgeInsets.all(10),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(title,style: const TextStyle(fontWeight: FontWeight.bold)),
-        Text(describe),
-      ],
-    ));
+          children: [
+            Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+            TextFormField(
+              controller: controller,
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                floatingLabelStyle: TextStyle(color: MyTheme.lightColor),
+              ),
+            )
+            
+          ],
+        ));
   }
 }
 

@@ -40,9 +40,9 @@ class _MoState extends State<Mo> {
           child: (Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              BoxUI.titleText("運動排行榜", 10, fontSize: MySize.titleSize),
+              Box.titleText("運動排行榜", 10, fontSize: MySize.titleSize),
               Center(
-                child: BoxUI.boxHasRadius(
+                child: Box.boxHasRadius(
                   child: DataTable(
                       columns: const [
                         DataColumn(label: Text("排名")),
@@ -64,9 +64,9 @@ class _MoState extends State<Mo> {
                 ),
               ),
              
-              BoxUI.titleText("Mo伴是什麼？", 10, fontSize: MySize.subtitleSize),
+              Box.titleText("Mo伴是什麼？", 10, fontSize: MySize.subtitleSize),
               Text("曾一起運動的朋友。", style: myText(color: MyTheme.hintColor)),
-              BoxUI.titleText("運動綜合評分如何計算？", 10, fontSize: MySize.subtitleSize),
+              Box.titleText("運動綜合評分如何計算？", 10, fontSize: MySize.subtitleSize),
               Text("從運動者最後一次運動中，將各動作等級換算成數字，再以算術平均計算。",
                   style: myText(color: MyTheme.hintColor)),
             ],

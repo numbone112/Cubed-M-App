@@ -24,12 +24,11 @@ GetUser _$GetUserFromJson(Map<String, dynamic> json) => GetUser(
       disease:
           (json['disease'] as List<dynamic>).map((e) => e as String).toList(),
       target: json['target'] as String,
-      target_sets: (json['target_sets'] as List<dynamic>)
-          .map((e) => e as String)
-          .toList(),
       target_level: (json['target_level'] as List<dynamic>)
           .map((e) => e as String)
           .toList(),
+      target_sets:
+          (json['target_sets'] as List<dynamic>).map((e) => e as int).toList(),
       id: json['id'] as String,
     );
 
@@ -49,4 +48,20 @@ Map<String, dynamic> _$GetUserToJson(GetUser instance) => <String, dynamic>{
       'target_sets': instance.target_sets,
       'target_level': instance.target_level,
       'id': instance.id,
+    };
+
+Target _$TargetFromJson(Map<String, dynamic> json) => Target(
+      target: json['target'] as String,
+      target_level: (json['target_level'] as List<dynamic>)
+          .map((e) => e as String)
+          .toList(),
+      target_sets: (json['target_sets'] as List<dynamic>)
+          .map((e) => e as String)
+          .toList(),
+    );
+
+Map<String, dynamic> _$TargetToJson(Target instance) => <String, dynamic>{
+      'target': instance.target,
+      'target_sets': instance.target_sets,
+      'target_level': instance.target_level,
     };

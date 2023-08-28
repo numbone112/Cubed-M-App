@@ -3,6 +3,7 @@
 import 'dart:convert';
 
 import 'package:e_fu/request/api.dart';
+import 'package:e_fu/request/user/get_user_data.dart';
 import 'package:e_fu/request/user/get_user_model.dart';
 import 'login_data.dart';
 import 'package:logger/logger.dart';
@@ -20,10 +21,11 @@ abstract class UserAPI {
   // Future<String> updateUser(int id, User user);
 
   //查詢使用者
-  Future<GetUserModel> getUser(String eId);
+  Future<Format> getUser(String eId);
 
   // Future<Format> updateProfile(ProfileData profileData);
   // Future<Format> getFuDatil(String pId);
+  Future<Format> setTarget(Target target);
 }
 
 class UserRepo extends API implements UserAPI {
@@ -55,26 +57,36 @@ class UserRepo extends API implements UserAPI {
 
   @override
   getUser(String eId) async {
-    try {
-      dynamic response = await client.get(
+    return await lunch(client.get(
         Uri.parse('$domain/therapist/$eId'),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      );
+        headers: header,
+      ));
+    // try {
+    //   dynamic response = await client.get(
+    //     Uri.parse('$domain/therapist/$eId'),
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //     },
+    //   );
 
-      Map responseBody = json.decode(utf8.decode(response.bodyBytes));
-      if (response.statusCode == 200) {
-        logger.v(responseBody);
-        return GetUserModel.fromJson(responseBody);
-      } else {
-        logger.v("not 200");
-        return GetUserModel.fromJson(responseBody);
-      }
-    } catch (e) {
-      Map error = {"D": {}, "message": "error", "success": false};
-      logger.v(e);
-      return GetUserModel.fromJson(error);
-    }
+    //   Map responseBody = json.decode(utf8.decode(response.bodyBytes));
+    //   if (response.statusCode == 200) {
+    //     logger.v(responseBody);
+    //     return GetUserModel.fromJson(responseBody);
+    //   } else {
+    //     logger.v("not 200");
+    //     return GetUserModel.fromJson(responseBody);
+    //   }
+    // } catch (e) {
+    //   Map error = {"D": {}, "message": "error", "success": false};
+    //   logger.v(e);
+    //   return GetUserModel.fromJson(error);
+    // }
+  }
+
+  @override
+  Future<Format> setTarget(Target target) async {
+    return await lunch(
+        client.patch(Uri.parse('$domain/user/target'), headers: header, body: target));
   }
 }

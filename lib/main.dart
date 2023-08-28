@@ -5,6 +5,7 @@ import 'package:e_fu/pages/exercise/insert.dart';
 import 'package:e_fu/pages/mo/hide_mo_list.dart';
 import 'package:e_fu/pages/mo/mo_list.dart';
 import 'package:e_fu/pages/user/profile.dart';
+import 'package:e_fu/pages/user/profile_goal.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import './pages/e/e_update.dart';
 import 'package:e_fu/pages/event/event.dart';
@@ -90,7 +91,8 @@ class MyappState extends State<MyApp> {
         MoList.routeName: (_) => MoList(userName: userName),
         HindMoList.routeName: (_) => HindMoList(userName: userName),
         InsertInvite.routeName: (_) => InsertInvite(userName: userName),
-        Profile.routeName:(_) => Profile(userName: userName),
+        Profile.routeName: (_) => Profile(userName: userName),
+        ProfileGoal.routeName :(_) => ProfileGoal(userName: userName),
       },
     );
   }

@@ -5,40 +5,35 @@ import 'package:e_fu/pages/e/e_update.dart';
 import 'package:e_fu/request/user/get_user_data.dart';
 import 'package:flutter/material.dart';
 
-class Profile extends StatefulWidget {
-  static const routeName = '/profile';
+class ProfileGoal extends StatefulWidget {
+  static const routeName = '/profile/goal';
   final String userName;
-  const Profile({super.key, required this.userName});
+  const ProfileGoal({super.key, required this.userName});
 
   @override
-  ProfilePageState createState() => ProfilePageState();
+  ProfileGoalState createState() => ProfileGoalState();
 }
 
-class ProfilePageState extends State<Profile> {
+class ProfileGoalState extends State<ProfileGoal> {
   @override
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context)!.settings.arguments as GetUser;
 
     return CustomPage(
       body: ListView(children: [
-        Box.twoinfo("ID", args.id),
-        Box.twoinfo("姓名", args.name),
-        Box.twoinfo("性別", args.sex),
-        Box.twoinfo("生日", args.birthday.toIso8601String().substring(0, 10)),
-        Box.twoinfo("手機號碼", args.phone),
-        Box.twoinfo("身高", args.height.toString()),
-        Box.twoinfo("體重", args.height.toString()),
-        Box.twoinfo("疾病", args.disease.join(" , ")),
+        Box.twoinfo("運動目標", args.target),
+        Box.twoinfo("運動組數", args.target_sets.toString()),
+       
         Box.twoinfo("", "", widget: [
           GestureDetector(
-            child: const Text("編輯個人資料",
+            child: const Text("編輯運動目標",
                 style: TextStyle(fontWeight: FontWeight.bold)),
             onTap: () => Navigator.pushNamed(context, ProfileUpdate.routeName,
-                arguments: args),
+               ),
           )
         ]),
       ]),
-      title: "個人檔案",
+      title: "管理運動目標",
       headColor: MyTheme.lightColor,
       prevColor: Colors.white,
       headTextColor: Colors.white,

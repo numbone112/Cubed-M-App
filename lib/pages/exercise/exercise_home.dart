@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:e_fu/module/box_ui.dart';
 import 'package:e_fu/my_data.dart';
 import 'package:e_fu/request/exercise/history_data.dart';
+import 'package:e_fu/request/invite/invite.dart';
 import 'package:e_fu/request/invite/invite_data.dart';
 
 import 'package:flutter/material.dart';
@@ -17,16 +20,26 @@ class ExerciseHomeState extends State<ExerciseHome>
     with SingleTickerProviderStateMixin {
   // 宣告 TabController
   late TabController tabController;
+  InviteRepo repo=InviteRepo();
+  List<Invite> invite_list=[];
 
   @override
   void initState() {
     // 建立 TabController，vsync 接受的型態是 TickerProvider
     tabController = TabController(length: 2, vsync: this);
     super.initState();
+     repo.inviteList(widget.userNmae,1).then((value) {
+        List<Invite> inviteList= parseInviteList(jsonEncode(value.D));
+        setState(() {
+          invite_list=inviteList;
+        });
+      
+    } );
   }
 
   @override
   Widget build(BuildContext context) {
+   
     var array = [
       Invite(
           name: "運動Easy",

@@ -8,6 +8,7 @@ import 'package:logger/logger.dart';
 abstract class InviteAPI {
   // 新增邀約
   Future<Format> createInvite(Invite invite);
+  Future<Format> inviteList(String userName, int mode);
 }
 
 class InviteRepo extends API implements InviteAPI {
@@ -21,6 +22,29 @@ class InviteRepo extends API implements InviteAPI {
                 'Content-Type': 'application/json',
               },
               body: jsonEncode(invite.toJson()));
+
+      Map responseBody = json.decode(utf8.decode(response.bodyBytes));
+      if (response.statusCode == 200) {
+        logger.v(responseBody);
+        return Format.fromJson(responseBody);
+      } else {
+        logger.v("not 200");
+        return Format.fromJson(responseBody);
+      }
+    } catch (e) {
+      logger.v(e);
+      return Format.fromFields("error", false, "");
+    }
+  }
+
+  @override
+  Future<Format> inviteList(String userName, int mode) async {
+    try {
+      //記得去invite_data.g.dart把firend改回來
+      final response = await client
+          .get(Uri.parse('$domain/invite/list2/$userName/$mode'), headers: {
+        'Content-Type': 'application/json',
+      });
 
       Map responseBody = json.decode(utf8.decode(response.bodyBytes));
       if (response.statusCode == 200) {

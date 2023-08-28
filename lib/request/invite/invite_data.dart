@@ -1,8 +1,18 @@
 
 
+import 'dart:convert';
+
 import 'package:json_annotation/json_annotation.dart';
 
 part 'invite_data.g.dart';
+
+List<Invite> parseInviteList(String responseBody) {
+  
+  final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
+
+  return parsed.map<Invite>((json) => Invite.fromJson(json)).toList();
+}
+
 
 @JsonSerializable(explicitToJson: true)
 class Invite {

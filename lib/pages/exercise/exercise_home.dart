@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:e_fu/module/box_ui.dart';
 import 'package:e_fu/my_data.dart';
 import 'package:e_fu/request/exercise/history_data.dart';
+import 'package:e_fu/request/invite/invite.dart';
 import 'package:e_fu/request/invite/invite_data.dart';
 
 import 'package:flutter/material.dart';
@@ -17,16 +20,26 @@ class ExerciseHomeState extends State<ExerciseHome>
     with SingleTickerProviderStateMixin {
   // 宣告 TabController
   late TabController tabController;
+  InviteRepo repo=InviteRepo();
+  List<Invite> invite_list=[];
 
   @override
   void initState() {
     // 建立 TabController，vsync 接受的型態是 TickerProvider
     tabController = TabController(length: 2, vsync: this);
     super.initState();
+     repo.inviteList(widget.userNmae,1).then((value) {
+        List<Invite> inviteList= parseInviteList(jsonEncode(value.D));
+        setState(() {
+          invite_list=inviteList;
+        });
+      
+    } );
   }
 
   @override
   Widget build(BuildContext context) {
+   
     var array = [
       Invite(
           name: "運動Easy",
@@ -71,11 +84,11 @@ class ExerciseHomeState extends State<ExerciseHome>
               controller: tabController,
               tabs: [
                 Tab(
-                  child: BoxUI.titleText("邀約", 0, alignment: Alignment.center),
+                  child: Box.titleText("邀約", 0, alignment: Alignment.center),
                 ),
                 Tab(
                   child:
-                      BoxUI.titleText("歷史運動", 0, alignment: Alignment.center),
+                      Box.titleText("歷史運動", 0, alignment: Alignment.center),
                 ),
               ],
             ),
@@ -89,18 +102,18 @@ class ExerciseHomeState extends State<ExerciseHome>
                     children: [
                       Row(
                         children: [
-                          BoxUI.textRadiusBorder("已接受"),
-                          BoxUI.textRadiusBorder("未接受")
+                          Box.textRadiusBorder("已接受"),
+                          Box.textRadiusBorder("未接受")
                         ],
                       ),
-                      BoxUI.boxHasRadius(
+                      Box.boxHasRadius(
                           child: SizedBox(
                             height: MediaQuery.of(context).size.height * 0.6,
                             width: MediaQuery.of(context).size.width * 0.8,
                             child: ListView.builder(
-                                itemCount: array.length,
+                                itemCount: invite_list.length,
                                 itemBuilder: (BuildContext context, int index) {
-                                  return (BoxUI.inviteBox(array[index]));
+                                  return (Box.inviteBox(invite_list[index]));
                                 }),
                           ),
                           color: MyTheme.backgroudColor),
@@ -113,15 +126,15 @@ class ExerciseHomeState extends State<ExerciseHome>
                         Text("篩選"),
                       ],
                     ),
-                    BoxUI.boxHasRadius(
+                    Box.boxHasRadius(
                         child: SizedBox(
                       height: MediaQuery.of(context).size.height * 0.6,
                       width: MediaQuery.of(context).size.width * 0.8,
-                      child: BoxUI.boxHasRadius(
+                      child: Box.boxHasRadius(
                           child: ListView.builder(
                               itemCount: history.length,
                               itemBuilder: (BuildContext context, int index) {
-                                return (BoxUI.history(history[index],context,widget.userNmae));
+                                return (Box.history(history[index],context,widget.userNmae));
                               }),
                           color: MyTheme.backgroudColor),
                     ))

@@ -27,7 +27,7 @@ class PeopleBox {
       padding: const EdgeInsets.all(8.0),
       child: Stack(
         children: [
-          BoxUI.boxHasRadius(
+          Box.boxHasRadius(
             padding: const EdgeInsets.fromLTRB(100, 8, 8, 8),
             height: 100,
             width: 600,
@@ -47,7 +47,7 @@ class PeopleBox {
               ],
             ),
           ),
-          BoxUI.boxHasRadius(
+          Box.boxHasRadius(
               height: 100,
               width: 100,
               color: MyTheme.lightColor,

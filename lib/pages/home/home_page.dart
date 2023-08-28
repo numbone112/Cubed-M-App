@@ -49,7 +49,7 @@ class HomePageState extends State<HomePage> {
   }
 
   Widget inviteBox(Invite invite) {
-    return BoxUI.boxHasRadius(
+    return Box.boxHasRadius(
       padding: const EdgeInsets.all(10),
       margin: const EdgeInsets.all(10),
       height: 100,
@@ -99,7 +99,7 @@ class HomePageState extends State<HomePage> {
                 child: const Text("今天一起來運動吧!"),
               ),
 
-              BoxUI.titleText("運動等級", 15, fontSize: MySize.titleSize),
+              Box.titleText("運動等級", 15, fontSize: MySize.titleSize),
               SizedBox(
                 // width: MediaQuery.of(context).size.width * 0.8,
                 child: Row(
@@ -108,7 +108,7 @@ class HomePageState extends State<HomePage> {
                     SingleChildScrollView(
                       child: Stack(
                         children: [
-                          BoxUI.boxHasRadius(
+                          Box.boxHasRadius(
                             height: 150,
                             width: 150,
                             child: Padding(
@@ -134,7 +134,7 @@ class HomePageState extends State<HomePage> {
                           ),
                           Padding(
                             padding: const EdgeInsets.fromLTRB(100, 0, 0, 0),
-                            child: BoxUI.boxHasRadius(
+                            child: Box.boxHasRadius(
                               color: Colors.black,
                               height: 150,
                               width: 80,
@@ -166,19 +166,19 @@ class HomePageState extends State<HomePage> {
                         ],
                       ),
                     ),
-                    BoxUI.boxHasRadius(
+                    Box.boxHasRadius(
                       width: 100,
                       height: 150,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          BoxUI.titleText(
+                          Box.titleText(
                             "運動訓練",
                             fontSize: MySize.subtitleSize,
                             0,
                             alignment: AlignmentDirectional.center,
                           ),
-                          BoxUI.boxHasRadius(
+                          Box.boxHasRadius(
                               padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
                               color: Colors.black,
                               child: GestureDetector(
@@ -187,7 +187,7 @@ class HomePageState extends State<HomePage> {
                                   style: myText(color: Colors.white),
                                 ),
                               )),
-                          BoxUI.boxHasRadius(
+                          Box.boxHasRadius(
                             padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
                             color: MyTheme.buttonColor,
                             child: GestureDetector(
@@ -205,16 +205,16 @@ class HomePageState extends State<HomePage> {
               ),
               Row(
                 children: [
-                  BoxUI.titleText("運動邀約", 15, fontSize: MySize.titleSize),
+                  Box.titleText("運動邀約", 15, fontSize: MySize.titleSize),
                   const Padding(padding: EdgeInsets.all(10)),
-                  BoxUI.boxHasRadius(
+                  Box.boxHasRadius(
                       padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
                       color: MyTheme.hintColor,
                       child: GestureDetector(
                         onTap: () {
                           Navigator.pushNamed(context, InsertInvite.routeName);
                         },
-                        child: BoxUI.titleText("新增", 0, color: Colors.white),
+                        child: Box.titleText("新增", 0, color: Colors.white),
                       ))
                 ],
               ),

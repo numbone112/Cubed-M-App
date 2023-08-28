@@ -36,7 +36,7 @@ class PersonResult extends StatelessWidget {
 
     results = List.generate(appointmentDetail.done.length, (index) {
       List<int> value = appointmentDetail.done[index];
-      return (BoxUI.boxHasRadius(
+      return (Box.boxHasRadius(
         margin: const EdgeInsets.all(10),
         child: Column(
           children: [
@@ -53,7 +53,7 @@ class PersonResult extends StatelessWidget {
                             crossAxisCount: 5, childAspectRatio: 1),
                     children: List.generate(
                       value.length,
-                      (index) => BoxUI.boxHasRadius(
+                      (index) => Box.boxHasRadius(
                         margin: const EdgeInsets.all(10),
                         child: Center(
                             child: Text(

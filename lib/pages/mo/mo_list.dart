@@ -1,6 +1,5 @@
 import 'package:e_fu/module/page.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:logger/logger.dart';
 
 import 'package:e_fu/pages/mo/hide_mo_list.dart';
@@ -49,7 +48,7 @@ class _MoListPageState extends State<MoList> {
   }
 
   Widget moWiget(int i) {
-    return BoxUI.boxHasRadius(
+    return Box.boxHasRadius(
       color: Colors.white,
       margin: const EdgeInsets.fromLTRB(0, 10, 0, 5),
       height: 80,
@@ -172,111 +171,22 @@ class _MoListPageState extends State<MoList> {
             ),
             Expanded(
               child: ScrollConfiguration(
-                  behavior: CusBehavior(),
-                  child: (moList == null)
-                      ? Container(
-                          color: MyTheme.backgroudColor,
-                          margin: const EdgeInsets.fromLTRB(0, 0, 0, 64),
-                          child: Center(
-                              child: CircularProgressIndicator(
+                behavior: CusBehavior(),
+                child: (moList == null)
+                    ? Container(
+                        color: MyTheme.backgroudColor,
+                        margin: const EdgeInsets.fromLTRB(0, 0, 0, 64),
+                        child: Center(
+                          child: CircularProgressIndicator(
                             color: MyTheme.lightColor,
-                          )),
-                        )
-                      : ListView(
-                          children: moListWidget,
-                        )),
+                          ),
+                        ),
+                      )
+                    : ListView(children: moListWidget),
+              ),
             ),
           ],
         ),
         title: "管理Mo伴");
-
-    // SafeArea(
-    //   child: Scaffold(
-    //     appBar: AppBar(
-    //       title: const Text("管理Mo伴"),
-    //       backgroundColor: MyTheme.lightColor,
-    //       leading: GestureDetector(
-    //         child: const Icon(Icons.chevron_left),
-    //         onTap: () {
-    //           Navigator.of(context).pop();
-    //         },
-    //       ),
-    //     ),
-    //     body: Container(
-    //       margin: const EdgeInsets.fromLTRB(10, 20, 10, 0),
-    //       color: MyTheme.backgroudColor,
-    // child: Column(
-    //   children: [
-    //     GestureDetector(
-    //       child: Row(
-    //         mainAxisAlignment: MainAxisAlignment.end,
-    //         children: [
-    //           Text("隱藏名單",
-    //               style: TextStyle(
-    //                   color: MyTheme.black, fontSize: MySize.body)),
-    //           Padding(
-    //             padding: const EdgeInsets.all(5),
-    //             child: Image.asset(
-    //               'assets/images/hind.png',
-    //               scale: 2,
-    //             ),
-    //           ),
-    //         ],
-    //       ),
-    //       onTap: () => Navigator.pushNamed(context, HindMoList.routeName,
-    //           arguments: widget.userName),
-    //     ),
-    //     Container(
-    //       margin: const EdgeInsets.fromLTRB(0, 15, 0, 5),
-    //       padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-    //       alignment: const Alignment(0, 0),
-    //       height: 50,
-    //       decoration: const BoxDecoration(
-    //         color: Colors.white,
-    //         borderRadius: BorderRadius.all(Radius.circular(30)),
-    //       ),
-    //       child: Row(
-    //         children: [
-    //           Image.asset(
-    //             'assets/images/search.png',
-    //             scale: 1.5,
-    //           ),
-    //           Expanded(
-    //             child: Padding(
-    //               padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
-    //               child: TextField(
-    //                 cursorColor: MyTheme.lightColor,
-    //                 decoration: InputDecoration(
-    //                   border: InputBorder.none,
-    //                   hintText: "搜尋",
-    //                   hintStyle: TextStyle(color: MyTheme.hintColor),
-    //                 ),
-    //               ),
-    //             ),
-    //           )
-    //         ],
-    //       ),
-    //     ),
-    //     Expanded(
-    //       child: ScrollConfiguration(
-    //           behavior: CusBehavior(),
-    //           child: (moList == null)
-    //               ? Container(
-    //                   color: MyTheme.backgroudColor,
-    //                   margin: const EdgeInsets.fromLTRB(0, 0, 0, 64),
-    //                   child: Center(
-    //                       child: CircularProgressIndicator(
-    //                     color: MyTheme.lightColor,
-    //                   )),
-    //                 )
-    //               : ListView(
-    //                   children: moListWidget,
-    //                 )),
-    //     ),
-    //   ],
-    // ),
-    //     ),
-    //   ),
-    // );
   }
 }

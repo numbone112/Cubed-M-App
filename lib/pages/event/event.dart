@@ -469,7 +469,7 @@ class EventState extends State<Event> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     (forEvent.now == eIndex)
-                        ? BoxUI.boxHasRadius(
+                        ? Box.boxHasRadius(
                             child: Text(
                               exerciseItem[eIndex],
                               style: myText(color: Colors.white),
@@ -506,7 +506,7 @@ class EventState extends State<Event> {
           connectDeviec.containsKey(index)
               ? const Text("已連接")
               : GestureDetector(
-                  child: BoxUI.boxHasRadius(
+                  child: Box.boxHasRadius(
                       child: Text(
                         "連接",
                         style: myText(color: Colors.white),
@@ -664,7 +664,7 @@ class EventState extends State<Event> {
                             ),
                           ),
                     GestureDetector(
-                      child: BoxUI.boxHasRadius(
+                      child: Box.boxHasRadius(
                         width: 200,
                         padding: const EdgeInsets.all(10),
                         color: MyTheme.lightColor,

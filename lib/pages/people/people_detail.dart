@@ -68,7 +68,7 @@ class PeopleDetailState extends State<PeopleDetail> {
           height: 600,
           child: ListView(
             children: [
-              BoxUI.boxHasRadius(
+              Box.boxHasRadius(
                 child: Row(children: [
                   Expanded(
                       child: Column(
@@ -91,16 +91,16 @@ class PeopleDetailState extends State<PeopleDetail> {
                   ))
                 ]),
               ),
-              BoxUI.boxWithTitle(
+              Box.boxWithTitle(
                   "預約復健",
                   Container(
-                    child: BoxUI.boxHasRadius(
+                    child: Box.boxHasRadius(
                         height: 100,
                         child: Row(
                           children: [
                             Expanded(
                                 // flex: 1,
-                                child: BoxUI.boxHasRadius(
+                                child: Box.boxHasRadius(
                                     height: 100,
                                     color: MyTheme.lightColor,
                                     child: Column(
@@ -149,10 +149,10 @@ class PeopleDetailState extends State<PeopleDetail> {
               //             children: const [],
               //           )),
               //     )),
-              BoxUI.boxWithTitle(
+              Box.boxWithTitle(
                 "歷史復健紀錄",
                 Container(
-                  child: BoxUI.boxHasRadius(
+                  child: Box.boxHasRadius(
                     height: 300,
                     child: Row(
                       children: patientData==null

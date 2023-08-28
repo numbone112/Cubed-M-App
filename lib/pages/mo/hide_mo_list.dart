@@ -46,7 +46,7 @@ class _HindMoListState extends State<HindMoList> {
   }
 
   Widget hindMoWiget(int i) {
-    return BoxUI.boxHasRadius(
+    return Box.boxHasRadius(
       color: Colors.white,
       margin: const EdgeInsets.fromLTRB(0, 10, 0, 5),
       height: 80,

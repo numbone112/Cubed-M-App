@@ -116,7 +116,7 @@ class EventHomeState extends State<EventHome> {
               todayBuilder: (context, day, focusedDay) {
                 final text = DateFormat.d().format(day);
     
-                return BoxUI.boxHasRadius(
+                return Box.boxHasRadius(
                   margin: const EdgeInsets.all(3),
                   color: MyTheme.lightColor,
                   child: Center(
@@ -130,7 +130,7 @@ class EventHomeState extends State<EventHome> {
               selectedBuilder: (context, day, focusedDay) {
                 final text = DateFormat.d().format(day);
     
-                return BoxUI.boxHasRadius(
+                return Box.boxHasRadius(
                   margin: const EdgeInsets.all(3),
                   color: MyTheme.color,
                   child: Center(
@@ -176,7 +176,7 @@ class EventHomeState extends State<EventHome> {
                               .isAfter(DateTime.now());
     
                           return GestureDetector(
-                            child: BoxUI.boxHasRadius(
+                            child: Box.boxHasRadius(
                                 height: 100,
                                 width: 600,
                                 margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
@@ -188,7 +188,7 @@ class EventHomeState extends State<EventHome> {
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       children: [Text(value[index].tf_id.time)],
                                     ),
-                                    BoxUI.boxHasRadius(
+                                    Box.boxHasRadius(
                                       width: 50,
                                       height: 30,
                                       color: MyTheme.buttonColor,

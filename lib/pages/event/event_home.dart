@@ -16,6 +16,7 @@ import 'package:flutter/material.dart';
 class EventHome extends StatefulWidget {
    const EventHome({super.key,required this.userName});
    final String userName;
+   static  String routeName="/event";
 
   @override
   State<StatefulWidget> createState() => EventHomeState();

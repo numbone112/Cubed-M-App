@@ -180,55 +180,55 @@ class ProfileUpdateState extends State<ProfileUpdate> {
           ),
         )),
       ),
-      bottomNavigationBar: Row(
-        children: [
-          Expanded(
-              child: BoxUI.boxHasRadius(
-            color: MyTheme.lightColor,
-            margin: const EdgeInsets.all(30),
-            padding: const EdgeInsets.all(20),
-            child: GestureDetector(
-              child: Text(
-                "取消",
-                style: myText(color: Colors.white),
-                textAlign: TextAlign.center,
-              ),
-              onTap: () => Navigator.pop(context, null),
-            ),
-          )),
-          Expanded(
-            child: BoxUI.boxHasRadius(
-              margin: const EdgeInsets.all(30),
-              padding: const EdgeInsets.all(20),
-              color: MyTheme.buttonColor,
-              child: GestureDetector(
-                onTap: () {
-                  EasyLoading.show(status: "loading...");
-                  ProfileData toSend = ProfileData(
-                      password: "",
-                      birthday: DateTime.parse(dateinput.text),
-                      id: _profileData!.id,
-                      phone: phoneinput.text,
-                      sex: sexinput.text,
-                      name: nameinput.text);
-                  logger.v(toSend.toJson());
-                  eRepo.updateProfile(toSend).then((value) {
-                    EasyLoading.dismiss();
-                    if (value.D == "good") {
-                      Navigator.pop(context, toSend);
-                    }
-                  });
-                },
-                child: Text(
-                  "送出",
-                  style: myText(color: Colors.white),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ),
-          )
-        ],
-      ),
+      // bottomNavigationBar: Row(
+      //   children: [
+      //     Expanded(
+      //         child: Box.boxHasRadius(
+      //       color: MyTheme.lightColor,
+      //       margin: const EdgeInsets.all(30),
+      //       padding: const EdgeInsets.all(20),
+      //       child: GestureDetector(
+      //         child: Text(
+      //           "取消",
+      //           style: myText(color: Colors.white),
+      //           textAlign: TextAlign.center,
+      //         ),
+      //         onTap: () => Navigator.pop(context, null),
+      //       ),
+      //     )),
+      //     Expanded(
+      //       child: Box.boxHasRadius(
+      //         margin: const EdgeInsets.all(30),
+      //         padding: const EdgeInsets.all(20),
+      //         color: MyTheme.buttonColor,
+      //         child: GestureDetector(
+      //           onTap: () {
+      //             EasyLoading.show(status: "loading...");
+      //             ProfileData toSend = ProfileData(
+      //                 password: "",
+      //                 birthday: DateTime.parse(dateinput.text),
+      //                 id: _profileData!.id,
+      //                 phone: phoneinput.text,
+      //                 sex: sexinput.text,
+      //                 name: nameinput.text);
+      //             logger.v(toSend.toJson());
+      //             eRepo.updateProfile(toSend).then((value) {
+      //               EasyLoading.dismiss();
+      //               if (value.D == "good") {
+      //                 Navigator.pop(context, toSend);
+      //               }
+      //             });
+      //           },
+      //           child: Text(
+      //             "送出",
+      //             style: myText(color: Colors.white),
+      //             textAlign: TextAlign.center,
+      //           ),
+      //         ),
+      //       ),
+      //     )
+      //   ],
+      // ),
     );
   }
 }

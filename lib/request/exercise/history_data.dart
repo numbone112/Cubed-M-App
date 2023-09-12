@@ -1,7 +1,6 @@
-// ignore_for_file: non_constant_identifier_names
-
-
 import 'package:json_annotation/json_annotation.dart';
+
+part 'history_data.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class History {
@@ -15,12 +14,15 @@ class History {
       required this.isGroup,
       required this.items,
       required this.score,
-      required this.peopleCount
+      required this.peopleCount,
+      required this.m_id
+      
 
       });
 
   String name;
   DateTime time;
+  String m_id;
   String people;
   String remark;
   bool isGroup;
@@ -29,7 +31,7 @@ class History {
   int peopleCount;
   List<int> items;
  
-  // factory Invite.fromJson(Map<String, dynamic> json) =>
-  //     _$InviteFromJson(json);
-  // Map<String, dynamic> toJson() => _$InviteToJson(this);
+  factory History.fromJson(Map<String, dynamic> json) =>
+      _$HistoryFromJson(json);
+  Map<String, dynamic> toJson() => _$HistoryToJson(this);
 }

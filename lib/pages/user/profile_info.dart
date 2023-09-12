@@ -76,7 +76,7 @@ class ProfileCreateState extends State<ProfileInfo> {
                 child: (Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Box.titleText("個人資訊", 15, fontSize: MySize.titleSize),
+                    Box.titleText("個人資訊", gap:15, fontSize: MySize.titleSize),
                     Box.boxHasRadius(
                       margin: const EdgeInsets.fromLTRB(0, 5, 0, 5),
                       padding: const EdgeInsets.all(10),

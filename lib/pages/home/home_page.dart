@@ -1,3 +1,6 @@
+import 'package:e_fu/pages/event/event.dart';
+import 'package:e_fu/pages/event/event_home.dart';
+import 'package:e_fu/pages/exercise/group_c.dart';
 import 'package:e_fu/pages/exercise/insert.dart';
 import 'package:linked_scroll_controller/linked_scroll_controller.dart';
 
@@ -99,7 +102,7 @@ class HomePageState extends State<HomePage> {
                 child: const Text("今天一起來運動吧!"),
               ),
 
-              Box.titleText("運動等級", 15, fontSize: MySize.titleSize),
+              Box.titleText("運動等級", gap:15, fontSize: MySize.titleSize),
               SizedBox(
                 // width: MediaQuery.of(context).size.width * 0.8,
                 child: Row(
@@ -175,13 +178,14 @@ class HomePageState extends State<HomePage> {
                           Box.titleText(
                             "運動訓練",
                             fontSize: MySize.subtitleSize,
-                            0,
+                          
                             alignment: AlignmentDirectional.center,
                           ),
                           Box.boxHasRadius(
                               padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
                               color: Colors.black,
                               child: GestureDetector(
+                                onTap: () => Navigator.pushNamed(context, GroupEvent.routeName),
                                 child: Text(
                                   '開始',
                                   style: myText(color: Colors.white),
@@ -191,6 +195,8 @@ class HomePageState extends State<HomePage> {
                             padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
                             color: MyTheme.buttonColor,
                             child: GestureDetector(
+                              onTap: () => Navigator.pushNamed(context, Event.routeName),
+
                               child: Text(
                                 '分析',
                                 style: myText(color: Colors.white),
@@ -205,7 +211,7 @@ class HomePageState extends State<HomePage> {
               ),
               Row(
                 children: [
-                  Box.titleText("運動邀約", 15, fontSize: MySize.titleSize),
+                  Box.titleText("運動邀約", gap:15, fontSize: MySize.titleSize),
                   const Padding(padding: EdgeInsets.all(10)),
                   Box.boxHasRadius(
                       padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
@@ -214,7 +220,7 @@ class HomePageState extends State<HomePage> {
                         onTap: () {
                           Navigator.pushNamed(context, InsertInvite.routeName);
                         },
-                        child: Box.titleText("新增", 0, color: Colors.white),
+                        child: Box.titleText("新增",  color: Colors.white),
                       ))
                 ],
               ),

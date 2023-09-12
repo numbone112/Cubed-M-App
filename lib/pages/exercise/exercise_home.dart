@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:e_fu/module/box_ui.dart';
+import 'package:e_fu/module/page.dart';
 import 'package:e_fu/my_data.dart';
 import 'package:e_fu/request/exercise/history_data.dart';
 import 'package:e_fu/request/invite/invite.dart';
@@ -10,7 +11,7 @@ import 'package:flutter/material.dart';
 
 class ExerciseHome extends StatefulWidget {
   final String userNmae;
-  const ExerciseHome({super.key,required this.userNmae});
+  const ExerciseHome({super.key, required this.userNmae});
 
   @override
   State<StatefulWidget> createState() => ExerciseHomeState();
@@ -20,26 +21,24 @@ class ExerciseHomeState extends State<ExerciseHome>
     with SingleTickerProviderStateMixin {
   // 宣告 TabController
   late TabController tabController;
-  InviteRepo repo=InviteRepo();
-  List<Invite> invite_list=[];
+  InviteRepo repo = InviteRepo();
+  List<Invite> invite_list = [];
 
   @override
   void initState() {
     // 建立 TabController，vsync 接受的型態是 TickerProvider
     tabController = TabController(length: 2, vsync: this);
     super.initState();
-     repo.inviteList(widget.userNmae,1).then((value) {
-        List<Invite> inviteList= parseInviteList(jsonEncode(value.D));
-        setState(() {
-          invite_list=inviteList;
-        });
-      
-    } );
+    repo.inviteList(widget.userNmae, 1).then((value) {
+      List<Invite> inviteList = parseInviteList(jsonEncode(value.D));
+      setState(() {
+        invite_list = inviteList;
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-   
     var array = [
       Invite(
           name: "運動Easy",
@@ -58,7 +57,8 @@ class ExerciseHomeState extends State<ExerciseHome>
           isGroup: true,
           items: [3, 2, 1],
           score: 5.0,
-          peopleCount: 3),
+          peopleCount: 3,
+          m_id: "11136000"),
       History(
           name: "我要運動",
           time: DateTime.now(),
@@ -68,83 +68,82 @@ class ExerciseHomeState extends State<ExerciseHome>
           isGroup: false,
           items: [3, 2, 1],
           score: 5.0,
-          peopleCount: 3)
+          peopleCount: 3,
+          m_id: "11136000"),
     ];
-    return (Scaffold(
-      backgroundColor: MyTheme.backgroudColor,
-      resizeToAvoidBottomInset: true,
-      body: SafeArea(
-        child: Column(
-          children: [
-            TabBar(
-              indicatorColor: MyTheme.buttonColor,
-              labelStyle: TextStyle(color: MyTheme.buttonColor),
-              unselectedLabelStyle: const TextStyle(color: Colors.black12),
-              labelColor: MyTheme.buttonColor,
-              controller: tabController,
-              tabs: [
-                Tab(
-                  child: Box.titleText("邀約", 0, alignment: Alignment.center),
-                ),
-                Tab(
-                  child:
-                      Box.titleText("歷史運動", 0, alignment: Alignment.center),
-                ),
-              ],
+    return (CustomPage(
+        body: Column(
+      children: [
+        TabBar(
+          indicatorColor: MyTheme.buttonColor,
+          labelStyle: TextStyle(color: MyTheme.buttonColor),
+          unselectedLabelStyle: const TextStyle(color: Colors.black12),
+          labelColor: MyTheme.buttonColor,
+          controller: tabController,
+          tabs: [
+            Tab(
+              child: Box.titleText("邀約", alignment: Alignment.center),
             ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 0.75,
-              width: MediaQuery.of(context).size.width * 0.8,
-              child: TabBarView(
-                controller: tabController,
-                children: [
-                  Column(
-                    children: [
-                      Row(
-                        children: [
-                          Box.textRadiusBorder("已接受"),
-                          Box.textRadiusBorder("未接受")
-                        ],
-                      ),
-                      Box.boxHasRadius(
-                          child: SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.6,
-                            width: MediaQuery.of(context).size.width * 0.8,
-                            child: ListView.builder(
-                                itemCount: invite_list.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  return (Box.inviteBox(invite_list[index]));
-                                }),
-                          ),
-                          color: MyTheme.backgroudColor),
-                    ],
-                  ),
-                  Column(children: [
-                    const Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Text("篩選"),
-                      ],
-                    ),
-                    Box.boxHasRadius(
-                        child: SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.6,
-                      width: MediaQuery.of(context).size.width * 0.8,
-                      child: Box.boxHasRadius(
-                          child: ListView.builder(
-                              itemCount: history.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                return (Box.history(history[index],context,widget.userNmae));
-                              }),
-                          color: MyTheme.backgroudColor),
-                    ))
-                  ]),
-                ],
-              ),
+            Tab(
+              child: Box.titleText("歷史運動", alignment: Alignment.center),
             ),
           ],
         ),
-      ),
-    ));
+        SizedBox(
+          height: MediaQuery.of(context).size.height * 0.7,
+          width: MediaQuery.of(context).size.width * 0.8,
+          child: TabBarView(
+            controller: tabController,
+            children: [
+              Column(
+                children: [
+                  Row(
+                    children: [
+                      Box.textRadiusBorder("已接受"),
+                      Box.textRadiusBorder("未接受")
+                    ],
+                  ),
+                  Box.boxHasRadius(
+                      child: SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.6,
+                        width: MediaQuery.of(context).size.width * 0.8,
+                        child: ListView.builder(
+                            itemCount: invite_list.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return (Box.inviteBox(
+                                  invite_list[index], context));
+                            }),
+                      ),
+                      color: MyTheme.backgroudColor),
+                ],
+              ),
+              Column(children: [
+                const Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text("篩選"),
+                  ],
+                ),
+                Box.boxHasRadius(
+                  child: SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.6,
+                    width: MediaQuery.of(context).size.width * 0.8,
+                    child: Box.boxHasRadius(
+                      color: MyTheme.backgroudColor,
+                      child: ListView.builder(
+                          itemCount: history.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return (Box.history(
+                                history[index], context, widget.userNmae));
+                          }),
+                    ),
+                  ),
+                )
+              ]),
+            ],
+          ),
+        ),
+      ],
+    )));
   }
 }

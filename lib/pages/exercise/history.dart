@@ -7,37 +7,35 @@ import 'package:flutter/material.dart';
 
 import '../../module/page.dart';
 
-class HistoryDetail extends StatefulWidget {
+class HistoryDetailPage extends StatefulWidget {
   final String userName;
-  final History history;
+  // final History history;
 
-  const HistoryDetail(
-      {super.key, required this.userName, required this.history});
+  const HistoryDetailPage(
+      {super.key, required this.userName});
   static const routeName = '/history/detail';
 
   @override
   State<StatefulWidget> createState() => HistoryDetailstate();
 }
 
-class HistoryDetailstate extends State<HistoryDetail> {
+class HistoryDetailstate extends State<HistoryDetailPage> {
   @override
   Widget build(BuildContext context) {
+    final history =ModalRoute.of(context)!.settings.arguments as History;
+    Map<String,dynamic> toInvite=history.toJson();
+    print(history.toJson());
     return (CustomPage(
       body: ListView(children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            Column(
-              children: [
-                Text(widget.history.name),
-                Text(widget.history.time.toString().substring(0, 16)),
-                Text('備註:${widget.history.remark}')
-              ],
-            ),
+            Box.inviteInfo(Invite.fromJson(toInvite)),
+           
             Column(
               children: [
                 const Text("平均"),
-                Box.textRadiusBorder(widget.history.avgScore.toString(),
+                Box.textRadiusBorder(history.avgScore.toString(),
                     font: Colors.white, filling: MyTheme.lightColor)
               ],
             )

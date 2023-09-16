@@ -1,7 +1,8 @@
 import 'package:e_fu/module/box_ui.dart';
 import 'package:e_fu/module/page.dart';
 import 'package:e_fu/my_data.dart';
-import 'package:e_fu/pages/e/e_update.dart';
+
+import 'package:e_fu/pages/profile/profile_update.dart';
 import 'package:e_fu/request/user/get_user_data.dart';
 import 'package:flutter/material.dart';
 
@@ -21,7 +22,7 @@ class ProfileGoalState extends State<ProfileGoal> {
 
     return CustomPage(
       body: ListView(children: [
-        Box.twoinfo("運動目標", args.target),
+        // Box.twoinfo("運動目標", args),
         Box.twoinfo("運動組數", args.target_sets.toString()),
        
         Box.twoinfo("", "", widget: [

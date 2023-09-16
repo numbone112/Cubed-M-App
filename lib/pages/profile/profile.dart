@@ -1,14 +1,17 @@
+import 'package:e_fu/main.dart';
 import 'package:e_fu/module/box_ui.dart';
 import 'package:e_fu/my_data.dart';
 import 'package:e_fu/pages/mo/mo_list.dart';
-import 'package:e_fu/pages/user/profile.dart';
-import 'package:e_fu/pages/user/profile_goal.dart';
+import 'package:e_fu/pages/plan/plan.dart';
+import 'package:e_fu/pages/profile/profile_edit.dart';
+import 'package:e_fu/pages/profile/profile_goal.dart';
 import 'package:e_fu/request/user/account.dart';
 import 'package:e_fu/request/user/get_user_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:logger/logger.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../module/cusbehiver.dart';
 
@@ -58,6 +61,42 @@ class ProfileCreateState extends State<ProfileInfo> {
     getProfile();
   }
 
+  Widget setsBox(String title, TextEditingController controller) {
+    return Row(
+      children: [
+        Text(title),
+        Expanded(child: TextInput.radius("組數", controller))
+      ],
+    );
+  }
+
+  setTarget() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            //shape 可以改變形狀
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(24.0))),
+            title: Text("設定運動組數"),
+
+            content: Container(
+                height: 300,
+                width: 300,
+                child: Column(
+                  children: [
+                    // TextInput.radius("text", TextEditingController()),
+                    setsBox("左手", TextEditingController()),
+                    setsBox("右手", TextEditingController()),
+                    setsBox("椅子坐立", TextEditingController()),
+
+                    Box.yesnoBox(() {}, () {})
+                  ],
+                )),
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return (profile == null)
@@ -76,7 +115,7 @@ class ProfileCreateState extends State<ProfileInfo> {
                 child: (Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Box.titleText("個人資訊", gap:15, fontSize: MySize.titleSize),
+                    Box.titleText("個人資訊", gap: 15, fontSize: MySize.titleSize),
                     Box.boxHasRadius(
                       margin: const EdgeInsets.fromLTRB(0, 5, 0, 5),
                       padding: const EdgeInsets.all(10),
@@ -171,7 +210,9 @@ class ProfileCreateState extends State<ProfileInfo> {
                         width: MediaQuery.of(context).size.width * 0.9,
                         padding: const EdgeInsets.all(10),
                         child: GestureDetector(
-                          onTap: ()=>Navigator.pushNamed(context, Profile.routeName,arguments: profile),
+                          onTap: () => Navigator.pushNamed(
+                              context, Profile.routeName,
+                              arguments: profile),
                           child: Row(
                             children: [
                               Padding(
@@ -195,7 +236,9 @@ class ProfileCreateState extends State<ProfileInfo> {
                         width: MediaQuery.of(context).size.width * 0.9,
                         padding: const EdgeInsets.all(10),
                         child: GestureDetector(
-                          onTap: ()=>Navigator.pushNamed(context, ProfileGoal.routeName,arguments: profile),
+                          onTap: () => Navigator.pushNamed(
+                              context, PlanPage.routeName,
+                              arguments: profile),
                           child: Row(
                             children: [
                               Padding(
@@ -204,7 +247,7 @@ class ProfileCreateState extends State<ProfileInfo> {
                                 child: Image.asset('assets/images/target.png',
                                     scale: 2.0),
                               ),
-                              const Text("管理目標",
+                              const Text("管理計畫",
                                   style: TextStyle(fontSize: 16)),
                             ],
                           ),
@@ -242,6 +285,7 @@ class ProfileCreateState extends State<ProfileInfo> {
                       width: MediaQuery.of(context).size.width * 0.9,
                       padding: const EdgeInsets.all(10),
                       child: GestureDetector(
+                        onTap: () => setTarget(),
                         child: Row(
                           children: [
                             Padding(
@@ -260,6 +304,20 @@ class ProfileCreateState extends State<ProfileInfo> {
                         width: MediaQuery.of(context).size.width * 0.9,
                         padding: const EdgeInsets.all(10),
                         child: GestureDetector(
+                          onTap: () async {
+                            SharedPreferences prefs =
+                                await SharedPreferences.getInstance();
+                            prefs.remove(Name.userName);
+                            if (context.mounted) {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute<void>(
+                                  builder: (BuildContext context) =>
+                                      const MyApp(),
+                                ),
+                              );
+                            }
+                          },
                           child: Row(
                             children: [
                               Padding(

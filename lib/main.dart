@@ -1,5 +1,4 @@
 import 'package:e_fu/home.dart';
-import 'package:e_fu/pages/event/event_home.dart';
 import 'package:e_fu/pages/event/event_now_result.dart';
 import 'package:e_fu/pages/event/event_result.dart';
 import 'package:e_fu/pages/exercise/detail.dart';
@@ -7,14 +6,15 @@ import 'package:e_fu/pages/exercise/group_c.dart';
 import 'package:e_fu/pages/exercise/history.dart';
 import 'package:e_fu/pages/exercise/insert.dart';
 import 'package:e_fu/pages/exercise/invite.dart';
+import 'package:e_fu/pages/exercise/single_c.dart';
 import 'package:e_fu/pages/mo/hide_mo_list.dart';
 import 'package:e_fu/pages/mo/mo_list.dart';
-import 'package:e_fu/pages/user/profile.dart';
-import 'package:e_fu/pages/user/profile_goal.dart';
-import 'package:e_fu/request/exercise/historyDetail_data.dart';
-import 'package:e_fu/request/invite/invite_data.dart';
+import 'package:e_fu/pages/plan/plan.dart';
+import 'package:e_fu/pages/plan/plan_insert.dart';
+import 'package:e_fu/pages/profile/profile_edit.dart';
+import 'package:e_fu/pages/profile/profile_goal.dart';
+import 'package:e_fu/pages/profile/profile_update.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import './pages/e/e_update.dart';
 import 'package:e_fu/pages/event/event.dart';
 import 'package:e_fu/sign.dart';
 import 'package:flutter/material.dart';
@@ -101,9 +101,12 @@ class MyappState extends State<MyApp> {
         Profile.routeName: (_) => Profile(userName: userName),
         ProfileGoal.routeName: (_) => ProfileGoal(userName: userName),
         GroupEvent.routeName: (_) => GroupEvent(userName: userName),
+        SingleEvent.routeName: (_) => SingleEvent(userName: userName),
         InvitePage.routeName: (_) => const InvitePage(),
         HistoryDetailPerson.routeName:(_)=>HistoryDetailPerson(userName: userName,),
-        HistoryDetailPage.routeName:(_)=>HistoryDetailPage(userName: userName,)
+        HistoryDetailPage.routeName:(_)=>HistoryDetailPage(userName: userName,),
+        PlanPage.routeName:(_)=>PlanPage(userName: userName),
+        PlanInsertPage.routeName:(_)=>PlanInsertPage(userName: userName)
       },
     );
   }

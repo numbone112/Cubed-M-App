@@ -1,26 +1,36 @@
 import 'dart:math';
 
 import 'package:e_fu/my_data.dart';
+import 'package:e_fu/pages/event/event.dart';
+import 'package:e_fu/pages/exercise/group_c.dart';
 import 'package:e_fu/pages/exercise/history.dart';
+import 'package:e_fu/pages/exercise/invite.dart';
+import 'package:e_fu/request/e/e_data.dart';
 import 'package:e_fu/request/exercise/history_data.dart';
 import 'package:e_fu/request/invite/invite_data.dart';
+import 'package:e_fu/request/plan/plan_data.dart';
+import 'package:ele_progress/ele_progress.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
+import '../pages/exercise/detail.dart';
+
 class Box {
+  static final List<String> execute_text = ["一", '二', '三', '四', '五', '六', '日'];
   static Widget boxHasRadius({
     Color? color,
     double? height,
     double? width,
+    Border? border,
     required Widget child,
     EdgeInsetsGeometry? margin,
     EdgeInsetsGeometry? padding,
   }) {
     return Container(
       decoration: BoxDecoration(
-        borderRadius: const BorderRadius.all(Radius.circular(30)),
-        color: color ?? Colors.white,
-      ),
+          borderRadius: const BorderRadius.all(Radius.circular(30)),
+          color: color ?? Colors.white,
+          border: border),
       height: height,
       width: width,
       margin: margin,
@@ -54,14 +64,15 @@ class Box {
     );
   }
 
-  static Widget titleText(String title, double gap,
+  static Widget titleText(String title,
       {AlignmentGeometry? alignment,
+      double? gap,
       double? fontSize,
       Color? color,
       FontWeight? fontWeight}) {
     return Container(
       alignment: alignment ?? Alignment.centerLeft,
-      padding: EdgeInsets.fromLTRB(0, gap, 0, gap),
+      padding: EdgeInsets.fromLTRB(0, gap ?? 0, 0, gap ?? 0),
       child: Text(
         title,
         style: TextStyle(
@@ -73,7 +84,7 @@ class Box {
     );
   }
 
-  static Widget inviteBox(Invite invite) {
+  static Widget inviteBox(Invite invite, BuildContext context) {
     return (Box.boxHasRadius(
         padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
         height: 100,
@@ -81,31 +92,32 @@ class Box {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Expanded(
+              child: GestureDetector(
+                behavior: HitTestBehavior.translucent,
+                onTap: () => Navigator.pushNamed(context, InvitePage.routeName,
+                    arguments: invite),
                 child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  invite.name,
-                  style: TextStyle(
-                      color: MyTheme.buttonColor, fontWeight: FontWeight.bold),
-                  textAlign: TextAlign.left,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      invite.name,
+                      style: TextStyle(
+                          color: MyTheme.buttonColor,
+                          fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.left,
+                    ),
+                    Text(invite.time.toString().substring(0, 10)),
+                    Text(
+                      '召集人：${invite.m_id}',
+                      style: const TextStyle(color: Colors.grey),
+                    ),
+                    Text(
+                      '備註：${invite.remark}',
+                      style: const TextStyle(color: Colors.grey),
+                    )
+                  ],
                 ),
-                Text(invite.time.toString().substring(0, 10)),
-                Text(
-                  '召集人：${invite.m_id}',
-                  style: const TextStyle(color: Colors.grey),
-                ),
-                Text(
-                  '備註：${invite.remark}',
-                  style: const TextStyle(color: Colors.grey),
-                )
-              ],
-            )),
-            GestureDetector(
-              child: const Icon(Icons.cancel_sharp),
-            ),
-            GestureDetector(
-              child: const Icon(Icons.check),
+              ),
             ),
           ],
         )));
@@ -114,7 +126,7 @@ class Box {
   static Widget history(
       History history, BuildContext context, String userName) {
     Widget item, label;
-    if (history.isGroup) {
+    if (history.isGroup()) {
       item = Row(
         children: [
           const Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -123,10 +135,7 @@ class Box {
               child: Text("我"),
             ),
             Padding(padding: EdgeInsets.all(2.5)),
-            Padding(
-              padding: EdgeInsets.all(5),
-              child: Text("平均"),
-            ),
+            Padding(padding: EdgeInsets.all(5), child: Text("平均")),
           ]),
           Column(
             children: [
@@ -166,13 +175,8 @@ class Box {
         onTap: () {
           Logger logger = Logger();
           logger.v("this is push");
-          Navigator.push(
-            context,
-            MaterialPageRoute<void>(
-              builder: (BuildContext context) =>
-                  HistoryDetail(userName: userName, history: history),
-            ),
-          );
+          Navigator.pushNamed(context, HistoryDetailPage.routeName,
+              arguments: history);
         },
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -185,7 +189,7 @@ class Box {
                   Row(
                     children: [
                       label,
-                      history.isGroup
+                      history.isGroup()
                           ? Text(
                               history.name,
                               style: TextStyle(
@@ -197,12 +201,12 @@ class Box {
                   ),
                   Text(history.time.toString().substring(0, 10)),
                   Text(
-                    "召集人: ${history.name}",
+                    "召集人: ${history.m_name}",
                     style: const TextStyle(color: Colors.grey),
                   ),
-                  history.isGroup
+                  history.isGroup()
                       ? Text(
-                          "共 ${history.peopleCount} 人",
+                          "共 ${history.peopleCount()} 人",
                           style: const TextStyle(color: Colors.grey),
                         )
                       : Container(),
@@ -218,7 +222,8 @@ class Box {
     );
   }
 
-  static Widget twoinfo(String title, String describe, {List<Widget>? widget}) {
+  static Widget twoinfo(String title, String? describe,
+      {List<Widget>? widget}) {
     return Box.boxHasRadius(
       padding: const EdgeInsets.fromLTRB(30, 10, 10, 10),
       margin: const EdgeInsets.all(10),
@@ -228,39 +233,331 @@ class Box {
         children: widget ??
             [
               Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-              Text(describe),
+              Text(describe!),
             ],
       ),
     );
   }
 
   static Widget twoinfoWithInput(
-      String title,  TextEditingController controller) {
+      String title, TextEditingController controller) {
     return Box.boxHasRadius(
-        padding: const EdgeInsets.fromLTRB(30, 10, 10, 10),
-        margin: const EdgeInsets.all(10),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
+      padding: const EdgeInsets.fromLTRB(30, 10, 10, 10),
+      margin: const EdgeInsets.all(10),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+          TextFormField(
+            controller: controller,
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              floatingLabelStyle: TextStyle(color: MyTheme.lightColor),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  static Widget inviteInfo(Invite invite, bool isHost) {
+    return Container(
+      margin: const EdgeInsets.only(top: 30),
+      child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-            TextFormField(
-              controller: controller,
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                floatingLabelStyle: TextStyle(color: MyTheme.lightColor),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(invite.name,
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: MyTheme.buttonColor)),
+                Text(invite.time
+                    .toString()
+                    .substring(0, 16)
+                    .replaceAll("T", " ")),
+                Text('備註:${invite.remark}')
+              ],
+            ),
+            isHost
+                ? GestureDetector(
+                    child: Text(
+                      "＋邀請",
+                      style: TextStyle(color: MyTheme.color),
+                    ),
+                  )
+                : Container()
+          ]),
+    );
+  }
+
+  static Widget boxWithX(String title, {Function()? function}) {
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      onTap: function,
+      child: Stack(
+        alignment: Alignment.centerRight,
+        children: [
+          Box.textRadiusBorder(title,
+              font: MyTheme.buttonColor,
+              filling: Colors.white,
+              border: MyTheme.buttonColor,
+              margin: EdgeInsets.fromLTRB(5, 15, 5, 5),
+              width: null),
+          Box.boxHasRadius(
+            child: const Text(
+              "X",
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Colors.white),
+            ),
+            color: MyTheme.lightColor,
+            width: 15,
+            height: 15,
+          )
+        ],
+      ),
+    );
+  }
+
+  static Widget yesnoBox(Function() yes, Function() no) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        Box.boxHasRadius(
+            child: GestureDetector(
+                behavior: HitTestBehavior.translucent,
+                onTap: no,
+                child: Box.textRadiusBorder('取消',
+                    border: MyTheme.lightColor, filling: MyTheme.lightColor)),
+            color: MyTheme.lightColor),
+        Box.boxHasRadius(
+          child: GestureDetector(
+            behavior: HitTestBehavior.translucent,
+            onTap: yes,
+            child: Box.textRadiusBorder('確認', border: MyTheme.buttonColor),
+          ),
+          color: MyTheme.buttonColor,
+        )
+      ],
+    );
+  }
+
+  static Widget connect(BuildContext context) {
+    ForEvent forEvent = ForEvent(
+        appointmentDetail: EAppointmentDetail(
+            id: 5,
+            done: [[], [], []],
+            p_id: "p_id",
+            item: [5, 7, 8],
+            name: "name",
+            remark: "remark"));
+    List<String> exerciseItem = ["左手", "右手", "坐立"];
+
+    return (Box.boxHasRadius(
+      border: Border.all(color: MyTheme.color),
+      margin: const EdgeInsets.only(top: 10, bottom: 10),
+      width: MediaQuery.of(context).size.width * 0.8,
+      height: MediaQuery.of(context).size.height / 4,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Row(
+            children: List.generate(
+              exerciseItem.length,
+              (eIndex) => Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    (forEvent.now == eIndex)
+                        ? Box.boxHasRadius(
+                            child: Text(
+                              exerciseItem[eIndex],
+                              style: myText(color: Colors.white),
+                            ),
+                            color: MyTheme.buttonColor,
+                            padding: const EdgeInsets.all(5))
+                        : Text(
+                            exerciseItem[eIndex],
+                          ),
+                    const Padding(padding: EdgeInsets.all(5)),
+                    SizedBox(
+                      height: 50,
+                      width: 50,
+                      child: EProgress(
+                        progress: forEvent.progress[eIndex] ?? 0,
+                        colors: [MyTheme.buttonColor],
+                        showText: true,
+                        format: (progress) {
+                          return '${forEvent.appointmentDetail.item[eIndex]}';
+                        },
+                        textStyle: TextStyle(
+                            color: forEvent.now == eIndex
+                                ? MyTheme.buttonColor
+                                : Colors.black),
+                        type: ProgressType.dashboard,
+                        backgroundColor: Colors.grey,
+                      ),
+                    )
+                  ],
+                ),
               ),
-            )
-            
-          ],
-        ));
+            ),
+          ),
+          // connectDeviec.containsKey(index)
+          //     ? const Text("已連接")
+          //     :
+          GestureDetector(
+              behavior: HitTestBehavior.translucent,
+              child: Box.textRadiusBorder("連接",
+                  font: Colors.white, filling: MyTheme.color)),
+          const Padding(padding: EdgeInsets.all(2)),
+          Text("提醒：請配戴裝置")
+        ],
+      ),
+    ));
+  }
+
+  static Widget connectInfo(ConnectState connectState) {
+    return Box.boxHasRadius(
+      margin: const EdgeInsets.only(bottom: 10, top: 10),
+      padding: const EdgeInsets.only(bottom: 10, top: 10),
+      child: Row(
+        children: [
+          Expanded(
+              flex: 0,
+              child: Box.textRadiusBorder("",
+                  filling: connectState.state ? Colors.green : Colors.red,
+                  width: 25)),
+          Expanded(
+            flex: 2,
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [Text(connectState.id), Text(connectState.name)]),
+          ),
+          Expanded(
+            flex: 1,
+            child: connectState.isHost == null
+                ? Box.textRadiusBorder(connectState.text(),
+                    filling: MyTheme.lightColor)
+                : Box.textRadiusBorder("主持人",
+                    filling: Colors.white, font: MyTheme.color),
+          )
+        ],
+      ),
+    );
+  }
+
+  static Widget planBox(Plan plan, BuildContext context) {
+    return SizedBox(
+      width: MediaQuery.of(context).size.width * 0.8,
+      height: 150,
+      child: (Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Container(),
+                flex: 1,
+              ),
+              Expanded(
+                  flex: 2,
+                  child: Text(
+                    plan.name,
+                    textAlign: TextAlign.center,
+                  )),
+              Expanded(
+                  flex: 1,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      GestureDetector(
+                        child: Text("編輯"),
+                      ),
+                      GestureDetector(
+                        child: Text("刪除"),
+                      )
+                    ],
+                  ))
+            ],
+          ),
+          Text(plan.getRange()),
+          Row(children: executeWeek()),
+          Row(children: planWeek(plan))
+        ],
+      )),
+    );
+  }
+
+  static List<Widget> executeWeek({bool? show}) {
+    List<Widget> result = [];
+    int today = DateTime.now().weekday;
+    bool check = show != null && show;
+
+    for (var element in execute_text) {
+      bool isToday = (today == (result.length + 1) && check);
+      print("isToday: $isToday");
+      print("result: ${result.length}");
+      print("today: $today");
+      result.add(Expanded(
+        flex: 1,
+        child: Box.boxHasRadius(
+            child: Text(
+              element,
+              textAlign: TextAlign.center,
+              style: TextStyle(color: isToday ? Colors.white : null),
+            ),
+            color: isToday ? MyTheme.color : Colors.white),
+      ));
+    }
+    return result;
+  }
+
+  static List<Widget> planWeek(Plan plan, {List<bool>? exe}) {
+    List<Widget> result = [];
+    bool isHome = exe != null;
+    for (var check in plan.execute) {
+      Widget widget =
+          Box.textRadiusBorder("", width: 25, filling: MyTheme.color);
+      if (isHome) {
+        if (DateTime.now().weekday > result.length) {
+          widget = Box.boxHasRadius(
+              child: Icon(
+                Icons.check_circle,
+                color: exe[result.length] ? Colors.green : Colors.red,
+              ),
+              width: 25);
+        } else {
+          widget = Box.boxHasRadius(
+            child: Icon(
+              Icons.check_circle,
+              color: Colors.grey,
+            ),
+            width: 25,
+          );
+        }
+      }
+      result.add(Expanded(
+        flex: 1,
+        child: check ? widget : Container(),
+      ));
+    }
+    return result;
   }
 }
 
 class TextInput {
   static Widget radius(String text, TextEditingController controller,
-      {TextField? textField}) {
+      {TextField? textField,
+      Function()? onTap,
+      double? width,
+      double? height}) {
     return Container(
+      width: width,
+      height: height,
       margin: const EdgeInsets.all(10),
       padding: const EdgeInsets.all(0),
       decoration: BoxDecoration(
@@ -269,14 +566,45 @@ class TextInput {
           border: Border.all(color: MyTheme.lightColor)),
       child: textField ??
           TextFormField(
+            onTap: onTap,
             controller: controller,
-            // obscureText: true,
             decoration: InputDecoration(
               border: InputBorder.none,
               labelText: text,
               floatingLabelStyle: TextStyle(color: MyTheme.lightColor),
             ),
           ),
+    );
+  }
+
+  static Widget radiusWithTitle(String text, TextEditingController controller,
+      {TextField? textField, Function()? onTap}) {
+    return SizedBox(
+      width: 200,
+      height: 200,
+      child: Row(
+        children: [
+          Text(text),
+          Container(
+            margin: const EdgeInsets.all(10),
+            padding: const EdgeInsets.all(0),
+            decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20.0),
+                border: Border.all(color: MyTheme.lightColor)),
+            child: textField ??
+                TextFormField(
+                  onTap: onTap,
+                  controller: controller,
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    // labelText: text,
+                    floatingLabelStyle: TextStyle(color: MyTheme.lightColor),
+                  ),
+                ),
+          )
+        ],
+      ),
     );
   }
 }

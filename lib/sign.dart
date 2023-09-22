@@ -25,23 +25,24 @@ class _LoginState extends State<Login> {
   TextEditingController accountC = TextEditingController();
   TextEditingController pswC = TextEditingController();
 
-  TextField te(TextEditingController t,bool h) {
+  TextField inputBox(TextEditingController t, bool h, String hintText) {
     return (TextField(
       obscureText: h,
       controller: t,
       scrollPadding: EdgeInsets.only(
           bottom: MediaQuery.of(context).viewInsets.bottom + 25 * 4),
-      decoration: const InputDecoration(
+      decoration: InputDecoration(
+        hintText: hintText,
         fillColor: Colors.white,
         filled: true,
         border: OutlineInputBorder(
           ///设置边框四个角的弧度
-          borderRadius: BorderRadius.all(Radius.circular(10)),
+          borderRadius: const BorderRadius.all(Radius.circular(10)),
 
           ///用来配置边框的样式
           borderSide: BorderSide(
             ///设置边框的颜色
-            color: Color.fromRGBO(10, 112, 41, 1),
+            color: MyTheme.color,
 
             ///设置边框的粗细
             width: 2.0,
@@ -51,12 +52,12 @@ class _LoginState extends State<Login> {
         ///设置输入框可编辑时的边框样式
         enabledBorder: OutlineInputBorder(
           ///设置边框四个角的弧度
-          borderRadius: BorderRadius.all(Radius.circular(10)),
+          borderRadius: const BorderRadius.all(Radius.circular(10)),
 
           ///用来配置边框的样式
           borderSide: BorderSide(
             ///设置边框的颜色
-            color: Color.fromRGBO(10, 112, 41, 1),
+            color: MyTheme.color,
 
             ///设置边框的粗细
             width: 2.0,
@@ -82,8 +83,7 @@ class _LoginState extends State<Login> {
   Widget buttonCustom(String s, Function f) {
     return (TextButton(
       style: TextButton.styleFrom(
-          backgroundColor: const Color.fromRGBO(10, 112, 41, 1),
-          foregroundColor: Colors.white),
+          backgroundColor: MyTheme.color, foregroundColor: Colors.white),
       onPressed: () {
         f.call();
       },
@@ -96,9 +96,9 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    TextField accountField = te(accountC,false);
+    TextField accountField = inputBox(accountC, false, "帳號");
 
-    TextField passwordField = te(pswC,true);
+    TextField passwordField = inputBox(pswC, true, '密碼');
 
     SharedPreferences prefs;
     return Scaffold(
@@ -109,16 +109,25 @@ class _LoginState extends State<Login> {
         child: Center(
             child: SingleChildScrollView(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
+            // mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-              const Row(
-                children: [Icon(Icons.people), Text("帳號")],
-              ),
+              Image.asset(
+                  'assets/images/logo.png',
+                  scale: 1,
+                ),
               accountField,
-              const Row(
-                children: [Icon(Icons.password), Text("密碼")],
-              ),
+              const Padding(padding: EdgeInsets.only(top: 30)),
               passwordField,
+              const Padding(padding: EdgeInsets.only(top: 30)),
+              Align(
+                child: GestureDetector(
+                    child: Text(
+                  "忘記密碼",
+                  style: TextStyle(color: Colors.grey),
+                )),
+                alignment: Alignment.centerRight,
+              ),
+              const Padding(padding: EdgeInsets.only(top: 30)),
               buttonCustom("登入", () async {
                 logger.v("login button");
                 final utf = utf8.encode(pswC.text);
@@ -127,23 +136,40 @@ class _LoginState extends State<Login> {
                 logger.v("encryptStr $encryptStr");
                 logger.v("digest $digest");
 
-                Format a = await userRepo.login(accountC.text,encryptStr);
+                Format a = await userRepo.login(accountC.text, encryptStr);
                 if (a.message == "登入成功") {
                   prefs = await SharedPreferences.getInstance();
                   prefs.setString(Name.userName, accountC.text);
                   if (context.mounted) {
-                     Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute<void>(
-                            builder: (BuildContext context) => const MyApp(),
-                          ),
-                        );
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute<void>(
+                        builder: (BuildContext context) => const MyApp(),
+                      ),
+                    );
                   }
                 } else {
                   logger.v(a);
                 }
               }),
-              buttonCustom("Ｇoogle 登入", () => {logger.v("test")}),
+              const Padding(padding: EdgeInsets.only(top: 30)),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("還沒註冊帳號嗎?立即"),
+                  GestureDetector(
+                    child: Text(
+                      "註冊",
+                      style: TextStyle(color: MyTheme.color),
+                    ),
+                  )
+                ],
+              ),
+              const Padding(padding: EdgeInsets.only(top: 30)),
+              GestureDetector(
+                child: Icon(Icons.g_mobiledata),
+              )
+              // buttonCustom("Ｇoogle 登入", () => {logger.v("test")}),
             ],
           ),
         )),

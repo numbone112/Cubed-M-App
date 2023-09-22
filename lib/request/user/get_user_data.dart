@@ -16,7 +16,6 @@ class GetUser {
     required this.weight,
     required this.height,
     required this.disease,
-    required this.target,
     required this.target_level,
     required this.target_sets,
     required this.id,
@@ -30,10 +29,9 @@ class GetUser {
   int role;
   List<String> friend;
   List<String> hide_friend;
-  List<String> weight;
+  List<int> weight;
   int height;
   List<String> disease;
-  String target;
   List<int> target_sets;
   List<String> target_level;
   String id;

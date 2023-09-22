@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:e_fu/module/page.dart';
 import 'package:e_fu/pages/event/ble_device.dart';
 import 'package:e_fu/pages/event/event_now_result.dart';
+import 'package:e_fu/request/invite/invite_data.dart';
 // import 'package:e_fu/pages/event/event_result.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:logger/logger.dart';
@@ -97,10 +99,24 @@ class EventState extends State<Event> {
   ERepo eRepo = ERepo();
   bool notyet = true;
   int trainCount = 0;
-  List<ForEvent> forEventList = [];
+  List<ForEvent> forEventList = [
+    ForEvent(
+        appointmentDetail: EAppointmentDetail(
+            id: 5,
+            done: [
+              [5, 5, 5]
+            ],
+            p_id: "p_id",
+            item: [5, 5, 5],
+            name: "name",
+            remark: "remark"))
+  ];
   int trainGoal = 0;
   var logger = Logger();
-  late EAppointment eAppointment;
+  EAppointment eAppointment = EAppointment(
+      id: TimeRange(start_date: DateTime.now(), time: "5A"),
+      count: 5,
+      tf_id: TimeRange(start_date: DateTime.now(), time: "5A"));
 
   Future<List<EAppointmentDetail>> getData(EAppointment eAppointment) async {
     EasyLoading.show(status: 'loading...');
@@ -423,28 +439,6 @@ class EventState extends State<Event> {
             textAlign: TextAlign.center,
           ),
         ),
-        Expanded(
-          flex: 1,
-          child: PopupMenuButton(
-            itemBuilder: (content) {
-              return const [
-                PopupMenuItem(
-                  value: '/edit',
-                  child: Text("編輯"),
-                ),
-                PopupMenuItem(
-                  value: '/del',
-                  child: Text("刪除"),
-                )
-              ];
-            },
-            onSelected: (value) {
-              if (value == "/edit") {
-                editDialog(forEvent.appointmentDetail);
-              }
-            },
-          ),
-        ),
       ],
     );
   }
@@ -602,121 +596,91 @@ class EventState extends State<Event> {
 
   @override
   Widget build(BuildContext context) {
-    final args = ModalRoute.of(context)!.settings.arguments as EAppointment;
-    eAppointment = args;
-    if (selectedArrange.isEmpty & notyet) {
-      getData(args).then(
-        (value) {
-          setState(() {
-            forEventList = ForEvent.parseEventList(value);
-            trainGoal = ForEvent.getMax(forEventList);
-          });
-          notyet = false;
-        },
-      );
-    }
+    // final args = ModalRoute.of(context)!.settings.arguments as EAppointment;
+    // eAppointment = args;
+    // if (selectedArrange.isEmpty & notyet) {
+    //   getData(args).then(
+    //     (value) {
+    //       setState(() {
+    //         forEventList = ForEvent.parseEventList(value);
+    //         trainGoal = ForEvent.getMax(forEventList);
+    //       });
+    //       notyet = false;
+    //     },
+    //   );
+    // }
 
-    return (Scaffold(
-      resizeToAvoidBottomInset: true,
-      backgroundColor: MyTheme.backgroudColor,
-      body: SafeArea(
-        child: Column(
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  flex: 1,
-                  child: IconButton(
-                    icon: const Icon(Icons.arrow_back_ios),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                ),
-                const Expanded(
-                  flex: 2,
-                  child: Text(
-                    "復健",
-                    style: TextStyle(fontSize: 30),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                Expanded(
-                  flex: 1,
-                  child: Container(),
-                ),
-              ],
-            ),
-            SizedBox(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  children: [
-                    forEventList.isEmpty
-                        ? const Text(" ")
-                        : SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.7,
-                            child: ListView.builder(
-                              itemCount: forEventList.length,
-                              itemBuilder: ((context, index) {
-                                return (exerciseBox(index));
-                              }),
-                            ),
-                          ),
-                    GestureDetector(
-                      child: Box.boxHasRadius(
-                        width: 200,
-                        padding: const EdgeInsets.all(10),
-                        color: MyTheme.lightColor,
-                        child: Row(
-                          children: [
-                            const Icon(Icons.not_started_rounded),
-                            Text(
-                              "全部開始",
-                              style: myText(color: Colors.white),
-                            )
-                          ],
-                        ),
+    return CustomPage(
+      buildContext: context,
+      title: "",
+      titWidget: Box.inviteInfo(Invite(name: "name", time: DateTime.now().toIso8601String(), m_id: "m_id", remark: "remark"), false),
+      body: SizedBox(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              forEventList.isEmpty
+                  ? const Text(" ")
+                  : SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.7,
+                      child: ListView.builder(
+                        itemCount: forEventList.length,
+                        itemBuilder: ((context, index) {
+                          return (exerciseBox(index));
+                        }),
                       ),
-                      onTap: () {
-                        if (connectDeviec.isEmpty) {
-                          showDialog(
-                            context: context,
-                            builder: (ctx) => const AlertDialog(
-                              content: Text("尚未連接裝置"),
-                            ),
-                          );
-                        } else {
-                          EasyLoading.instance.indicatorWidget = SizedBox(
-                            width: 75,
-                            height: 75,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                SpinKitPouringHourGlassRefined(
-                                  color: MyTheme.color,
-                                ),
-                                const Text("復健中")
-                              ],
-                            ),
-                          );
-
-                          EasyLoading.show();
-
-                          if (trainCount < 3) {}
-                          for (var element in characteristicList) {
-                            element.write(utf8.encode("E-fu"));
-                          }
-                        }
-                      },
                     ),
-                  ],
+              GestureDetector(
+                child: Box.boxHasRadius(
+                  width: 200,
+                  padding: const EdgeInsets.all(10),
+                  color: MyTheme.lightColor,
+                  child: Row(
+                    children: [
+                      const Icon(Icons.not_started_rounded),
+                      Text(
+                        "全部開始",
+                        style: myText(color: Colors.white),
+                      )
+                    ],
+                  ),
                 ),
+                onTap: () {
+                  if (connectDeviec.isEmpty) {
+                    showDialog(
+                      context: context,
+                      builder: (ctx) => const AlertDialog(
+                        content: Text("尚未連接裝置"),
+                      ),
+                    );
+                  } else {
+                    EasyLoading.instance.indicatorWidget = SizedBox(
+                      width: 75,
+                      height: 75,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          SpinKitPouringHourGlassRefined(
+                            color: MyTheme.color,
+                          ),
+                          const Text("復健中")
+                        ],
+                      ),
+                    );
+
+                    EasyLoading.show();
+
+                    if (trainCount < 3) {}
+                    for (var element in characteristicList) {
+                      element.write(utf8.encode("E-fu"));
+                    }
+                  }
+                },
               ),
-            )
-          ],
+            ],
+          ),
         ),
       ),
-    ));
+    );
   }
 }

@@ -80,54 +80,66 @@ class InsertInvitestate extends State<InsertInvite> {
               children: [
                 const Text("運動日期："),
                 Expanded(
-                    child: TextInput.radius("請選擇運動日期",dateInput,
+                  child: TextInput.radius(
+                    "請選擇運動日期",
+                    dateInput,
                     textField: TextField(
-                  controller: dateInput, //editing controller of this TextField
-                  decoration: const InputDecoration(hintText: "請選擇運動日期",
-                   border: InputBorder.none,),
-                  readOnly:
-                      true, //set it true, so that user will not able to edit text
-                  onTap: () async {
-                    DateTime? pickedDate = await showDatePicker(
-                        context: context,
-                        initialDate: DateTime.now(),
-                        firstDate: DateTime(
-                            2000), //DateTime.now() - not to allow to choose before today.
-                        lastDate: DateTime(2101));
+                      controller:
+                          dateInput, //editing controller of this TextField
+                      decoration: const InputDecoration(
+                        hintText: "請選擇運動日期",
+                        border: InputBorder.none,
+                      ),
+                      readOnly:
+                          true, //set it true, so that user will not able to edit text
+                      onTap: () async {
+                        DateTime? pickedDate = await showDatePicker(
+                            context: context,
+                            initialDate: DateTime.now(),
+                            firstDate: DateTime(
+                                2000), //DateTime.now() - not to allow to choose before today.
+                            lastDate: DateTime(2101));
 
-                    if (pickedDate != null) {
-                      dateInput.text = dateFormat.format(pickedDate);
-                    } else {
-                      logger.v("Date is not selected");
-                    }
-                  },
+                        if (pickedDate != null) {
+                          dateInput.text = dateFormat.format(pickedDate);
+                        } else {
+                          logger.v("Date is not selected");
+                        }
+                      },
+                    ),
+                  ),
                 )
-                    ))
               ],
             ),
             Row(
               children: [
                 const Text("運動時段："),
                 Expanded(
-                    child: TextInput.radius("請選擇運動時段", timeInput,
+                  child: TextInput.radius(
+                    "請選擇運動時段",
+                    timeInput,
                     textField: TextField(
-                  controller: timeInput, //editing controller of this TextField
-                  decoration: const InputDecoration(hintText: "請選擇運動時段",
-                   border: InputBorder.none,
-                  ),
-                  readOnly:
-                      true, //set it true, so that user will not able to edit text
-                  onTap: () async {
-                    TimeOfDay? pickedTime = await showTimePicker(
-                        context: context, initialTime: TimeOfDay.now());
+                      controller:
+                          timeInput, //editing controller of this TextField
+                      decoration: const InputDecoration(
+                        hintText: "請選擇運動時段",
+                        border: InputBorder.none,
+                      ),
+                      readOnly:
+                          true, //set it true, so that user will not able to edit text
+                      onTap: () async {
+                        TimeOfDay? pickedTime = await showTimePicker(
+                            context: context, initialTime: TimeOfDay.now());
 
-                    if (pickedTime != null) {
-                      timeInput.text = pickedTime.format(context) ;
-                    } else {
-                      logger.v("Date is not selected");
-                    }
-                  },
-                )))
+                        if (pickedTime != null) {
+                          timeInput.text = pickedTime.format(context);
+                        } else {
+                          logger.v("Date is not selected");
+                        }
+                      },
+                    ),
+                  ),
+                )
               ],
             ),
             Row(
@@ -140,19 +152,18 @@ class InsertInvitestate extends State<InsertInvite> {
             ),
             Container(
               margin: const EdgeInsets.all(10),
-              child: const Divider(
-                height: 1.0,
-                color: Colors.grey,
-              ),
+              child: const Divider(height: 1.0, color: Colors.grey),
             ),
             const Text('邀請人'),
             Padding(
               padding: const EdgeInsets.fromLTRB(25, 10, 25, 10),
+              child: Row(children: [Box.boxWithX("小明")]),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(25, 10, 25, 10),
               child: Row(
                 children: [
-                  Expanded(
-                    child: TextInput.radius(' 請搜尋姓名或ID', quaryInput),
-                  )
+                  Expanded(child: TextInput.radius(' 請搜尋姓名或ID', quaryInput))
                 ],
               ),
             ),
@@ -166,37 +177,20 @@ class InsertInvitestate extends State<InsertInvite> {
                         invitedPeople[index], invitedPeople[index]);
                   }),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Box.boxHasRadius(
-                    child: GestureDetector(
-                        child: Box.textRadiusBorder('取消',
-                            border: MyTheme.lightColor,
-                            filling: MyTheme.lightColor)),
-                    color: MyTheme.lightColor),
-                Box.boxHasRadius(
-                  child: GestureDetector(
-                    child: Box.textRadiusBorder('確認',
-                        border: MyTheme.buttonColor),
-                    onTap: () {
-                      EasyLoading.show(status: "loading...");
-                      Invite invite = Invite(
-                          m_id: widget.userName,
-                          name: nameInput.text,
-                          time: DateTime.now(),
-                          remark: remarkInput.text,
-                          friend: friend);
-                      api.createInvite(invite).then((value) => {
-                            EasyLoading.dismiss(),
-                            if (value.success!) {Navigator.pop(context)} else {}
-                          });
-                    },
-                  ),
-                  color: MyTheme.buttonColor,
-                )
-              ],
-            )
+            Box.yesnoBox(() {
+              EasyLoading.show(status: "loading...");
+              Invite invite = Invite(
+                  m_id: widget.userName,
+                  name: nameInput.text,
+                  time: DateTime.now().toIso8601String(),
+                  remark: remarkInput.text,
+                  friend: friend
+                  );
+              api.createInvite(invite).then((value) => {
+                    EasyLoading.dismiss(),
+                    if (value.success!) {Navigator.pop(context)} else {}
+                  });
+            }, () => Navigator.pop(context))
           ],
         ),
         buildContext: context,

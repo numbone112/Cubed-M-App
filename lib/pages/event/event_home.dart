@@ -16,6 +16,7 @@ import 'package:flutter/material.dart';
 class EventHome extends StatefulWidget {
    const EventHome({super.key,required this.userName});
    final String userName;
+   static  String routeName="/event";
 
   @override
   State<StatefulWidget> createState() => EventHomeState();
@@ -176,6 +177,7 @@ class EventHomeState extends State<EventHome> {
                               .isAfter(DateTime.now());
     
                           return GestureDetector(
+                            behavior: HitTestBehavior.translucent,
                             child: Box.boxHasRadius(
                                 height: 100,
                                 width: 600,

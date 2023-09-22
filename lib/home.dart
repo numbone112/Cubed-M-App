@@ -1,7 +1,7 @@
-import 'package:e_fu/pages/exercise/exercise_home.dart';
+import 'package:e_fu/pages/exercise/exercise.dart';
 import 'package:e_fu/pages/home/home_page.dart';
 import 'package:e_fu/pages/mo/mo.dart';
-import 'package:e_fu/pages/user/profile_info.dart';
+import 'package:e_fu/pages/profile/profile.dart';
 import 'package:flutter/material.dart';
 
 import 'bottom_bar_view.dart';
@@ -75,12 +75,12 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                 //   return;
                 // }
                 setState(() {
-                  tabBody = const Mo();
+                  tabBody =  Mo(userName: widget.userName,);
                 });
               } else if (index == 2) {
                 setState(() {
                   tabBody = ExerciseHome(
-                    userNmae: widget.userName,
+                    userName: widget.userName,
                   );
                 });
               } else if (index == 3) {

@@ -46,7 +46,10 @@ dev_dependencies:
 flutter:
 
   uses-material-design: true
-
+  fonts:
+    - family: taipei
+      fonts:
+        - asset: assets/font/jf-openhuninn-1.1.ttf
   assets:
       - assets/images/
       

@@ -48,7 +48,6 @@ class InviteRepo extends API implements InviteAPI {
 
       Map responseBody = json.decode(utf8.decode(response.bodyBytes));
       if (response.statusCode == 200) {
-        logger.v(responseBody);
         return Format.fromJson(responseBody);
       } else {
         logger.v("not 200");

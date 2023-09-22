@@ -3,6 +3,7 @@ import 'package:e_fu/module/box_ui.dart';
 import 'package:e_fu/my_data.dart';
 import 'package:e_fu/pages/mo/mo_list.dart';
 import 'package:e_fu/pages/plan/plan.dart';
+import 'package:e_fu/pages/profile/analysis.dart';
 import 'package:e_fu/pages/profile/profile_edit.dart';
 import 'package:e_fu/pages/profile/profile_goal.dart';
 import 'package:e_fu/request/user/account.dart';
@@ -33,6 +34,14 @@ class RawDataSet {
   final String title;
   final Color color;
   final List<double> values;
+}
+
+class SubMenu {
+  SubMenu({required this.title, this.function, required this.img, this.widget});
+  final String title;
+  final String img;
+  Widget? widget;
+  Function()? function;
 }
 
 class ProfileCreateState extends State<ProfileInfo> {
@@ -70,6 +79,87 @@ class ProfileCreateState extends State<ProfileInfo> {
     );
   }
 
+  List<Widget> intos() {
+    List<Widget> result = [];
+    List<SubMenu> subMenus = [
+      SubMenu(
+          title: "個人檔案",
+          img: "assets/images/profile.png",
+          function: () => Navigator.pushNamed(context, Profile.routeName,
+              arguments: profile)),
+      SubMenu(
+          title: "成效分析",
+          img: "",
+          function: () => Navigator.push(
+                context,
+                MaterialPageRoute<void>(
+                  builder: (BuildContext context) => DailyEarnings(),
+                ),
+              ),
+          widget: Icon(Icons.accessibility_new_rounded)),
+      SubMenu(
+          title: "管理計畫",
+          img: "assets/images/target.png",
+          function: () => Navigator.pushNamed(context, PlanPage.routeName,
+              arguments: profile)),
+     
+      SubMenu(
+        title: "設定",
+        img: "assets/images/setting.png",
+        function: () => setTarget(),
+      ),
+      SubMenu(
+        title: "登出",
+        img: "assets/images/logout.png",
+        function: () async {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          prefs.remove(Name.userName);
+          if (context.mounted) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute<void>(
+                builder: (BuildContext context) => const MyApp(),
+              ),
+            );
+          }
+        },
+      )
+    ];
+
+    for (var element in subMenus) {
+      result.add(
+        Box.boxHasRadius(
+          margin: const EdgeInsets.fromLTRB(0, 10, 0, 5),
+          height: 70,
+          width: MediaQuery.of(context).size.width * 0.9,
+          padding: const EdgeInsets.all(10),
+          child: GestureDetector(
+            behavior: HitTestBehavior.translucent,
+            onTap: element.function,
+            child: Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 0, 15, 0),
+                  child: element.widget ??
+                      Image.asset(
+                        element.img,
+                        scale: 2.0,
+                      ),
+                ),
+                Text(
+                  element.title,
+                  style: TextStyle(fontSize: 16),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+
+    return result;
+  }
+
   setTarget() {
     showDialog(
         context: context,
@@ -81,18 +171,19 @@ class ProfileCreateState extends State<ProfileInfo> {
             title: Text("設定運動組數"),
 
             content: Container(
-                height: 300,
-                width: 300,
-                child: Column(
-                  children: [
-                    // TextInput.radius("text", TextEditingController()),
-                    setsBox("左手", TextEditingController()),
-                    setsBox("右手", TextEditingController()),
-                    setsBox("椅子坐立", TextEditingController()),
+              height: 300,
+              width: 300,
+              child: Column(
+                children: [
+                  // TextInput.radius("text", TextEditingController()),
+                  setsBox("左手", TextEditingController()),
+                  setsBox("右手", TextEditingController()),
+                  setsBox("椅子坐立", TextEditingController()),
 
-                    Box.yesnoBox(() {}, () {})
-                  ],
-                )),
+                  Box.yesnoBox(() {}, () {})
+                ],
+              ),
+            ),
           );
         });
   }
@@ -114,7 +205,7 @@ class ProfileCreateState extends State<ProfileInfo> {
                 padding: const EdgeInsets.fromLTRB(20, 10, 20, 20),
                 child: (Column(
                   mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
+                  children: <Widget>[
                     Box.titleText("個人資訊", gap: 15, fontSize: MySize.titleSize),
                     Box.boxHasRadius(
                       margin: const EdgeInsets.fromLTRB(0, 5, 0, 5),
@@ -184,10 +275,12 @@ class ProfileCreateState extends State<ProfileInfo> {
 
                                     return RadarDataSet(
                                       fillColor: isSelected
-                                          ? rawDataSet.color.withOpacity(0.2)
+                                          ? Colors.white.withOpacity(0.5)
+                                          // rawDataSet.color.withOpacity(0.2)
                                           : rawDataSet.color.withOpacity(0.05),
                                       borderColor: isSelected
-                                          ? rawDataSet.color
+                                          ? Colors.white
+                                          // rawDataSet.color
                                           : rawDataSet.color.withOpacity(0.25),
                                       entryRadius: isSelected ? 3 : 2,
                                       dataEntries: rawDataSet.values
@@ -204,133 +297,8 @@ class ProfileCreateState extends State<ProfileInfo> {
                         ],
                       ),
                     ),
-                    Box.boxHasRadius(
-                        margin: const EdgeInsets.fromLTRB(0, 10, 0, 5),
-                        height: 70,
-                        width: MediaQuery.of(context).size.width * 0.9,
-                        padding: const EdgeInsets.all(10),
-                        child: GestureDetector(
-                          onTap: () => Navigator.pushNamed(
-                              context, Profile.routeName,
-                              arguments: profile),
-                          child: Row(
-                            children: [
-                              Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(20, 0, 15, 0),
-                                child: Image.asset(
-                                  'assets/images/profile.png',
-                                  scale: 2.0,
-                                ),
-                              ),
-                              const Text(
-                                "個人檔案",
-                                style: TextStyle(fontSize: 16),
-                              ),
-                            ],
-                          ),
-                        )),
-                    Box.boxHasRadius(
-                        margin: const EdgeInsets.fromLTRB(0, 10, 0, 5),
-                        height: 70,
-                        width: MediaQuery.of(context).size.width * 0.9,
-                        padding: const EdgeInsets.all(10),
-                        child: GestureDetector(
-                          onTap: () => Navigator.pushNamed(
-                              context, PlanPage.routeName,
-                              arguments: profile),
-                          child: Row(
-                            children: [
-                              Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(20, 0, 15, 0),
-                                child: Image.asset('assets/images/target.png',
-                                    scale: 2.0),
-                              ),
-                              const Text("管理計畫",
-                                  style: TextStyle(fontSize: 16)),
-                            ],
-                          ),
-                        )),
-                    GestureDetector(
-                      child: Box.boxHasRadius(
-                        margin: const EdgeInsets.fromLTRB(0, 10, 0, 5),
-                        height: 70,
-                        width: MediaQuery.of(context).size.width * 0.9,
-                        padding: const EdgeInsets.all(10),
-                        child: GestureDetector(
-                          child: Row(
-                            children: [
-                              Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(20, 0, 15, 0),
-                                child: Image.asset(
-                                    'assets/images/setting_friend.png',
-                                    scale: 2.0),
-                              ),
-                              const Text("管理Mo伴",
-                                  style: TextStyle(fontSize: 16)),
-                            ],
-                          ),
-                        ),
-                      ),
-                      onTap: () {
-                        Navigator.pushNamed(context, MoList.routeName,
-                            arguments: widget.userName);
-                      },
-                    ),
-                    Box.boxHasRadius(
-                      margin: const EdgeInsets.fromLTRB(0, 10, 0, 5),
-                      height: 70,
-                      width: MediaQuery.of(context).size.width * 0.9,
-                      padding: const EdgeInsets.all(10),
-                      child: GestureDetector(
-                        onTap: () => setTarget(),
-                        child: Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(20, 0, 15, 0),
-                              child: Image.asset('assets/images/setting.png',
-                                  scale: 2.0),
-                            ),
-                            const Text("設定", style: TextStyle(fontSize: 16)),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Box.boxHasRadius(
-                        margin: const EdgeInsets.fromLTRB(0, 10, 0, 5),
-                        height: 70,
-                        width: MediaQuery.of(context).size.width * 0.9,
-                        padding: const EdgeInsets.all(10),
-                        child: GestureDetector(
-                          onTap: () async {
-                            SharedPreferences prefs =
-                                await SharedPreferences.getInstance();
-                            prefs.remove(Name.userName);
-                            if (context.mounted) {
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute<void>(
-                                  builder: (BuildContext context) =>
-                                      const MyApp(),
-                                ),
-                              );
-                            }
-                          },
-                          child: Row(
-                            children: [
-                              Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(20, 0, 15, 0),
-                                child: Image.asset('assets/images/logout.png',
-                                    scale: 2.0),
-                              ),
-                              const Text("登出", style: TextStyle(fontSize: 16)),
-                            ],
-                          ),
-                        )),
-                  ],
+                   
+                  ]+intos(),
                 )),
               ),
             ),

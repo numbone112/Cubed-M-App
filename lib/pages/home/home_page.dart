@@ -2,6 +2,10 @@ import 'package:e_fu/pages/event/event.dart';
 import 'package:e_fu/pages/event/event_home.dart';
 import 'package:e_fu/pages/exercise/group_c.dart';
 import 'package:e_fu/pages/exercise/insert.dart';
+import 'package:e_fu/pages/exercise/single_c.dart';
+import 'package:e_fu/pages/profile/profile.dart';
+import 'package:e_fu/request/plan/plan_data.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:linked_scroll_controller/linked_scroll_controller.dart';
 
 import 'package:e_fu/module/box_ui.dart';
@@ -32,7 +36,7 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
-  String userName = "王小明";
+  String userName = "柯明朗";
   late LinkedScrollControllerGroup _controllers;
   late ScrollController _letters;
   late ScrollController _numbers;
@@ -78,6 +82,9 @@ class HomePageState extends State<HomePage> {
     );
   }
 
+  List<RawDataSet> rawDataSetList = [
+    RawDataSet(title: "復健者", color: Colors.blue, values: [5, 3, 1])
+  ];
   @override
   Widget build(BuildContext context) {
     return ScrollConfiguration(
@@ -85,167 +92,255 @@ class HomePageState extends State<HomePage> {
       child: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(20),
-          child: (Column(
-            mainAxisAlignment: MainAxisAlignment.start,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // const Padding(padding: ),
               Container(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "Hello $userName",
-                  style: const TextStyle(
-                      fontSize: 24, fontWeight: FontWeight.bold),
+                alignment: Alignment.center,
+                margin: EdgeInsets.only(bottom: 10),
+                child: const Text(
+                  "Cubed M",
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 ),
               ),
-              Container(
-                alignment: Alignment.centerLeft,
-                child: const Text("今天一起來運動吧!"),
-              ),
-
-              Box.titleText("運動等級", gap:15, fontSize: MySize.titleSize),
-              SizedBox(
-                // width: MediaQuery.of(context).size.width * 0.8,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    SingleChildScrollView(
-                      child: Stack(
-                        children: [
-                          Box.boxHasRadius(
-                            height: 150,
-                            width: 150,
-                            child: Padding(
-                              padding: const EdgeInsets.only(left: 20),
-                              child: ListView(
-                                controller: _letters,
-                                children: [
-                                  Text(
-                                    "左手二頭肌",
-                                    style: myText(height: 3),
-                                  ),
-                                  Text(
-                                    "右手二頭肌",
-                                    style: myText(height: 3),
-                                  ),
-                                  Text(
-                                    "下肢肌力",
-                                    style: myText(height: 3),
-                                  ),
-                                ],
-                              ),
-                            ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Box.boxHasRadius(
+                    width: MediaQuery.of(context).size.width * 0.4,
+                    height: 200,
+                    child: CustomScrollView(
+                      slivers: <Widget>[
+                        SliverAppBar(
+                          backgroundColor: MyTheme.color,
+                          pinned: true,
+                          title: Padding(
+                            padding: EdgeInsets.all(10),
+                            child: Text("運動日程"),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(100, 0, 0, 0),
-                            child: Box.boxHasRadius(
-                              color: Colors.black,
-                              height: 150,
-                              width: 80,
-                              child: ListView(
-                                controller: _numbers,
-                                children: [
-                                  Text(
-                                    "好",
-                                    style:
-                                        myText(color: Colors.white, height: 3),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  Text(
-                                    "不好",
-                                    style:
-                                        myText(color: Colors.white, height: 3),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  Text(
-                                    "普通",
-                                    style:
-                                        myText(color: Colors.white, height: 3),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ],
+                        ),
+                        SliverList(
+                          delegate: SliverChildBuilderDelegate(
+                              (BuildContext context, int index) {
+                            return Container(
+                              alignment: Alignment.center,
+                              child: Padding(
+                                padding: EdgeInsets.all(10),
+                                child: Text("今天 17:00"),
                               ),
+                            );
+                          }, childCount: 20),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.4,
+                    height: 200,
+                    child: Box.boxHasRadius(
+                      child: Column(
+                        children: [
+                          Text("分析圖"),
+                          Container(
+                            margin: EdgeInsets.only(top: 20),
+                            width: 150,
+                            height: 150,
+                            child: RadarChart(
+                              RadarChartData(
+                                  getTitle: (index, angle) {
+                                    final usedAngle = angle;
+                                    switch (index) {
+                                      case 0:
+                                        return RadarChartTitle(
+                                          text: '左手',
+                                          angle: usedAngle,
+                                        );
+                                      case 2:
+                                        return RadarChartTitle(
+                                          text: '右手',
+                                          angle: usedAngle,
+                                        );
+                                      case 1:
+                                        return RadarChartTitle(
+                                            text: '下肢', angle: usedAngle);
+                                      default:
+                                        return const RadarChartTitle(text: '');
+                                    }
+                                  },
+                                  dataSets: rawDataSetList
+                                      .asMap()
+                                      .entries
+                                      .map((entry) {
+                                    final rawDataSet = entry.value;
+
+                                    final isSelected = true;
+
+                                    return RadarDataSet(
+                                      fillColor: isSelected
+                                          ? Colors.grey.withOpacity(0.5)
+                                          // rawDataSet.color.withOpacity(0.2)
+                                          : rawDataSet.color.withOpacity(0.05),
+                                      borderColor: isSelected
+                                          ? Colors.white
+                                          // rawDataSet.color
+                                          : rawDataSet.color.withOpacity(0.25),
+                                      entryRadius: isSelected ? 3 : 2,
+                                      dataEntries: rawDataSet.values
+                                          .map((e) => RadarEntry(value: e))
+                                          .toList(),
+                                      borderWidth: isSelected ? 2.3 : 2,
+                                    );
+                                  }).toList()),
+                              swapAnimationDuration:
+                                  const Duration(milliseconds: 150), // Optional
+                              swapAnimationCurve: Curves.linear, // Optional
                             ),
                           )
                         ],
                       ),
                     ),
-                    Box.boxHasRadius(
-                      width: 100,
-                      height: 150,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Box.titleText(
-                            "運動訓練",
-                            fontSize: MySize.subtitleSize,
-                          
-                            alignment: AlignmentDirectional.center,
-                          ),
-                          Box.boxHasRadius(
-                              padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-                              color: Colors.black,
-                              child: GestureDetector(
-                                onTap: () => Navigator.pushNamed(context, GroupEvent.routeName),
-                                child: Text(
-                                  '開始',
-                                  style: myText(color: Colors.white),
-                                ),
-                              )),
-                          Box.boxHasRadius(
-                            padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-                            color: MyTheme.buttonColor,
-                            child: GestureDetector(
-                              onTap: () => Navigator.pushNamed(context, Event.routeName),
+                  )
+                ],
+              ),
 
-                              child: Text(
-                                '分析',
-                                style: myText(color: Colors.white),
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    )
+              Box.boxHasRadius(
+                height: 80,
+                margin: EdgeInsets.only(top: 20, bottom: 20),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Row(
+                      // mainAxisAlignment: MainAxisAlignment,
+                      children: [
+                        Padding(padding: EdgeInsets.only(left: 25)),
+                        Expanded(
+                          child: Text("運動計畫"),
+                        ),
+                        Icon(Icons.arrow_forward),
+                        Padding(padding: EdgeInsets.only(left: 25))
+                      ],
+                    ),
+                    Row(children: Box.executeWeek(show: true)),
+                    Row(
+                      children: Box.planWeek(
+                          Plan(
+                              name: "",
+                              end_date: DateTime.now(),
+                              user_id: '',
+                              str_date: DateTime.now(),
+                              execute: [
+                                true,
+                                true,
+                                false,
+                                false,
+                                true,
+                                true,
+                                false
+                              ]),
+                          exe: [true, true, false, false, false, true, false]),
+                    ),
                   ],
                 ),
               ),
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Box.titleText("運動邀約", gap:15, fontSize: MySize.titleSize),
-                  const Padding(padding: EdgeInsets.all(10)),
-                  Box.boxHasRadius(
-                      padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-                      color: MyTheme.hintColor,
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.pushNamed(context, InsertInvite.routeName);
-                        },
-                        child: Box.titleText("新增",  color: Colors.white),
-                      ))
+                  GestureDetector(
+                    child: Box.boxHasRadius(
+                      padding: EdgeInsets.fromLTRB(50, 25, 50, 25),
+                      child: Text("肌力測試"),
+                    ),
+                  ),
+                  GestureDetector(
+                    child: Box.boxHasRadius(
+                      padding: EdgeInsets.fromLTRB(50, 25, 50, 25),
+                      child: Text("邀約運動"),
+                    ),
+                  ),
                 ],
               ),
-              SizedBox(
-                height: 200,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: [
-                    inviteBox(Invite(
-                        host: "羅真",
-                        remark: "活動中心集合",
-                        name: "運動小隊",
-                        dateTime: DateTime.now(),
-                        accept: "接受")),
-                    inviteBox(Invite(
-                        host: "羅真",
-                        remark: "活動中心集合",
-                        name: "運動小隊",
-                        dateTime: DateTime.now(),
-                        accept: "接受"))
-                  ],
-                ),
-              )
+              // Box.titleText("運動等級", gap: 15, fontSize: MySize.titleSize),
+              // SizedBox(
+              //   child: Row(
+              //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              //     children: [
+              //       Box.boxHasRadius(
+              //         width: 100,
+              //         height: 150,
+              //         child: Column(
+              //           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              //           children: [
+              //             Box.titleText(
+              //               "運動訓練",
+              //               fontSize: MySize.subtitleSize,
+              //               alignment: AlignmentDirectional.center,
+              //             ),
+              //             Box.boxHasRadius(
+              //                 padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+              //                 color: Colors.black,
+              //                 child: GestureDetector(
+              //                   onTap: () => Navigator.pushNamed(
+              //                       context, GroupEvent.routeName),
+              //                   child: Text(
+              //                     '開始',
+              //                     style: myText(color: Colors.white),
+              //                   ),
+              //                 )),
+              //             Box.boxHasRadius(
+              //               padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+              //               color: MyTheme.buttonColor,
+              //               child: GestureDetector(
+              //                 onTap: () => Navigator.pushNamed(
+              //                     context, SingleEvent.routeName),
+              //                 child: Text(
+              //                   '分析',
+              //                   style: myText(color: Colors.white),
+              //                 ),
+              //               ),
+              //             )
+              //           ],
+              //         ),
+              //       )
+              //     ],
+              //   ),
+              // ),
+              // Row(
+              //   children: [
+              //     Box.titleText("運動邀約", gap: 15, fontSize: MySize.titleSize),
+              //     const Padding(padding: EdgeInsets.all(10)),
+              //     Box.boxHasRadius(
+              //         padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+              //         color: MyTheme.hintColor,
+              //         child: GestureDetector(
+              //           onTap: () {
+              //             Navigator.pushNamed(context, InsertInvite.routeName);
+              //           },
+              //           child: Box.titleText("新增", color: Colors.white),
+              //         ))
+              //   ],
+              // ),
+              // SizedBox(
+              //   height: 200,
+              //   child: ListView(
+              //     scrollDirection: Axis.horizontal,
+              //     children: [
+              //       inviteBox(Invite(
+              //           host: "羅真",
+              //           remark: "活動中心集合",
+              //           name: "運動小隊",
+              //           dateTime: DateTime.now(),
+              //           accept: "接受")),
+              //       inviteBox(Invite(
+              //           host: "羅真",
+              //           remark: "活動中心集合",
+              //           name: "運動小隊",
+              //           dateTime: DateTime.now(),
+              //           accept: "接受"))
+              //     ],
+              //   ),
+              // )
             ],
-          )),
+          ),
         ),
       ),
     );

@@ -1,3 +1,5 @@
+// import 'dart:js_interop';
+
 import 'package:e_fu/module/box_ui.dart';
 import 'package:e_fu/my_data.dart';
 import 'package:e_fu/request/exercise/history_data.dart';
@@ -18,8 +20,39 @@ class HistoryDetailPerson extends StatefulWidget {
 }
 
 class HistoryDetailPersonstate extends State<HistoryDetailPerson> {
+  int select = 0;
+  List<DoneItem> dones = [];
+  static final List<String> level_table = ["很差", "差", "普通", "好", "很好"];
+  static final List<String> type = ["左手", "右手", '椅子坐立'];
+
+  changeSelect(int s, List<DoneItem> origin) {
+    setState(() {
+      dones = origin.where((element) => element.type_id == s).toList();
+      select = s;
+    });
+  }
+
+  List<Widget> label(List<DoneItem> d) {
+    List<Widget> result = [];
+    for (var i = 0; i < type.length; i++) {
+      result.add(
+        GestureDetector(
+          behavior: HitTestBehavior.translucent,
+          onTap: () => changeSelect(i, d),
+          child: Box.textRadiusBorder(type[i],
+              font: select == i ? Colors.white : MyTheme.buttonColor,
+              filling: select == i ? MyTheme.buttonColor : Colors.white,
+              border: MyTheme.buttonColor,
+              width: 75),
+        ),
+      );
+    }
+    return result;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final args = ModalRoute.of(context)!.settings.arguments as HistoryDeep;
     return (CustomPage(
       body: ListView(children: [
         Row(
@@ -27,14 +60,14 @@ class HistoryDetailPersonstate extends State<HistoryDetailPerson> {
           children: [
             Column(
               children: [
-                Text("小明明"),
+                Text(args.name),
                 Text('男 66'),
               ],
             ),
             Column(
               children: [
                 const Text("評分"),
-                Box.textRadiusBorder('4.1',
+                Box.textRadiusBorder(args.score.toString(),
                     font: Colors.white, filling: MyTheme.lightColor)
               ],
             )
@@ -42,44 +75,31 @@ class HistoryDetailPersonstate extends State<HistoryDetailPerson> {
         ),
         //各運動項目
         Row(
-          children: [
-            Box.textRadiusBorder("左手",
-                font: Colors.white, filling: MyTheme.buttonColor),
-            Box.textRadiusBorder("右手",
-                font: MyTheme.buttonColor,
-                filling: Colors.white,
-                border: MyTheme.buttonColor),
-            Box.textRadiusBorder("椅子坐立",
-                width: 75,
-                font: MyTheme.buttonColor,
-                filling: Colors.white,
-                border: MyTheme.buttonColor)
-          ],
+          children: label(args.done),
         ),
         SizedBox(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height - 300,
-          child: ListView(
-            children: [
-              Box.boxHasRadius(
+          child: ListView.builder(
+            itemCount: dones.length,
+            itemBuilder: (context, index) {
+              return Box.boxHasRadius(
                 height: 50,
-                margin: EdgeInsets.only(top: 15,bottom: 15),
+                margin: EdgeInsets.only(top: 15, bottom: 15),
                 child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,  
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [Text("1"), Text("25次"), Text("好")],
+                  children: [
+                    Text(index.toString()),
+                    Text(dones[index].times.toString()),
+                    Text(level_table[dones[index].level])
+                  ],
                 ),
-              ),
-              Box.boxHasRadius(
-                height: 50,
-                margin: EdgeInsets.only(top: 15,bottom: 15),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,  
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [Text("2"), Text("25次"), Text("好")],
-                ),
-              ),
-            ],
+              );
+            },
+            // children: [
+
+            // ],
           ),
         )
       ]),

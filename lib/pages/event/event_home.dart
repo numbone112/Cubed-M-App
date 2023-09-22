@@ -177,6 +177,7 @@ class EventHomeState extends State<EventHome> {
                               .isAfter(DateTime.now());
     
                           return GestureDetector(
+                            behavior: HitTestBehavior.translucent,
                             child: Box.boxHasRadius(
                                 height: 100,
                                 width: 600,

@@ -25,7 +25,7 @@ class InviteState extends State<InvitePage> {
           Container(
               width: MediaQuery.of(context).size.width*0.8,
             alignment: Alignment.centerLeft,
-            child: Box.inviteInfo(invite),
+            child: Box.inviteInfo(invite,false),
           ),
           Box.boxHasRadius(
             padding: const EdgeInsets.all(10),

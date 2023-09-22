@@ -182,9 +182,10 @@ class InsertInvitestate extends State<InsertInvite> {
               Invite invite = Invite(
                   m_id: widget.userName,
                   name: nameInput.text,
-                  time: DateTime.now(),
+                  time: DateTime.now().toIso8601String(),
                   remark: remarkInput.text,
-                  friend: friend);
+                  friend: friend
+                  );
               api.createInvite(invite).then((value) => {
                     EasyLoading.dismiss(),
                     if (value.success!) {Navigator.pop(context)} else {}

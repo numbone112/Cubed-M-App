@@ -39,7 +39,7 @@ class ProfileUpdateState extends State<ProfileUpdate> {
 
       dateinput.text = dateFormat.format(_profileData!.birthday);
       phoneinput.text = _profileData!.phone;
-      sexinput.text = _profileData!.sex;
+      sexinput.text = _profileData!.sex!;
       nameinput.text = _profileData!.name;
     }
     return Scaffold(

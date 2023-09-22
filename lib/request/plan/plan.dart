@@ -2,26 +2,28 @@ import 'dart:convert';
 
 import 'package:e_fu/request/api.dart';
 import 'package:e_fu/request/data.dart';
-import 'package:e_fu/request/invite/invite_data.dart';
+import 'package:e_fu/request/plan/plan_data.dart';
 import 'package:logger/logger.dart';
 
-abstract class InviteAPI {
+abstract class PlanAPI {
   // 新增邀約
-  Future<Format> createInvite(Invite invite);
-  Future<Format> inviteList(String userName, int mode);
+  Future<Format> createPlan(Plan invite);
+  Future<Format> getPlan(String user_id);
+  // Future<Format> inviteList(String userName, int mode);
 }
 
-class InviteRepo extends API implements InviteAPI {
+class PlanRepo extends API implements PlanAPI {
   var logger = Logger();
+
   @override
-  Future<Format> createInvite(Invite invite) async {
+  Future<Format> createPlan(Plan plan) async {
     try {
       final response =
-          await client.post(Uri.parse('$domain/invite/${invite.m_id}'),
+          await client.post(Uri.parse('$domain/plan/${plan.user_id}'),
               headers: {
                 'Content-Type': 'application/json',
               },
-              body: jsonEncode(invite.toJson()));
+              body: jsonEncode(plan.toJson()));
 
       Map responseBody = json.decode(utf8.decode(response.bodyBytes));
       if (response.statusCode == 200) {
@@ -38,16 +40,18 @@ class InviteRepo extends API implements InviteAPI {
   }
 
   @override
-  Future<Format> inviteList(String userName, int mode) async {
+  Future<Format> getPlan(String user_id) async {
     try {
-      //記得去invite_data.g.dart把firend改回來
-      final response = await client
-          .get(Uri.parse('$domain/invite/list2/$userName/$mode'), headers: {
-        'Content-Type': 'application/json',
-      });
+      final response = await client.get(
+        Uri.parse('$domain/plan/$user_id'),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      );
 
       Map responseBody = json.decode(utf8.decode(response.bodyBytes));
       if (response.statusCode == 200) {
+        logger.v(responseBody);
         return Format.fromJson(responseBody);
       } else {
         logger.v("not 200");

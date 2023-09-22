@@ -14,7 +14,8 @@ class CustomPage extends StatefulWidget {
       this.headColor,
       this.headTextColor,
       this.prevColor,
-      this.width});
+      this.width,
+      this.titWidget});
   final Widget body;
   final BuildContext? buildContext;
   final String? title;
@@ -25,6 +26,7 @@ class CustomPage extends StatefulWidget {
   final Color? headTextColor;
   final Color? prevColor;
   final double? width;
+  final Widget? titWidget;
 
   @override
   State<StatefulWidget> createState() => CustomPageState();
@@ -51,7 +53,7 @@ class CustomPageState extends State<CustomPage> {
                           Expanded(
                             child: Padding(
                               padding:
-                                  const EdgeInsets.only(top: 20, bottom: 5),
+                                  const EdgeInsets.all(0),
                               child: Row(
                                 children: [
                                   Expanded(
@@ -77,15 +79,16 @@ class CustomPageState extends State<CustomPage> {
                                             : Container(),
                                   ),
                                   Expanded(
-                                      flex: 2,
-                                      child: Text(
+                                      flex: 3,
+                                      child: widget.titWidget??
+                                      Text(
                                         widget.title ?? "",
                                         style: TextStyle(
                                             fontSize: 25,
                                             color: widget.headTextColor),
                                         maxLines: 1,
                                         textAlign: TextAlign.center,
-                                      )),
+                                      ),),
                                   Expanded(
                                     flex: 1,
                                     child: Container(

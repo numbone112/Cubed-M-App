@@ -18,12 +18,10 @@ GetUser _$GetUserFromJson(Map<String, dynamic> json) => GetUser(
       hide_friend: (json['hide_friend'] as List<dynamic>)
           .map((e) => e as String)
           .toList(),
-      weight:
-          (json['weight'] as List<dynamic>).map((e) => e as String).toList(),
+      weight: (json['weight'] as List<dynamic>).map((e) => e as int).toList(),
       height: json['height'] as int,
       disease:
           (json['disease'] as List<dynamic>).map((e) => e as String).toList(),
-      target: json['target'] as String,
       target_level: (json['target_level'] as List<dynamic>)
           .map((e) => e as String)
           .toList(),
@@ -44,7 +42,6 @@ Map<String, dynamic> _$GetUserToJson(GetUser instance) => <String, dynamic>{
       'weight': instance.weight,
       'height': instance.height,
       'disease': instance.disease,
-      'target': instance.target,
       'target_sets': instance.target_sets,
       'target_level': instance.target_level,
       'id': instance.id,

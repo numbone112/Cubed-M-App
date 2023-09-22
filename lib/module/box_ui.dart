@@ -2,16 +2,21 @@ import 'dart:math';
 
 import 'package:e_fu/my_data.dart';
 import 'package:e_fu/pages/event/event.dart';
+import 'package:e_fu/pages/exercise/group_c.dart';
 import 'package:e_fu/pages/exercise/history.dart';
 import 'package:e_fu/pages/exercise/invite.dart';
 import 'package:e_fu/request/e/e_data.dart';
 import 'package:e_fu/request/exercise/history_data.dart';
 import 'package:e_fu/request/invite/invite_data.dart';
+import 'package:e_fu/request/plan/plan_data.dart';
 import 'package:ele_progress/ele_progress.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
+import '../pages/exercise/detail.dart';
+
 class Box {
+  static final List<String> execute_text = ["一", '二', '三', '四', '五', '六', '日'];
   static Widget boxHasRadius({
     Color? color,
     double? height,
@@ -88,6 +93,7 @@ class Box {
           children: [
             Expanded(
               child: GestureDetector(
+                behavior: HitTestBehavior.translucent,
                 onTap: () => Navigator.pushNamed(context, InvitePage.routeName,
                     arguments: invite),
                 child: Column(
@@ -113,12 +119,6 @@ class Box {
                 ),
               ),
             ),
-            // GestureDetector(
-            //   child: const Icon(Icons.cancel_sharp),
-            // ),
-            // GestureDetector(
-            //   child: const Icon(Icons.check),
-            // ),
           ],
         )));
   }
@@ -126,7 +126,7 @@ class Box {
   static Widget history(
       History history, BuildContext context, String userName) {
     Widget item, label;
-    if (history.isGroup) {
+    if (history.isGroup()) {
       item = Row(
         children: [
           const Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -189,7 +189,7 @@ class Box {
                   Row(
                     children: [
                       label,
-                      history.isGroup
+                      history.isGroup()
                           ? Text(
                               history.name,
                               style: TextStyle(
@@ -201,12 +201,12 @@ class Box {
                   ),
                   Text(history.time.toString().substring(0, 10)),
                   Text(
-                    "召集人: ${history.name}",
+                    "召集人: ${history.m_name}",
                     style: const TextStyle(color: Colors.grey),
                   ),
-                  history.isGroup
+                  history.isGroup()
                       ? Text(
-                          "共 ${history.peopleCount} 人",
+                          "共 ${history.peopleCount()} 人",
                           style: const TextStyle(color: Colors.grey),
                         )
                       : Container(),
@@ -222,7 +222,8 @@ class Box {
     );
   }
 
-  static Widget twoinfo(String title, String describe, {List<Widget>? widget}) {
+  static Widget twoinfo(String title, String? describe,
+      {List<Widget>? widget}) {
     return Box.boxHasRadius(
       padding: const EdgeInsets.fromLTRB(30, 10, 10, 10),
       margin: const EdgeInsets.all(10),
@@ -232,7 +233,7 @@ class Box {
         children: widget ??
             [
               Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-              Text(describe),
+              Text(describe!),
             ],
       ),
     );
@@ -260,24 +261,42 @@ class Box {
     );
   }
 
-  static Widget inviteInfo(Invite invite) {
+  static Widget inviteInfo(Invite invite, bool isHost) {
     return Container(
       margin: const EdgeInsets.only(top: 30),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(invite.name,
-              style: TextStyle(
-                  fontWeight: FontWeight.bold, color: MyTheme.buttonColor)),
-          Text(invite.time.toString().substring(0, 16)),
-          Text('備註:${invite.remark}')
-        ],
-      ),
+      child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(invite.name,
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: MyTheme.buttonColor)),
+                Text(invite.time
+                    .toString()
+                    .substring(0, 16)
+                    .replaceAll("T", " ")),
+                Text('備註:${invite.remark}')
+              ],
+            ),
+            isHost
+                ? GestureDetector(
+                    child: Text(
+                      "＋邀請",
+                      style: TextStyle(color: MyTheme.color),
+                    ),
+                  )
+                : Container()
+          ]),
     );
   }
 
   static Widget boxWithX(String title, {Function()? function}) {
     return GestureDetector(
+      behavior: HitTestBehavior.translucent,
       onTap: function,
       child: Stack(
         alignment: Alignment.centerRight,
@@ -309,12 +328,14 @@ class Box {
       children: [
         Box.boxHasRadius(
             child: GestureDetector(
+                behavior: HitTestBehavior.translucent,
                 onTap: no,
                 child: Box.textRadiusBorder('取消',
                     border: MyTheme.lightColor, filling: MyTheme.lightColor)),
             color: MyTheme.lightColor),
         Box.boxHasRadius(
           child: GestureDetector(
+            behavior: HitTestBehavior.translucent,
             onTap: yes,
             child: Box.textRadiusBorder('確認', border: MyTheme.buttonColor),
           ),
@@ -337,9 +358,9 @@ class Box {
 
     return (Box.boxHasRadius(
       border: Border.all(color: MyTheme.color),
-      margin: EdgeInsets.only(top: 3, bottom: 3),
-      width:   MediaQuery.of(context).size.width*0.8,
-      height: 200,
+      margin: const EdgeInsets.only(top: 10, bottom: 10),
+      width: MediaQuery.of(context).size.width * 0.8,
+      height: MediaQuery.of(context).size.height / 4,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -389,6 +410,7 @@ class Box {
           //     ? const Text("已連接")
           //     :
           GestureDetector(
+              behavior: HitTestBehavior.translucent,
               child: Box.textRadiusBorder("連接",
                   font: Colors.white, filling: MyTheme.color)),
           const Padding(padding: EdgeInsets.all(2)),
@@ -397,12 +419,145 @@ class Box {
       ),
     ));
   }
+
+  static Widget connectInfo(ConnectState connectState) {
+    return Box.boxHasRadius(
+      margin: const EdgeInsets.only(bottom: 10, top: 10),
+      padding: const EdgeInsets.only(bottom: 10, top: 10),
+      child: Row(
+        children: [
+          Expanded(
+              flex: 0,
+              child: Box.textRadiusBorder("",
+                  filling: connectState.state ? Colors.green : Colors.red,
+                  width: 25)),
+          Expanded(
+            flex: 2,
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [Text(connectState.id), Text(connectState.name)]),
+          ),
+          Expanded(
+            flex: 1,
+            child: connectState.isHost == null
+                ? Box.textRadiusBorder(connectState.text(),
+                    filling: MyTheme.lightColor)
+                : Box.textRadiusBorder("主持人",
+                    filling: Colors.white, font: MyTheme.color),
+          )
+        ],
+      ),
+    );
+  }
+
+  static Widget planBox(Plan plan, BuildContext context) {
+    return SizedBox(
+      width: MediaQuery.of(context).size.width * 0.8,
+      height: 150,
+      child: (Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Container(),
+                flex: 1,
+              ),
+              Expanded(
+                  flex: 2,
+                  child: Text(
+                    plan.name,
+                    textAlign: TextAlign.center,
+                  )),
+              Expanded(
+                  flex: 1,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      GestureDetector(
+                        child: Text("編輯"),
+                      ),
+                      GestureDetector(
+                        child: Text("刪除"),
+                      )
+                    ],
+                  ))
+            ],
+          ),
+          Text(plan.getRange()),
+          Row(children: executeWeek()),
+          Row(children: planWeek(plan))
+        ],
+      )),
+    );
+  }
+
+  static List<Widget> executeWeek({bool? show}) {
+    List<Widget> result = [];
+    int today = DateTime.now().weekday;
+    bool check = show != null && show;
+
+    for (var element in execute_text) {
+      bool isToday = (today == (result.length + 1) && check);
+      print("isToday: $isToday");
+      print("result: ${result.length}");
+      print("today: $today");
+      result.add(Expanded(
+        flex: 1,
+        child: Box.boxHasRadius(
+            child: Text(
+              element,
+              textAlign: TextAlign.center,
+              style: TextStyle(color: isToday ? Colors.white : null),
+            ),
+            color: isToday ? MyTheme.color : Colors.white),
+      ));
+    }
+    return result;
+  }
+
+  static List<Widget> planWeek(Plan plan, {List<bool>? exe}) {
+    List<Widget> result = [];
+    bool isHome = exe != null;
+    for (var check in plan.execute) {
+      Widget widget =
+          Box.textRadiusBorder("", width: 25, filling: MyTheme.color);
+      if (isHome) {
+        if (DateTime.now().weekday > result.length) {
+          widget = Box.boxHasRadius(
+              child: Icon(
+                Icons.check_circle,
+                color: exe[result.length] ? Colors.green : Colors.red,
+              ),
+              width: 25);
+        } else {
+          widget = Box.boxHasRadius(
+            child: Icon(
+              Icons.check_circle,
+              color: Colors.grey,
+            ),
+            width: 25,
+          );
+        }
+      }
+      result.add(Expanded(
+        flex: 1,
+        child: check ? widget : Container(),
+      ));
+    }
+    return result;
+  }
 }
 
 class TextInput {
   static Widget radius(String text, TextEditingController controller,
-      {TextField? textField}) {
+      {TextField? textField,
+      Function()? onTap,
+      double? width,
+      double? height}) {
     return Container(
+      width: width,
+      height: height,
       margin: const EdgeInsets.all(10),
       padding: const EdgeInsets.all(0),
       decoration: BoxDecoration(
@@ -411,14 +566,45 @@ class TextInput {
           border: Border.all(color: MyTheme.lightColor)),
       child: textField ??
           TextFormField(
+            onTap: onTap,
             controller: controller,
-            // obscureText: true,
             decoration: InputDecoration(
               border: InputBorder.none,
               labelText: text,
               floatingLabelStyle: TextStyle(color: MyTheme.lightColor),
             ),
           ),
+    );
+  }
+
+  static Widget radiusWithTitle(String text, TextEditingController controller,
+      {TextField? textField, Function()? onTap}) {
+    return SizedBox(
+      width: 200,
+      height: 200,
+      child: Row(
+        children: [
+          Text(text),
+          Container(
+            margin: const EdgeInsets.all(10),
+            padding: const EdgeInsets.all(0),
+            decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20.0),
+                border: Border.all(color: MyTheme.lightColor)),
+            child: textField ??
+                TextFormField(
+                  onTap: onTap,
+                  controller: controller,
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    // labelText: text,
+                    floatingLabelStyle: TextStyle(color: MyTheme.lightColor),
+                  ),
+                ),
+          )
+        ],
+      ),
     );
   }
 }

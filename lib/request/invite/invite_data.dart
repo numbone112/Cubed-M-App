@@ -22,14 +22,17 @@ class Invite {
       required this.time,
       required this.m_id,
       required this.remark,
-      required this.friend
+       this.friend
       });
 
   String name;
-  DateTime time;
+  String time;
   String m_id;
   String remark;
-  List<String> friend;
+  List<String>? friend;
+  DateTime transTime(){
+    return DateTime.now();
+  }
  
   factory Invite.fromJson(Map<String, dynamic> json) =>
       _$InviteFromJson(json);

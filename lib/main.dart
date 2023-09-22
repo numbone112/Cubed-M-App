@@ -8,6 +8,7 @@ import 'package:e_fu/pages/exercise/insert.dart';
 import 'package:e_fu/pages/exercise/invite.dart';
 import 'package:e_fu/pages/exercise/single_c.dart';
 import 'package:e_fu/pages/mo/hide_mo_list.dart';
+import 'package:e_fu/pages/mo/moDetail.dart';
 import 'package:e_fu/pages/mo/mo_list.dart';
 import 'package:e_fu/pages/plan/plan.dart';
 import 'package:e_fu/pages/plan/plan_insert.dart';
@@ -74,6 +75,7 @@ class MyappState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(fontFamily: "taipei"),
       builder: EasyLoading.init(),
       color: MyTheme.backgroudColor,
       home: Container(
@@ -106,7 +108,8 @@ class MyappState extends State<MyApp> {
         HistoryDetailPerson.routeName:(_)=>HistoryDetailPerson(userName: userName,),
         HistoryDetailPage.routeName:(_)=>HistoryDetailPage(userName: userName,),
         PlanPage.routeName:(_)=>PlanPage(userName: userName),
-        PlanInsertPage.routeName:(_)=>PlanInsertPage(userName: userName)
+        PlanInsertPage.routeName:(_)=>PlanInsertPage(userName: userName),
+        MoDetail.routeName: (_) => MoDetail(userName: userName),
       },
     );
   }

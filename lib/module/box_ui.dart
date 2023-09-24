@@ -22,13 +22,13 @@ class Box {
     double? height,
     double? width,
     Border? border,
-    required Widget child,
+    required Widget? child,
     EdgeInsetsGeometry? margin,
     EdgeInsetsGeometry? padding,
   }) {
     return Container(
       decoration: BoxDecoration(
-          borderRadius: const BorderRadius.all(Radius.circular(30)),
+          borderRadius: const BorderRadius.all(Radius.circular(20)),
           color: color ?? Colors.white,
           border: border),
       height: height,
@@ -129,7 +129,7 @@ class Box {
     if (history.isGroup()) {
       item = Row(
         children: [
-          const Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Padding(
               padding: EdgeInsets.all(5),
               child: Text("我"),
@@ -505,10 +505,14 @@ class Box {
       result.add(Expanded(
         flex: 1,
         child: Box.boxHasRadius(
-            child: Text(
-              element,
-              textAlign: TextAlign.center,
-              style: TextStyle(color: isToday ? Colors.white : null),
+            height: 25,
+            child: Container(
+              alignment: Alignment.center,
+              child: Text(
+                element,
+                textAlign: TextAlign.center,
+                style: TextStyle(color: isToday ? Colors.white : null),
+              ),
             ),
             color: isToday ? MyTheme.color : Colors.white),
       ));
@@ -520,26 +524,47 @@ class Box {
     List<Widget> result = [];
     bool isHome = exe != null;
     for (var check in plan.execute) {
-      Widget widget =
-          Box.textRadiusBorder("", width: 25, filling: MyTheme.color);
+      Widget widget = const SizedBox(width: 30, height: 30);
       if (isHome) {
         if (DateTime.now().weekday > result.length) {
-          widget = Box.boxHasRadius(
-              child: Icon(
-                Icons.check_circle,
-                color: exe[result.length] ? Colors.green : Colors.red,
+          widget = Container(
+            padding: const EdgeInsets.all(5),
+            child: ClipOval(
+              child: Container(
+                height: 30,
+                color: exe[result.length] ? MyTheme.green : MyTheme.pink,
+                child: Icon(
+                  Icons.done,
+                  color: Colors.white,
+                ),
               ),
-              width: 25);
-        } else {
-          widget = Box.boxHasRadius(
-            child: Icon(
-              Icons.check_circle,
-              color: Colors.grey,
             ),
-            width: 25,
           );
+        } else {
+          widget = Container(
+            padding: const EdgeInsets.all(5),
+            child: ClipOval(
+              child: Container(
+                height: 30,
+                color: MyTheme.gray,
+                child: Icon(
+                  Icons.done,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          );
+          // widget = Box.boxHasRadius(
+          //     child: Icon(
+          //       Icons.check_circle,
+          //       color: Colors.grey,
+          //     ),
+          //     height: 30);
         }
       }
+      // result.add(
+      //    check ? widget : Container(),
+      // );
       result.add(Expanded(
         flex: 1,
         child: check ? widget : Container(),

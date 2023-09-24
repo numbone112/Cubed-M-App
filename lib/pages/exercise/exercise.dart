@@ -126,9 +126,9 @@ class ExerciseHomeState extends State<ExerciseHome>
                 ],
               ),
               Column(children: [
-                const Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
+                  children: const [
                     Text("篩選"),
                   ],
                 ),

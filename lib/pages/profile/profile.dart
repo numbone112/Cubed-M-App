@@ -102,7 +102,6 @@ class ProfileCreateState extends State<ProfileInfo> {
           img: "assets/images/target.png",
           function: () => Navigator.pushNamed(context, PlanPage.routeName,
               arguments: profile)),
-     
       SubMenu(
         title: "設定",
         img: "assets/images/setting.png",
@@ -190,118 +189,156 @@ class ProfileCreateState extends State<ProfileInfo> {
 
   @override
   Widget build(BuildContext context) {
-    return (profile == null)
-        ? Container(
-            color: MyTheme.backgroudColor,
-            child: Center(
-                child: CircularProgressIndicator(
-              color: MyTheme.lightColor,
-            )),
-          )
-        : ScrollConfiguration(
-            behavior: CusBehavior(),
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(20, 10, 20, 20),
-                child: (Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    Box.titleText("個人資訊", gap: 15, fontSize: MySize.titleSize),
-                    Box.boxHasRadius(
-                      margin: const EdgeInsets.fromLTRB(0, 5, 0, 5),
-                      padding: const EdgeInsets.all(10),
-                      height: 200,
-                      color: MyTheme.lightColor,
-                      width: MediaQuery.of(context).size.width * 0.9,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                profile!.name,
-                                // textAlign: TextAlign.center,
-                                style: myText(
-                                    color: Colors.white,
-                                    fontsize: MySize.subtitleSize),
+    return Column(children: [
+      Container(
+        alignment: Alignment.center,
+        height: MediaQuery.of(context).size.height * 0.1,
+        child: MyText(text: "個人資訊", type: 2),
+      ),
+      Expanded(
+        child: ScrollConfiguration(
+          behavior: CusBehavior(),
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+              child: (Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                      (profile == null)
+                          ? Box.boxHasRadius(
+                            height: MediaQuery.of(context).size.height * 0.33,
+                              color: MyTheme.backgroudColor,
+                              child: Center(
+                                  child: CircularProgressIndicator(
+                                color: MyTheme.lightColor,
+                              )),
+                            )
+                          : Box.boxHasRadius(
+                              height: MediaQuery.of(context).size.height * 0.33,
+                              color: Colors.white,
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: const BorderRadius.horizontal(
+                                        left: Radius.circular(20),
+                                        right: Radius.circular(0),
+                                      ),
+                                      color: MyTheme.color,
+                                    ),
+                                    height:
+                                        MediaQuery.of(context).size.height * 0.33,
+                                    child: Container(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          20, 40, 20, 20),
+                                      alignment: Alignment.center,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.fromLTRB(
+                                                0, 0, 0, 20),
+                                            child: MyText(
+                                                text: profile!.name,
+                                                type: 3,
+                                                color: Colors.white),
+                                          ),
+                                          Padding(
+                                              padding: const EdgeInsets.fromLTRB(
+                                                  0, 0, 0, 10),
+                                              child: MyText(
+                                                  text:
+                                                      "性別：${profile!.sex != "female" ? "男" : "女"}",
+                                                  type: 4,
+                                                  color: Colors.white)),
+                                          MyText(
+                                              text:
+                                                  "年齡：${DateTime.now().year - profile!.birthday.year}",
+                                              type: 4,
+                                              color: Colors.white),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Container(
+                                      width: 150,
+                                      height: 150,
+                                      child: RadarChart(
+                                        RadarChartData(
+                                            getTitle: (index, angle) {
+                                              final usedAngle = angle;
+                                              switch (index) {
+                                                case 0:
+                                                  return RadarChartTitle(
+                                                    text: '左手',
+                                                    angle: usedAngle,
+                                                  );
+                                                case 2:
+                                                  return RadarChartTitle(
+                                                    text: '右手',
+                                                    angle: usedAngle,
+                                                  );
+                                                case 1:
+                                                  return RadarChartTitle(
+                                                      text: '下肢',
+                                                      angle: usedAngle);
+                                                default:
+                                                  return const RadarChartTitle(
+                                                      text: '');
+                                              }
+                                            },
+                                            dataSets: rawDataSetList
+                                                .asMap()
+                                                .entries
+                                                .map((entry) {
+                                              final rawDataSet = entry.value;
+        
+                                              final isSelected = true;
+        
+                                              return RadarDataSet(
+                                                fillColor: isSelected
+                                                    ? MyTheme.lightColor
+                                                        .withOpacity(0.5)
+                                                    // rawDataSet.color.withOpacity(0.2)
+                                                    : rawDataSet.color
+                                                        .withOpacity(0.05),
+                                                borderColor: isSelected
+                                                    ? Colors.white
+                                                        .withOpacity(0.8)
+                                                    // rawDataSet.color
+                                                    : rawDataSet.color
+                                                        .withOpacity(0.25),
+                                                entryRadius: isSelected ? 3 : 2,
+                                                dataEntries: rawDataSet.values
+                                                    .map((e) =>
+                                                        RadarEntry(value: e))
+                                                    .toList(),
+                                                borderWidth: isSelected ? 2.3 : 2,
+                                              );
+                                            }).toList()),
+                                        swapAnimationDuration: const Duration(
+                                            milliseconds: 150), // Optional
+                                        swapAnimationCurve:
+                                            Curves.linear, // Optional
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                              Text(
-                                "性別：${profile!.sex != "female" ? "男" : "女"}",
-                                // textAlign: TextAlign.center,
-
-                                style: myText(color: Colors.white),
-                              ),
-                              Text(
-                                "年齡：${DateTime.now().year - profile!.birthday.year}",
-                                // textAlign: TextAlign.center,
-
-                                style: myText(color: Colors.white),
-                              )
-                            ],
-                          ),
-                          SizedBox(
-                            width: 150,
-                            height: 150,
-                            child: RadarChart(
-                              RadarChartData(
-                                  getTitle: (index, angle) {
-                                    final usedAngle = angle;
-                                    switch (index) {
-                                      case 0:
-                                        return RadarChartTitle(
-                                          text: '左手',
-                                          angle: usedAngle,
-                                        );
-                                      case 2:
-                                        return RadarChartTitle(
-                                          text: '右手',
-                                          angle: usedAngle,
-                                        );
-                                      case 1:
-                                        return RadarChartTitle(
-                                            text: '下肢', angle: usedAngle);
-                                      default:
-                                        return const RadarChartTitle(text: '');
-                                    }
-                                  },
-                                  dataSets: rawDataSetList
-                                      .asMap()
-                                      .entries
-                                      .map((entry) {
-                                    final rawDataSet = entry.value;
-
-                                    final isSelected = true;
-
-                                    return RadarDataSet(
-                                      fillColor: isSelected
-                                          ? Colors.white.withOpacity(0.5)
-                                          // rawDataSet.color.withOpacity(0.2)
-                                          : rawDataSet.color.withOpacity(0.05),
-                                      borderColor: isSelected
-                                          ? Colors.white
-                                          // rawDataSet.color
-                                          : rawDataSet.color.withOpacity(0.25),
-                                      entryRadius: isSelected ? 3 : 2,
-                                      dataEntries: rawDataSet.values
-                                          .map((e) => RadarEntry(value: e))
-                                          .toList(),
-                                      borderWidth: isSelected ? 2.3 : 2,
-                                    );
-                                  }).toList()),
-                              swapAnimationDuration:
-                                  const Duration(milliseconds: 150), // Optional
-                              swapAnimationCurve: Curves.linear, // Optional
                             ),
-                          )
-                        ],
-                      ),
-                    ),
-                   
-                  ]+intos(),
-                )),
-              ),
+                    ] +
+                    intos(),
+              )),
             ),
-          );
+          ),
+        ),
+      )
+    ]);
   }
 }

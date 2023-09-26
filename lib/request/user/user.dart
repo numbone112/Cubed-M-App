@@ -21,11 +21,11 @@ abstract class UserAPI {
   // Future<String> updateUser(int id, User user);
 
   //查詢使用者
-  Future<Format> getUser(String eId);
+  //Future<Format> getUser(String eId);
 
   // Future<Format> updateProfile(ProfileData profileData);
   // Future<Format> getFuDatil(String pId);
-  Future<Format> setTarget(Target target);
+  //Future<Format> setTarget(Target target);
 }
 
 class UserRepo extends API implements UserAPI {
@@ -55,12 +55,12 @@ class UserRepo extends API implements UserAPI {
     }
   }
 
-  @override
-  getUser(String eId) async {
-    return await lunch(client.get(
-        Uri.parse('$domain/therapist/$eId'),
-        headers: header,
-      ));
+  // @override
+  // getUser(String eId) async {
+  //   return await lunch(client.get(
+  //       Uri.parse('$domain/therapist/$eId'),
+  //       headers: header,
+  //     ));
     // try {
     //   dynamic response = await client.get(
     //     Uri.parse('$domain/therapist/$eId'),
@@ -84,9 +84,8 @@ class UserRepo extends API implements UserAPI {
     // }
   }
 
-  @override
-  Future<Format> setTarget(Target target) async {
-    return await lunch(
-        client.patch(Uri.parse('$domain/user/target'), headers: header, body: target));
-  }
-}
+  // @override
+  // Future<Format> setTarget(Target target) async {
+  //   return await lunch(
+  //       client.patch(Uri.parse('$domain/user/target'), headers: header, body: target));
+  // }

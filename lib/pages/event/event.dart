@@ -538,8 +538,8 @@ class EventState extends State<Event> {
                       await showDialog(
                         context: context,
                         builder: (ctx) => CupertinoAlertDialog(
-                          content: const Column(
-                            children: [
+                          content: Column(
+                            children: const [
                               SizedBox(
                                 height: 10,
                               ),

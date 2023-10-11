@@ -22,28 +22,39 @@ class MySize {
   static double body = 14;
 }
 
+class TextType {
+  static const int page = 1;
+  static const int fun = 2;
+  static const int sub = 3;
+  static const int content = 4;
+  static const int hint = 5;
+}
+
 Widget MyText({String text = "", int? type, Color? color = Colors.black}) {
-  //1:page大標 2:功能文字 3:小標 4:內文 5:提示文字
-  if (type == 1) {
-    return Text(text,
-        style:
-            TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: color));
-  } else if (type == 2) {
-    return Text(text,
-        style:
-            TextStyle(fontSize: 18, color: color));
-  } else if (type == 3) {
-    return Text(text,
+  switch (type) {
+    //1:page大標 2:功能文字 3:小標 4:內文 5:提示文字
+    case TextType.page:
+      return Text(text,
+          style: TextStyle(
+              fontSize: 22, fontWeight: FontWeight.bold, color: color));
+    case TextType.fun:
+      return Text(text, style: TextStyle(fontSize: 18, color: color));
+    case TextType.sub:
+      return Text(
+        text,
         style: TextStyle(
           fontSize: 16,
           color: color,
-        ));
-  } else if (type == 4) {
-    return Text(text, style: TextStyle(fontSize: 14, color: color));
-  } else if (type == 5) {
-    return Text(text, style: TextStyle(fontSize: 12, color: color));
-  } else
-    return Text(text);
+        ),
+      );
+    case TextType.content:
+      return Text(text, style: TextStyle(fontSize: 14, color: color));
+
+    case TextType.hint:
+      return Text(text, style: TextStyle(fontSize: 12, color: color));
+    default:
+      return Text(text, style: TextStyle(fontSize: 12, color: color));
+  }
 }
 
 class Name {

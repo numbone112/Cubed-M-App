@@ -31,6 +31,7 @@ class DailyEarnings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomPage(
+      safeAreaColor: MyTheme.lightColor,
       title: "成效分析",
       headTextColor: Colors.white,
       headColor: MyTheme.lightColor,

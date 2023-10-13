@@ -17,20 +17,34 @@ import '../pages/exercise/detail.dart';
 
 class Box {
   static final List<String> execute_text = ["一", '二', '三', '四', '五', '六', '日'];
-  static Widget boxHasRadius({
-    Color? color,
-    double? height,
-    double? width,
-    Border? border,
-    required Widget? child,
-    EdgeInsetsGeometry? margin,
-    EdgeInsetsGeometry? padding,
-  }) {
+
+  static List<BoxShadow> getshadow(Color color) {
+    return [
+      BoxShadow(
+          color: color,
+          offset: Offset(6.0, 6.0), //陰影x軸偏移量
+          blurRadius: 0, //陰影模糊程度
+          spreadRadius: 0 //陰影擴散程度
+          )
+    ];
+  }
+
+  static Widget boxHasRadius(
+      {Color? color,
+      double? height,
+      double? width,
+      Border? border,
+      required Widget? child,
+      EdgeInsetsGeometry? margin,
+      EdgeInsetsGeometry? padding,
+      List<BoxShadow>? boxShadow}) {
     return Container(
       decoration: BoxDecoration(
-          borderRadius: const BorderRadius.all(Radius.circular(20)),
-          color: color ?? Colors.white,
-          border: border),
+        borderRadius: const BorderRadius.all(Radius.circular(20)),
+        color: color ?? Colors.white,
+        border: border,
+        boxShadow: boxShadow,
+      ),
       height: height,
       width: width,
       margin: margin,

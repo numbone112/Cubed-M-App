@@ -17,49 +17,13 @@ class PlanRepo extends API implements PlanAPI {
 
   @override
   Future<Format> createPlan(Plan plan) async {
-    try {
-      final response =
-          await client.post(Uri.parse('$domain/plan/${plan.user_id}'),
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: jsonEncode(plan.toJson()));
-
-      Map responseBody = json.decode(utf8.decode(response.bodyBytes));
-      if (response.statusCode == 200) {
-        logger.v(responseBody);
-        return Format.fromJson(responseBody);
-      } else {
-        logger.v("not 200");
-        return Format.fromJson(responseBody);
-      }
-    } catch (e) {
-      logger.v(e);
-      return Format.fromFields("error", false, "");
-    }
+    return await lunch(client.post(Uri.parse('$domain/plan/${plan.user_id}'),
+        headers: header, body: jsonEncode(plan.toJson())));
   }
 
   @override
   Future<Format> getPlan(String user_id) async {
-    try {
-      final response = await client.get(
-        Uri.parse('$domain/plan/$user_id'),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      );
-
-      Map responseBody = json.decode(utf8.decode(response.bodyBytes));
-      if (response.statusCode == 200) {
-        logger.v(responseBody);
-        return Format.fromJson(responseBody);
-      } else {
-        logger.v("not 200");
-        return Format.fromJson(responseBody);
-      }
-    } catch (e) {
-      logger.v(e);
-      return Format.fromFields("error", false, "");
-    }
+    return await lunch(
+        client.get(Uri.parse('$domain/plan/$user_id'), headers: header));
   }
 }

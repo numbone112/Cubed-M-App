@@ -32,55 +32,14 @@ class UserRepo extends API implements UserAPI {
 
   @override
   Future<Format> login(String user, String psw) async {
-    try {
-      final response = await client.post(Uri.parse('$domain/login'),
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: jsonEncode(User(id: user, password: psw).toJson()));
-
-      Map responseBody = json.decode(utf8.decode(response.bodyBytes));
-      if (response.statusCode == 200) {
-        logger.v(response.body);
-        return Format.fromJson(responseBody);
-      } else {
-        logger.v("not 200");
-        return Format.fromJson(responseBody);
-      }
-    } catch (e) {
-      logger.v("error");
-      logger.v(e.toString());
-      return Format.fromFields("error", false, "");
-    }
+    return await lunch(client.post(Uri.parse('$domain/login'),
+        headers: header,
+        body: jsonEncode(User(id: user, password: psw).toJson())));
   }
 
   @override
   getUser(String id) async {
-    Map result;
-    try {
-      dynamic response = await client.get(
-        Uri.parse('$domain/therapist/$id'),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      );
-
-      result = json.decode(utf8.decode(response.bodyBytes));
-      if (response.statusCode == 200) {
-        logger.v(result);
-        return Format.fromJson(result);
-      } else {
-        logger.v("not 200");
-        return Format.fromJson(result);
-      }
-    } catch (e) {
-      result = {"D": {}, "message": "error", "success": false};
-      logger.v(e);
-      return Format.fromJson(result);
-    } finally {
-      // logger.v(result);
-    }
-    
-    // return Form.fromJson(result);
+    return await lunch(
+        client.get(Uri.parse('$domain/therapist/$id'), headers: header));
   }
 }

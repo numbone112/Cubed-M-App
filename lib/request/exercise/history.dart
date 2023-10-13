@@ -20,47 +20,16 @@ class HistoryRepo extends API implements HistoryAPI {
 
   @override
   Future<Format> historyList(String userName) async {
-    try {
-      //記得去history_data.g.dart把firend改回來
-      final response = await client
-          .get(Uri.parse('$domain/history/list/$userName'), headers: {
-        'Content-Type': 'application/json',
-      });
-
-      Map responseBody = json.decode(utf8.decode(response.bodyBytes));
-      if (response.statusCode == 200) {
-        logger.v(responseBody);
-        return Format.fromJson(responseBody);
-      } else {
-        logger.v("not 200");
-        return Format.fromJson(responseBody);
-      }
-    } catch (e) {
-      logger.v(e);
-      return Format.fromFields("error", false, "");
-    }
+    return await lunch(client.get(Uri.parse('$domain/history/list/$userName'),headers: header),);
+    
   }
   
   @override
   Future<Format> hisotry(int iId) async {
-     try {
-      //記得去history_data.g.dart把firend改回來
-      final response = await client
-          .get(Uri.parse('$domain/history/$iId'), headers: {
-        'Content-Type': 'application/json',
-      });
+          //記得去history_data.g.dart把firend改回來
 
-      Map responseBody = json.decode(utf8.decode(response.bodyBytes));
-      if (response.statusCode == 200) {
-        logger.v(responseBody);
-        return Format.fromJson(responseBody);
-      } else {
-        logger.v("not 200");
-        return Format.fromJson(responseBody);
-      }
-    } catch (e) {
-      logger.v(e);
-      return Format.fromFields("error", false, "");
-    }
+    return await lunch(client
+          .get(Uri.parse('$domain/history/$iId'), headers: header));
+     
   }
 }

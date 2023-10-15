@@ -50,9 +50,9 @@ class _MoState extends State<MoRank> {
     return List.generate(
         r.length,
         (index) => Box.boxHasRadius(
-          height: 50,
-          margin: EdgeInsets.only(bottom: 15,top: 15),
-          child: Row(
+              height: 50,
+              margin: EdgeInsets.only(bottom: 10, top: 10),
+              child: Row(
                 children: [
                   Expanded(
                     child: Text(
@@ -75,10 +75,9 @@ class _MoState extends State<MoRank> {
                     ),
                     flex: 1,
                   ),
-                  
                 ],
               ),
-        ));
+            ));
   }
 
   @override
@@ -91,51 +90,55 @@ class _MoState extends State<MoRank> {
       Rank(name: "Albert", score: 1.3, rank: 5),
       Rank(name: "Amy", score: 0.9, rank: 6),
     ];
-    return ScrollConfiguration(
-      behavior: CusBehavior(),
-      child: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(20, 15, 20, 20),
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+      child: ScrollConfiguration(
+        behavior: CusBehavior(),
+        child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-               Align(
-                alignment: Alignment.centerRight,
-                 child: GestureDetector(
-                            onTap: () => showInfo(),
-                            child: Box.boxHasRadius(
-                              child: Icon(
-                                Icons.question_mark_outlined,
-                                color: Colors.white,
-                              ),
-                              color: Colors.grey,
-                            ),),
-               ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          "排名",
-                          textAlign: TextAlign.center,
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: GestureDetector(
+                      onTap: () => showInfo(),
+                      child: Box.boxHasRadius(
+                          child: Icon(
+                            Icons.question_mark_outlined,
+                            size: 20,
+                            color: MyTheme.color,
+                          ),
+                          color: MyTheme.backgroudColor,
+                          border: Border.all(color: MyTheme.color, width: 1.5)),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                    child: Row(
+                      children: const [
+                        Expanded(
+                          child: Text(
+                            "排名",
+                            textAlign: TextAlign.center,
+                          ),
+                          flex: 1,
                         ),
-                        flex: 1,
-                      ),
-                      Expanded(
-                        child: Text(
-                          "姓名",
-                          textAlign: TextAlign.center,
+                        Expanded(
+                          child: Text(
+                            "姓名",
+                            textAlign: TextAlign.center,
+                          ),
+                          flex: 1,
                         ),
-                        flex: 1,
-                      ),
-                      Expanded(
-                        child: Text(
-                          "分數",
-                          textAlign: TextAlign.center,
+                        Expanded(
+                          child: Text(
+                            "分數",
+                            textAlign: TextAlign.center,
+                          ),
+                          flex: 1,
                         ),
-                        flex: 1,
-                      ),
-                    
-                    ],
+                      ],
+                    ),
                   ),
 
                   // Center(

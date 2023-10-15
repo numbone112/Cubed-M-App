@@ -90,15 +90,12 @@ class HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return CustomPage(
       title: "Cubed M",
-      // titWidget: Container(
-      //   alignment: Alignment.center,
-        
-      //   child: MyText(text: "Cubed M", type: TextType.page),
-      // ),
+      headTexttype: TextType.page,
+      headHeight: MediaQuery.of(context).size.height * 0.12,
       body: Padding(
-        padding: const EdgeInsets.only(left: 20, right: 20,top: 20),
+        padding: const EdgeInsets.only(left: 20, right: 20, bottom: 30, top: 0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -138,7 +135,7 @@ class HomePageState extends State<HomePage> {
                                   child: Padding(
                                     padding: const EdgeInsets.all(10),
                                     child: MyText(
-                                        text: "今天 ${index*2+15}:00",
+                                        text: "今天 ${index * 2 + 15}:00",
                                         type: TextType.content),
                                   ),
                                 );
@@ -220,8 +217,7 @@ class HomePageState extends State<HomePage> {
               ],
             ),
             Box.boxHasRadius(
-              height: MediaQuery.of(context).size.height * 0.2,
-              
+              height: MediaQuery.of(context).size.height * 0.22,
               padding: const EdgeInsets.fromLTRB(20, 10, 20, 20),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -265,18 +261,18 @@ class HomePageState extends State<HomePage> {
               children: [
                 GestureDetector(
                   child: Box.boxHasRadius(
-                    boxShadow:Box.getshadow(MyTheme.color),
+                    boxShadow: Box.getshadow(MyTheme.color),
                     width: MediaQuery.of(context).size.width * 0.43,
-                    height: MediaQuery.of(context).size.height * 0.1,
+                    height: MediaQuery.of(context).size.height * 0.13,
                     child:
                         Center(child: MyText(text: "肌力測試", type: TextType.sub)),
                   ),
                 ),
                 GestureDetector(
                   child: Box.boxHasRadius(
-                    boxShadow:Box.getshadow(MyTheme.color),
+                    boxShadow: Box.getshadow(MyTheme.color),
                     width: MediaQuery.of(context).size.width * 0.43,
-                    height: MediaQuery.of(context).size.height * 0.1,
+                    height: MediaQuery.of(context).size.height * 0.13,
                     child:
                         Center(child: MyText(text: "邀約運動", type: TextType.sub)),
                   ),

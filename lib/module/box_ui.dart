@@ -519,7 +519,7 @@ class Box {
       result.add(Expanded(
         flex: 1,
         child: Box.boxHasRadius(
-            height: 25,
+            height: 30,
             child: Container(
               alignment: Alignment.center,
               child: Text(

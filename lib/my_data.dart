@@ -30,30 +30,41 @@ class TextType {
   static const int hint = 5;
 }
 
-Widget MyText({String text = "", int? type, Color? color = Colors.black}) {
+Widget MyText(
+    {String text = "",
+    int? type,
+    Color? color = Colors.black,
+    TextAlign? textAlign = TextAlign.left}) {
   switch (type) {
     //1:page大標 2:功能文字 3:小標 4:內文 5:提示文字
     case TextType.page:
       return Text(text,
           style: TextStyle(
-              fontSize: 22, fontWeight: FontWeight.bold, color: color));
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
+            color: color,
+          ),
+          textAlign: textAlign);
     case TextType.fun:
-      return Text(text, style: TextStyle(fontSize: 18, color: color));
+      return Text(text,
+          style: TextStyle(fontSize: 20, color: color), textAlign: textAlign);
     case TextType.sub:
-      return Text(
-        text,
-        style: TextStyle(
-          fontSize: 16,
-          color: color,
-        ),
-      );
+      return Text(text,
+          style: TextStyle(
+            fontSize: 16,
+            color: color,
+          ),
+          textAlign: textAlign);
     case TextType.content:
-      return Text(text, style: TextStyle(fontSize: 14, color: color));
+      return Text(text,
+          style: TextStyle(fontSize: 14, color: color), textAlign: textAlign);
 
     case TextType.hint:
-      return Text(text, style: TextStyle(fontSize: 12, color: color));
+      return Text(text,
+          style: TextStyle(fontSize: 12, color: color), textAlign: textAlign);
     default:
-      return Text(text, style: TextStyle(fontSize: 12, color: color));
+      return Text(text,
+          style: TextStyle(fontSize: 12, color: color), textAlign: textAlign);
   }
 }
 

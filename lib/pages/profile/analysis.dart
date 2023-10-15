@@ -58,7 +58,7 @@ class DailyEarnings extends StatelessWidget {
                     backgroundColor: Colors.grey,
                   ),
                 ),
-                Text("動作完整性"),
+                MyText(text: '動作完整性', type: TextType.sub),
               ],
             ),
             Column(
@@ -77,7 +77,7 @@ class DailyEarnings extends StatelessWidget {
                     backgroundColor: Colors.grey,
                   ),
                 ),
-                Text("平均等級"),
+                MyText(text: '平均等級', type: TextType.sub),
               ],
             ),
           ],
@@ -106,7 +106,7 @@ class DailyEarnings extends StatelessWidget {
             ],
           ),
         ),
-        Text("歷程等級與預測"),
+        MyText(text: '歷程等級與預測', type: TextType.sub),
       ]),
     );
   }
@@ -167,9 +167,9 @@ class DailyEarnings extends StatelessWidget {
             showTitles: true,
             reservedSize: 22,
             getTitlesWidget: (value, meta) {
-              String? month = moneyMap[value.toInt()];
+              String? money = moneyMap[value.toInt()];
 
-              return Text(month ?? "");
+              return Text(money ?? "");
             },
           ))),
       borderData: FlBorderData(

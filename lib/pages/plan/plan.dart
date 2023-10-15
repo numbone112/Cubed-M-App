@@ -106,7 +106,7 @@ class PlanState extends State<PlanPage> {
                       color: Color(0xFFFFFFFF),
                       child: Column(
                         children: [
-                          Text("運動長條圖"),
+                          MyText(text: '運動長條圖', type: TextType.sub),
                           SizedBox(
                             width: 500,
                             height: 150,
@@ -149,10 +149,10 @@ class PlanState extends State<PlanPage> {
                     child: GestureDetector(
                       onTap: () => Navigator.pushNamed(
                           context, PlanInsertPage.routeName),
-                      child: Text(
-                        "+新增  ",
-                        style: TextStyle(color: MyTheme.color),
-                      ),
+                      child: MyText(
+                          text: '+ 新增',
+                          color: MyTheme.color,
+                          type: TextType.content),
                     ),
                   ),
                 ] +

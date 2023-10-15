@@ -8,6 +8,8 @@ class CustomPage extends StatefulWidget {
       required this.body,
       this.buildContext,
       this.title,
+      this.headHeight,
+      this.headTexttype,
       this.floatButton,
       this.change,
       this.rightButton,
@@ -20,6 +22,8 @@ class CustomPage extends StatefulWidget {
   final Widget body;
   final BuildContext? buildContext;
   final String? title;
+  final double? headHeight;
+  final int? headTexttype;
   final Widget? floatButton;
   final Function? change;
   final GestureDetector? rightButton;
@@ -42,82 +46,92 @@ class CustomPageState extends State<CustomPage> {
       resizeToAvoidBottomInset: true,
       floatingActionButton: widget.floatButton,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      body: SafeArea(
-        bottom: false,
-        child: ScrollConfiguration(
-          behavior: CusBehavior(),
-          child: Container(
-            color: MyTheme.backgroudColor,
-            child: Column(
-              children: [
-                widget.title != null
-                    ? Container(
-                        color: widget.headColor,
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.all(0),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      flex: 1,
-                                      child: (widget.buildContext != null)
-                                          ? IconButton(
-                                              icon: Icon(
-                                                Icons.arrow_back_ios,
-                                                color: widget.prevColor,
-                                              ),
-                                              onPressed: () {
-                                                Navigator.pop(
-                                                    widget.buildContext!);
-                                              },
-                                            )
-                                          : (widget.change != null)
+      body: Container(
+        color: widget.headColor??MyTheme.backgroudColor,
+        child: SafeArea(
+            bottom: false,
+            child: ScrollConfiguration(
+              behavior: CusBehavior(),
+              child: Container(
+                color: MyTheme.backgroudColor,
+                child: Column(
+                  children: [
+                    widget.title != null
+                        ? Container(
+                            color: widget.headColor,
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(0),
+                                    child: Row(
+                                      children: [
+                                        Expanded(
+                                          flex: 1,
+                                          child: (widget.buildContext != null)
                                               ? IconButton(
-                                                  icon: const Icon(
-                                                      Icons.arrow_back_ios),
-                                                  onPressed: () =>
-                                                      widget.change!.call(),
+                                                  icon: Icon(
+                                                    Icons.arrow_back_ios,
+                                                    size: 15,
+                                                    color: widget.prevColor,
+                                                  ),
+                                                  onPressed: () {
+                                                    Navigator.pop(
+                                                        widget.buildContext!);
+                                                  },
                                                 )
-                                              : Container(),
-                                    ),
-                                    Expanded(
-                                      flex: 3,
-                                      child: widget.titWidget ??
-                                          Text(
-                                            widget.title ?? "",
-                                            style: TextStyle(
-                                                fontSize: 25,
-                                                color: widget.headTextColor,
-                                                fontWeight: FontWeight.bold),
-                                            maxLines: 1,
-                                            textAlign: TextAlign.center,
+                                              : (widget.change != null)
+                                                  ? IconButton(
+                                                      icon: const Icon(
+                                                          Icons.arrow_back_ios),
+                                                      onPressed: () =>
+                                                          widget.change!.call(),
+                                                    )
+                                                  : Container(),
+                                        ),
+                                        Expanded(
+                                          flex: 3,
+                                          child: Container(
+                                              alignment: Alignment.center,
+                                              height: widget.headHeight ??
+                                                  MediaQuery.of(context)
+                                                          .size
+                                                          .height *
+                                                      0.08,
+                                              child: widget.titWidget ??
+                                                  MyText(
+                                                      text: widget.title ?? "",
+                                                      type: widget.headTexttype ??
+                                                          TextType.fun,
+                                                      color: widget.headTextColor,
+                                                      textAlign:
+                                                          TextAlign.center)),
+                                        ),
+                                        Expanded(
+                                          flex: 1,
+                                          child: Container(
+                                            child: widget.rightButton,
                                           ),
+                                        ),
+                                      ],
                                     ),
-                                    Expanded(
-                                      flex: 1,
-                                      child: Container(
-                                        child: widget.rightButton,
-                                      ),
-                                    ),
-                                  ],
+                                  ),
                                 ),
-                              ),
+                              ],
                             ),
-                          ],
-                        ),
-                      )
-                    : Container(),
-                SizedBox(
-                  width: widget.width ?? MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height * 0.8,
-                  child: widget.body,
-                )
-              ],
-            ),
-          ),
-        ),
+                          )
+                        : Container(),
+                    Expanded(
+                      child: SizedBox(
+                        width: widget.width ?? MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height * 0.8,
+                        child: widget.body,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            )),
       ),
     ));
   }

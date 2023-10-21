@@ -70,7 +70,7 @@ static List<TabIconData> newAppList = <TabIconData>[
     TabIconData(
       imagePath: 'assets/images/friend_outlined.png',
       selectedImagePath: 'assets/images/friend.png',
-      title: 'MO伴',
+      title: 'Mo 伴',
       index: 1,
       isSelected: false,
       animationController: null,

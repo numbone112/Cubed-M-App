@@ -38,7 +38,7 @@ class DailyEarnings extends StatelessWidget {
       prevColor: Colors.white,
       buildContext: context,
       body: Column(children: [
-        Padding(padding: EdgeInsets.all(10)),
+        const Padding(padding: EdgeInsets.all(10)),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -58,7 +58,7 @@ class DailyEarnings extends StatelessWidget {
                     backgroundColor: Colors.grey,
                   ),
                 ),
-                MyText(text: '動作完整性', type: TextType.sub),
+                MyText(text: '運動達成率', type: TextType.sub),
               ],
             ),
             Column(
@@ -67,13 +67,14 @@ class DailyEarnings extends StatelessWidget {
                   height: 100,
                   width: 100,
                   child: EProgress(
-                    progress: 75,
+                    progress: 412 ~/ 5,
                     colors: [MyTheme.buttonColor],
                     showText: true,
                     format: (progress) {
-                      return '好';
+                      return '  好\n4.12';
                     },
                     type: ProgressType.dashboard,
+                    // textStyle: TextStyle(),
                     backgroundColor: Colors.grey,
                   ),
                 ),
@@ -90,16 +91,12 @@ class DailyEarnings extends StatelessWidget {
                 aspectRatio: 1.5,
                 child: Container(
                   decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(18),
-                    ),
+                    borderRadius: BorderRadius.all(Radius.circular(18)),
                   ),
                   child: Padding(
                     padding: const EdgeInsets.only(
                         right: 18.0, left: 12.0, top: 24, bottom: 12),
-                    child: LineChart(
-                      mainData(),
-                    ),
+                    child: LineChart(mainData()),
                   ),
                 ),
               ),
@@ -115,22 +112,20 @@ class DailyEarnings extends StatelessWidget {
     double nowScaleDouble = 4;
     return LineChartData(
       extraLinesData: ExtraLinesData(
-        verticalLines: nowScaleDouble == null
-            ? null
-            : [
-                VerticalLine(
-                  x: nowScaleDouble,
-                  color: const Color.fromRGBO(197, 0, 0, 1),
-                  strokeWidth: 2,
-                  dashArray: [5, 10],
-                  label: VerticalLineLabel(
-                    show: true,
-                    alignment: Alignment(1, 0.5),
-                    padding: const EdgeInsets.only(left: 10, top: 5),
-                    labelResolver: (line) => "now",
-                  ),
-                ),
-              ],
+        verticalLines: [
+          VerticalLine(
+            x: nowScaleDouble,
+            color: const Color.fromRGBO(197, 0, 0, 1),
+            strokeWidth: 2,
+            dashArray: [5, 10],
+            label: VerticalLineLabel(
+              show: true,
+              alignment: const Alignment(1, 0.5),
+              padding: const EdgeInsets.only(left: 10, top: 5),
+              labelResolver: (line) => "now",
+            ),
+          ),
+        ],
       ),
       gridData: FlGridData(
         show: true,
@@ -182,16 +177,17 @@ class DailyEarnings extends StatelessWidget {
       maxY: 2,
       lineBarsData: [
         LineChartBarData(
+          color: MyTheme.color,
           spots: [
-            FlSpot(0, -2),
+            const FlSpot(0, -2),
 
-            FlSpot(1, -1),
-            FlSpot(2, -1),
+            const FlSpot(1, -1),
+            const FlSpot(2, -1),
             // FlSpot(2, 4),
-            FlSpot(3, 1),
-            FlSpot(4, 0),
-            FlSpot(5.1, 1.5),
-            FlSpot(5.8, 1.7),
+            const FlSpot(3, 1),
+            const FlSpot(4, 0),
+            const FlSpot(5.1, 1.5),
+            const FlSpot(5.8, 1.7),
           ],
           isCurved: true,
           // colors: gradientColors,

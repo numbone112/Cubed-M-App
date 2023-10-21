@@ -55,6 +55,7 @@ class HistoryDetailPersonstate extends State<HistoryDetailPerson> {
     final args = ModalRoute.of(context)!.settings.arguments as HistoryDeep;
     return (CustomPage(
       body: ListView(children: [
+        Padding(padding: EdgeInsets.all(10)),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [

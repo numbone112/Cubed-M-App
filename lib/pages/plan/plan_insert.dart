@@ -37,37 +37,33 @@ class PlanInsertState extends State<PlanInsertPage> {
   TextEditingController strInput = TextEditingController();
   TextEditingController endInput = TextEditingController();
   PlanRepo planRepo = PlanRepo();
-  
 
   Widget choise() {
     List<Widget> _list = [];
     for (var i = 0; i < execute.length; i++) {
-      _list.add(Box.boxHasRadius(
-        width:MediaQuery.of(context).size.width*0.7,
-        height: 50,
-        border: Border.all(color: MyTheme.lightColor),
-        margin: EdgeInsets.only(top: 5,bottom: 5),
-        color: execute[i]?MyTheme.lightColor:null,
-        child: GestureDetector(
-          behavior: HitTestBehavior.translucent,
-          onTap: ()=>        setState(() {
-                      execute[i] = !execute[i]  ;
-                    }),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text("星期${execute_text[i]}",),
-              // Checkbox(
-              //     value: execute[i],
-              //     onChanged: (value) {
-              //       setState(() {
-              //         execute[i] = value ?? false;
-              //       });
-              //     })
-            ],
+      _list.add(
+        Box.boxHasRadius(
+          width: MediaQuery.of(context).size.width * 0.7,
+          height: 50,
+          border: Border.all(color: MyTheme.lightColor),
+          margin: const EdgeInsets.only(top: 5, bottom: 5),
+          color: execute[i] ? MyTheme.lightColor : null,
+          child: GestureDetector(
+            behavior: HitTestBehavior.translucent,
+            onTap: () => setState(() {
+              execute[i] = !execute[i];
+            }),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "星期${execute_text[i]}",
+                ),
+              ],
+            ),
           ),
         ),
-      ));
+      );
     }
     return Column(
       children: _list,
@@ -95,34 +91,26 @@ class PlanInsertState extends State<PlanInsertPage> {
       title: "新增計畫",
       buildContext: context,
       body: Container(
-        margin: EdgeInsets.only(left: 20,right: 20),
         child: ListView(
           children: [
             Row(
               children: [
-                Text("計畫名稱"),
-                Expanded(
-                    child: TextInput.radius(
-                  "",
-                  nameInput,
-                ))
+                const Text("計畫名稱"),
+                Expanded(child: TextInput.radius("", nameInput))
               ],
             ),
             Row(
               children: [
-                Text("開始時間"),
+                const Text("開始時間"),
                 Expanded(
-                  child: TextInput.radius(
-                    "",
-                    strInput,
-                    onTap: () => dateInput(strInput),
-                  ),
+                  child: TextInput.radius("", strInput,
+                      onTap: () => dateInput(strInput)),
                 )
               ],
             ),
             Row(
               children: [
-                Text("結束時間"),
+                const Text("結束時間"),
                 Expanded(
                   child: TextInput.radius(
                     "",
@@ -132,8 +120,14 @@ class PlanInsertState extends State<PlanInsertPage> {
                 )
               ],
             ),
-            Text("運動計畫表",textAlign: TextAlign.center,),
-            Text("請點選欲安排運動之星期",textAlign: TextAlign.center,),
+            const Text(
+              "運動計畫表",
+              textAlign: TextAlign.center,
+            ),
+            const Text(
+              "請點選欲安排運動之星期",
+              textAlign: TextAlign.center,
+            ),
             choise(),
             Box.yesnoBox(() {
               Plan plan = Plan(

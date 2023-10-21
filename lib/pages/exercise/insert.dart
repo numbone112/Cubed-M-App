@@ -1,7 +1,11 @@
+import 'dart:convert';
+
 import 'package:e_fu/module/box_ui.dart';
 import 'package:e_fu/my_data.dart';
 import 'package:e_fu/request/invite/invite.dart';
 import 'package:e_fu/request/invite/invite_data.dart';
+import 'package:e_fu/request/mo/mo.dart';
+import 'package:e_fu/request/mo/mo_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:intl/intl.dart';
@@ -26,13 +30,16 @@ class InsertInvitestate extends State<InsertInvite> {
   TextEditingController quaryInput = TextEditingController();
   TextEditingController dateInput = TextEditingController();
   TextEditingController timeInput = TextEditingController();
-
+  List<MoSearch> searchList = [];
+  Set<MoSearch> selectFriend = {};
   DateFormat dateFormat = DateFormat('yyyy-MM-dd ');
   TimeOfDayFormat timeFormat = TimeOfDayFormat.HH_colon_mm;
+  MoRepo moRepo = MoRepo();
 
-  Widget peopleItem(String id, String name) {
+  Widget peopleItem(String id, String name, {Color? select}) {
     return Box.boxHasRadius(
-      margin: const EdgeInsets.only(right: 30, left: 30),
+      color: select,
+      margin: const EdgeInsets.only(right: 30, left: 30, top: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -157,13 +164,24 @@ class InsertInvitestate extends State<InsertInvite> {
             const Text('邀請人'),
             Padding(
               padding: const EdgeInsets.fromLTRB(25, 10, 25, 10),
-              child: Row(children: [Box.boxWithX("小明")]),
+              child: Row(children: selectFriend.map((mosearch) => Box.boxWithX(mosearch.name)).toList()
+              ),
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(25, 10, 25, 10),
               child: Row(
                 children: [
-                  Expanded(child: TextInput.radius(' 請搜尋姓名或ID', quaryInput))
+                  Expanded(child: TextInput.radius(' 請搜尋姓名或ID', quaryInput)),
+                  GestureDetector(
+                    child: Text("搜尋"),
+                    onTap: () {
+                      moRepo.search(quaryInput.text).then((value) {
+                        setState(() {
+                          searchList = parseMoSearchList(jsonEncode(value.D));
+                        });
+                      });
+                    },
+                  )
                 ],
               ),
             ),
@@ -171,10 +189,21 @@ class InsertInvitestate extends State<InsertInvite> {
               width: MediaQuery.of(context).size.width,
               height: 250,
               child: ListView.builder(
-                  itemCount: invitedPeople.length,
+                  itemCount: searchList.length,
                   itemBuilder: (context, index) {
-                    return peopleItem(
-                        invitedPeople[index], invitedPeople[index]);
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          selectFriend.add(searchList[index]);
+                        });
+                      },
+                      child: peopleItem(
+                          select: selectFriend.contains(searchList[index])
+                              ? MyTheme.lightColor
+                              : null,
+                          searchList[index].id,
+                          searchList[index].name),
+                    );
                   }),
             ),
             Box.yesnoBox(() {
@@ -184,7 +213,7 @@ class InsertInvitestate extends State<InsertInvite> {
                   name: nameInput.text,
                   time: DateTime.now().toIso8601String(),
                   remark: remarkInput.text,
-                  friend: friend
+                  friend: selectFriend.map((select) => select.id).toList(),
                   );
               api.createInvite(invite).then((value) => {
                     EasyLoading.dismiss(),

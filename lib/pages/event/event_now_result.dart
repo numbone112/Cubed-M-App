@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:e_fu/pages/exercise/EventRecord.dart';
+import 'package:e_fu/pages/exercise/event.dart';
 import 'package:intl/intl.dart';
 
 import 'package:e_fu/module/page.dart';
@@ -26,10 +28,10 @@ class EventNowResult extends StatefulWidget {
 
 class PersonResult extends StatelessWidget {
   final Logger logger = Logger();
-  final EAppointmentDetail appointmentDetail;
+  final EventRecordInfo eventRecordInfo;
   final Map<int, List<int>> done;
 
-  PersonResult(this.appointmentDetail, {super.key, required this.done});
+  PersonResult(this.eventRecordInfo, {super.key, required this.done});
   @override
   Widget build(BuildContext context) {
     Map<int, String> table = {0: "左手", 1: "右手", 2: "坐立"};
@@ -74,8 +76,7 @@ class PersonResult extends StatelessWidget {
 
     return SizedBox(
         child: Column(
-            children:
-                <Widget>[Text("復健者：${appointmentDetail.name}")] + results));
+            children: <Widget>[Text("運動者：${eventRecordInfo.name}")] + results));
   }
 }
 
@@ -86,7 +87,7 @@ class EventNowResultState extends State<EventNowResult> {
   List<PersonResult> reulstList = [];
   late EAppointment eAppointment;
 
-  Future<List<EAppointmentDetail>> getData(EAppointment eAppointment) async {
+  Future<List<EventRecordInfo>> getData(EAppointment eAppointment) async {
     EasyLoading.show(status: 'loading...');
     try {
       Format d = await eRepo.getApDetail(
@@ -105,12 +106,17 @@ class EventNowResultState extends State<EventNowResult> {
       try {
         final args = ModalRoute.of(context)!.settings.arguments as List<Object>;
         logger.v("args length ${args.length}");
-        final forEvnetList = args[0] as List<ForEvent>;
+        final forEvnetList = args[0] as List<EventRecord>;
+        for (var element in forEvnetList) {
+          //補年紀
+          element.processData(element.eventRecordInfo.id,true);
+        }
         eAppointment = args[1] as EAppointment;
         logger.v('done data${forEvnetList[0].data}');
+
         setState(() {
           reulstList = List.generate(forEvnetList.length, (index) {
-            return PersonResult(forEvnetList[index].appointmentDetail,
+            return PersonResult(forEvnetList[index].eventRecordInfo,
                 done: forEvnetList[index].data);
           });
         });
@@ -126,9 +132,8 @@ class EventNowResultState extends State<EventNowResult> {
     return CustomPage(
         buildContext: context,
         body: Column(children: [
-          const Text("復健師"),
           Text(
-              "復健日期: ${DateFormat("yyyy/mm/dd HH:mm").format(eAppointment.tf_id.start_date)}"),
+              "運動日期: ${DateFormat("yyyy/mm/dd HH:mm").format(eAppointment.tf_id.start_date)}"),
           Stack(
             children: [
               SizedBox(
@@ -168,6 +173,6 @@ class EventNowResultState extends State<EventNowResult> {
             ],
           )
         ]),
-        title: "本次復健紀錄");
+        title: "本次運動紀錄");
   }
 }

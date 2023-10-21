@@ -70,23 +70,19 @@ Map<String, dynamic> _$EAppointmentDetailBaseToJson(
       'tf_time': instance.tf_time.toIso8601String(),
     };
 
-EAppointmentDetail _$EAppointmentDetailFromJson(Map<String, dynamic> json) =>
-    EAppointmentDetail(
-      id: json['id'] as int,
+EventRecordInfo _$EventRecordInfoFromJson(Map<String, dynamic> json) =>
+    EventRecordInfo(
+      id: json['id'] as int? ?? -1,
       done: (json['done'] as List<dynamic>)
           .map((e) => (e as List<dynamic>).map((e) => e as int).toList())
           .toList(),
-      p_id: json['p_id'] as String,
-      item: (json['item'] as List<dynamic>).map((e) => e as int).toList(),
-      name: json['name'] as String,
-      remark: json['remark'] as String,
+      name: json['name'] as String? ?? "",
+      remark: json['remark'] as String? ?? "",
     );
 
-Map<String, dynamic> _$EAppointmentDetailToJson(EAppointmentDetail instance) =>
+Map<String, dynamic> _$EventRecordInfoToJson(EventRecordInfo instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'p_id': instance.p_id,
-      'item': instance.item,
       'done': instance.done,
       'remark': instance.remark,
       'name': instance.name,

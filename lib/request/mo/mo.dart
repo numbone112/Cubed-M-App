@@ -16,11 +16,11 @@ abstract class MoAPI {
   Future<Format> hindMo(String id, mId);
   // 取消隱藏mo伴
   Future<Format> showMo(String id, mId);
+
+  Future<Format> search(String keyword);
 }
 
 class MoRepo extends API implements MoAPI {
-  var logger = Logger();
-
   @override
   getMoList(String id) async {
     {
@@ -35,14 +35,14 @@ class MoRepo extends API implements MoAPI {
         Map responseBody = json.decode(utf8.decode(response.bodyBytes));
         logger.v(responseBody);
         if (response.statusCode == 200) {
-          logger.v(responseBody);
+          logger.v(responseBody["D"]);
           return GetMoListModel.fromJson(responseBody);
         } else {
           logger.v("not 200");
           return GetMoListModel.fromJson(responseBody);
         }
       } catch (e) {
-        Map error = {"D": {}, "message": "error", "success": false};
+        Map error = {"D": [], "message": "error", "success": false};
         logger.v(e);
         return GetMoListModel.fromJson(error);
       }
@@ -125,5 +125,10 @@ class MoRepo extends API implements MoAPI {
         return Format.fromFields("error", false, "");
       }
     }
+  }
+
+  @override
+  Future<Format> search(String keyword) async {
+    return await lunch(client.get(Uri.parse('$domain/mo/search/$keyword')));
   }
 }

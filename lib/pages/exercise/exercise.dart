@@ -61,6 +61,30 @@ class ExerciseHomeState extends State<ExerciseHome>
     });
   }
 
+  List<Widget> getfilterButtons() {
+    List<Widget> result = [];
+    final filters = ["已接受", '未接受', '未回覆'];
+
+    for (int i = 1; i <= filters.length; i++) {
+      result.add(GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: () => filter(i),
+        child: Container(
+          padding: const EdgeInsets.all(10),
+          margin: const EdgeInsets.fromLTRB(0, 0, 10, 10),
+          decoration: BoxDecoration(
+              color: mode == i ? MyTheme.color : MyTheme.lightColor,
+              borderRadius: BorderRadius.circular(30)),
+          child: MyText(
+              text: filters[i - 1],
+              color: Colors.white,
+              type: TextType.content),
+        ),
+      ));
+    }
+    return result;
+  }
+
   @override
   Widget build(BuildContext context) {
     return CustomPage(
@@ -86,97 +110,45 @@ class ExerciseHomeState extends State<ExerciseHome>
           child: TabBarView(
             controller: tabController,
             children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        GestureDetector(
-                          behavior: HitTestBehavior.translucent,
-                          onTap: () => filter(1),
-                          child: Container(
-                              padding: const EdgeInsets.all(10),
-                              margin: const EdgeInsets.fromLTRB(0, 0, 10, 10),
-                              decoration: BoxDecoration(
-                                  color: mode == 1
-                                      ? MyTheme.color
-                                      : MyTheme.lightColor,
-                                  borderRadius: BorderRadius.circular(30)),
-                              child: MyText(
-                                  text: "已接受",
-                                  color: Colors.white,
-                                  type: TextType.content)),
-                        ),
-                        GestureDetector(
-                          behavior: HitTestBehavior.translucent,
-                          onTap: () => filter(2),
-                          child: Container(
-                              padding: const EdgeInsets.all(10),
-                              margin: const EdgeInsets.fromLTRB(0, 0, 10, 10),
-                              decoration: BoxDecoration(
-                                  color: mode == 2
-                                      ? MyTheme.color
-                                      : MyTheme.lightColor,
-                                  borderRadius: BorderRadius.circular(30)),
-                              child: MyText(
-                                  text: "未接受",
-                                  color: Colors.white,
-                                  type: TextType.content)),
-                        ),
-                        GestureDetector(
-                          behavior: HitTestBehavior.translucent,
-                          onTap: () => filter(3),
-                          child: Container(
-                              padding: const EdgeInsets.all(10),
-                              margin: const EdgeInsets.fromLTRB(0, 0, 10, 10),
-                              decoration: BoxDecoration(
-                                  color: mode == 3
-                                      ? MyTheme.color
-                                      : MyTheme.lightColor,
-                                  borderRadius: BorderRadius.circular(30)),
-                              child: MyText(
-                                  text: "未回覆",
-                                  color: Colors.white,
-                                  type: TextType.content)),
-                        ),
-                      ],
+              Column(
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(top: 10,bottom: 10),
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: getfilterButtons()),
+                  ),
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: invite_list.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return (Box.inviteBox(invite_list[index], context));
+                      },
                     ),
-                    Expanded(
+                  ),
+                ],
+              ),
+              Column(children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [MyText(text: "篩選", type: TextType.content)],
+                ),
+                Box.boxHasRadius(
+                  child: SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.6,
+                    // width: MediaQuery.of(context).size.width * 0.8,
+                    child: Box.boxHasRadius(
+                      color: MyTheme.backgroudColor,
                       child: ListView.builder(
-                          itemCount: invite_list.length,
+                          itemCount: hisotry_list.length,
                           itemBuilder: (BuildContext context, int index) {
-                            return (Box.inviteBox(invite_list[index], context));
+                            return (Box.history(hisotry_list[index], context,
+                                widget.userName));
                           }),
                     ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-                child: Column(children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [MyText(text: "篩選", type: TextType.content)],
                   ),
-                  Box.boxHasRadius(
-                    child: SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.6,
-                      width: MediaQuery.of(context).size.width * 0.8,
-                      child: Box.boxHasRadius(
-                        color: MyTheme.backgroudColor,
-                        child: ListView.builder(
-                            itemCount: hisotry_list.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              return (Box.history(hisotry_list[index], context,
-                                  widget.userName));
-                            }),
-                      ),
-                    ),
-                  )
-                ]),
-              ),
+                )
+              ]),
             ],
           ),
         ),

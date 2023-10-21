@@ -42,8 +42,8 @@ class ProfilePageState extends State<Profile> {
     final args = ModalRoute.of(context)!.settings.arguments as GetUser;
 
     return CustomPage(
-      body: Padding(
-        padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
+      body: Container(
+        // padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
         child: ListView(children: [
           profileItem(title: 'ID', subtitle: args.id),
           profileItem(title: '姓名', subtitle: args.name),

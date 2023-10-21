@@ -31,7 +31,7 @@ Map<String, dynamic> _$RecordToJson(Record instance) => <String, dynamic>{
       'times': instance.times,
       'sets_no': instance.sets_no,
       'item_id': instance.item_id,
-      'a_id': instance.a_id,
+      'i_id': instance.i_id,
       'timestream': instance.timestream.toIso8601String(),
     };
 

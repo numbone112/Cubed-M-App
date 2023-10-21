@@ -1,4 +1,5 @@
 import 'package:e_fu/module/page.dart';
+import 'package:e_fu/pages/mo/moDetail.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
@@ -57,22 +58,26 @@ class _MoListPageState extends State<MoList> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text("ID:${moList!.d[i].id}",
-                  style: TextStyle(
-                      color: MyTheme.black,
-                      fontWeight: FontWeight.w400,
-                      fontSize: MySize.body)),
-              const SizedBox(height: 5),
-              Text(moList!.d[i].name,
-                  style: TextStyle(
-                      color: MyTheme.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: MySize.subtitleSize))
-            ],
+          GestureDetector(
+            behavior: HitTestBehavior.translucent,
+            onTap: () => Navigator.pushNamed(context, MoDetail.routeName),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text("ID:${moList!.d[i].id}",
+                    style: TextStyle(
+                        color: MyTheme.black,
+                        fontWeight: FontWeight.w400,
+                        fontSize: MySize.body)),
+                const SizedBox(height: 5),
+                Text(moList!.d[i].name,
+                    style: TextStyle(
+                        color: MyTheme.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: MySize.subtitleSize))
+              ],
+            ),
           ),
           GestureDetector(
             child: Container(
@@ -112,8 +117,8 @@ class _MoListPageState extends State<MoList> {
       getMoList();
     }
 
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+    return Container(
+      // padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
       child: Column(
         children: [
           GestureDetector(

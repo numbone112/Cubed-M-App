@@ -12,8 +12,6 @@ import '../../module/page.dart';
 
 class HistoryDetailPage extends StatefulWidget {
   final String userName;
-  // final History history;
-
   const HistoryDetailPage({super.key, required this.userName});
   static const routeName = '/history/detail';
 
@@ -27,16 +25,16 @@ class HistoryDetailstate extends State<HistoryDetailPage> {
 
   Widget deepBox(HistoryDeep historyDeep, bool isM) {
     return Container(
-      margin: EdgeInsets.only(top: 20),
+      margin: const EdgeInsets.only(top: 20),
       width: MediaQuery.of(context).size.width,
       child: Stack(
         children: [
           Box.boxHasRadius(
-              padding: EdgeInsets.only(left: 80),
-              margin: EdgeInsets.only(left: 100),
+              padding: const EdgeInsets.only(left: 80),
+              margin: const EdgeInsets.only(left: 100),
               color: Colors.white,
               height: 120,
-              width: 250,
+              // width: 250,
               child: Row(
                 children: [
                   SizedBox(
@@ -66,7 +64,7 @@ class HistoryDetailstate extends State<HistoryDetailPage> {
                 ],
               )),
           Box.boxHasRadius(
-            margin: EdgeInsets.only(left: 50),
+            // margin: const EdgeInsets.only(left: 50),
             color: MyTheme.buttonColor,
             height: 120,
             width: 120,
@@ -101,10 +99,9 @@ class HistoryDetailstate extends State<HistoryDetailPage> {
     for (HistoryDeep historyDeep in historyDeepList) {
       if (historyDeep.user_id == m_id) {
         result.insert(0, deepBox(historyDeep, true));
-      }else{
-result.add(deepBox(historyDeep, false));
+      } else {
+        result.add(deepBox(historyDeep, false));
       }
-      
     }
     return result;
   }
@@ -114,11 +111,8 @@ result.add(deepBox(historyDeep, false));
     final history = ModalRoute.of(context)!.settings.arguments as History;
     if (historyDeepList.isEmpty) {
       historyRepo.hisotry(history.i_id).then((value) async {
-        print(value.D);
-
         setState(() {
           historyDeepList = parseHistoryDeepList(jsonEncode(value.D));
-          // history = historyState;
         });
       });
     }
@@ -126,6 +120,7 @@ result.add(deepBox(historyDeep, false));
     return (CustomPage(
       body: ListView(
           children: <Widget>[
+            Padding(padding: EdgeInsets.all(10)),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [

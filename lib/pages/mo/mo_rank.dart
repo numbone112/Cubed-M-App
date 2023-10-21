@@ -27,7 +27,7 @@ class _MoState extends State<MoRank> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            content: Container(
+            content: SizedBox(
               height: 150,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -48,36 +48,37 @@ class _MoState extends State<MoRank> {
 
   List<Widget> rankTable(List<Rank> r) {
     return List.generate(
-        r.length,
-        (index) => Box.boxHasRadius(
-              height: 50,
-              margin: EdgeInsets.only(bottom: 10, top: 10),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      r[index].rank.toString(),
-                      textAlign: TextAlign.center,
-                    ),
-                    flex: 1,
-                  ),
-                  Expanded(
-                    child: Text(
-                      r[index].name,
-                      textAlign: TextAlign.center,
-                    ),
-                    flex: 1,
-                  ),
-                  Expanded(
-                    child: Text(
-                      r[index].score.toString(),
-                      textAlign: TextAlign.center,
-                    ),
-                    flex: 1,
-                  ),
-                ],
+      r.length,
+      (index) => Box.boxHasRadius(
+        height: 50,
+        margin: const EdgeInsets.only(bottom: 10, top: 10),
+        child: Row(
+          children: [
+            Expanded(
+              flex: 1,
+              child: Text(
+                r[index].rank.toString(),
+                textAlign: TextAlign.center,
               ),
-            ));
+            ),
+            Expanded(
+              flex: 1,
+              child: Text(
+                r[index].name,
+                textAlign: TextAlign.center,
+              ),
+            ),
+            Expanded(
+              flex: 1,
+              child: Text(
+                r[index].score.toString(),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
@@ -90,8 +91,8 @@ class _MoState extends State<MoRank> {
       Rank(name: "Albert", score: 1.3, rank: 5),
       Rank(name: "Amy", score: 0.9, rank: 6),
     ];
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+    return Container(
+      // padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
       child: ScrollConfiguration(
         behavior: CusBehavior(),
         child: SingleChildScrollView(
@@ -112,61 +113,34 @@ class _MoState extends State<MoRank> {
                           border: Border.all(color: MyTheme.color, width: 1.5)),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                  const Padding(
+                    padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
                     child: Row(
-                      children: const [
+                      children: [
                         Expanded(
+                          flex: 1,
                           child: Text(
                             "排名",
                             textAlign: TextAlign.center,
                           ),
-                          flex: 1,
                         ),
                         Expanded(
+                          flex: 1,
                           child: Text(
                             "姓名",
                             textAlign: TextAlign.center,
                           ),
-                          flex: 1,
                         ),
                         Expanded(
+                          flex: 1,
                           child: Text(
                             "分數",
                             textAlign: TextAlign.center,
                           ),
-                          flex: 1,
                         ),
                       ],
                     ),
                   ),
-
-                  // Center(
-                  //   child: Box.boxHasRadius(
-                  //     child: DataTable(
-                  //       columns: const [
-                  //         DataColumn(label: Text("排名")),
-                  //         DataColumn(label: Text("姓名")),
-                  //         DataColumn(label: Text("分數"))
-                  //       ],
-                  //       rows: List.generate(rankList.length, (index) {
-                  //         Rank r = rankList[index];
-                  //         return DataRow(
-                  //           onLongPress: () =>
-                  //               Navigator.pushNamed(context, MoDetail.routeName),
-                  //           color: index == widget.first
-                  //               ? MaterialStateProperty.all(MyTheme.lightColor)
-                  //               : null,
-                  //           cells: [
-                  //             DataCell(Text(r.rank.toString())),
-                  //             DataCell(Text(r.name)),
-                  //             DataCell(Text(r.score.toString()))
-                  //           ],
-                  //         );
-                  //       }),
-                  //     ),
-                  //   ),
-                  // ),
                 ] +
                 rankTable(rankList),
           ),

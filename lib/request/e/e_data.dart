@@ -20,11 +20,11 @@ List<EAppointment> parseEApointment(String responseBody) {
       .toList();
 }
 
-List<EAppointmentDetail> parseEApointmentDetail(String responseBody) {
+List<EventRecordInfo> parseEApointmentDetail(String responseBody) {
   final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
 
   return parsed
-      .map<EAppointmentDetail>((json) => EAppointmentDetail.fromJson(json))
+      .map<EventRecordInfo>((json) => EventRecordInfo.fromJson(json))
       .toList();
 }
 
@@ -98,23 +98,23 @@ class EAppointmentDetailBase {
 }
 
 @JsonSerializable(explicitToJson: true)
-class EAppointmentDetail {
-  EAppointmentDetail(
-      {required this.id,
-      required this.done,
-      required this.p_id,
-      required this.item,
-      required this.name,
-      required this.remark});
+class EventRecordInfo {
+  EventRecordInfo(
+      {this.id = -1,
+      this.done = const [],
+      //  this.p_id="",
+      // required this.item,
+      this.name = "",
+      this.remark = ""});
   int id;
-  String p_id;
-  List<int> item;
+  // String p_id;
+  // List<int> item;
   List<List<int>> done;
   String remark;
   String name;
-  factory EAppointmentDetail.fromJson(Map<String, dynamic> json) =>
-      _$EAppointmentDetailFromJson(json);
-  Map<String, dynamic> toJson() => _$EAppointmentDetailToJson(this);
+  factory EventRecordInfo.fromJson(Map<String, dynamic> json) =>
+      _$EventRecordInfoFromJson(json);
+  Map<String, dynamic> toJson() => _$EventRecordInfoToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -175,3 +175,5 @@ class PatientData extends ProfileData {
       _$PatientDataFromJson(json);
   Map<String, dynamic> toJson() => _$PatientDataToJson(this);
 }
+
+

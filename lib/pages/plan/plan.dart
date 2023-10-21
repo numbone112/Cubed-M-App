@@ -94,8 +94,7 @@ class PlanState extends State<PlanPage> {
   @override
   Widget build(BuildContext context) {
     return CustomPage(
-      body: Padding(
-        padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
+      body: Container(
         child: ListView(
             children: [
                   Box.boxHasRadius(

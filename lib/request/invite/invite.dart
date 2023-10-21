@@ -9,7 +9,7 @@ abstract class InviteAPI {
   // 新增邀約
   Future<Format> createInvite(Invite invite);
   Future<Format> inviteList(String userName, int mode);
-  Future<Format> replyInvite(bool accept, String user_id, String invite_id);
+  Future<Format> replyInvite(int accept, String user_id, int invite_id);
 }
 
 class InviteRepo extends API implements InviteAPI {
@@ -29,12 +29,12 @@ class InviteRepo extends API implements InviteAPI {
 
   @override
   Future<Format> replyInvite(
-      bool accept, String user_id, String invite_id) async {
+      int accept, String user_id, int invite_id) async {
     //version 2
     //記得去invite_data.g.dart把firend改回來
 
     return await lunch(client.post(
         Uri.parse('$domain/invite/$user_id/$invite_id'),
-        body: {"accept": accept}));
+        body: jsonEncode({"accept": accept}),headers: header));
   }
 }

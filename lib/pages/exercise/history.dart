@@ -120,7 +120,7 @@ class HistoryDetailstate extends State<HistoryDetailPage> {
     return (CustomPage(
       body: ListView(
           children: <Widget>[
-            Padding(padding: EdgeInsets.all(10)),
+            const Padding(padding: EdgeInsets.all(10)),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [

@@ -21,7 +21,7 @@ class InviteState extends State<InvitePage> {
   List<Widget> showOnInvite(List<String> friends) {
     List<Widget> result = [];
     for (var f in friends) {
-      result.add(f.contains(friends.first) ? Text("成員") : Text(" "));
+      result.add(f.contains(friends.first) ? const Text("成員") : const Text(" "));
       result.add(Box.textRadiusBorder(f,filling: Colors.white,font: Colors.black));
       // result.add(Text(f));
       result.add(Box.textRadiusBorder("已接受",));
@@ -56,7 +56,7 @@ class InviteState extends State<InvitePage> {
             child: GridView.count(
               crossAxisCount: 3,
               children: [
-                Text('召集人'),
+                const Text('召集人'),
                 Text(invite.m_name),
               ],
             ),

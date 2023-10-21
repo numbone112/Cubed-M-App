@@ -5,9 +5,9 @@ import 'package:e_fu/module/page.dart';
 import 'package:e_fu/pages/event/ble_device.dart';
 import 'package:e_fu/pages/event/event_now_result.dart';
 import 'package:e_fu/pages/exercise/EventRecord.dart';
-import 'package:e_fu/pages/exercise/event.dart';
+
 import 'package:e_fu/request/invite/invite_data.dart';
-// import 'package:e_fu/pages/event/event_result.dart';
+
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:logger/logger.dart';
 import 'package:e_fu/module/box_ui.dart';
@@ -426,8 +426,8 @@ class EventState extends State<Event> {
                       await showDialog(
                         context: context,
                         builder: (ctx) => CupertinoAlertDialog(
-                          content: Column(
-                            children: const [
+                          content: const Column(
+                            children: [
                               SizedBox(
                                 height: 10,
                               ),
@@ -499,8 +499,8 @@ class EventState extends State<Event> {
               Box.boxHasRadius(
                 child: ExpansionTile(
                   collapsedShape: Border.all(color: MyTheme.backgroudColor),
-                  title: Text("運動分級表"),
-                  children: [Text("運動分級表詳細資料")],
+                  title: const Text("運動分級表"),
+                  children: [const Text("運動分級表詳細資料")],
                 ),
               ),
               GestureDetector(

@@ -3,14 +3,11 @@ import 'package:e_fu/module/page.dart';
 import 'package:e_fu/module/toast.dart';
 import 'package:e_fu/pages/event/event.dart';
 import 'package:e_fu/pages/exercise/EventRecord.dart';
-import 'package:e_fu/pages/exercise/event.dart';
 import 'package:e_fu/pages/exercise/insert.dart';
-import 'package:e_fu/pages/exercise/single_c.dart';
 import 'package:e_fu/pages/profile/profile.dart';
 import 'package:e_fu/request/e/e_data.dart';
 import 'package:e_fu/request/plan/plan_data.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:linked_scroll_controller/linked_scroll_controller.dart';
 
 import 'package:e_fu/module/box_ui.dart';
 import 'package:e_fu/my_data.dart';
@@ -139,7 +136,6 @@ class HomePageState extends State<HomePage> {
                                 rawDataSetList.asMap().entries.map((entry) {
                               final rawDataSet = entry.value;
 
-                              final isSelected = true;
 
                               return RadarDataSet(
                                 fillColor: MyTheme.lightColor,

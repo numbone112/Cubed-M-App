@@ -1,13 +1,10 @@
 import 'package:e_fu/my_data.dart';
-import 'package:e_fu/pages/exercise/event.dart';
-import 'package:e_fu/pages/exercise/group_c.dart';
+
 import 'package:e_fu/pages/exercise/history.dart';
 import 'package:e_fu/pages/exercise/invite.dart';
-import 'package:e_fu/request/e/e_data.dart';
 import 'package:e_fu/request/exercise/history_data.dart';
 import 'package:e_fu/request/invite/invite_data.dart';
 import 'package:e_fu/request/plan/plan_data.dart';
-import 'package:ele_progress/ele_progress.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 

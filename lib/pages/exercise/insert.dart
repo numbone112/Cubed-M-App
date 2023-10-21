@@ -65,8 +65,6 @@ class InsertInvitestate extends State<InsertInvite> {
 
   @override
   Widget build(BuildContext context) {
-    var invitedPeople = ["sodiffi"];
-    var friend = [widget.userName];
     var logger = Logger();
 
     return SizedBox(

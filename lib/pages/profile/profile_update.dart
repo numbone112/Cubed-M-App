@@ -1,4 +1,3 @@
-
 import 'package:e_fu/module/box_ui.dart';
 import 'package:e_fu/module/page.dart';
 import 'package:e_fu/my_data.dart';
@@ -33,8 +32,7 @@ class ProfileUpdateState extends State<ProfileUpdate> {
   Widget build(BuildContext context) {
     if (_profileData == null) {
       setState(() {
-        _profileData =
-            ModalRoute.of(context)!.settings.arguments as GetUser;
+        _profileData = ModalRoute.of(context)!.settings.arguments as GetUser;
       });
 
       dateinput.text = dateFormat.format(_profileData!.birthday);
@@ -180,55 +178,6 @@ class ProfileUpdateState extends State<ProfileUpdate> {
           ),
         )),
       ),
-      // bottomNavigationBar: Row(
-      //   children: [
-      //     Expanded(
-      //         child: Box.boxHasRadius(
-      //       color: MyTheme.lightColor,
-      //       margin: const EdgeInsets.all(30),
-      //       padding: const EdgeInsets.all(20),
-      //       child: GestureDetector(
-      //         child: Text(
-      //           "取消",
-      //           style: myText(color: Colors.white),
-      //           textAlign: TextAlign.center,
-      //         ),
-      //         onTap: () => Navigator.pop(context, null),
-      //       ),
-      //     )),
-      //     Expanded(
-      //       child: Box.boxHasRadius(
-      //         margin: const EdgeInsets.all(30),
-      //         padding: const EdgeInsets.all(20),
-      //         color: MyTheme.buttonColor,
-      //         child: GestureDetector(
-      //           onTap: () {
-      //             EasyLoading.show(status: "loading...");
-      //             ProfileData toSend = ProfileData(
-      //                 password: "",
-      //                 birthday: DateTime.parse(dateinput.text),
-      //                 id: _profileData!.id,
-      //                 phone: phoneinput.text,
-      //                 sex: sexinput.text,
-      //                 name: nameinput.text);
-      //             logger.v(toSend.toJson());
-      //             eRepo.updateProfile(toSend).then((value) {
-      //               EasyLoading.dismiss();
-      //               if (value.D == "good") {
-      //                 Navigator.pop(context, toSend);
-      //               }
-      //             });
-      //           },
-      //           child: Text(
-      //             "送出",
-      //             style: myText(color: Colors.white),
-      //             textAlign: TextAlign.center,
-      //           ),
-      //         ),
-      //       ),
-      //     )
-      //   ],
-      // ),
     );
   }
 }

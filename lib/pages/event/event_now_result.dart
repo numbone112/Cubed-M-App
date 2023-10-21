@@ -85,20 +85,7 @@ class EventNowResultState extends State<EventNowResult> {
   ERepo eRepo = ERepo();
   int currentPageIndex = 0;
   List<PersonResult> reulstList = [];
-  late EAppointment eAppointment;
 
-  Future<List<EventRecordInfo>> getData(EAppointment eAppointment) async {
-    EasyLoading.show(status: 'loading...');
-    try {
-      Format d = await eRepo.getApDetail(
-          widget.userName, eAppointment.id.start_date, eAppointment.id.time);
-      return parseEApointmentDetail(jsonEncode(d.D));
-    } catch (e) {
-      return [];
-    } finally {
-      EasyLoading.dismiss();
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -111,7 +98,6 @@ class EventNowResultState extends State<EventNowResult> {
           //補年紀
           element.processData(element.eventRecordInfo.id,true);
         }
-        eAppointment = args[1] as EAppointment;
         logger.v('done data${forEvnetList[0].data}');
 
         setState(() {
@@ -132,8 +118,9 @@ class EventNowResultState extends State<EventNowResult> {
     return CustomPage(
         buildContext: context,
         body: Column(children: [
-          Text(
-              "運動日期: ${DateFormat("yyyy/mm/dd HH:mm").format(eAppointment.tf_id.start_date)}"),
+          Text('sport date'
+              // "運動日期: ${DateFormat("yyyy/mm/dd HH:mm").format()}"
+              ),
           Stack(
             children: [
               SizedBox(

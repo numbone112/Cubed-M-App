@@ -26,6 +26,7 @@ class EventRecord {
   bool isConnect = false;
   Set<String> endSign = Set();
   List<DoneItem> done = [];
+  double avg=0;
 
   void record(int count) {
     data[now]!.add(count);
@@ -120,14 +121,18 @@ class EventRecord {
   }
 
   void processData(int age, bool isMan) {
+    double avgScore=0;
     tempData.forEach((key, value) {
       List<int> temp = [];
       for (var element in value) {
         int times = int.parse(element.split(',')[1]);
         temp.add(times);
+        int s=score(times, age, isMan, key);
+        avgScore+=s;
         done.add(DoneItem(
-            level: score(times, age, isMan, key), times: times, type_id: key));
+            level: s, times: times, type_id: key));
       }
+      avg=avgScore/done.length;
       data[key] = temp;
     });
   }

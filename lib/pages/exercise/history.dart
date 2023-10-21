@@ -60,7 +60,7 @@ class HistoryDetailstate extends State<HistoryDetailPage> {
                       ],
                     ),
                   ),
-                  Box.textRadiusBorder(historyDeep.score.toString())
+                  Box.textRadiusBorder(historyDeep.score.toString(),width: 60)
                 ],
               )),
           Box.boxHasRadius(
@@ -126,9 +126,11 @@ class HistoryDetailstate extends State<HistoryDetailPage> {
                   children: [
                     Box.inviteInfo(Invite.fromJson(history.toJson()), false),
                     Column(
+                      
                       children: [
                         const Text("平均"),
                         Box.textRadiusBorder(history.avgScore.toString(),
+                        width: 60,
                             color: Colors.white, filling: MyTheme.lightColor)
                       ],
                     )

@@ -16,6 +16,7 @@ List<HistoryDeep> parseHistoryDeepList(String responseBody) {
   return parsed.map<HistoryDeep>((json) => HistoryDeep.fromJson(json)).toList();
 }
 
+
 @JsonSerializable(explicitToJson: true)
 class History {
   History(

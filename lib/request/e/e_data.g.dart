@@ -73,9 +73,10 @@ Map<String, dynamic> _$EAppointmentDetailBaseToJson(
 EventRecordInfo _$EventRecordInfoFromJson(Map<String, dynamic> json) =>
     EventRecordInfo(
       id: json['id'] as int? ?? -1,
-      done: (json['done'] as List<dynamic>)
-          .map((e) => (e as List<dynamic>).map((e) => e as int).toList())
-          .toList(),
+      done: (json['done'] as List<dynamic>?)
+              ?.map((e) => (e as List<dynamic>).map((e) => e as int).toList())
+              .toList() ??
+          const [],
       name: json['name'] as String? ?? "",
       remark: json['remark'] as String? ?? "",
     );

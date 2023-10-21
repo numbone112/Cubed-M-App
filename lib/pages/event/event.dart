@@ -4,7 +4,7 @@ import 'dart:math';
 import 'package:e_fu/module/page.dart';
 import 'package:e_fu/pages/event/ble_device.dart';
 import 'package:e_fu/pages/event/event_now_result.dart';
-import 'package:e_fu/pages/exercise/EventRecord.dart';
+import 'package:e_fu/pages/exercise/event_record.dart';
 
 import 'package:e_fu/request/invite/invite_data.dart';
 
@@ -426,8 +426,8 @@ class EventState extends State<Event> {
                       await showDialog(
                         context: context,
                         builder: (ctx) => CupertinoAlertDialog(
-                          content: const Column(
-                            children: [
+                          content: Column(
+                            children: const [
                               SizedBox(
                                 height: 10,
                               ),

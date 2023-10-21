@@ -21,10 +21,43 @@ class InviteState extends State<InvitePage> {
   List<Widget> showOnInvite(List<String> friends) {
     List<Widget> result = [];
     for (var f in friends) {
-      result.add(f.contains(friends.first) ? const Text("成員") : const Text(" "));
-      result.add(Box.textRadiusBorder(f,filling: Colors.white,font: Colors.black));
-      // result.add(Text(f));
-      result.add(Box.textRadiusBorder("已接受",));
+      // result
+      //     .add(f.contains(friends.first) ? const Text("成員") : const Text(" "));
+      // result.add(
+      //     Box.textRadiusBorder(f, filling: Colors.white, font: Colors.black));
+      // // result.add(Text(f));
+      // result.add(Box.textRadiusBorder(
+      //   "已接受",
+      // ));
+      result.add(Padding(
+        padding: const EdgeInsets.only(top: 5, bottom: 5),
+        child: Box.inviteMember(
+            type: f.contains(friends.first) ? '成員' : '',
+            name: f,
+            // accept: Container(
+            //   child: Box.boxHasRadius(
+            //     child: GestureDetector(
+            //         child: Box.textRadiusBorder('已接受',
+            //             border: MyTheme.lightColor,
+            //             filling: MyTheme.lightColor,
+            //             textType: TextType.content)),
+            //     color: MyTheme.lightColor,
+            //     height: 30,
+            //     margin: EdgeInsets.all(0),
+            //     padding: EdgeInsets.all(0),
+            //   ),
+            // )
+            accept: Container(
+              padding: const EdgeInsets.only(top: 10, bottom: 10),
+              decoration: BoxDecoration(
+                  color: MyTheme.color,
+                  borderRadius: BorderRadius.circular(30)),
+              child: MyText(
+                  text: '已接受',
+                  color: Colors.white,
+                  textAlign: TextAlign.center),
+            )),
+      ));
     }
     return result;
   }
@@ -45,37 +78,27 @@ class InviteState extends State<InvitePage> {
     return CustomPage(
       body: Column(
         children: [
+          Box.inviteInfo(invite, false),
           Container(
-            alignment: Alignment.centerLeft,
-            child: Box.inviteInfo(invite, false),
-          ),
-          Box.boxHasRadius(
-            padding: const EdgeInsets.all(10),
-            margin: const EdgeInsets.only(top: 30, bottom: 30),
-            height: 40,
-            child: GridView.count(
-              crossAxisCount: 3,
-              children: [
-                const Text('召集人'),
-                Text(invite.m_name),
-              ],
-            ),
-          ),
-          Box.boxHasRadius(
-            margin: const EdgeInsets.only(bottom: 30),
-            padding: const EdgeInsets.all(10),
-            height: 300,
-            child: GridView.count(
-              childAspectRatio:2.5,
-              crossAxisCount: 3,
-              children: showOnInvite(invite.friend),
-            ),
+              decoration: BoxDecoration(
+                  color: Colors.white, borderRadius: BorderRadius.circular(30)),
+              padding: const EdgeInsets.all(20),
+              margin: const EdgeInsets.only(top: 10, bottom: 10),
+              child: Box.inviteMember(type: '召集人', name: invite.m_name)),
+          Container(
+            decoration: BoxDecoration(
+                color: Colors.white, borderRadius: BorderRadius.circular(30)),
+            padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+            height: MediaQuery.of(context).size.height * 0.56,
+            child: ListView(children: showOnInvite(invite.friend)),
           ),
           invite.accept != 3
               ? Container()
-              : Box.yesnoBox(() {
-                  sendReply(1);
-                }, () => sendReply(2), noTitle: "拒絕")
+              : Box.yesnoBox(
+                  () => sendReply(1),
+                  yestTitle: '接受',
+                  () => sendReply(2),
+                  noTitle: '拒絕')
         ],
       ),
       title: "邀約",

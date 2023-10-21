@@ -111,10 +111,10 @@ class _MoState extends State<MoRank> {
                         border: Border.all(color: MyTheme.color, width: 1.5)),
                   ),
                 ),
-                const Padding(
-                  padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                 Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
                   child: Row(
-                    children: [
+                    children: const [
                       Expanded(
                         flex: 1,
                         child: Text(

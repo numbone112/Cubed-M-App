@@ -129,7 +129,7 @@ class HistoryDetailstate extends State<HistoryDetailPage> {
                       children: [
                         const Text("平均"),
                         Box.textRadiusBorder(history.avgScore.toString(),
-                            font: Colors.white, filling: MyTheme.lightColor)
+                            color: Colors.white, filling: MyTheme.lightColor)
                       ],
                     )
                   ],

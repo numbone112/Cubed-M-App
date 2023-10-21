@@ -2,7 +2,7 @@ import 'package:e_fu/module/exerciseProcess.dart';
 import 'package:e_fu/module/page.dart';
 import 'package:e_fu/module/toast.dart';
 import 'package:e_fu/pages/event/event.dart';
-import 'package:e_fu/pages/exercise/EventRecord.dart';
+import 'package:e_fu/pages/exercise/event_record.dart';
 import 'package:e_fu/pages/exercise/insert.dart';
 import 'package:e_fu/pages/profile/profile.dart';
 import 'package:e_fu/request/e/e_data.dart';

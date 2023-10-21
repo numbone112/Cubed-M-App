@@ -129,14 +129,16 @@ class ExerciseHomeState extends State<ExerciseHome>
                 ],
               ),
               Column(children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [MyText(text: "篩選", type: TextType.content)],
+                Container(
+                  margin: const EdgeInsets.only(top: 10,bottom: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [MyText(text: "篩選", type: TextType.content)],
+                  ),
                 ),
                 Box.boxHasRadius(
                   child: SizedBox(
                     height: MediaQuery.of(context).size.height * 0.6,
-                    // width: MediaQuery.of(context).size.width * 0.8,
                     child: Box.boxHasRadius(
                       color: MyTheme.backgroudColor,
                       child: ListView.builder(

@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:e_fu/pages/exercise/EventRecord.dart';
+import 'package:e_fu/pages/exercise/event_record.dart';
 
 import 'package:intl/intl.dart';
 

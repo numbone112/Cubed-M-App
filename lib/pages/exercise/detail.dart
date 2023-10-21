@@ -40,7 +40,7 @@ class HistoryDetailPersonstate extends State<HistoryDetailPerson> {
           behavior: HitTestBehavior.translucent,
           onTap: () => changeSelect(i, d),
           child: Box.textRadiusBorder(type[i],
-              font: select == i ? Colors.white : MyTheme.buttonColor,
+              color: select == i ? Colors.white : MyTheme.buttonColor,
               filling: select == i ? MyTheme.buttonColor : Colors.white,
               border: MyTheme.buttonColor,
               width: 75),
@@ -69,7 +69,7 @@ class HistoryDetailPersonstate extends State<HistoryDetailPerson> {
               children: [
                 const Text("評分"),
                 Box.textRadiusBorder(args.score.toString(),
-                    font: Colors.white, filling: MyTheme.lightColor)
+                    color: Colors.white, filling: MyTheme.lightColor)
               ],
             )
           ],

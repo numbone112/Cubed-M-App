@@ -19,7 +19,7 @@ class API {
     await function.then((response) {
       responseBody = json.decode(utf8.decode(response.bodyBytes));
     }).catchError((err) {
-      print(err);
+      logger.v(err);
     });
     logger.v(responseBody);
 

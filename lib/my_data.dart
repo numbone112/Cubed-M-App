@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 
 class MyTheme {
@@ -32,9 +34,10 @@ class TextType {
 
 Widget MyText(
     {String text = "",
-    int? type,
+    int? type = TextType.content,
     Color? color = Colors.black,
-    TextAlign? textAlign = TextAlign.left}) {
+    TextAlign? textAlign = TextAlign.left,
+    bool fontWeight = false}) {
   switch (type) {
     //1:page大標 2:功能文字 3:小標 4:內文 5:提示文字
     case TextType.page:
@@ -47,13 +50,17 @@ Widget MyText(
           textAlign: textAlign);
     case TextType.fun:
       return Text(text,
-          style: TextStyle(fontSize: 20, color: color), textAlign: textAlign);
+          style: TextStyle(
+              fontSize: 20,
+              color: color,
+              fontWeight: fontWeight ? FontWeight.bold : null),
+          textAlign: textAlign);
     case TextType.sub:
       return Text(text,
           style: TextStyle(
-            fontSize: 16,
-            color: color,
-          ),
+              fontSize: 16,
+              color: color,
+              fontWeight: fontWeight ? FontWeight.bold : null),
           textAlign: textAlign);
     case TextType.content:
       return Text(text,
@@ -64,7 +71,7 @@ Widget MyText(
           style: TextStyle(fontSize: 12, color: color), textAlign: textAlign);
     default:
       return Text(text,
-          style: TextStyle(fontSize: 12, color: color), textAlign: textAlign);
+          style: TextStyle(fontSize: 14, color: color), textAlign: textAlign);
   }
 }
 

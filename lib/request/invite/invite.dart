@@ -3,13 +3,13 @@ import 'dart:convert';
 import 'package:e_fu/request/api.dart';
 import 'package:e_fu/request/data.dart';
 import 'package:e_fu/request/invite/invite_data.dart';
-import 'package:logger/logger.dart';
 
 abstract class InviteAPI {
   // 新增邀約
   Future<Format> createInvite(Invite invite);
   Future<Format> inviteList(String userName, int mode);
-  Future<Format> replyInvite(int accept, String user_id, int invite_id);
+  Future<Format> replyInvite(int accept, String userId, int inviteId);
+  Future<Format> inviteDetail(int inviteId);
 }
 
 class InviteRepo extends API implements InviteAPI {
@@ -28,13 +28,19 @@ class InviteRepo extends API implements InviteAPI {
   }
 
   @override
-  Future<Format> replyInvite(
-      int accept, String user_id, int invite_id) async {
+  Future<Format> replyInvite(int accept, String userId, int inviteId) async {
     //version 2
     //記得去invite_data.g.dart把firend改回來
 
     return await lunch(client.post(
-        Uri.parse('$domain/invite/$user_id/$invite_id'),
-        body: jsonEncode({"accept": accept}),headers: header));
+        Uri.parse('$domain/invite/$userId/$inviteId'),
+        body: jsonEncode({"accept": accept}),
+        headers: header));
+  }
+
+  @override
+  Future<Format> inviteDetail(int inviteId) async {
+    return await lunch(
+        client.get(Uri.parse('$domain/invite/omg/$inviteId'), headers: header));
   }
 }

@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
 class Box {
-  static final List<String> execute_text = ["一", '二', '三', '四', '五', '六', '日'];
+  static final List<String> executeText = ["一", '二', '三', '四', '五', '六', '日'];
 
   static List<BoxShadow> getshadow(Color color) {
     return [
@@ -101,7 +101,7 @@ class Box {
     return (Box.boxHasRadius(
         margin: const EdgeInsets.only(bottom: 10),
         padding: const EdgeInsets.all(15),
-        height: 110,
+        height: 130,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -151,7 +151,7 @@ class Box {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           SizedBox(
-            width: MediaQuery.of(context).size.width * 0.21,
+            width: MediaQuery.of(context).size.width * 0.2,
             child: MyText(
               text: '運動評分',
               type: TextType.sub,
@@ -188,6 +188,7 @@ class Box {
         color: HexColor("C6AC78"),
         filling: Colors.white,
         border: HexColor("C6AC78"),
+        width: 60
       );
     } else {
       item = Box.textRadiusBorder(history.score.toString(),
@@ -198,9 +199,10 @@ class Box {
     }
 
     return Box.boxHasRadius(
-      height: 150,
+      height: 160,
       padding: const EdgeInsets.fromLTRB(15, 0, 15, 15),
       child: GestureDetector(
+        behavior: HitTestBehavior.translucent,
         onTap: () {
           Logger logger = Logger();
           logger.v("this is push");
@@ -351,6 +353,7 @@ class Box {
               ],
             ),
           ),
+          isHost?
           GestureDetector(
             child: Container(
               padding: const EdgeInsets.fromLTRB(5, 5, 10, 5),
@@ -369,7 +372,7 @@ class Box {
                 ],
               ),
             ),
-          )
+          ):Container()
         ],
       ),
     );
@@ -513,7 +516,7 @@ class Box {
     int today = DateTime.now().weekday;
     bool check = show != null && show;
 
-    for (var element in execute_text) {
+    for (var element in executeText) {
       bool isToday = (today == (result.length + 1) && check);
 
       result.add(Expanded(

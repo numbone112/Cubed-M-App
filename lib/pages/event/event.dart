@@ -5,9 +5,8 @@ import 'package:e_fu/module/page.dart';
 import 'package:e_fu/pages/event/ble_device.dart';
 import 'package:e_fu/pages/event/event_now_result.dart';
 import 'package:e_fu/pages/exercise/event_record.dart';
-
+import 'package:e_fu/request/data.dart';
 import 'package:e_fu/request/invite/invite_data.dart';
-
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:logger/logger.dart';
 import 'package:e_fu/module/box_ui.dart';
@@ -15,7 +14,6 @@ import 'package:e_fu/request/e/e.dart';
 import 'package:e_fu/request/e/e_data.dart';
 import 'package:e_fu/request/record/record.dart';
 import 'package:e_fu/my_data.dart';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -51,7 +49,6 @@ class EventState extends State<Event> {
   List<Map<String, dynamic>> toSave = [];
   List<BluetoothDevice> hasPair = [];
   AsciiDecoder asciiDecoder = const AsciiDecoder();
-  String number = "0";
   List<String> exerciseItem = ["左手", "右手", "坐立"];
   Map<int, Set<String>> hasFinish = {};
   ERepo eRepo = ERepo();
@@ -60,10 +57,6 @@ class EventState extends State<Event> {
   List<EventRecord> forEventList = [];
   int trainGoal = 0;
   var logger = Logger();
-  EAppointment eAppointment = EAppointment(
-      id: TimeRange(start_date: DateTime.now(), time: "5A"),
-      count: 5,
-      tf_id: TimeRange(start_date: DateTime.now(), time: "5A"));
 
   Future<void> updateBleState() async {
     if (await FlutterBluePlus.isSupported == false) {
@@ -72,7 +65,6 @@ class EventState extends State<Event> {
     }
 
     FlutterBluePlus.adapterState.listen((BluetoothAdapterState state) async {
-      print(state);
       if (state == BluetoothAdapterState.on) {
         logger.v('藍牙狀態爲開啓');
         Set<DeviceIdentifier> seen = {};
@@ -131,14 +123,21 @@ class EventState extends State<Event> {
   }
 
   Future<void> finish() async {
-    //傳送資料給後端
-    // Format a = await recordRepo.record(ArrangeDate(
-    //     forEventList.first.id.toString(),
-    //     toSave,
-    //     forEventList.first.data));
-    // if (a.message == "ok") {
-    //   logger.v("成功");
-    // }
+    List<RecordSenderItem> detail = [];
+    for (var element in forEventList) {
+      //補年紀
+      element.processData(element.eventRecordInfo.id, true);
+      detail.add(RecordSenderItem(
+          done: element.done,
+          score: element.avg,
+          user_id: element.eventRecordInfo.name));
+    }
+    // 傳送資料給後端
+    Format a =
+        await recordRepo.record(RecordSender(record: toSave, detail: detail));
+    if (a.message == "ok") {
+      logger.v("成功");
+    }
   }
 
   connect(BluetoothDevice device, int pIndex, EventRecord forEvent,
@@ -215,9 +214,9 @@ class EventState extends State<Event> {
                     }
                     //跳結果頁
                     if (context.mounted) {
-                      Navigator.pushReplacementNamed(
-                          context, EventNowResult.routeName,
-                          arguments: [forEventList, eAppointment]);
+                      // Navigator.pushReplacementNamed(
+                      //     context, EventNowResult.routeName,
+                      //     arguments: [forEventList]);
                     }
                     logger.v("enter else");
                   }
@@ -235,7 +234,6 @@ class EventState extends State<Event> {
                 element.onValueReceived.listen((value) async {
               try {
                 String string = String.fromCharCodes(value);
-                // logger.v("from record $value\n$string");
                 List<String> raw = string.split(",");
                 if (string != "0.00,0.00,0.00,0.00,0.00,0.00,0.00,0") {
                   toSave.add(Record.getRecordJson(raw, trainCount.toDouble(),
@@ -246,7 +244,6 @@ class EventState extends State<Event> {
               }
             });
             device.cancelWhenDisconnected(chrSubscription);
-
             await element.setNotifyValue(true);
             break;
           default:
@@ -307,10 +304,6 @@ class EventState extends State<Event> {
     return Row(
       children: [
         Expanded(
-          flex: 1,
-          child: Container(),
-        ),
-        Expanded(
           flex: 2,
           child: Text(
             forEvent.eventRecordInfo.name,
@@ -323,6 +316,7 @@ class EventState extends State<Event> {
 
   Widget exerciseBox(index) {
     EventRecord forEvent = forEventList[index];
+    logger.v(forEvent.eventRecordInfo.name);
     return Container(
       height: 225,
       margin: const EdgeInsets.all(3),
@@ -504,9 +498,11 @@ class EventState extends State<Event> {
                 ),
               ),
               GestureDetector(
-                child: Box.textRadiusBorder("全部開始",filling: MyTheme.lightColor,width: 100,),
-                
-             
+                child: Box.textRadiusBorder(
+                  "全部開始",
+                  filling: MyTheme.lightColor,
+                  width: 100,
+                ),
                 onTap: () async {
                   if (connectDeviec.isEmpty) {
                     showDialog(

@@ -1,10 +1,12 @@
+import 'dart:convert';
+
 import 'package:e_fu/module/box_ui.dart';
 import 'package:e_fu/module/page.dart';
 import 'package:e_fu/my_data.dart';
-import 'package:e_fu/request/exercise/history_data.dart';
 import 'package:e_fu/request/invite/invite.dart';
 import 'package:e_fu/request/invite/invite_data.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 
 class InvitePage extends StatefulWidget {
   const InvitePage({super.key, required this.userName});
@@ -17,47 +19,34 @@ class InvitePage extends StatefulWidget {
 class InviteState extends State<InvitePage> {
   Invite invite = Invite();
   InviteRepo inviteRepo = InviteRepo();
+  List<InviteDetail> detailList = [];
+  Logger logger = Logger();
 
-  List<Widget> showOnInvite(List<String> friends) {
+  List<Widget> showOnInvite() {
     List<Widget> result = [];
-    for (var f in friends) {
-      // result
-      //     .add(f.contains(friends.first) ? const Text("成員") : const Text(" "));
-      // result.add(
-      //     Box.textRadiusBorder(f, filling: Colors.white, font: Colors.black));
-      // // result.add(Text(f));
-      // result.add(Box.textRadiusBorder(
-      //   "已接受",
-      // ));
-      result.add(Padding(
-        padding: const EdgeInsets.only(top: 5, bottom: 5),
-        child: Box.inviteMember(
-            type: f.contains(friends.first) ? '成員' : '',
-            name: f,
-            // accept: Container(
-            //   child: Box.boxHasRadius(
-            //     child: GestureDetector(
-            //         child: Box.textRadiusBorder('已接受',
-            //             border: MyTheme.lightColor,
-            //             filling: MyTheme.lightColor,
-            //             textType: TextType.content)),
-            //     color: MyTheme.lightColor,
-            //     height: 30,
-            //     margin: EdgeInsets.all(0),
-            //     padding: EdgeInsets.all(0),
-            //   ),
-            // )
-            accept: Container(
-              padding: const EdgeInsets.only(top: 10, bottom: 10),
-              decoration: BoxDecoration(
-                  color: MyTheme.color,
-                  borderRadius: BorderRadius.circular(30)),
-              child: MyText(
-                  text: '已接受',
-                  color: Colors.white,
-                  textAlign: TextAlign.center),
-            )),
-      ));
+    for (var f in detailList) {
+      if (f.userName != invite.m_name) {
+        result.add(
+          Padding(
+            padding: const EdgeInsets.only(top: 10, bottom: 10),
+            child: Box.inviteMember(
+              type: f.userName.contains(detailList.first.userName) ? '成員' : '',
+              name: f.userName,
+              accept: Container(
+                padding: const EdgeInsets.only(top: 10, bottom: 10),
+                decoration: BoxDecoration(
+                    color: MyTheme.color,
+                    borderRadius: BorderRadius.circular(30)),
+                child: MyText(
+                    text:
+                        f.accept == 1 ? "已接受" : (f.accept == 2 ? "拒絕" : "待回覆"),
+                    color: Colors.white,
+                    textAlign: TextAlign.center),
+              ),
+            ),
+          ),
+        );
+      }
     }
     return result;
   }
@@ -67,14 +56,19 @@ class InviteState extends State<InvitePage> {
       setState(() {
         invite.accept = accept;
       });
-      print(value.message);
     });
   }
 
   @override
   Widget build(BuildContext context) {
     invite = ModalRoute.of(context)!.settings.arguments as Invite;
-    print(invite.accept);
+    if (detailList.isEmpty) {
+      inviteRepo.inviteDetail(invite.i_id).then((value) {
+        setState(() {
+          detailList = parseInviteDetailList(jsonEncode(value.D));
+        });
+      });
+    }
     return CustomPage(
       body: Column(
         children: [
@@ -90,7 +84,7 @@ class InviteState extends State<InvitePage> {
                 color: Colors.white, borderRadius: BorderRadius.circular(30)),
             padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
             height: MediaQuery.of(context).size.height * 0.56,
-            child: ListView(children: showOnInvite(invite.friend)),
+            child: ListView(children: showOnInvite()),
           ),
           invite.accept != 3
               ? Container()

@@ -1,6 +1,7 @@
 // ignore_for_file: non_constant_identifier_names
 
 
+import 'package:e_fu/request/exercise/history_data.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'record_data.g.dart';
@@ -49,6 +50,34 @@ class Record {
   // Map<String, dynamic> toJson() =>{
   //   "ax":ax,"ay":ay,"az":az,"gx":gx,"gy":gy,"gz":gz
   // };
+}
+
+@JsonSerializable(explicitToJson: true)
+class RecordSender {
+  RecordSender(
+      {
+        required this.record,required this.detail
+      });
+  List<Map<String, dynamic>> record;
+  List<RecordSenderItem> detail;
+
+  factory RecordSender.fromJson(Map<String, dynamic> json) => _$RecordSenderFromJson(json);
+  Map<String, dynamic> toJson() => _$RecordSenderToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class RecordSenderItem {
+  RecordSenderItem(
+       {
+        required this.done,required this.score , required this.user_id
+      });
+  
+  String user_id;
+  List<DoneItem> done;
+  double score;
+  
+  factory RecordSenderItem.fromJson(Map<String, dynamic> json) => _$RecordSenderItemFromJson(json);
+  Map<String, dynamic> toJson() => _$RecordSenderItemToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)

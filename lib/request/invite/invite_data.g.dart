@@ -32,3 +32,19 @@ Map<String, dynamic> _$InviteToJson(Invite instance) => <String, dynamic>{
       'remark': instance.remark,
       'friend': instance.friend,
     };
+
+InviteDetail _$InviteDetailFromJson(Map<String, dynamic> json) => InviteDetail(
+      accept: json['accept'] as int,
+      targetSets: (json['targetSets'] as List<dynamic>?)
+              ?.map((e) => e as int)
+              .toList() ??
+          const [5, 5, 5],
+      userName: json['userName'] as String,
+    );
+
+Map<String, dynamic> _$InviteDetailToJson(InviteDetail instance) =>
+    <String, dynamic>{
+      'userName': instance.userName,
+      'targetSets': instance.targetSets,
+      'accept': instance.accept,
+    };

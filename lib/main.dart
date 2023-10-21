@@ -1,12 +1,10 @@
 import 'package:e_fu/home.dart';
 import 'package:e_fu/pages/event/event_now_result.dart';
-import 'package:e_fu/pages/event/event_result.dart';
+
 import 'package:e_fu/pages/exercise/detail.dart';
-import 'package:e_fu/pages/exercise/group_c.dart';
 import 'package:e_fu/pages/exercise/history.dart';
 import 'package:e_fu/pages/exercise/insert.dart';
 import 'package:e_fu/pages/exercise/invite.dart';
-import 'package:e_fu/pages/exercise/single_c.dart';
 import 'package:e_fu/pages/mo/hide_mo_list.dart';
 import 'package:e_fu/pages/mo/moDetail.dart';
 import 'package:e_fu/pages/mo/mo_list.dart';
@@ -82,7 +80,7 @@ class MyappState extends State<MyApp> {
         color: MyTheme.backgroudColor,
         child: SafeArea(
           bottom: false,
-          child: userName == ""
+          child: userName.isEmpty
               ? const Login()
               : Home(
                   userName: userName,
@@ -95,20 +93,23 @@ class MyappState extends State<MyApp> {
         Login.routeName: (_) => const Login(),
         Event.routeName: (_) => Event(userName: userName),
         ProfileUpdate.routeName: (_) => const ProfileUpdate(),
-        // EventResult.routeName: (_) => EventResult(userName: userName),
         EventNowResult.routeName: (_) => EventNowResult(userName: userName),
         MoList.routeName: (_) => MoList(userName: userName),
         HindMoList.routeName: (_) => HindMoList(userName: userName),
         InsertInvite.routeName: (_) => InsertInvite(userName: userName),
         Profile.routeName: (_) => Profile(userName: userName),
         ProfileGoal.routeName: (_) => ProfileGoal(userName: userName),
-        // GroupEvent.routeName: (_) => GroupEvent(userName: userName),
-        // SingleEvent.routeName: (_) => SingleEvent(userName: userName),
-        InvitePage.routeName: (_) =>  InvitePage(userName: userName,),
-        HistoryDetailPerson.routeName:(_)=>HistoryDetailPerson(userName: userName,),
-        HistoryDetailPage.routeName:(_)=>HistoryDetailPage(userName: userName,),
-        PlanPage.routeName:(_)=>PlanPage(userName: userName),
-        PlanInsertPage.routeName:(_)=>PlanInsertPage(userName: userName),
+        InvitePage.routeName: (_) => InvitePage(
+              userName: userName,
+            ),
+        HistoryDetailPerson.routeName: (_) => HistoryDetailPerson(
+              userName: userName,
+            ),
+        HistoryDetailPage.routeName: (_) => HistoryDetailPage(
+              userName: userName,
+            ),
+        PlanPage.routeName: (_) => PlanPage(userName: userName),
+        PlanInsertPage.routeName: (_) => PlanInsertPage(userName: userName),
         MoDetail.routeName: (_) => MoDetail(userName: userName),
       },
     );

@@ -132,13 +132,6 @@ class EventRecord {
     });
   }
 
-  // static List<EventRecord> parseEventList(List<EAppointmentDetail> list) {
-  //   List<EventRecord> res = [];
-  //   for (EAppointmentDetail e in list) {
-  //     res.add(EventRecord(appointmentDetail: e));
-  //   }
-  //   return res;
-  // }
 
   static int getMax(List<EventRecord> data) {
     int max = 0;

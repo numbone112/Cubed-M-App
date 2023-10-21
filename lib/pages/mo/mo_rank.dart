@@ -91,59 +91,56 @@ class _MoState extends State<MoRank> {
       Rank(name: "Albert", score: 1.3, rank: 5),
       Rank(name: "Amy", score: 0.9, rank: 6),
     ];
-    return Container(
-      // padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
-      child: ScrollConfiguration(
-        behavior: CusBehavior(),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: GestureDetector(
-                      onTap: () => showInfo(),
-                      child: Box.boxHasRadius(
-                          child: Icon(
-                            Icons.question_mark_outlined,
-                            size: 20,
-                            color: MyTheme.color,
-                          ),
-                          color: MyTheme.backgroudColor,
-                          border: Border.all(color: MyTheme.color, width: 1.5)),
-                    ),
+    return ScrollConfiguration(
+      behavior: CusBehavior(),
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: GestureDetector(
+                    onTap: () => showInfo(),
+                    child: Box.boxHasRadius(
+                        child: Icon(
+                          Icons.question_mark_outlined,
+                          size: 20,
+                          color: MyTheme.color,
+                        ),
+                        color: MyTheme.backgroudColor,
+                        border: Border.all(color: MyTheme.color, width: 1.5)),
                   ),
-                  const Padding(
-                    padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          flex: 1,
-                          child: Text(
-                            "排名",
-                            textAlign: TextAlign.center,
-                          ),
+                ),
+                const Padding(
+                  padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        flex: 1,
+                        child: Text(
+                          "排名",
+                          textAlign: TextAlign.center,
                         ),
-                        Expanded(
-                          flex: 1,
-                          child: Text(
-                            "姓名",
-                            textAlign: TextAlign.center,
-                          ),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: Text(
+                          "姓名",
+                          textAlign: TextAlign.center,
                         ),
-                        Expanded(
-                          flex: 1,
-                          child: Text(
-                            "分數",
-                            textAlign: TextAlign.center,
-                          ),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: Text(
+                          "分數",
+                          textAlign: TextAlign.center,
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                ] +
-                rankTable(rankList),
-          ),
+                ),
+              ] +
+              rankTable(rankList),
         ),
       ),
     );

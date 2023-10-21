@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'package:e_fu/pages/exercise/EventRecord.dart';
-import 'package:e_fu/pages/exercise/event.dart';
+
 import 'package:intl/intl.dart';
 
 import 'package:e_fu/module/page.dart';
-import 'package:e_fu/pages/event/event.dart';
+
 import 'package:e_fu/request/data.dart';
 import 'package:e_fu/request/e/e.dart';
 import 'package:e_fu/request/e/e_data.dart';

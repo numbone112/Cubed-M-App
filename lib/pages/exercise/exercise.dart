@@ -113,7 +113,7 @@ class ExerciseHomeState extends State<ExerciseHome>
               Column(
                 children: [
                   Container(
-                    margin: EdgeInsets.only(top: 10,bottom: 10),
+                    margin: const EdgeInsets.only(top: 10,bottom: 10),
                     child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: getfilterButtons()),

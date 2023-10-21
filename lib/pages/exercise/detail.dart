@@ -55,14 +55,14 @@ class HistoryDetailPersonstate extends State<HistoryDetailPerson> {
     final args = ModalRoute.of(context)!.settings.arguments as HistoryDeep;
     return (CustomPage(
       body: ListView(children: [
-        Padding(padding: EdgeInsets.all(10)),
+        const Padding(padding: EdgeInsets.all(10)),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             Column(
               children: [
                 Text(args.name),
-                Text('男 66'),
+                const Text('男 66'),
               ],
             ),
             Column(
@@ -86,7 +86,7 @@ class HistoryDetailPersonstate extends State<HistoryDetailPerson> {
             itemBuilder: (context, index) {
               return Box.boxHasRadius(
                 height: 50,
-                margin: EdgeInsets.only(top: 15, bottom: 15),
+                margin: const EdgeInsets.only(top: 15, bottom: 15),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.spaceAround,

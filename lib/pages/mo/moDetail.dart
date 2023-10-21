@@ -22,8 +22,8 @@ class MoDetail extends StatefulWidget {
 class MoDetailState extends State<MoDetail> {
     HistoryRepo historyRepo = HistoryRepo();
 
-  // List<Invite> invite_list = [];
-  List<History> hisotry_list = [];
+  
+  List<History> hisotrylist = [];
 
   List<RawDataSet> rawDataSetList = [
     RawDataSet(title: "復健者", color: Colors.blue, values: [5, 3, 1])
@@ -36,7 +36,7 @@ class MoDetailState extends State<MoDetail> {
      historyRepo.historyList(widget.userName).then((value) {
       List<History> historyList = parseHistoryList(jsonEncode(value.D));
       setState(() {
-        hisotry_list = historyList;
+        hisotrylist = historyList;
       });
     });
   }
@@ -168,10 +168,10 @@ class MoDetailState extends State<MoDetail> {
                     child: Box.boxHasRadius(
                       color: MyTheme.backgroudColor,
                       child: ListView.builder(
-                          itemCount: hisotry_list.length,
+                          itemCount: hisotrylist.length,
                           itemBuilder: (BuildContext context, int index) {
                             return (Box.history(
-                                hisotry_list[index], context, widget.userName));
+                                hisotrylist[index], context, widget.userName));
                           }),
                     ),
                   ),

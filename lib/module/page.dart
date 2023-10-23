@@ -99,7 +99,7 @@ class CustomPageState extends State<CustomPage> {
                                                         .height *
                                                     0.08,
                                             child: widget.titWidget ??
-                                                MyText(
+                                                textWidget(
                                                     text: widget.title ?? "",
                                                     type: widget.headTexttype ??
                                                         TextType.fun,

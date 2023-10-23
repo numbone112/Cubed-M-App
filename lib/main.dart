@@ -6,7 +6,7 @@ import 'package:e_fu/pages/exercise/history.dart';
 import 'package:e_fu/pages/exercise/insert.dart';
 import 'package:e_fu/pages/exercise/invite.dart';
 import 'package:e_fu/pages/mo/hide_mo_list.dart';
-import 'package:e_fu/pages/mo/moDetail.dart';
+import 'package:e_fu/pages/mo/mo_detail.dart';
 import 'package:e_fu/pages/mo/mo_list.dart';
 import 'package:e_fu/pages/plan/plan.dart';
 import 'package:e_fu/pages/plan/plan_insert.dart';

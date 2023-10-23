@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:logger/logger.dart';
 
 import 'package:e_fu/request/mo/get_hind_mo_list_model.dart';
 import 'package:e_fu/request/data.dart';

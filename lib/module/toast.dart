@@ -1,5 +1,5 @@
 import 'package:e_fu/module/box_ui.dart';
-import 'package:e_fu/module/exerciseProcess.dart';
+import 'package:e_fu/module/exercise_process.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -19,14 +19,12 @@ setTarget(BuildContext context, List<ItemWithField> items,
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          //shape 可以改變形狀
           shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(24.0))),
           title: const Text("設定運動組數"),
-
-          content: Container(
-            height: 300,
-            width: 300,
+          content: SizedBox(
+            height: 325,
+            width: 325,
             child: Column(
               children: items
                       .map((e) => Box.setsBox(e.item, e.textEditingController))

@@ -10,7 +10,7 @@ import 'package:logger/logger.dart';
 
 class Box {
   static final List<String> executeText = ["一", '二', '三', '四', '五', '六', '日'];
-
+  static const BorderRadius normamBorderRadius = BorderRadius.all(Radius.circular(30));
   static List<BoxShadow> getshadow(Color color) {
     return [
       BoxShadow(
@@ -33,7 +33,7 @@ class Box {
       List<BoxShadow>? boxShadow}) {
     return Container(
       decoration: BoxDecoration(
-        borderRadius: const BorderRadius.all(Radius.circular(30)),
+        borderRadius: normamBorderRadius,
         color: color ?? Colors.white,
         border: border,
         boxShadow: boxShadow,
@@ -65,13 +65,13 @@ class Box {
         padding: padding,
         margin: margin,
         alignment: const Alignment(0, 0),
-        height: height ?? 25,
+        height: height ?? 30,
         width: width ?? text.length.toDouble() * 50,
         decoration: BoxDecoration(
             color: filling ?? MyTheme.buttonColor,
             borderRadius: BorderRadius.all(Radius.circular(height ?? 25)),
             border: Border.all(color: border ?? Colors.white)),
-        child: MyText(
+        child: textWidget(
             text: text,
             type: textType ?? TextType.sub,
             color: color ?? Colors.white));
@@ -114,22 +114,22 @@ class Box {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    MyText(
+                    textWidget(
                         text: invite.name,
                         type: TextType.sub,
                         color: MyTheme.buttonColor,
                         fontWeight: true),
-                    MyText(
+                    textWidget(
                         text: invite.time
                             .toString()
                             .substring(0, 16)
                             .replaceAll('T', ' '),
                         type: TextType.sub),
-                    MyText(
+                    textWidget(
                         text: '召集人：${invite.m_id}',
                         type: TextType.content,
                         color: MyTheme.hintColor),
-                    MyText(
+                    textWidget(
                         text:
                             '備註：${invite.remark.isEmpty ? '無' : invite.remark}',
                         type: TextType.content,
@@ -152,7 +152,7 @@ class Box {
         children: [
           SizedBox(
             width: MediaQuery.of(context).size.width * 0.2,
-            child: MyText(
+            child: textWidget(
               text: '運動評分',
               type: TextType.sub,
             ),
@@ -161,7 +161,7 @@ class Box {
             children: [
               SizedBox(
                   width: MediaQuery.of(context).size.width * 0.1,
-                  child: MyText(text: '我', type: TextType.content)),
+                  child: textWidget(text: '我', type: TextType.content)),
               Box.textRadiusBorder(history.score.toString(),
                   width: MediaQuery.of(context).size.width * 0.2,
                   height: MediaQuery.of(context).size.height * 0.05,
@@ -173,7 +173,7 @@ class Box {
             children: [
               SizedBox(
                   width: MediaQuery.of(context).size.width * 0.1,
-                  child: MyText(text: '平均', type: TextType.content)),
+                  child: textWidget(text: '平均', type: TextType.content)),
               Box.textRadiusBorder(history.avgScore.toString(),
                   width: MediaQuery.of(context).size.width * 0.2,
                   height: MediaQuery.of(context).size.height * 0.05,
@@ -183,13 +183,11 @@ class Box {
           )
         ],
       );
-      label = Box.textRadiusBorder(
-        "團體",
-        color: HexColor("C6AC78"),
-        filling: Colors.white,
-        border: HexColor("C6AC78"),
-        width: 60
-      );
+      label = Box.textRadiusBorder("團體",
+          color: HexColor("C6AC78"),
+          filling: Colors.white,
+          border: HexColor("C6AC78"),
+          width: 60);
     } else {
       item = Box.textRadiusBorder(history.score.toString(),
           margin: EdgeInsets.zero);
@@ -219,7 +217,7 @@ class Box {
                     children: [
                       label,
                       history.isGroup()
-                          ? MyText(
+                          ? textWidget(
                               text: history.name,
                               type: TextType.sub,
                               color: MyTheme.buttonColor,
@@ -234,21 +232,21 @@ class Box {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          MyText(
+                          textWidget(
                               text: history.time.toString().substring(0, 10),
                               type: TextType.sub),
-                          MyText(
+                          textWidget(
                               text: history.time
                                   .toString()
                                   .substring(11, 16)
                                   .replaceAll('T', ''),
                               type: TextType.sub),
-                          MyText(
+                          textWidget(
                               text: '召集人：${history.m_name}',
                               type: TextType.content,
                               color: MyTheme.hintColor),
                           history.isGroup()
-                              ? MyText(
+                              ? textWidget(
                                   text: '共 ${history.peopleCount()} 人',
                                   type: TextType.content,
                                   color: MyTheme.hintColor)
@@ -274,10 +272,10 @@ class Box {
       children: <Widget>[
         Expanded(
             flex: 2,
-            child: MyText(text: type ?? '', type: TextType.sub)),
+            child: textWidget(text: type ?? '', type: TextType.sub)),
         Expanded(
             flex: 5,
-            child: Center(child: MyText(text: name ?? '', type: TextType.sub))),
+            child: Center(child: textWidget(text: name ?? '', type: TextType.sub))),
         Expanded(flex: 2, child: accept ??= Container()),
       ],
     );
@@ -335,18 +333,18 @@ class Box {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                MyText(
+                textWidget(
                     text: invite.name,
                     type: TextType.fun,
                     color: MyTheme.buttonColor,
                     fontWeight: true),
-                MyText(
+                textWidget(
                     text: invite.time
                         .toString()
                         .substring(0, 16)
                         .replaceAll("T", " "),
                     type: TextType.sub),
-                MyText(
+                textWidget(
                     text: '備註：${invite.remark.isEmpty ? '無' : invite.remark}',
                     type: TextType.content,
                     color: MyTheme.hintColor)
@@ -367,7 +365,7 @@ class Box {
                     color: Colors.white,
                     size: 20,
                   ),
-                  MyText(
+                  textWidget(
                       text: '邀請', type: TextType.content, color: Colors.white)
                 ],
               ),
@@ -479,8 +477,8 @@ class Box {
           Row(
             children: [
               Expanded(
-                child: Container(),
                 flex: 1,
+                child: Container(),
               ),
               Expanded(
                   flex: 2,

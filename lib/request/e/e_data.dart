@@ -173,6 +173,7 @@ class PatientData extends ProfileData {
 
   factory PatientData.fromJson(Map<String, dynamic> json) =>
       _$PatientDataFromJson(json);
+  @override
   Map<String, dynamic> toJson() => _$PatientDataToJson(this);
 }
 

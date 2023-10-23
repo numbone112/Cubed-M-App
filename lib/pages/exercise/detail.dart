@@ -3,7 +3,6 @@
 import 'package:e_fu/module/box_ui.dart';
 import 'package:e_fu/my_data.dart';
 import 'package:e_fu/request/exercise/history_data.dart';
-import 'package:e_fu/request/invite/invite_data.dart';
 import 'package:flutter/material.dart';
 
 import '../../module/page.dart';
@@ -22,7 +21,7 @@ class HistoryDetailPerson extends StatefulWidget {
 class HistoryDetailPersonstate extends State<HistoryDetailPerson> {
   int select = 0;
   List<DoneItem> dones = [];
-  static final List<String> level_table = ["很差", "差", "普通", "好", "很好"];
+  static final List<String> leveltable = ["很差", "差", "普通", "好", "很好"];
   static final List<String> type = ["左手", "右手", '椅子坐立'];
 
   changeSelect(int s, List<DoneItem> origin) {
@@ -93,7 +92,7 @@ class HistoryDetailPersonstate extends State<HistoryDetailPerson> {
                   children: [
                     Text(index.toString()),
                     Text(dones[index].times.toString()),
-                    Text(level_table[dones[index].level])
+                    Text(leveltable[dones[index].level])
                   ],
                 ),
               );

@@ -24,6 +24,7 @@ class _LoginState extends State<Login> {
   String psw = "";
   TextEditingController accountC = TextEditingController();
   TextEditingController pswC = TextEditingController();
+  final BorderRadius _borderRadius = const BorderRadius.all(Radius.circular(10));
 
   TextField inputBox(TextEditingController t, bool h, String hintText) {
     return (TextField(
@@ -37,7 +38,7 @@ class _LoginState extends State<Login> {
         filled: true,
         border: OutlineInputBorder(
           ///设置边框四个角的弧度
-          borderRadius: const BorderRadius.all(Radius.circular(10)),
+          borderRadius: _borderRadius,
 
           ///用来配置边框的样式
           borderSide: BorderSide(
@@ -52,7 +53,7 @@ class _LoginState extends State<Login> {
         ///设置输入框可编辑时的边框样式
         enabledBorder: OutlineInputBorder(
           ///设置边框四个角的弧度
-          borderRadius: const BorderRadius.all(Radius.circular(10)),
+          borderRadius: _borderRadius,
 
           ///用来配置边框的样式
           borderSide: BorderSide(
@@ -65,10 +66,10 @@ class _LoginState extends State<Login> {
         ),
         disabledBorder: OutlineInputBorder(
           ///设置边框四个角的弧度
-          borderRadius: BorderRadius.all(Radius.circular(10)),
+          borderRadius: _borderRadius,
 
           ///用来配置边框的样式
-          borderSide: BorderSide(
+          borderSide: const BorderSide(
             ///设置边框的颜色
             color: Colors.red,
 
@@ -112,30 +113,25 @@ class _LoginState extends State<Login> {
             // mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               Image.asset(
-                  'assets/images/logo.png',
-                  scale: 1,
-                ),
+                'assets/images/logo.png',
+                scale: 1,
+              ),
               accountField,
               const Padding(padding: EdgeInsets.only(top: 30)),
               passwordField,
               const Padding(padding: EdgeInsets.only(top: 30)),
               Align(
+                alignment: Alignment.centerRight,
                 child: GestureDetector(
-                    child: Text(
+                    child: const Text(
                   "忘記密碼",
                   style: TextStyle(color: Colors.grey),
                 )),
-                alignment: Alignment.centerRight,
               ),
               const Padding(padding: EdgeInsets.only(top: 30)),
               buttonCustom("登入", () async {
-                logger.v("login button");
                 final utf = utf8.encode(pswC.text);
-                final digest = sha256.convert(utf);
-                final encryptStr = digest.toString().toUpperCase();
-                logger.v("encryptStr $encryptStr");
-                logger.v("digest $digest");
-
+                final encryptStr = sha256.convert(utf).toString().toUpperCase();
                 Format a = await userRepo.login(accountC.text, encryptStr);
                 if (a.message == "登入成功") {
                   prefs = await SharedPreferences.getInstance();
@@ -156,7 +152,7 @@ class _LoginState extends State<Login> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("還沒註冊帳號嗎?立即"),
+                  const Text("還沒註冊帳號嗎?立即"),
                   GestureDetector(
                     child: Text(
                       "註冊",
@@ -167,7 +163,7 @@ class _LoginState extends State<Login> {
               ),
               const Padding(padding: EdgeInsets.only(top: 30)),
               GestureDetector(
-                child: Icon(Icons.g_mobiledata),
+                child: const Icon(Icons.g_mobiledata),
               )
               // buttonCustom("Ｇoogle 登入", () => {logger.v("test")}),
             ],

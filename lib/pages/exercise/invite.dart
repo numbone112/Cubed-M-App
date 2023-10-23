@@ -37,7 +37,7 @@ class InviteState extends State<InvitePage> {
                 decoration: BoxDecoration(
                     color: MyTheme.color,
                     borderRadius: BorderRadius.circular(30)),
-                child: MyText(
+                child: textWidget(
                     text:
                         f.accept == 1 ? "已接受" : (f.accept == 2 ? "拒絕" : "待回覆"),
                     color: Colors.white,

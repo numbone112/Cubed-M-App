@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'dart:convert';
 
 import 'package:json_annotation/json_annotation.dart';
@@ -5,7 +7,6 @@ import 'package:json_annotation/json_annotation.dart';
 part 'plan_data.g.dart';
 
 List<Plan> parsePlanList(String responseBody) {
-  print(responseBody);
   
   final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
 
@@ -29,8 +30,7 @@ class Plan {
 
   List<bool> execute;
   String getRange(){
-    return str_date.toIso8601String().substring(0, 10)+" - "+
-    end_date.toIso8601String().substring(0, 10);
+    return "${str_date.toIso8601String().substring(0, 10)} - ${end_date.toIso8601String().substring(0, 10)}";
   }
 
   factory Plan.fromJson(Map<String, dynamic> json) => _$PlanFromJson(json);

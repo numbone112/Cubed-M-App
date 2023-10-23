@@ -1,4 +1,3 @@
-import 'package:e_fu/module/box_ui.dart';
 import 'package:e_fu/module/page.dart';
 import 'package:e_fu/my_data.dart';
 
@@ -26,8 +25,8 @@ class ProfilePageState extends State<Profile> {
       decoration: BoxDecoration(
           color: Colors.white, borderRadius: BorderRadius.circular(20)),
       child: ListTile(
-        title: MyText(text: title ?? '', type: TextType.sub),
-        subtitle: MyText(
+        title: textWidget(text: title ?? '', type: TextType.sub),
+        subtitle: textWidget(
             text: subtitle == '' ? '無' : subtitle ?? '',
             type: TextType.content,
             color: MyTheme.hintColor),
@@ -42,26 +41,23 @@ class ProfilePageState extends State<Profile> {
     final args = ModalRoute.of(context)!.settings.arguments as GetUser;
 
     return CustomPage(
-      body: Container(
-        // padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
-        child: ListView(children: [
-          profileItem(title: 'ID', subtitle: args.id),
-          profileItem(title: '姓名', subtitle: args.name),
-          profileItem(title: '性別', subtitle: args.sex),
-          profileItem(
-              title: '生日',
-              subtitle: args.birthday.toIso8601String().substring(0, 10)),
-          profileItem(title: '手機號碼', subtitle: args.phone),
-          profileItem(title: '身高', subtitle: args.height.toString()),
-          profileItem(title: '體重', subtitle: args.height.toString()),
-          profileItem(title: '疾病', subtitle: args.disease.join(" , ")),
-          profileItem(
-            title: '編輯個人檔案',
-            onTap: () => Navigator.pushNamed(context, ProfileUpdate.routeName,
-                arguments: args),
-          ),
-        ]),
-      ),
+      body: ListView(children: [
+        profileItem(title: 'ID', subtitle: args.id),
+        profileItem(title: '姓名', subtitle: args.name),
+        profileItem(title: '性別', subtitle: args.sex),
+        profileItem(
+            title: '生日',
+            subtitle: args.birthday.toIso8601String().substring(0, 10)),
+        profileItem(title: '手機號碼', subtitle: args.phone),
+        profileItem(title: '身高', subtitle: args.height.toString()),
+        profileItem(title: '體重', subtitle: args.height.toString()),
+        profileItem(title: '疾病', subtitle: args.disease.join(" , ")),
+        profileItem(
+          title: '編輯個人檔案',
+          onTap: () => Navigator.pushNamed(context, ProfileUpdate.routeName,
+              arguments: args),
+        ),
+      ]),
       title: "個人檔案",
       headColor: MyTheme.lightColor,
       prevColor: Colors.white,

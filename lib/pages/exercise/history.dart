@@ -44,17 +44,17 @@ class HistoryDetailstate extends State<HistoryDetailPage> {
                       children: [
                         Text(
                           "左手*3",
-                          style: myText(height: 1.5),
+                          style: textStyle(height: 1.5),
                           textAlign: TextAlign.center,
                         ),
                         Text(
                           "右手*5",
-                          style: myText(height: 1.5),
+                          style: textStyle(height: 1.5),
                           textAlign: TextAlign.center,
                         ),
                         Text(
                           "椅子坐立*1",
-                          style: myText(height: 1.5),
+                          style: textStyle(height: 1.5),
                           textAlign: TextAlign.center,
                         ),
                       ],
@@ -78,11 +78,11 @@ class HistoryDetailstate extends State<HistoryDetailPage> {
                 children: [
                   Text(
                     isM ? "召集人" : "成員",
-                    style: myText(height: 3, color: Colors.white),
+                    style: textStyle(height: 3, color: Colors.white),
                   ),
                   Text(
                     historyDeep.name,
-                    style: myText(height: 3, color: Colors.white),
+                    style: textStyle(height: 3, color: Colors.white),
                   ),
                 ],
               ),
@@ -93,11 +93,11 @@ class HistoryDetailstate extends State<HistoryDetailPage> {
     );
   }
 
-  List<Widget> deepBoxs(String m_id) {
+  List<Widget> deepBoxs(String mId) {
     List<Widget> result = [];
 
     for (HistoryDeep historyDeep in historyDeepList) {
-      if (historyDeep.user_id == m_id) {
+      if (historyDeep.user_id == mId) {
         result.insert(0, deepBox(historyDeep, true));
       } else {
         result.add(deepBox(historyDeep, false));

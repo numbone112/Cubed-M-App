@@ -37,7 +37,7 @@ class ProfileUpdateState extends State<ProfileUpdate> {
 
       dateinput.text = dateFormat.format(_profileData!.birthday);
       phoneinput.text = _profileData!.phone;
-      sexinput.text = _profileData!.sex!;
+      sexinput.text = _profileData!.sex;
       nameinput.text = _profileData!.name;
     }
     return Scaffold(
@@ -134,7 +134,7 @@ class ProfileUpdateState extends State<ProfileUpdate> {
                       child: GestureDetector(
                         child: Text(
                           "取消",
-                          style: myText(color: Colors.white),
+                          style: textStyle(color: Colors.white),
                           textAlign: TextAlign.center,
                         ),
                         onTap: () => Navigator.pop(context, null),
@@ -166,7 +166,7 @@ class ProfileUpdateState extends State<ProfileUpdate> {
                         },
                         child: Text(
                           "送出",
-                          style: myText(color: Colors.white),
+                          style: textStyle(color: Colors.white),
                           textAlign: TextAlign.center,
                         ),
                       ),

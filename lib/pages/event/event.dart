@@ -3,7 +3,6 @@ import 'dart:io';
 import 'dart:math';
 import 'package:e_fu/module/page.dart';
 import 'package:e_fu/pages/event/ble_device.dart';
-import 'package:e_fu/pages/event/event_now_result.dart';
 import 'package:e_fu/pages/exercise/event_record.dart';
 import 'package:e_fu/request/data.dart';
 import 'package:e_fu/request/invite/invite_data.dart';
@@ -60,7 +59,6 @@ class EventState extends State<Event> {
 
   Future<void> updateBleState() async {
     if (await FlutterBluePlus.isSupported == false) {
-      print("Bluetooth not supported by this device");
       return;
     }
 
@@ -160,7 +158,7 @@ class EventState extends State<Event> {
       connectDeviec[pIndex] = device.toString();
     });
     for (var service in services) {
-      service.characteristics.forEach((element) async {
+      for(BluetoothCharacteristic element in service.characteristics){
         switch (element.uuid.toString()) {
           case BleDevice.start:
             startCharList.add(element);
@@ -248,7 +246,8 @@ class EventState extends State<Event> {
             break;
           default:
         }
-      });
+      }
+     
     }
     logger.v("連接到$checkString");
 
@@ -321,7 +320,7 @@ class EventState extends State<Event> {
       height: 225,
       margin: const EdgeInsets.all(3),
       decoration: const BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(30)),
+          borderRadius: Box.normamBorderRadius,
           color: Colors.white),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -347,7 +346,7 @@ class EventState extends State<Event> {
                           ? Box.boxHasRadius(
                               child: Text(
                                 exerciseItem[eIndex],
-                                style: myText(color: Colors.white),
+                                style: textStyle(color: Colors.white),
                               ),
                               color: MyTheme.buttonColor,
                               padding: const EdgeInsets.all(5))
@@ -385,7 +384,7 @@ class EventState extends State<Event> {
                   child: Box.boxHasRadius(
                       child: Text(
                         "連接",
-                        style: myText(color: Colors.white),
+                        style: textStyle(color: Colors.white),
                         textAlign: TextAlign.center,
                       ),
                       margin: const EdgeInsets.all(3),
@@ -420,8 +419,8 @@ class EventState extends State<Event> {
                       await showDialog(
                         context: context,
                         builder: (ctx) => CupertinoAlertDialog(
-                          content: Column(
-                            children: const [
+                          content: const Column(
+                            children: [
                               SizedBox(
                                 height: 10,
                               ),
@@ -494,7 +493,7 @@ class EventState extends State<Event> {
                 child: ExpansionTile(
                   collapsedShape: Border.all(color: MyTheme.backgroudColor),
                   title: const Text("運動分級表"),
-                  children: [const Text("運動分級表詳細資料")],
+                  children: const [Text("運動分級表詳細資料")],
                 ),
               ),
               GestureDetector(

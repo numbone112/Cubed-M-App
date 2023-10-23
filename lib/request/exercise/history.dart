@@ -4,7 +4,6 @@ import 'package:e_fu/request/api.dart';
 import 'package:e_fu/request/data.dart';
 
 
-import 'package:logger/logger.dart';
 
 abstract class HistoryAPI {
   // 新增邀約
@@ -14,10 +13,6 @@ abstract class HistoryAPI {
 }
 
 class HistoryRepo extends API implements HistoryAPI {
-  var logger = Logger();
-  
-  
-
   @override
   Future<Format> historyList(String userName) async {
     return await lunch(client.get(Uri.parse('$domain/history/list/$userName'),headers: header),);

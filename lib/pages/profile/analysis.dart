@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 
 class DailyEarnings extends StatelessWidget {
-  List<Color> gradientColors = const [
+  final List<Color> gradientColors = const [
     Color.fromARGB(255, 5, 122, 189),
     Color(0xff02d39a),
   ];
@@ -27,6 +27,8 @@ class DailyEarnings extends StatelessWidget {
     1: '好',
     2: '很好',
   };
+
+  const DailyEarnings({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +60,7 @@ class DailyEarnings extends StatelessWidget {
                     backgroundColor: Colors.grey,
                   ),
                 ),
-                MyText(text: '運動達成率', type: TextType.sub),
+                textWidget(text: '運動達成率', type: TextType.sub),
               ],
             ),
             Column(
@@ -78,7 +80,7 @@ class DailyEarnings extends StatelessWidget {
                     backgroundColor: Colors.grey,
                   ),
                 ),
-                MyText(text: '平均等級', type: TextType.sub),
+                textWidget(text: '平均等級', type: TextType.sub),
               ],
             ),
           ],
@@ -103,7 +105,7 @@ class DailyEarnings extends StatelessWidget {
             ],
           ),
         ),
-        MyText(text: '歷程等級與預測', type: TextType.sub),
+        textWidget(text: '歷程等級與預測', type: TextType.sub),
       ]),
     );
   }

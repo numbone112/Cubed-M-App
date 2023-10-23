@@ -1,6 +1,5 @@
 import 'package:e_fu/module/box_ui.dart';
 import 'package:e_fu/my_data.dart';
-import 'package:e_fu/pages/mo/moDetail.dart';
 import 'package:flutter/material.dart';
 
 import '../../module/cusbehiver.dart';
@@ -34,11 +33,11 @@ class _MoState extends State<MoRank> {
                 children: [
                   Box.titleText("好友是什麼？",
                       gap: 10, fontSize: MySize.subtitleSize),
-                  Text("曾一起運動的朋友。", style: myText(color: MyTheme.hintColor)),
+                  Text("曾一起運動的朋友。", style: textStyle(color: MyTheme.hintColor)),
                   Box.titleText("運動綜合評分如何計算？",
                       gap: 10, fontSize: MySize.subtitleSize),
                   Text("從運動者最後一次運動中，將各動作等級換算成數字，再以算術平均計算。",
-                      style: myText(color: MyTheme.hintColor)),
+                      style: textStyle(color: MyTheme.hintColor)),
                 ],
               ),
             ),
@@ -111,10 +110,10 @@ class _MoState extends State<MoRank> {
                         border: Border.all(color: MyTheme.color, width: 1.5)),
                   ),
                 ),
-                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                 const Padding(
+                  padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
                   child: Row(
-                    children: const [
+                    children: [
                       Expanded(
                         flex: 1,
                         child: Text(

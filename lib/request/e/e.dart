@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:logger/logger.dart';
 
 import 'package:e_fu/request/api.dart';
 import 'package:e_fu/request/data.dart';
@@ -17,8 +16,6 @@ abstract class EAPI {
 }
 
 class ERepo extends API implements EAPI {
-  var logger = Logger();
-
   @override
   getFus(String eId) async {
     {

@@ -3,10 +3,7 @@
 import 'dart:convert';
 
 import 'package:e_fu/request/api.dart';
-import 'package:e_fu/request/user/get_user_data.dart';
-import 'package:e_fu/request/user/get_user_model.dart';
 import 'login_data.dart';
-import 'package:logger/logger.dart';
 
 import 'package:e_fu/request/data.dart';
 
@@ -29,8 +26,6 @@ abstract class UserAPI {
 }
 
 class UserRepo extends API implements UserAPI {
-  var logger = Logger();
-
   @override
   Future<Format> login(String user, String psw) async {
     try {

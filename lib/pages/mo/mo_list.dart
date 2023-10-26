@@ -1,5 +1,4 @@
-import 'package:e_fu/module/page.dart';
-import 'package:e_fu/pages/mo/moDetail.dart';
+import 'package:e_fu/pages/mo/mo_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
@@ -17,10 +16,10 @@ class MoList extends StatefulWidget {
   const MoList({super.key, required this.userName});
 
   @override
-  _MoListPageState createState() => _MoListPageState();
+  MoListPageState createState() => MoListPageState();
 }
 
-class _MoListPageState extends State<MoList> {
+class MoListPageState extends State<MoList> {
   MoRepo moRepo = MoRepo();
   GetMoListModel? moList;
   var logger = Logger();
@@ -86,7 +85,7 @@ class _MoListPageState extends State<MoList> {
               height: 30,
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: const BorderRadius.all(Radius.circular(30)),
+                borderRadius: Box.normamBorderRadius,
                 border: Border.all(width: 1, color: MyTheme.lightColor),
               ),
               child: Text("隱藏", style: TextStyle(color: MyTheme.lightColor)),
@@ -145,7 +144,7 @@ class _MoListPageState extends State<MoList> {
           height: 50,
           decoration: const BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.all(Radius.circular(30)),
+            borderRadius: Box.normamBorderRadius,
           ),
           child: Row(
             children: [

@@ -14,10 +14,10 @@ class HindMoList extends StatefulWidget {
   const HindMoList({super.key, required this.userName});
 
   @override
-  _HindMoListState createState() => _HindMoListState();
+  HindMoListState createState() => HindMoListState();
 }
 
-class _HindMoListState extends State<HindMoList> {
+class HindMoListState extends State<HindMoList> {
   MoRepo moRepo = MoRepo();
   GetHindMoListModel? hindMoList;
   var logger = Logger();
@@ -79,7 +79,7 @@ class _HindMoListState extends State<HindMoList> {
               height: 30,
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: const BorderRadius.all(Radius.circular(30)),
+                borderRadius:Box.normamBorderRadius,
                 border: Border.all(width: 1, color: MyTheme.pink),
               ),
               child: Text("取消", style: TextStyle(color: MyTheme.pink)),

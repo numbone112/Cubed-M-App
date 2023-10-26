@@ -5,7 +5,7 @@ import 'package:e_fu/pages/profile/profile.dart';
 import 'package:flutter/material.dart';
 
 import 'bottom_bar_view.dart';
-import 'module/tabIcon_data.dart';
+import 'module/tab_icon_data.dart';
 import 'my_data.dart';
 
 class Home extends StatefulWidget {

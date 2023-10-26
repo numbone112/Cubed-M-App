@@ -22,7 +22,7 @@ class PeopleBox {
       required this.birthday});
 
   Widget box() {
-    TextStyle wText = myText();
+    TextStyle wText = textStyle();
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Stack(

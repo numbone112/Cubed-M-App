@@ -25,8 +25,8 @@ class ExerciseHomeState extends State<ExerciseHome>
   InviteRepo inviteRepo = InviteRepo();
   HistoryRepo historyRepo = HistoryRepo();
 
-  List<Invite> invite_list = [];
-  List<History> hisotry_list = [];
+  List<Invite> invitelist = [];
+  List<History> hisotrylist = [];
 
   int mode = 1;
 
@@ -38,13 +38,13 @@ class ExerciseHomeState extends State<ExerciseHome>
     inviteRepo.inviteList(widget.userName, mode).then((value) {
       List<Invite> inviteList = parseInviteList(jsonEncode(value.D));
       setState(() {
-        invite_list = inviteList;
+        invitelist = inviteList;
       });
     });
     historyRepo.historyList(widget.userName).then((value) {
       List<History> historyList = parseHistoryList(jsonEncode(value.D));
       setState(() {
-        hisotry_list = historyList;
+        hisotrylist = historyList;
       });
     });
   }
@@ -56,7 +56,7 @@ class ExerciseHomeState extends State<ExerciseHome>
     inviteRepo.inviteList(widget.userName, mode).then((value) {
       List<Invite> inviteList = parseInviteList(jsonEncode(value.D));
       setState(() {
-        invite_list = inviteList;
+        invitelist = inviteList;
       });
     });
   }
@@ -76,7 +76,7 @@ class ExerciseHomeState extends State<ExerciseHome>
           decoration: BoxDecoration(
               color: mode == i ? MyTheme.color : MyTheme.lightColor,
               borderRadius: BorderRadius.circular(30)),
-          child: MyText(
+          child: textWidget(
               text: filters[i - 1],
               color: Colors.white,
               type: TextType.content),
@@ -121,9 +121,9 @@ class ExerciseHomeState extends State<ExerciseHome>
                   ),
                   Expanded(
                     child: ListView.builder(
-                      itemCount: invite_list.length,
+                      itemCount: invitelist.length,
                       itemBuilder: (BuildContext context, int index) {
-                        return (Box.inviteBox(invite_list[index], context));
+                        return (Box.inviteBox(invitelist[index], context));
                       },
                     ),
                   ),
@@ -134,7 +134,7 @@ class ExerciseHomeState extends State<ExerciseHome>
                   margin: const EdgeInsets.only(top: 10,bottom: 10),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
-                    children: [MyText(text: "篩選", type: TextType.content)],
+                    children: [textWidget(text: "篩選", type: TextType.content)],
                   ),
                 ),
                 Box.boxHasRadius(
@@ -143,9 +143,9 @@ class ExerciseHomeState extends State<ExerciseHome>
                     child: Box.boxHasRadius(
                       color: MyTheme.backgroudColor,
                       child: ListView.builder(
-                          itemCount: hisotry_list.length,
+                          itemCount: hisotrylist.length,
                           itemBuilder: (BuildContext context, int index) {
-                            return (Box.history(hisotry_list[index], context,
+                            return (Box.history(hisotrylist[index], context,
                                 widget.userName));
                           }),
                     ),

@@ -2,10 +2,8 @@ import 'package:e_fu/module/box_ui.dart';
 import 'package:e_fu/module/page.dart';
 import 'package:e_fu/my_data.dart';
 
-import 'package:e_fu/pages/profile/profile_update.dart';
 import 'package:e_fu/request/plan/plan.dart';
 import 'package:e_fu/request/plan/plan_data.dart';
-import 'package:e_fu/request/user/get_user_data.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
@@ -23,10 +21,8 @@ class PlanInsertState extends State<PlanInsertPage> {
   DateFormat dateFormat = DateFormat('yyyy-MM-dd');
 
   List<bool> execute = [];
-  List<String> execute_text = ["一", '二', '三', '四', '五', '六', '日'];
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     execute = [false, false, false, false, false, false, false];
   }
@@ -39,9 +35,9 @@ class PlanInsertState extends State<PlanInsertPage> {
   PlanRepo planRepo = PlanRepo();
 
   Widget choise() {
-    List<Widget> _list = [];
+    List<Widget> list = [];
     for (var i = 0; i < execute.length; i++) {
-      _list.add(
+      list.add(
         Box.boxHasRadius(
           width: MediaQuery.of(context).size.width * 0.7,
           height: 50,
@@ -57,7 +53,7 @@ class PlanInsertState extends State<PlanInsertPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  "星期${execute_text[i]}",
+                  "星期${Box.executeText[i]}",
                 ),
               ],
             ),
@@ -66,7 +62,7 @@ class PlanInsertState extends State<PlanInsertPage> {
       );
     }
     return Column(
-      children: _list,
+      children: list,
     );
   }
 
@@ -81,7 +77,6 @@ class PlanInsertState extends State<PlanInsertPage> {
     if (pickedDate != null) {
       controller.text = dateFormat.format(pickedDate);
     } else {
-      print("Date is not selected");
     }
   }
 
@@ -90,59 +85,57 @@ class PlanInsertState extends State<PlanInsertPage> {
     return CustomPage(
       title: "新增計畫",
       buildContext: context,
-      body: Container(
-        child: ListView(
-          children: [
-            Row(
-              children: [
-                const Text("計畫名稱"),
-                Expanded(child: TextInput.radius("", nameInput))
-              ],
-            ),
-            Row(
-              children: [
-                const Text("開始時間"),
-                Expanded(
-                  child: TextInput.radius("", strInput,
-                      onTap: () => dateInput(strInput)),
-                )
-              ],
-            ),
-            Row(
-              children: [
-                const Text("結束時間"),
-                Expanded(
-                  child: TextInput.radius(
-                    "",
-                    endInput,
-                    onTap: () => dateInput(endInput),
-                  ),
-                )
-              ],
-            ),
-            const Text(
-              "運動計畫表",
-              textAlign: TextAlign.center,
-            ),
-            const Text(
-              "請點選欲安排運動之星期",
-              textAlign: TextAlign.center,
-            ),
-            choise(),
-            Box.yesnoBox(() {
-              Plan plan = Plan(
-                  name: nameInput.text,
-                  user_id: widget.userName,
-                  str_date: DateTime.parse(strInput.text),
-                  end_date: DateTime.parse(endInput.text),
-                  execute: execute);
-              planRepo.createPlan(plan).then((value) {
-                logger.v(value.message);
-                logger.v(value.D);
-              });
-            }, () => Navigator.pop(context))
-          ],
-        ),
+      body: ListView(
+        children: [
+          Row(
+            children: [
+              const Text("計畫名稱"),
+              Expanded(child: TextInput.radius("", nameInput))
+            ],
+          ),
+          Row(
+            children: [
+              const Text("開始時間"),
+              Expanded(
+                child: TextInput.radius("", strInput,
+                    onTap: () => dateInput(strInput)),
+              )
+            ],
+          ),
+          Row(
+            children: [
+              const Text("結束時間"),
+              Expanded(
+                child: TextInput.radius(
+                  "",
+                  endInput,
+                  onTap: () => dateInput(endInput),
+                ),
+              )
+            ],
+          ),
+          const Text(
+            "運動計畫表",
+            textAlign: TextAlign.center,
+          ),
+          const Text(
+            "請點選欲安排運動之星期",
+            textAlign: TextAlign.center,
+          ),
+          choise(),
+          Box.yesnoBox(() {
+            Plan plan = Plan(
+                name: nameInput.text,
+                user_id: widget.userName,
+                str_date: DateTime.parse(strInput.text),
+                end_date: DateTime.parse(endInput.text),
+                execute: execute);
+            planRepo.createPlan(plan).then((value) {
+              logger.v(value.message);
+              logger.v(value.D);
+            });
+          }, () => Navigator.pop(context))
+        ],
       ),
     );
   }

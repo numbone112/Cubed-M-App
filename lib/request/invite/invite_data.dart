@@ -21,18 +21,19 @@ List<InviteDetail> parseInviteDetailList(String responseBody) {
 @JsonSerializable(explicitToJson: true)
 class Invite {
   Invite(
-      {this.i_id = -1,
+      {
+        // this.i_id = -1,
       this.id = -1,
       this.accept = 1,
       this.name = "愉快的運動",
       this.time = "",
       this.m_id = "",
       this.remark = "",
-      this.m_name = "太陽餅",
+      this.m_name = "",
       this.friend = const []}) {
-    time = datetime.toIso8601String();
+    time = datetime.toIso8601String().substring(0,16);
   }
-  int i_id;
+  // int i_id;
   String name;
 
   final DateTime datetime = DateTime.now();

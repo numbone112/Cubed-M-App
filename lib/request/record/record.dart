@@ -2,7 +2,6 @@
 
 import 'dart:convert';
 
-import 'package:logger/logger.dart';
 
 import 'package:e_fu/request/api.dart';
 import 'package:e_fu/request/data.dart';
@@ -14,14 +13,12 @@ abstract class RecordAPI {
 }
 
 class RecordRepo extends API implements RecordAPI {
-  var logger = Logger();
-
+  
   @override
   Future<Format> record(RecordSender recordSender) async {
     return await lunch(
       client.post(Uri.parse("$domain/record"),
           body: jsonEncode(recordSender.toJson())),
     );
-    throw Exception();
   }
 }

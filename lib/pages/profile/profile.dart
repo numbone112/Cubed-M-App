@@ -21,17 +21,17 @@ class ProfileInfo extends StatefulWidget {
   ProfileCreateState createState() => ProfileCreateState();
 }
 
-class RawDataSet {
-  RawDataSet({
-    required this.title,
-    required this.color,
-    required this.values,
-  });
+// class RawDataSet {
+//   RawDataSet({
+//     required this.title,
+//     required this.color,
+//     required this.values,
+//   });
 
-  final String title;
-  final Color color;
-  final List<double> values;
-}
+//   final String title;
+//   final Color color;
+//   final List<double> values;
+// }
 
 class SubMenu {
   SubMenu({required this.title, this.function, required this.img, this.widget});
@@ -79,7 +79,7 @@ class ProfileCreateState extends State<ProfileInfo> {
           function: () => Navigator.push(
                 context,
                 MaterialPageRoute<void>(
-                  builder: (BuildContext context) => DailyEarnings(),
+                  builder: (BuildContext context) => const DailyEarnings(),
                 ),
               ),
           widget: const Icon(Icons.accessibility_new_rounded)),
@@ -144,72 +144,69 @@ class ProfileCreateState extends State<ProfileInfo> {
   Widget build(BuildContext context) {
     return CustomPage(
       title: "其他",
-      body: Container(
-        // padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-        child: ScrollConfiguration(
-          behavior: CusBehavior(),
-          child: SingleChildScrollView(
-            child: (Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                    (profile == null)
-                        ? Box.boxHasRadius(
-                            // height: MediaQuery.of(context).size.height * 0.33,
-                            color: MyTheme.backgroudColor,
-                            child: Center(
-                                child: CircularProgressIndicator(
-                              color: MyTheme.lightColor,
-                            )),
-                          )
-                        : Box.boxHasRadius(
-                            // height: MediaQuery.of(context).size.height * 0.25,
-                            color: Colors.white,
+      body: ScrollConfiguration(
+        behavior: CusBehavior(),
+        child: SingleChildScrollView(
+          child: (Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+                  (profile == null)
+                      ? Box.boxHasRadius(
+                          // height: MediaQuery.of(context).size.height * 0.33,
+                          color: MyTheme.backgroudColor,
+                          child: Center(
+                              child: CircularProgressIndicator(
+                            color: MyTheme.lightColor,
+                          )),
+                        )
+                      : Box.boxHasRadius(
+                          // height: MediaQuery.of(context).size.height * 0.25,
+                          color: Colors.white,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(20)),
+                              color: MyTheme.color,
+                            ),
                             child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                    const BorderRadius.all(Radius.circular(20)),
-                                color: MyTheme.color,
-                              ),
-                              child: Container(
-                                padding: const EdgeInsets.fromLTRB(
-                                    20, 40, 20, 20),
-                                alignment: Alignment.center,
-                                child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.center,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          0, 0, 0, 20),
-                                      child: MyText(
-                                          text: profile!.name,
-                                          type: TextType.sub,
-                                          color: Colors.white),
-                                    ),
-                                    Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            0, 0, 0, 10),
-                                        child: MyText(
-                                            text:
-                                                "性別：${profile!.sex != "female" ? "男" : "女"}",
-                                            type: TextType.content,
-                                            color: Colors.white)),
-                                    MyText(
-                                        text:
-                                            "年齡：${DateTime.now().year - profile!.birthday.year}",
-                                        type: TextType.content,
+                              padding: const EdgeInsets.fromLTRB(
+                                  20, 40, 20, 20),
+                              alignment: Alignment.center,
+                              child: Column(
+                                crossAxisAlignment:
+                                    CrossAxisAlignment.start,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.center,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.fromLTRB(
+                                        0, 0, 0, 20),
+                                    child: textWidget(
+                                        text: profile!.name,
+                                        type: TextType.sub,
                                         color: Colors.white),
-                                  ],
-                                ),
+                                  ),
+                                  Padding(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          0, 0, 0, 10),
+                                      child: textWidget(
+                                          text:
+                                              "性別：${profile!.sex != "female" ? "男" : "女"}",
+                                          type: TextType.content,
+                                          color: Colors.white)),
+                                  textWidget(
+                                      text:
+                                          "年齡：${DateTime.now().year - profile!.birthday.year}",
+                                      type: TextType.content,
+                                      color: Colors.white),
+                                ],
                               ),
                             ),
                           ),
-                  ] +
-                  intos(),
-            )),
-          ),
+                        ),
+                ] +
+                intos(),
+          )),
         ),
       ),
     );

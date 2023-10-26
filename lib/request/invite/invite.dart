@@ -10,6 +10,7 @@ abstract class InviteAPI {
   Future<Format> inviteList(String userName, int mode);
   Future<Format> replyInvite(int accept, String userId, int inviteId);
   Future<Format> inviteDetail(int inviteId);
+  Future<Format> searchInvite(String userId, String time);
 }
 
 class InviteRepo extends API implements InviteAPI {
@@ -42,5 +43,12 @@ class InviteRepo extends API implements InviteAPI {
   Future<Format> inviteDetail(int inviteId) async {
     return await lunch(
         client.get(Uri.parse('$domain/invite/omg/$inviteId'), headers: header));
+  }
+
+  @override
+  Future<Format> searchInvite(String userId, String time) async {
+    return await lunch(client.get(
+      Uri.parse('$domain/invite/search/$userId/$time'),
+    ));
   }
 }

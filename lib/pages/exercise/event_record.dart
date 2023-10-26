@@ -24,7 +24,7 @@ class EventRecord {
   Map<int, Set<String>> tempData = {0: {}, 1: {}, 2: {}};
   bool unReadable = false;
   bool isConnect = false;
-  Set<String> endSign = Set();
+  Set<String> endSign = {};
   List<DoneItem> done = [];
   double avg=0;
 

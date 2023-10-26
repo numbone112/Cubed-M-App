@@ -1,4 +1,3 @@
-import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 
@@ -32,7 +31,7 @@ class TextType {
   static const int hint = 5;
 }
 
-Widget MyText(
+Widget textWidget(
     {String text = "",
     int? type = TextType.content,
     Color? color = Colors.black,
@@ -95,7 +94,7 @@ class HexColor extends Color {
   }
 }
 
-TextStyle myText({double? fontsize, Color? color, double? height}) {
+TextStyle textStyle({double? fontsize, Color? color, double? height}) {
   return TextStyle(
       color: color ?? Colors.black, fontSize: fontsize, height: height);
 }

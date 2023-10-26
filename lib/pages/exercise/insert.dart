@@ -136,7 +136,7 @@ class InsertInvitestate extends State<InsertInvite> {
                         TimeOfDay? pickedTime = await showTimePicker(
                             context: context, initialTime: TimeOfDay.now());
 
-                        if (pickedTime != null) {
+                        if (pickedTime != null && context.mounted) {
                           timeInput.text = pickedTime.format(context);
                         } else {
                           logger.v("Date is not selected");
@@ -171,7 +171,7 @@ class InsertInvitestate extends State<InsertInvite> {
                 children: [
                   Expanded(child: TextInput.radius(' 請搜尋姓名或ID', quaryInput)),
                   GestureDetector(
-                    child: Text("搜尋"),
+                    child: const Text("搜尋"),
                     onTap: () {
                       moRepo.search(quaryInput.text).then((value) {
                         setState(() {

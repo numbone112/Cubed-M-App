@@ -1,6 +1,5 @@
 // ignore_for_file: non_constant_identifier_names
 
-
 import 'package:e_fu/request/exercise/history_data.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -8,23 +7,34 @@ part 'record_data.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class Record {
-  static final List<String> column=["ax",'ay','az','gx','gy','gz','pitch','times','sets_no','item_id','i_id'];
+  static final List<String> column = [
+    "ax",
+    'ay',
+    'az',
+    'gx',
+    'gy',
+    'gz',
+    'pitch',
+    'times',
+    'sets_no',
+    'item_id',
+    'i_id'
+  ];
   Record(this.ax, this.ay, this.az, this.gx, this.gy, this.gz, this.pitch,
       this.times, this.sets_no, this.item_id, this.i_id) {
     timestream = DateTime.now();
   }
-  static Map<String, dynamic> getRecordJson(List<String> list,double sets_n,double item_i,int i_){
-    Map<String,dynamic> result={};
-    for(int i=0;i<list.length;i++){
-      
-      result[column[i]]=list[i];
+  static Map<String, dynamic> getRecordJson(
+      List<String> list, double sets_n, double item_i, int i_) {
+    Map<String, dynamic> result = {};
+    for (int i = 0; i < list.length; i++) {
+      result[column[i]] = list[i];
     }
-    result["sets_no"]=sets_n;
-    result["item_id"]=item_i;
-    result["i_id"]=i_;
+    result["sets_no"] = sets_n;
+    result["item_id"] = item_i;
+    result["i_id"] = i_;
     return result;
   }
-
 
   double ax;
   double ay;
@@ -54,40 +64,27 @@ class Record {
 
 @JsonSerializable(explicitToJson: true)
 class RecordSender {
-  RecordSender(
-      {
-        required this.record,required this.detail
-      });
-  List<Map<String, dynamic>> record;
+  RecordSender({required this.raw, required this.detail});
+  List<Map<String, dynamic>> raw;
   List<RecordSenderItem> detail;
 
-  factory RecordSender.fromJson(Map<String, dynamic> json) => _$RecordSenderFromJson(json);
+  factory RecordSender.fromJson(Map<String, dynamic> json) =>
+      _$RecordSenderFromJson(json);
   Map<String, dynamic> toJson() => _$RecordSenderToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
 class RecordSenderItem {
   RecordSenderItem(
-       {
-        required this.done,required this.score , required this.user_id
-      });
-  
+      {required this.done, required this.score, required this.user_id,required this.i_id});
+
   String user_id;
   List<DoneItem> done;
   double score;
-  
-  factory RecordSenderItem.fromJson(Map<String, dynamic> json) => _$RecordSenderItemFromJson(json);
+  int i_id;
+
+  factory RecordSenderItem.fromJson(Map<String, dynamic> json) =>
+      _$RecordSenderItemFromJson(json);
   Map<String, dynamic> toJson() => _$RecordSenderItemToJson(this);
 }
 
-@JsonSerializable(explicitToJson: true)
-class ArrangeDate {
-  ArrangeDate(this.arrangeId, this.raw, this.done);
-  String arrangeId;//i_id
-  Map<int, List<int>> done;
-  List<Record> raw;
-
-  factory ArrangeDate.fromJson(Map<String, dynamic> json) =>
-      _$ArrangeDateFromJson(json);
-  Map<String, dynamic> toJson() => _$ArrangeDateToJson(this);
-}

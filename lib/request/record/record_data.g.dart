@@ -36,7 +36,7 @@ Map<String, dynamic> _$RecordToJson(Record instance) => <String, dynamic>{
     };
 
 RecordSender _$RecordSenderFromJson(Map<String, dynamic> json) => RecordSender(
-      record: (json['record'] as List<dynamic>)
+      raw: (json['raw'] as List<dynamic>)
           .map((e) => e as Map<String, dynamic>)
           .toList(),
       detail: (json['detail'] as List<dynamic>)
@@ -46,7 +46,7 @@ RecordSender _$RecordSenderFromJson(Map<String, dynamic> json) => RecordSender(
 
 Map<String, dynamic> _$RecordSenderToJson(RecordSender instance) =>
     <String, dynamic>{
-      'record': instance.record,
+      'raw': instance.raw,
       'detail': instance.detail.map((e) => e.toJson()).toList(),
     };
 
@@ -57,6 +57,7 @@ RecordSenderItem _$RecordSenderItemFromJson(Map<String, dynamic> json) =>
           .toList(),
       score: (json['score'] as num).toDouble(),
       user_id: json['user_id'] as String,
+      i_id: json['i_id'] as int,
     );
 
 Map<String, dynamic> _$RecordSenderItemToJson(RecordSenderItem instance) =>
@@ -64,22 +65,5 @@ Map<String, dynamic> _$RecordSenderItemToJson(RecordSenderItem instance) =>
       'user_id': instance.user_id,
       'done': instance.done.map((e) => e.toJson()).toList(),
       'score': instance.score,
-    };
-
-ArrangeDate _$ArrangeDateFromJson(Map<String, dynamic> json) => ArrangeDate(
-      json['arrangeId'] as String,
-      (json['raw'] as List<dynamic>)
-          .map((e) => Record.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      (json['done'] as Map<String, dynamic>).map(
-        (k, e) => MapEntry(
-            int.parse(k), (e as List<dynamic>).map((e) => e as int).toList()),
-      ),
-    );
-
-Map<String, dynamic> _$ArrangeDateToJson(ArrangeDate instance) =>
-    <String, dynamic>{
-      'arrangeId': instance.arrangeId,
-      'done': instance.done.map((k, e) => MapEntry(k.toString(), e)),
-      'raw': instance.raw.map((e) => e.toJson()).toList(),
+      'i_id': instance.i_id,
     };

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class ItemSets {
   static final List<String> items = ["左手", "右手", "椅子坐立"];

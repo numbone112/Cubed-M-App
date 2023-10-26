@@ -1,4 +1,4 @@
-import 'package:e_fu/module/exerciseProcess.dart';
+import 'package:e_fu/module/exercise_process.dart';
 import 'package:e_fu/module/page.dart';
 import 'package:e_fu/module/toast.dart';
 import 'package:e_fu/pages/event/event.dart';
@@ -36,14 +36,7 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage> {
   String userName = "柯明朗";
-  // late LinkedScrollControllerGroup _controllers;
-  // late ScrollController _letters;
-  // late ScrollController _numbers;
   List<ItemWithField> targetCheck = ItemSets.withField();
-
-  List<RawDataSet> rawDataSetList = [
-    RawDataSet(title: "復健者", color: Colors.blue, values: [5, 3, 1])
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +65,7 @@ class HomePageState extends State<HomePage> {
                       height: MediaQuery.of(context).size.height * 0.05,
                       child: Container(
                           alignment: Alignment.center,
-                          child: MyText(
+                          child: textWidget(
                               text: "運動日程",
                               type: TextType.sub,
                               color: Colors.white)),
@@ -90,7 +83,7 @@ class HomePageState extends State<HomePage> {
                                 alignment: Alignment.center,
                                 child: Padding(
                                   padding: const EdgeInsets.all(10),
-                                  child: MyText(
+                                  child: textWidget(
                                       text: "今天 ${index * 2 + 15}:00",
                                       type: TextType.content),
                                 ),
@@ -112,53 +105,22 @@ class HomePageState extends State<HomePage> {
                       height: MediaQuery.of(context).size.height * 0.05,
                       child: Container(
                           alignment: Alignment.center,
-                          child: MyText(text: "分析圖", type: TextType.sub)),
+                          child: textWidget(text: "分析圖", type: TextType.sub)),
                     ),
                     Expanded(
-                        child: Box.boxHasRadius(
-                      width: MediaQuery.of(context).size.width * 0.33,
-                      height: MediaQuery.of(context).size.width * 0.33,
-                      child: RadarChart(
-                        RadarChartData(
-                            getTitle: (index, angle) {
-                              switch (index) {
-                                case 0:
-                                  return RadarChartTitle(text: '左手');
-                                case 2:
-                                  return RadarChartTitle(text: '右手');
-                                case 1:
-                                  return RadarChartTitle(text: '下肢');
-                                default:
-                                  return const RadarChartTitle(text: '');
-                              }
-                            },
-                            dataSets:
-                                rawDataSetList.asMap().entries.map((entry) {
-                              final rawDataSet = entry.value;
-
-
-                              return RadarDataSet(
-                                fillColor: MyTheme.lightColor,
-                                borderColor: Colors.white,
-                                entryRadius: 3,
-                                dataEntries: rawDataSet.values
-                                    .map((e) => RadarEntry(value: e))
-                                    .toList(),
-                                borderWidth: 2.3,
-                              );
-                            }).toList()),
-                        swapAnimationDuration:
-                            const Duration(milliseconds: 150), // Optional
-                        swapAnimationCurve: Curves.linear, // Optional
+                      child: Box.boxHasRadius(
+                        width: MediaQuery.of(context).size.width * 0.33,
+                        height: MediaQuery.of(context).size.width * 0.33,
+                        child: Chart.avgChart([5, 3, 1]),
                       ),
-                    ))
+                    )
                   ],
                 ),
               ),
             ],
           ),
           Box.boxHasRadius(
-            margin: EdgeInsets.only(top: 20, bottom: 20),
+            margin: const EdgeInsets.only(top: 20, bottom: 20),
             height: MediaQuery.of(context).size.height * 0.22,
             padding: const EdgeInsets.fromLTRB(20, 10, 20, 20),
             child: Column(
@@ -171,7 +133,7 @@ class HomePageState extends State<HomePage> {
                     children: [
                       Container(
                           alignment: Alignment.center,
-                          child: MyText(text: "運動計畫", type: TextType.sub)),
+                          child: textWidget(text: "運動計畫", type: TextType.sub)),
                       const Icon(Icons.chevron_right),
                     ],
                   ),
@@ -229,7 +191,7 @@ class HomePageState extends State<HomePage> {
                   width: MediaQuery.of(context).size.width * 0.43,
                   height: MediaQuery.of(context).size.height * 0.13,
                   child: Center(
-                    child: MyText(text: "肌力測試", type: TextType.sub),
+                    child: textWidget(text: "肌力測試", type: TextType.sub),
                   ),
                 ),
               ),
@@ -241,8 +203,8 @@ class HomePageState extends State<HomePage> {
                   boxShadow: Box.getshadow(MyTheme.color),
                   width: MediaQuery.of(context).size.width * 0.43,
                   height: MediaQuery.of(context).size.height * 0.13,
-                  child:
-                      Center(child: MyText(text: "邀約運動", type: TextType.sub)),
+                  child: Center(
+                      child: textWidget(text: "邀約運動", type: TextType.sub)),
                 ),
               ),
             ],

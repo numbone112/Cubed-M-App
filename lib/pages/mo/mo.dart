@@ -1,11 +1,8 @@
-import 'package:e_fu/module/box_ui.dart';
 import 'package:e_fu/my_data.dart';
-import 'package:e_fu/pages/mo/moDetail.dart';
 import 'package:e_fu/pages/mo/mo_list.dart';
 import 'package:e_fu/pages/mo/mo_rank.dart';
 import 'package:flutter/material.dart';
 
-import '../../module/cusbehiver.dart';
 import '../../module/page.dart';
 
 class Mo extends StatefulWidget {
@@ -20,6 +17,7 @@ class Mo extends StatefulWidget {
 
 class _MoState extends State<Mo> with SingleTickerProviderStateMixin {
   late TabController tabController;
+  @override
   void initState() {
     // 建立 TabController，vsync 接受的型態是 TickerProvider
     tabController = TabController(length: 2, vsync: this);
@@ -49,7 +47,7 @@ class _MoState extends State<Mo> with SingleTickerProviderStateMixin {
         Expanded(
           child: TabBarView(
               controller: tabController,
-              children: [const MoRank(), MoList(userName: widget.userName)]),
+              children: [ MoRank(userName: widget.userName,), MoList(userName: widget.userName)]),
         ),
       ]),
     );

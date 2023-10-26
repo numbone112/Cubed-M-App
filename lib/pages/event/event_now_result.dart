@@ -1,11 +1,8 @@
-import 'dart:convert';
 import 'package:e_fu/pages/exercise/event_record.dart';
 
-import 'package:intl/intl.dart';
 
 import 'package:e_fu/module/page.dart';
 
-import 'package:e_fu/request/data.dart';
 import 'package:e_fu/request/e/e.dart';
 import 'package:e_fu/request/e/e_data.dart';
 import 'package:logger/logger.dart';
@@ -14,7 +11,6 @@ import 'package:e_fu/module/box_ui.dart';
 import 'package:e_fu/my_data.dart';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class EventNowResult extends StatefulWidget {
   static const routeName = '/event/result/now';
@@ -60,7 +56,7 @@ class PersonResult extends StatelessWidget {
                         child: Center(
                             child: Text(
                           "${value[index]}",
-                          style: myText(color: Colors.white),
+                          style: textStyle(color: Colors.white),
                         )),
                         color: MyTheme.color,
                       ),
@@ -118,7 +114,7 @@ class EventNowResultState extends State<EventNowResult> {
     return CustomPage(
         buildContext: context,
         body: Column(children: [
-          Text('sport date'
+          const Text('sport date'
               // "運動日期: ${DateFormat("yyyy/mm/dd HH:mm").format()}"
               ),
           Stack(

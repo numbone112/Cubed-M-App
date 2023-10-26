@@ -191,11 +191,28 @@ class Box {
           border: HexColor("C6AC78"),
           width: 60);
     } else {
-      item = Box.textRadiusBorder(history.score.toString(),
-          margin: EdgeInsets.zero);
+      item = Container(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+              width: MediaQuery.of(context).size.width * 0.2,
+              child: textWidget(
+                text: '運動評分',
+                type: TextType.sub,
+              ),
+            ),
+            Box.textRadiusBorder(history.score.toString(),
+                margin: const EdgeInsets.only(top: 20), width: 60),
+          ],
+        ),
+      );
 
       label = Box.textRadiusBorder('個人',
-          filling: Colors.white, border: Colors.black45, color: Colors.black45);
+          filling: Colors.white,
+          border: Colors.black45,
+          color: Colors.black45,
+          width: 60);
     }
 
     return Box.boxHasRadius(
@@ -412,8 +429,7 @@ class Box {
 
   static Widget yesnoBox(Function() yes, Function() no,
       {String? yestTitle, noTitle}) {
-    return Expanded(
-      child: Container(
+    return  Container(
         alignment: Alignment.bottomCenter,
         padding: const EdgeInsets.all(10),
         child: Row(
@@ -438,7 +454,6 @@ class Box {
             )
           ],
         ),
-      ),
     );
   }
 

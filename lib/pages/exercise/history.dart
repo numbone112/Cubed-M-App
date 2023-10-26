@@ -25,70 +25,71 @@ class HistoryDetailstate extends State<HistoryDetailPage> {
 
   Widget deepBox(HistoryDeep historyDeep, bool isM) {
     return Container(
-      margin: const EdgeInsets.only(top: 20),
-      width: MediaQuery.of(context).size.width,
-      child: Stack(
-        children: [
-          Box.boxHasRadius(
-              padding: const EdgeInsets.only(left: 80),
-              margin: const EdgeInsets.only(left: 100),
-              color: Colors.white,
-              height: 120,
-              // width: 250,
-              child: Row(
-                children: [
-                  SizedBox(
-                    width: 80,
-                    height: 80,
-                    child: ListView(
-                      children: [
-                        Text(
-                          "左手*3",
-                          style: textStyle(height: 1.5),
-                          textAlign: TextAlign.center,
-                        ),
-                        Text(
-                          "右手*5",
-                          style: textStyle(height: 1.5),
-                          textAlign: TextAlign.center,
-                        ),
-                        Text(
-                          "椅子坐立*1",
-                          style: textStyle(height: 1.5),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
+      margin: const EdgeInsets.only(top: 10),
+      child: Box.boxHasRadius(
+        height: MediaQuery.of(context).size.height * 0.15,
+        color: Colors.white,
+        child: Row(
+          children: [
+            Box.boxHasRadius(
+              color: isM ? MyTheme.color : MyTheme.lightColor,
+              width: MediaQuery.of(context).size.width * 0.3,
+              height: MediaQuery.of(context).size.height * 0.15,
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.pushNamed(context, HistoryDetailPerson.routeName,
+                      arguments: historyDeep);
+                },
+                child: Container(
+                  padding: const EdgeInsets.only(top: 30, bottom: 30),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      textWidget(
+                        text: isM ? "召集人" : "成員",
+                        color: Colors.white,
+                      ),
+                      textWidget(
+                        text: historyDeep.name,
+                        color: Colors.white,
+                      ),
+                    ],
                   ),
-                  Box.textRadiusBorder(historyDeep.score.toString(),width: 60)
-                ],
-              )),
-          Box.boxHasRadius(
-            // margin: const EdgeInsets.only(left: 50),
-            color: MyTheme.buttonColor,
-            height: 120,
-            width: 120,
-            child: GestureDetector(
-              onTap: () {
-                Navigator.pushNamed(context, HistoryDetailPerson.routeName,
-                    arguments: historyDeep);
-              },
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                ),
+              ),
+            ),
+            Expanded(
+              child: ListView(
+                scrollDirection: Axis.vertical,
                 children: [
-                  Text(
-                    isM ? "召集人" : "成員",
-                    style: textStyle(height: 3, color: Colors.white),
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: textWidget(
+                        text: '左手*3',
+                        textAlign: TextAlign.center,
+                        type: TextType.content),
                   ),
-                  Text(
-                    historyDeep.name,
-                    style: textStyle(height: 3, color: Colors.white),
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: textWidget(
+                        text: '右手*5',
+                        textAlign: TextAlign.center,
+                        type: TextType.content),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: textWidget(
+                        text: '椅子坐立*1',
+                        textAlign: TextAlign.center,
+                        type: TextType.content),
                   ),
                 ],
               ),
             ),
-          ),
-        ],
+            Box.textRadiusBorder(historyDeep.score.toString(),
+                width: 60, textType: TextType.sub)
+          ],
+        ),
       ),
     );
   }
@@ -120,18 +121,21 @@ class HistoryDetailstate extends State<HistoryDetailPage> {
     return (CustomPage(
       body: ListView(
           children: <Widget>[
-            const Padding(padding: EdgeInsets.all(10)),
+                const Padding(padding: EdgeInsets.only(bottom: 10)),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Box.inviteInfo(Invite.fromJson(history.toJson()), false),
                     Column(
-                      
                       children: [
-                        const Text("平均"),
+                        textWidget(
+                          text: '平均',
+                          type: TextType.sub,
+                        ),
                         Box.textRadiusBorder(history.avgScore.toString(),
-                        width: 60,
-                            color: Colors.white, filling: MyTheme.lightColor)
+                            width: 60,
+                            color: Colors.white,
+                            textType: TextType.sub)
                       ],
                     )
                   ],

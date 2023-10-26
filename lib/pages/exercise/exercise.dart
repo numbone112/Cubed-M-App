@@ -64,23 +64,17 @@ class ExerciseHomeState extends State<ExerciseHome>
   List<Widget> getfilterButtons() {
     List<Widget> result = [];
     final filters = ["已接受", '未接受', '未回覆'];
-    
 
     for (int i = 1; i <= filters.length; i++) {
       result.add(GestureDetector(
         behavior: HitTestBehavior.translucent,
         onTap: () => filter(i),
-        child: Container(
-          padding: const EdgeInsets.all(10),
-          margin: const EdgeInsets.fromLTRB(0, 0, 10, 10),
-          decoration: BoxDecoration(
-              color: mode == i ? MyTheme.color : MyTheme.lightColor,
-              borderRadius: BorderRadius.circular(30)),
-          child: textWidget(
-              text: filters[i - 1],
-              color: Colors.white,
-              type: TextType.content),
-        ),
+        child: Box.textRadiusBorder(filters[i - 1],
+            margin: const EdgeInsets.all(5),
+            color: mode == i ? Colors.white : MyTheme.color,
+            filling: mode == i ? MyTheme.color : Colors.white,
+            border: MyTheme.color,
+            width: 75),
       ));
     }
     return result;
@@ -114,7 +108,7 @@ class ExerciseHomeState extends State<ExerciseHome>
               Column(
                 children: [
                   Container(
-                    margin: const EdgeInsets.only(top: 10,bottom: 10),
+                    margin: const EdgeInsets.only(top: 10, bottom: 10),
                     child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: getfilterButtons()),
@@ -131,7 +125,7 @@ class ExerciseHomeState extends State<ExerciseHome>
               ),
               Column(children: [
                 Container(
-                  margin: const EdgeInsets.only(top: 10,bottom: 10),
+                  margin: const EdgeInsets.only(top: 10, bottom: 10),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [textWidget(text: "篩選", type: TextType.content)],
@@ -145,8 +139,8 @@ class ExerciseHomeState extends State<ExerciseHome>
                       child: ListView.builder(
                           itemCount: hisotrylist.length,
                           itemBuilder: (BuildContext context, int index) {
-                            return (Box.history(hisotrylist[index], context,
-                                widget.userName));
+                            return (Box.history(
+                                hisotrylist[index], context, widget.userName));
                           }),
                     ),
                   ),

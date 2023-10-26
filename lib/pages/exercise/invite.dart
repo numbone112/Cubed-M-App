@@ -86,11 +86,11 @@ class InviteState extends State<InvitePage> {
             decoration: BoxDecoration(
                 color: Colors.white, borderRadius: BorderRadius.circular(30)),
             padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-            height: MediaQuery.of(context).size.height * 0.56,
+            height: MediaQuery.of(context).size.height * 0.52,
             child: ListView(children: showOnInvite()),
           ),
           invite.accept != 3
-              ? (invite.m_id==widget.userName
+              ? (invite.m_id == widget.userName
                   ? GestureDetector(
                       onTap: () {
                         List<EventRecord> forEvent = [];
@@ -99,16 +99,26 @@ class InviteState extends State<InvitePage> {
                           forEvent.add(EventRecord(
                               eventRecordDetail:
                                   EventRecordDetail(item: element.targetSets),
-                              eventRecordInfo: EventRecordInfo(name: element.userName)));
+                              eventRecordInfo:
+                                  EventRecordInfo(name: element.userName)));
                         }
-                        Navigator.pushReplacementNamed(context, Event.routeName,arguments: forEvent);
+                        Navigator.pushReplacementNamed(context, Event.routeName,
+                            arguments: forEvent);
                       },
-                      child: Box.textRadiusBorder("開始運動"),
+                      child: Container(
+                        padding: const EdgeInsets.all(10),
+                        child: Box.boxHasRadius(
+                            color: MyTheme.buttonColor,
+                            child: GestureDetector(
+                              onTap: null,
+                              child: Box.textRadiusBorder('開始運動',
+                                  border: MyTheme.buttonColor),
+                            )),
+                      ),
                     )
                   : Container())
               : Box.yesnoBox(() => sendReply(1), () => sendReply(2),
                   noTitle: "拒絕")
-
         ],
       ),
       title: "邀約",

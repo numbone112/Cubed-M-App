@@ -39,10 +39,11 @@ class HistoryDetailPersonstate extends State<HistoryDetailPerson> {
           behavior: HitTestBehavior.translucent,
           onTap: () => changeSelect(i, d),
           child: Box.textRadiusBorder(type[i],
-              color: select == i ? Colors.white : MyTheme.buttonColor,
-              filling: select == i ? MyTheme.buttonColor : Colors.white,
-              border: MyTheme.buttonColor,
-              width: 75),
+              margin: const EdgeInsets.fromLTRB(0, 20, 10, 0),
+              color: select == i ? Colors.white : MyTheme.color,
+              filling: select == i ? MyTheme.color : Colors.white,
+              border: MyTheme.color,
+              width: 80),
         ),
       );
     }
@@ -54,21 +55,40 @@ class HistoryDetailPersonstate extends State<HistoryDetailPerson> {
     final args = ModalRoute.of(context)!.settings.arguments as HistoryDeep;
     return (CustomPage(
       body: ListView(children: [
-        const Padding(padding: EdgeInsets.all(10)),
+        const Padding(padding: EdgeInsets.only(top: 10, bottom: 10)),
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Column(
-              children: [
-                Text(args.name),
-                const Text('男 66'),
-              ],
+            SizedBox(
+              height: 70,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  textWidget(
+                    text: args.name,
+                    type: TextType.fun,
+                    color: MyTheme.buttonColor,
+                  ),
+                  textWidget(
+                    text: args.user_id,
+                    type: TextType.sub,
+                  ),
+                  textWidget(
+                    text: '男 66',
+                    type: TextType.sub,
+                  ),
+                ],
+              ),
             ),
             Column(
               children: [
-                const Text("評分"),
+                textWidget(
+                  text: '評分',
+                  type: TextType.sub,
+                ),
                 Box.textRadiusBorder(args.score.toString(),
-                    color: Colors.white, filling: MyTheme.lightColor)
+                    width: 60, color: Colors.white, textType: TextType.sub)
               ],
             )
           ],
@@ -76,6 +96,35 @@ class HistoryDetailPersonstate extends State<HistoryDetailPerson> {
         //各運動項目
         Row(
           children: label(args.done),
+        ),
+        Container(
+          margin: const EdgeInsets.only(top: 15),
+          child: Flex(
+            direction: Axis.horizontal,
+            children: [
+              Expanded(
+                flex: 1,
+                child: textWidget(
+                    text: '組數',
+                    type: TextType.content,
+                    textAlign: TextAlign.center),
+              ),
+              Expanded(
+                flex: 1,
+                child: textWidget(
+                    text: '次數',
+                    type: TextType.content,
+                    textAlign: TextAlign.center),
+              ),
+              Expanded(
+                flex: 1,
+                child: textWidget(
+                    text: '等級',
+                    type: TextType.content,
+                    textAlign: TextAlign.center),
+              )
+            ],
+          ),
         ),
         SizedBox(
           width: MediaQuery.of(context).size.width,
@@ -85,14 +134,31 @@ class HistoryDetailPersonstate extends State<HistoryDetailPerson> {
             itemBuilder: (context, index) {
               return Box.boxHasRadius(
                 height: 50,
-                margin: const EdgeInsets.only(top: 15, bottom: 15),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                margin: const EdgeInsets.only(top: 15),
+                child: Flex(
+                  direction: Axis.horizontal,
                   children: [
-                    Text(index.toString()),
-                    Text(dones[index].times.toString()),
-                    Text(leveltable[dones[index].level])
+                    Expanded(
+                      flex: 1,
+                      child: textWidget(
+                          text: index.toString(),
+                          type: TextType.content,
+                          textAlign: TextAlign.center),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: textWidget(
+                          text: dones[index].times.toString(),
+                          type: TextType.content,
+                          textAlign: TextAlign.center),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: textWidget(
+                          text: leveltable[dones[index].level],
+                          type: TextType.content,
+                          textAlign: TextAlign.center),
+                    )
                   ],
                 ),
               );

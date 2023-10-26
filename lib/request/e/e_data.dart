@@ -100,15 +100,8 @@ class EAppointmentDetailBase {
 @JsonSerializable(explicitToJson: true)
 class EventRecordInfo {
   EventRecordInfo(
-      {this.id = -1,
-      this.done = const [],
-      //  this.p_id="",
-      // required this.item,
-      this.name = "",
-      this.remark = ""});
+      {this.id = -1, this.done = const [], this.name = "", this.remark = ""});
   int id;
-  // String p_id;
-  // List<int> item;
   List<List<int>> done;
   String remark;
   String name;
@@ -176,5 +169,3 @@ class PatientData extends ProfileData {
   @override
   Map<String, dynamic> toJson() => _$PatientDataToJson(this);
 }
-
-

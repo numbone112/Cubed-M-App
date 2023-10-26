@@ -21,17 +21,17 @@ class ProfileInfo extends StatefulWidget {
   ProfileCreateState createState() => ProfileCreateState();
 }
 
-class RawDataSet {
-  RawDataSet({
-    required this.title,
-    required this.color,
-    required this.values,
-  });
+// class RawDataSet {
+//   RawDataSet({
+//     required this.title,
+//     required this.color,
+//     required this.values,
+//   });
 
-  final String title;
-  final Color color;
-  final List<double> values;
-}
+//   final String title;
+//   final Color color;
+//   final List<double> values;
+// }
 
 class SubMenu {
   SubMenu({required this.title, this.function, required this.img, this.widget});

@@ -36,14 +36,7 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage> {
   String userName = "柯明朗";
-  // late LinkedScrollControllerGroup _controllers;
-  // late ScrollController _letters;
-  // late ScrollController _numbers;
   List<ItemWithField> targetCheck = ItemSets.withField();
-
-  List<RawDataSet> rawDataSetList = [
-    RawDataSet(title: "復健者", color: Colors.blue, values: [5, 3, 1])
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -115,43 +108,12 @@ class HomePageState extends State<HomePage> {
                           child: textWidget(text: "分析圖", type: TextType.sub)),
                     ),
                     Expanded(
-                        child: Box.boxHasRadius(
-                      width: MediaQuery.of(context).size.width * 0.33,
-                      height: MediaQuery.of(context).size.width * 0.33,
-                      child: RadarChart(
-                        RadarChartData(
-                            getTitle: (index, angle) {
-                              switch (index) {
-                                case 0:
-                                  return const RadarChartTitle(text: '左手');
-                                case 2:
-                                  return const RadarChartTitle(text: '右手');
-                                case 1:
-                                  return const RadarChartTitle(text: '下肢');
-                                default:
-                                  return const RadarChartTitle(text: '');
-                              }
-                            },
-                            dataSets:
-                                rawDataSetList.asMap().entries.map((entry) {
-                              final rawDataSet = entry.value;
-
-
-                              return RadarDataSet(
-                                fillColor: MyTheme.lightColor,
-                                borderColor: Colors.white,
-                                entryRadius: 3,
-                                dataEntries: rawDataSet.values
-                                    .map((e) => RadarEntry(value: e))
-                                    .toList(),
-                                borderWidth: 2.3,
-                              );
-                            }).toList()),
-                        swapAnimationDuration:
-                            const Duration(milliseconds: 150), // Optional
-                        swapAnimationCurve: Curves.linear, // Optional
+                      child: Box.boxHasRadius(
+                        width: MediaQuery.of(context).size.width * 0.33,
+                        height: MediaQuery.of(context).size.width * 0.33,
+                        child: Chart.avgChart([5, 3, 1]),
                       ),
-                    ))
+                    )
                   ],
                 ),
               ),
@@ -241,8 +203,8 @@ class HomePageState extends State<HomePage> {
                   boxShadow: Box.getshadow(MyTheme.color),
                   width: MediaQuery.of(context).size.width * 0.43,
                   height: MediaQuery.of(context).size.height * 0.13,
-                  child:
-                      Center(child: textWidget(text: "邀約運動", type: TextType.sub)),
+                  child: Center(
+                      child: textWidget(text: "邀約運動", type: TextType.sub)),
                 ),
               ),
             ],

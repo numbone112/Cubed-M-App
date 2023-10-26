@@ -5,12 +5,14 @@ import 'package:e_fu/pages/exercise/invite.dart';
 import 'package:e_fu/request/exercise/history_data.dart';
 import 'package:e_fu/request/invite/invite_data.dart';
 import 'package:e_fu/request/plan/plan_data.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
 class Box {
   static final List<String> executeText = ["一", '二', '三', '四', '五', '六', '日'];
-  static const BorderRadius normamBorderRadius = BorderRadius.all(Radius.circular(30));
+  static const BorderRadius normamBorderRadius =
+      BorderRadius.all(Radius.circular(30));
   static List<BoxShadow> getshadow(Color color) {
     return [
       BoxShadow(
@@ -98,48 +100,48 @@ class Box {
   }
 
   static Widget inviteBox(Invite invite, BuildContext context) {
-    return (Box.boxHasRadius(
-        margin: const EdgeInsets.only(bottom: 10),
-        padding: const EdgeInsets.all(15),
-        height: 130,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Expanded(
-              child: GestureDetector(
-                behavior: HitTestBehavior.translucent,
-                onTap: () => Navigator.pushNamed(context, InvitePage.routeName,
-                    arguments: invite),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    textWidget(
-                        text: invite.name,
-                        type: TextType.sub,
-                        color: MyTheme.buttonColor,
-                        fontWeight: true),
-                    textWidget(
-                        text: invite.time
-                            .toString()
-                            .substring(0, 16)
-                            .replaceAll('T', ' '),
-                        type: TextType.sub),
-                    textWidget(
-                        text: '召集人：${invite.m_id}',
-                        type: TextType.content,
-                        color: MyTheme.hintColor),
-                    textWidget(
-                        text:
-                            '備註：${invite.remark.isEmpty ? '無' : invite.remark}',
-                        type: TextType.content,
-                        color: MyTheme.hintColor)
-                  ],
-                ),
+    return Box.boxHasRadius(
+      margin: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.all(15),
+      height: 130,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Expanded(
+            child: GestureDetector(
+              behavior: HitTestBehavior.translucent,
+              onTap: () => Navigator.pushNamed(context, InvitePage.routeName,
+                  arguments: invite),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  textWidget(
+                      text: invite.name,
+                      type: TextType.sub,
+                      color: MyTheme.buttonColor,
+                      fontWeight: true),
+                  textWidget(
+                      text: invite.time
+                          .toString()
+                          .substring(0, 16)
+                          .replaceAll('T', ' '),
+                      type: TextType.sub),
+                  textWidget(
+                      text: '召集人：${invite.m_id}',
+                      type: TextType.content,
+                      color: MyTheme.hintColor),
+                  textWidget(
+                      text: '備註：${invite.remark.isEmpty ? '無' : invite.remark}',
+                      type: TextType.content,
+                      color: MyTheme.hintColor)
+                ],
               ),
             ),
-          ],
-        )));
+          ),
+        ],
+      ),
+    );
   }
 
   static Widget history(
@@ -271,11 +273,11 @@ class Box {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         Expanded(
-            flex: 2,
-            child: textWidget(text: type ?? '', type: TextType.sub)),
+            flex: 2, child: textWidget(text: type ?? '', type: TextType.sub)),
         Expanded(
             flex: 5,
-            child: Center(child: textWidget(text: name ?? '', type: TextType.sub))),
+            child: Center(
+                child: textWidget(text: name ?? '', type: TextType.sub))),
         Expanded(flex: 2, child: accept ??= Container()),
       ],
     );
@@ -351,26 +353,29 @@ class Box {
               ],
             ),
           ),
-          isHost?
-          GestureDetector(
-            child: Container(
-              padding: const EdgeInsets.fromLTRB(5, 5, 10, 5),
-              decoration: BoxDecoration(
-                  color: MyTheme.lightColor,
-                  borderRadius: BorderRadius.circular(30)),
-              child: Row(
-                children: [
-                  const Icon(
-                    Icons.add,
-                    color: Colors.white,
-                    size: 20,
+          isHost
+              ? GestureDetector(
+                  child: Container(
+                    padding: const EdgeInsets.fromLTRB(5, 5, 10, 5),
+                    decoration: BoxDecoration(
+                        color: MyTheme.lightColor,
+                        borderRadius: BorderRadius.circular(30)),
+                    child: Row(
+                      children: [
+                        const Icon(
+                          Icons.add,
+                          color: Colors.white,
+                          size: 20,
+                        ),
+                        textWidget(
+                            text: '邀請',
+                            type: TextType.content,
+                            color: Colors.white)
+                      ],
+                    ),
                   ),
-                  textWidget(
-                      text: '邀請', type: TextType.content, color: Colors.white)
-                ],
-              ),
-            ),
-          ):Container()
+                )
+              : Container()
         ],
       ),
     );
@@ -594,6 +599,40 @@ class Box {
         Text(title),
         Expanded(child: TextInput.radius("組數", controller))
       ],
+    );
+  }
+}
+
+class Chart {
+  static Widget avgChart(List<double> values) {
+    return RadarChart(
+      RadarChartData(
+          titlePositionPercentageOffset: 0.3,
+          getTitle: (index, angle) {
+            switch (index) {
+              case 0:
+                return const RadarChartTitle(text: '左手');
+              case 2:
+                return const RadarChartTitle(text: '右手');
+              case 1:
+                return const RadarChartTitle(text: '下肢');
+              default:
+                return const RadarChartTitle(text: '');
+            }
+          },
+          ticksTextStyle: const TextStyle(fontSize: 0),
+          dataSets: [
+            RadarDataSet(
+              fillColor: MyTheme.lightColor,
+              borderColor: MyTheme.lightColor,
+              entryRadius: 2.3,
+              dataEntries: values.map((e) => RadarEntry(value: e)).toList(),
+              borderWidth: 2.3,
+            )
+          ]),
+
+      swapAnimationDuration: const Duration(milliseconds: 150), // Optional
+      swapAnimationCurve: Curves.linear, // Optional
     );
   }
 }

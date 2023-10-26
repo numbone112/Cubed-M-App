@@ -1,13 +1,21 @@
 // ignore_for_file: non_constant_identifier_names
 
+import 'dart:convert';
+
 import 'package:json_annotation/json_annotation.dart';
 
 part 'get_user_data.g.dart';
 
+List<GetUser> parseGetUserList(String responseBody) {
+  final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
+
+  return parsed.map<GetUser>((json) => GetUser.fromJson(json)).toList();
+}
+
 @JsonSerializable(explicitToJson: true)
 class GetUser {
   GetUser({
-    required this.password,
+     this.password="",
     required this.name,
     required this.sex,
     required this.phone,
@@ -18,9 +26,9 @@ class GetUser {
     required this.weight,
     required this.height,
     required this.disease,
-    required this.target_level,
-    required this.target_sets,
+    required this.score,
     required this.id,
+    required this.sport_info
   });
 
   String password;
@@ -34,9 +42,9 @@ class GetUser {
   List<int> weight;
   int height;
   List<String> disease;
-  List<int> target_sets;
-  List<String> target_level;
+  double score;
   String id;
+  List<SportInfo> sport_info;
 
   factory GetUser.fromJson(Map<String, dynamic> json) =>
       _$GetUserFromJson(json);
@@ -44,16 +52,18 @@ class GetUser {
 }
 
 @JsonSerializable(explicitToJson: true)
-class Target {
-  Target(
-      {required this.target,
+class SportInfo {
+  SportInfo(
+      {required this.type_id,
+      required this.score,
       required this.target_level,
       required this.target_sets});
+  int type_id;
+  int target_sets;
+  int target_level;
+  double score;
 
-  String target;
-  List<String> target_sets;
-  List<String> target_level;
-
-  factory Target.fromJson(Map<String, dynamic> json) => _$TargetFromJson(json);
-  Map<String, dynamic> toJson() => _$TargetToJson(this);
+  factory SportInfo.fromJson(Map<String, dynamic> json) =>
+      _$SportInfoFromJson(json);
+  Map<String, dynamic> toJson() => _$SportInfoToJson(this);
 }

@@ -1,18 +1,22 @@
 import 'dart:convert';
 
+import 'package:age_calculator/age_calculator.dart';
 import 'package:e_fu/module/box_ui.dart';
 import 'package:e_fu/module/page.dart';
 import 'package:e_fu/my_data.dart';
 import 'package:e_fu/pages/profile/profile.dart';
 import 'package:e_fu/request/exercise/history.dart';
 import 'package:e_fu/request/exercise/history_data.dart';
+import 'package:e_fu/request/mo/mo.dart';
+import 'package:e_fu/request/user/get_user_data.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 class MoDetail extends StatefulWidget {
   static const routeName = '/mo/detail';
   final int first = 1;
-  const MoDetail({super.key, required this.userName});
+  final GetUser friend;
+  const MoDetail({super.key, required this.userName, required this.friend});
   final String userName;
 
   @override
@@ -23,18 +27,15 @@ class MoDetailState extends State<MoDetail> {
   HistoryRepo historyRepo = HistoryRepo();
 
   List<History> hisotrylist = [];
+  MoRepo moRepo = MoRepo();
 
-  List<RawDataSet> rawDataSetList = [
-    RawDataSet(title: "復健者", color: Colors.blue, values: [5, 3, 1])
-  ];
 
   @override
   void initState() {
     super.initState();
-    historyRepo.historyList(widget.userName).then((value) {
-      List<History> historyList = parseHistoryList(jsonEncode(value.D));
+    moRepo.detail(widget.userName, widget.friend.id).then((value) {
       setState(() {
-        hisotrylist = historyList;
+        hisotrylist = parseHistoryList(jsonEncode(value.D));
       });
     });
   }
@@ -46,22 +47,27 @@ class MoDetailState extends State<MoDetail> {
       headColor: MyTheme.lightColor,
       buildContext: context,
       body: ListView(children: [
+        const Padding(padding: EdgeInsets.all(10)),
         Box.boxHasRadius(
-          padding: const EdgeInsets.all(20),
-          margin: const EdgeInsets.only(left: 30, right: 30),
           height: 100,
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              const Column(
+              Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: [Text("林哲卉"), Text("女 66")],
+                children: [
+                  textWidget(text: widget.friend.name, type: TextType.fun),
+                  textWidget(
+                      text:
+                          "${widget.friend.sex} ${AgeCalculator.age(widget.friend.birthday).years}",
+                      type: TextType.fun)
+                ],
               ),
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text("運動評分"),
-                  Box.boxHasRadius(child: const Text("4.1"), color: Colors.red)
+                  textWidget(text: "運動評分",type: TextType.fun),
+                  Box.textRadiusBorder(widget.friend.score.toString(),width: 70)
                 ],
               )
             ],
@@ -72,23 +78,23 @@ class MoDetailState extends State<MoDetail> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Box.boxHasRadius(
+              width: MediaQuery.of(context).size.width*0.4,
                 height: 200,
-                margin: const EdgeInsets.only(left: 30),
+                // margin: const EdgeInsets.only(left: 30),
                 padding: const EdgeInsets.all(10),
-                child: const Column(
+                child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    Text("與好友一起運動"),
-                    Text(
-                      "共 15 次",
-                      style: TextStyle(fontSize: 30),
-                    ),
-                    Text("最後一次運動2023/04/05")
+                    textWidget(text: "與好友一起運動"),
+                    textWidget(
+                        text: "共 ${hisotrylist.length} 次", type: TextType.fun),
+                    textWidget(text: "最後一次運動2023/04/05"),
                   ],
                 )),
             Box.boxHasRadius(
+              width: MediaQuery.of(context).size.width*0.4,
               height: 200,
-              margin: const EdgeInsets.only(right: 30),
+              padding: const EdgeInsets.all(5),
               child: Column(
                 children: [
                   const Text("分析圖"),
@@ -96,46 +102,7 @@ class MoDetailState extends State<MoDetail> {
                     margin: const EdgeInsets.only(top: 20),
                     width: 150,
                     height: 150,
-                    child: RadarChart(
-                      RadarChartData(
-                          getTitle: (index, angle) {
-                            final usedAngle = angle;
-                            switch (index) {
-                              case 0:
-                                return RadarChartTitle(
-                                  text: '左手',
-                                  angle: usedAngle,
-                                );
-                              case 2:
-                                return RadarChartTitle(
-                                  text: '右手',
-                                  angle: usedAngle,
-                                );
-                              case 1:
-                                return RadarChartTitle(
-                                    text: '下肢', angle: usedAngle);
-                              default:
-                                return const RadarChartTitle(text: '');
-                            }
-                          },
-                          dataSets: rawDataSetList.asMap().entries.map((entry) {
-                            final rawDataSet = entry.value;
-
-
-                            return RadarDataSet(
-                              fillColor: Colors.grey.withOpacity(0.5),
-                              borderColor: Colors.white,
-                              entryRadius: 3,
-                              dataEntries: rawDataSet.values
-                                  .map((e) => RadarEntry(value: e))
-                                  .toList(),
-                              borderWidth: 2.3,
-                            );
-                          }).toList()),
-                      swapAnimationDuration:
-                          const Duration(milliseconds: 150), // Optional
-                      swapAnimationCurve: Curves.linear, // Optional
-                    ),
+                    child: Chart.avgChart(widget.friend.sport_info.map((e) => e.score).toList())
                   )
                 ],
               ),

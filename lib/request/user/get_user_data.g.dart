@@ -7,7 +7,7 @@ part of 'get_user_data.dart';
 // **************************************************************************
 
 GetUser _$GetUserFromJson(Map<String, dynamic> json) => GetUser(
-      password: json['password'] as String,
+      password: json['password'] as String? ?? "",
       name: json['name'] as String,
       sex: json['sex'] as String,
       phone: json['phone'] as String,
@@ -22,12 +22,11 @@ GetUser _$GetUserFromJson(Map<String, dynamic> json) => GetUser(
       height: json['height'] as int,
       disease:
           (json['disease'] as List<dynamic>).map((e) => e as String).toList(),
-      target_level: (json['target_level'] as List<dynamic>)
-          .map((e) => e as String)
-          .toList(),
-      target_sets:
-          (json['target_sets'] as List<dynamic>).map((e) => e as int).toList(),
+      score: (json['score'] as num).toDouble(),
       id: json['id'] as String,
+      sport_info: (json['sport_info'] as List<dynamic>)
+          .map((e) => SportInfo.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$GetUserToJson(GetUser instance) => <String, dynamic>{
@@ -42,23 +41,21 @@ Map<String, dynamic> _$GetUserToJson(GetUser instance) => <String, dynamic>{
       'weight': instance.weight,
       'height': instance.height,
       'disease': instance.disease,
-      'target_sets': instance.target_sets,
-      'target_level': instance.target_level,
+      'score': instance.score,
       'id': instance.id,
+      'sport_info': instance.sport_info.map((e) => e.toJson()).toList(),
     };
 
-Target _$TargetFromJson(Map<String, dynamic> json) => Target(
-      target: json['target'] as String,
-      target_level: (json['target_level'] as List<dynamic>)
-          .map((e) => e as String)
-          .toList(),
-      target_sets: (json['target_sets'] as List<dynamic>)
-          .map((e) => e as String)
-          .toList(),
+SportInfo _$SportInfoFromJson(Map<String, dynamic> json) => SportInfo(
+      type_id: json['type_id'] as int,
+      score: (json['score'] as num).toDouble(),
+      target_level: json['target_level'] as int,
+      target_sets: json['target_sets'] as int,
     );
 
-Map<String, dynamic> _$TargetToJson(Target instance) => <String, dynamic>{
-      'target': instance.target,
+Map<String, dynamic> _$SportInfoToJson(SportInfo instance) => <String, dynamic>{
+      'type_id': instance.type_id,
       'target_sets': instance.target_sets,
       'target_level': instance.target_level,
+      'score': instance.score,
     };

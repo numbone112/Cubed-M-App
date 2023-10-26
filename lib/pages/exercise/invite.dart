@@ -3,6 +3,9 @@ import 'dart:convert';
 import 'package:e_fu/module/box_ui.dart';
 import 'package:e_fu/module/page.dart';
 import 'package:e_fu/my_data.dart';
+import 'package:e_fu/pages/event/event.dart';
+import 'package:e_fu/pages/exercise/event_record.dart';
+import 'package:e_fu/request/e/e_data.dart';
 import 'package:e_fu/request/invite/invite.dart';
 import 'package:e_fu/request/invite/invite_data.dart';
 import 'package:flutter/material.dart';
@@ -52,7 +55,7 @@ class InviteState extends State<InvitePage> {
   }
 
   sendReply(int accept) {
-    inviteRepo.replyInvite(accept, widget.userName, invite.i_id).then((value) {
+    inviteRepo.replyInvite(accept, widget.userName, invite.id).then((value) {
       setState(() {
         invite.accept = accept;
       });
@@ -63,7 +66,7 @@ class InviteState extends State<InvitePage> {
   Widget build(BuildContext context) {
     invite = ModalRoute.of(context)!.settings.arguments as Invite;
     if (detailList.isEmpty) {
-      inviteRepo.inviteDetail(invite.i_id).then((value) {
+      inviteRepo.inviteDetail(invite.id).then((value) {
         setState(() {
           detailList = parseInviteDetailList(jsonEncode(value.D));
         });
@@ -87,12 +90,25 @@ class InviteState extends State<InvitePage> {
             child: ListView(children: showOnInvite()),
           ),
           invite.accept != 3
-              ? Container()
-              : Box.yesnoBox(
-                  () => sendReply(1),
-                  yestTitle: '接受',
-                  () => sendReply(2),
-                  noTitle: '拒絕')
+              ? (invite.m_id==widget.userName
+                  ? GestureDetector(
+                      onTap: () {
+                        List<EventRecord> forEvent = [];
+                        for (var element in detailList) {
+                          logger.v(element.userName);
+                          forEvent.add(EventRecord(
+                              eventRecordDetail:
+                                  EventRecordDetail(item: element.targetSets),
+                              eventRecordInfo: EventRecordInfo(name: element.userName)));
+                        }
+                        Navigator.pushReplacementNamed(context, Event.routeName,arguments: forEvent);
+                      },
+                      child: Box.textRadiusBorder("開始運動"),
+                    )
+                  : Container())
+              : Box.yesnoBox(() => sendReply(1), () => sendReply(2),
+                  noTitle: "拒絕")
+
         ],
       ),
       title: "邀約",

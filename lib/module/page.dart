@@ -97,7 +97,7 @@ class CustomPageState extends State<CustomPage> {
                                                 MediaQuery.of(context)
                                                         .size
                                                         .height *
-                                                    0.08,
+                                                    0.1,
                                             child: widget.titWidget ??
                                                 textWidget(
                                                     text: widget.title ?? "",

@@ -98,10 +98,8 @@ class MyappState extends State<MyApp> {
         HindMoList.routeName: (_) => HindMoList(userName: userName),
         InsertInvite.routeName: (_) => InsertInvite(userName: userName),
         Profile.routeName: (_) => Profile(userName: userName),
-        ProfileGoal.routeName: (_) => ProfileGoal(userName: userName),
-        InvitePage.routeName: (_) => InvitePage(
-              userName: userName,
-            ),
+        // ProfileGoal.routeName: (_) => ProfileGoal(userName: userName),
+        InvitePage.routeName: (_) => InvitePage(userName: userName),
         HistoryDetailPerson.routeName: (_) => HistoryDetailPerson(
               userName: userName,
             ),
@@ -110,7 +108,7 @@ class MyappState extends State<MyApp> {
             ),
         PlanPage.routeName: (_) => PlanPage(userName: userName),
         PlanInsertPage.routeName: (_) => PlanInsertPage(userName: userName),
-        MoDetail.routeName: (_) => MoDetail(userName: userName),
+        // MoDetail.routeName: (_) => MoDetail(userName: userName),
       },
     );
   }

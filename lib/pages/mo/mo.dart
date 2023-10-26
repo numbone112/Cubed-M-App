@@ -47,7 +47,7 @@ class _MoState extends State<Mo> with SingleTickerProviderStateMixin {
         Expanded(
           child: TabBarView(
               controller: tabController,
-              children: [const MoRank(), MoList(userName: widget.userName)]),
+              children: [ MoRank(userName: widget.userName,), MoList(userName: widget.userName)]),
         ),
       ]),
     );

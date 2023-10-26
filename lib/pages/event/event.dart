@@ -1,10 +1,15 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
+import 'package:age_calculator/age_calculator.dart';
 import 'package:e_fu/module/page.dart';
 import 'package:e_fu/pages/event/ble_device.dart';
 import 'package:e_fu/pages/exercise/event_record.dart';
+import 'package:e_fu/pages/exercise/history.dart';
 import 'package:e_fu/request/data.dart';
+import 'package:e_fu/request/exercise/history.dart';
+import 'package:e_fu/request/exercise/history_data.dart';
+import 'package:e_fu/request/invite/invite.dart';
 import 'package:e_fu/request/invite/invite_data.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:logger/logger.dart';
@@ -56,6 +61,8 @@ class EventState extends State<Event> {
   List<EventRecord> forEventList = [];
   int trainGoal = 0;
   var logger = Logger();
+  HistoryRepo historyRepo = HistoryRepo();
+  InviteRepo inviteRepo = InviteRepo();
 
   Future<void> updateBleState() async {
     if (await FlutterBluePlus.isSupported == false) {
@@ -124,18 +131,60 @@ class EventState extends State<Event> {
     List<RecordSenderItem> detail = [];
     for (var element in forEventList) {
       //補年紀
-      element.processData(element.eventRecordInfo.id, true);
+      element.processData(
+          // AgeCalculator()
+          70,
+          true);
       detail.add(RecordSenderItem(
           done: element.done,
           score: element.avg,
-          user_id: element.eventRecordInfo.name));
+          user_id: element.eventRecordInfo.name,
+          i_id: element.eventRecordInfo.id));
     }
     // 傳送資料給後端
     Format a =
-        await recordRepo.record(RecordSender(record: toSave, detail: detail));
+        await recordRepo.record(RecordSender(raw: toSave, detail: detail));
     if (a.message == "ok") {
       logger.v("成功");
     }
+    for (var element in hasPair) {
+      element.disconnect();
+    }
+
+    //跳結果頁
+    if (context.mounted) {
+      int inviteIndex = forEventList.first.eventRecordInfo.id;
+      if (inviteIndex == -1) {
+        Invite invite = Invite(m_id: widget.userName, friend: [widget.userName]);
+        await inviteRepo.createInvite(invite).then((value) async {
+          
+          await inviteRepo
+              .searchInvite(widget.userName, invite.time)
+              .then((value) async {
+            
+            inviteIndex = parseInviteList(jsonEncode(value.D))[0].id;
+            logger.v("inviteIndex$inviteIndex");
+            await historyRepo
+                .historyList(widget.userName, iId: inviteIndex.toString())
+                .then((value) {
+              History history = parseHistoryList(jsonEncode(value.D))[0];
+              Navigator.pushReplacementNamed(
+                  context, HistoryDetailPage.routeName,
+                  arguments: history);
+            });
+          });
+        });
+      } else {
+        await historyRepo
+            .historyList(widget.userName, iId: inviteIndex.toString())
+            .then((value) {
+          History history = parseHistoryList(jsonEncode(value.D))[0];
+          Navigator.pushReplacementNamed(context, HistoryDetailPage.routeName,
+              arguments: history);
+        });
+      }
+    }
+    logger.v("enter else");
   }
 
   connect(BluetoothDevice device, int pIndex, EventRecord forEvent,
@@ -158,7 +207,7 @@ class EventState extends State<Event> {
       connectDeviec[pIndex] = device.toString();
     });
     for (var service in services) {
-      for(BluetoothCharacteristic element in service.characteristics){
+      for (BluetoothCharacteristic element in service.characteristics) {
         switch (element.uuid.toString()) {
           case BleDevice.start:
             startCharList.add(element);
@@ -200,23 +249,6 @@ class EventState extends State<Event> {
                   //全部結束
                   if (trainCount >= trainGoal) {
                     //關閉所有連線
-                    for (var element in hasPair) {
-                      element.disconnect();
-                    }
-                    //串接後端
-                    try {
-                      logger.v("end done${forEvent.data}");
-                      finish();
-                    } catch (e) {
-                      logger.v("event all done $e");
-                    }
-                    //跳結果頁
-                    if (context.mounted) {
-                      // Navigator.pushReplacementNamed(
-                      //     context, EventNowResult.routeName,
-                      //     arguments: [forEventList]);
-                    }
-                    logger.v("enter else");
                   }
                 }
                 EasyLoading.dismiss();
@@ -247,7 +279,6 @@ class EventState extends State<Event> {
           default:
         }
       }
-     
     }
     logger.v("連接到$checkString");
 
@@ -320,8 +351,7 @@ class EventState extends State<Event> {
       height: 225,
       margin: const EdgeInsets.all(3),
       decoration: const BoxDecoration(
-          borderRadius: Box.normamBorderRadius,
-          color: Colors.white),
+          borderRadius: Box.normamBorderRadius, color: Colors.white),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
@@ -481,7 +511,7 @@ class EventState extends State<Event> {
               forEventList.isEmpty
                   ? const Text(" ")
                   : SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.7,
+                      height: MediaQuery.of(context).size.height * 0.65,
                       child: ListView.builder(
                         itemCount: forEventList.length,
                         itemBuilder: ((context, index) {
@@ -496,47 +526,60 @@ class EventState extends State<Event> {
                   children: const [Text("運動分級表詳細資料")],
                 ),
               ),
-              GestureDetector(
-                child: Box.textRadiusBorder(
-                  "全部開始",
-                  filling: MyTheme.lightColor,
-                  width: 100,
-                ),
-                onTap: () async {
-                  if (connectDeviec.isEmpty) {
-                    showDialog(
-                      context: context,
-                      builder: (ctx) => const AlertDialog(
-                        content: Text("尚未連接裝置"),
-                      ),
-                    );
-                  } else {
-                    EasyLoading.instance.indicatorWidget = SizedBox(
-                      width: 75,
-                      height: 75,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          SpinKitPouringHourGlassRefined(
-                            color: MyTheme.color,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  GestureDetector(
+                    child: Box.textRadiusBorder(
+                      "全部開始",
+                      filling: MyTheme.lightColor,
+                      width: 100,
+                    ),
+                    onTap: () async {
+                      if (connectDeviec.isEmpty) {
+                        showDialog(
+                          context: context,
+                          builder: (ctx) => const AlertDialog(
+                            content: Text("尚未連接裝置"),
                           ),
-                          const Text("運動中")
-                        ],
-                      ),
-                    );
+                        );
+                      } else {
+                        EasyLoading.instance.indicatorWidget = SizedBox(
+                          width: 75,
+                          height: 75,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              SpinKitPouringHourGlassRefined(
+                                color: MyTheme.color,
+                              ),
+                              const Text("運動中")
+                            ],
+                          ),
+                        );
 
-                    EasyLoading.show();
+                        EasyLoading.show();
 
-                    if (trainCount < 3) {}
-                    for (var element in signCharList) {
-                      await element.setNotifyValue(true);
-                    }
-                    for (var element in startCharList) {
-                      element.write(utf8.encode("E-fu"));
-                    }
-                  }
-                },
-              ),
+                        if (trainCount < 3) {}
+                        for (var element in signCharList) {
+                          await element.setNotifyValue(true);
+                        }
+                        for (var element in startCharList) {
+                          element.write(utf8.encode("E-fu"));
+                        }
+                      }
+                    },
+                  ),
+                  GestureDetector(
+                    onTap: () => finish(),
+                    child: Box.textRadiusBorder(
+                      "結束",
+                      filling: MyTheme.lightColor,
+                      width: 100,
+                    ),
+                  )
+                ],
+              )
             ],
           ),
         ),

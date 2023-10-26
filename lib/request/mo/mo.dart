@@ -17,6 +17,10 @@ abstract class MoAPI {
   Future<Format> showMo(String id, mId);
 
   Future<Format> search(String keyword);
+
+  Future<Format> rank(String userId);
+
+  Future<Format> detail(String userId, friendId);
 }
 
 class MoRepo extends API implements MoAPI {
@@ -129,5 +133,16 @@ class MoRepo extends API implements MoAPI {
   @override
   Future<Format> search(String keyword) async {
     return await lunch(client.get(Uri.parse('$domain/mo/search/$keyword')));
+  }
+
+  @override
+  Future<Format> rank(String userId) async {
+    return await lunch(client.get(Uri.parse("$domain/mo/rank/$userId")));
+  }
+
+  @override
+  Future<Format> detail(String userId, friendId) async {
+    return await lunch(
+        client.get(Uri.parse("$domain/mo/detail/$userId/$friendId")));
   }
 }

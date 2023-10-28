@@ -124,11 +124,15 @@ class Box {
                   textWidget(
                       text: invite.time
                           .toString()
-                          .substring(0, 16)
-                          .replaceAll('T', ' '),
+                          .substring(0, 17)
+                          .replaceAll('T', ''),
                       type: TextType.sub),
                   textWidget(
                       text: '召集人：${invite.m_id}',
+                      type: TextType.content,
+                      color: MyTheme.hintColor),
+                  textWidget(
+                      text: '共 ${invite.friend.length + 1} 人',
                       type: TextType.content,
                       color: MyTheme.hintColor),
                   textWidget(
@@ -339,6 +343,7 @@ class Box {
     );
   }
 
+  //邀約運動資訊
   static Widget inviteInfo(Invite invite, bool isHost) {
     return Container(
       padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
@@ -360,7 +365,7 @@ class Box {
                 textWidget(
                     text: invite.time
                         .toString()
-                        .substring(0, 16)
+                        .substring(0, 17)
                         .replaceAll("T", " "),
                     type: TextType.sub),
                 textWidget(
@@ -428,32 +433,35 @@ class Box {
   }
 
   static Widget yesnoBox(Function() yes, Function() no,
-      {String? yestTitle, noTitle}) {
-    return  Container(
-        alignment: Alignment.bottomCenter,
-        padding: const EdgeInsets.all(10),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            Box.boxHasRadius(
-                child: GestureDetector(
-                    behavior: HitTestBehavior.translucent,
-                    onTap: no,
-                    child: Box.textRadiusBorder(noTitle ?? '取消',
-                        border: MyTheme.lightColor,
-                        filling: MyTheme.lightColor)),
-                color: MyTheme.lightColor),
-            Box.boxHasRadius(
+      {String? yestTitle, noTitle, double? height, width}) {
+    return Container(
+      alignment: Alignment.bottomCenter,
+      padding: const EdgeInsets.only(top: 10, bottom: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Box.boxHasRadius(
+              height: height,
+              width: width,
               child: GestureDetector(
-                behavior: HitTestBehavior.translucent,
-                onTap: yes,
-                child: Box.textRadiusBorder(yestTitle ?? '確定',
-                    border: MyTheme.buttonColor),
-              ),
-              color: MyTheme.buttonColor,
-            )
-          ],
-        ),
+                  behavior: HitTestBehavior.translucent,
+                  onTap: no,
+                  child: Box.textRadiusBorder(noTitle ?? '取消',
+                      border: MyTheme.lightColor, filling: MyTheme.lightColor)),
+              color: MyTheme.lightColor),
+          Box.boxHasRadius(
+            height: height,
+            width: width,
+            child: GestureDetector(
+              behavior: HitTestBehavior.translucent,
+              onTap: yes,
+              child: Box.textRadiusBorder(yestTitle ?? '確定',
+                  border: MyTheme.buttonColor),
+            ),
+            color: MyTheme.buttonColor,
+          )
+        ],
+      ),
     );
   }
 
@@ -608,11 +616,26 @@ class Box {
     return result;
   }
 
+  //設立組數的輸入框
   static Widget setsBox(String title, TextEditingController controller) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Container(width: 70, alignment: Alignment.center, child: Text(title)),
+        TextInput.radius('組數', controller, width: 80),
+        const SizedBox(width: 40, child: Text('組')),
+      ],
+    );
+  }
+
+  //表單標題和輸入框
+  static Widget textInput(
+      String title, String hintText, TextEditingController controller) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(title),
-        Expanded(child: TextInput.radius("組數", controller))
+        Expanded(child: TextInput.radius(hintText, controller)),
       ],
     );
   }
@@ -653,31 +676,38 @@ class Chart {
 }
 
 class TextInput {
-  static Widget radius(String text, TextEditingController controller,
-      {TextField? textField,
-      Function()? onTap,
-      double? width,
-      double? height}) {
+  static Widget radius(
+    String text,
+    TextEditingController controller, {
+    TextField? textField,
+    Function()? onTap,
+    double? width,
+    double? height,
+    Color? color,
+  }) {
     return Container(
-      width: width,
-      height: height,
-      margin: const EdgeInsets.all(10),
-      padding: const EdgeInsets.all(0),
-      decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20.0),
-          border: Border.all(color: MyTheme.lightColor)),
-      child: textField ??
-          TextFormField(
-            onTap: onTap,
-            controller: controller,
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              labelText: text,
-              floatingLabelStyle: TextStyle(color: MyTheme.lightColor),
-            ),
-          ),
-    );
+        width: width,
+        height: height ?? 45,
+        margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20.0),
+            border: Border.all(color: color ?? MyTheme.lightColor)),
+        child: textField ??
+            TextField(
+              onTap: onTap,
+              controller: controller,
+              cursorColor: color ?? MyTheme.lightColor,
+              textAlignVertical: TextAlignVertical.center,
+              decoration: InputDecoration(
+                isCollapsed: true,
+                contentPadding: const EdgeInsets.all(10),
+                border: InputBorder.none,
+                hintText: text,
+                hintStyle: TextStyle(color: MyTheme.hintColor, fontSize: 14),
+              ),
+            ));
   }
 
   static Widget radiusWithTitle(String text, TextEditingController controller,

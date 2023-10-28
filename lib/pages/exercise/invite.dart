@@ -66,7 +66,8 @@ class InviteState extends State<InvitePage> {
   Widget build(BuildContext context) {
     invite = ModalRoute.of(context)!.settings.arguments as Invite;
     if (detailList.isEmpty) {
-      inviteRepo.inviteDetail(invite.id).then((value) {
+      inviteRepo.inviteDetail(invite.i_id).then((value) {
+        logger.v(value.D);
         setState(() {
           detailList = parseInviteDetailList(jsonEncode(value.D));
         });
@@ -86,7 +87,7 @@ class InviteState extends State<InvitePage> {
             decoration: BoxDecoration(
                 color: Colors.white, borderRadius: BorderRadius.circular(30)),
             padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-            height: MediaQuery.of(context).size.height * 0.52,
+            height: MediaQuery.of(context).size.height * 0.51,
             child: ListView(children: showOnInvite()),
           ),
           invite.accept != 3
@@ -117,8 +118,11 @@ class InviteState extends State<InvitePage> {
                       ),
                     )
                   : Container())
-              : Box.yesnoBox(() => sendReply(1), () => sendReply(2),
-                  noTitle: "拒絕")
+              : SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  child: Box.yesnoBox(() => sendReply(1), () => sendReply(2),
+                      noTitle: "拒絕"),
+                )
         ],
       ),
       title: "邀約",

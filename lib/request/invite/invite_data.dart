@@ -15,14 +15,15 @@ List<Invite> parseInviteList(String responseBody) {
 List<InviteDetail> parseInviteDetailList(String responseBody) {
   final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
 
-  return parsed.map<InviteDetail>((json) => InviteDetail.fromJson(json)).toList();
+  return parsed
+      .map<InviteDetail>((json) => InviteDetail.fromJson(json))
+      .toList();
 }
 
 @JsonSerializable(explicitToJson: true)
 class Invite {
   Invite(
-      {
-        // this.i_id = -1,
+      {this.i_id = -1,
       this.id = -1,
       this.accept = 1,
       this.name = "愉快的運動",
@@ -31,9 +32,11 @@ class Invite {
       this.remark = "",
       this.m_name = "",
       this.friend = const []}) {
-    time = datetime.toIso8601String().substring(0,16);
+    if (time == "") {
+      time = datetime.toIso8601String();
+    }
   }
-  // int i_id;
+  int i_id;
   String name;
 
   final DateTime datetime = DateTime.now();
@@ -55,7 +58,9 @@ class Invite {
 @JsonSerializable(explicitToJson: true)
 class InviteDetail {
   InviteDetail(
-      {required this.accept,  this.targetSets=const [5,5,5], required this.userName});
+      {required this.accept,
+      this.targetSets = const [5, 5, 5],
+      required this.userName});
   String userName;
   List<int> targetSets;
   int accept;

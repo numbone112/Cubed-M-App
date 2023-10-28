@@ -8,6 +8,7 @@ part of 'invite_data.dart';
 
 Invite _$InviteFromJson(Map<String, dynamic> json) => Invite(
       id: json['id'] as int? ?? -1,
+      i_id: json['i_id'] as int? ?? -1,
       accept: json['accept'] as int? ?? 1,
       name: json['name'] as String? ?? "愉快的運動",
       time: json['time'] as String? ?? "",

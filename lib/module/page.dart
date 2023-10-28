@@ -62,59 +62,55 @@ class CustomPageState extends State<CustomPage> {
                           child: Row(
                             children: [
                               Expanded(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(0),
-                                  child: Row(
-                                    children: [
-                                      Expanded(
-                                        flex: 1,
-                                        child: (widget.buildContext != null)
-                                            ? IconButton(
-                                                icon: Icon(
-                                                  Icons.arrow_back_ios,
-                                                  size: 15,
-                                                  color: widget.prevColor,
-                                                ),
-                                                onPressed: () {
-                                                  Navigator.pop(
-                                                      widget.buildContext!);
-                                                },
-                                              )
-                                            : (widget.change != null)
-                                                ? IconButton(
-                                                    icon: const Icon(
-                                                        Icons.arrow_back_ios),
-                                                    onPressed: () =>
-                                                        widget.change!.call(),
-                                                  )
-                                                : Container(),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      flex: 1,
+                                      child: (widget.buildContext != null)
+                                          ? IconButton(
+                                              icon: Icon(
+                                                Icons.arrow_back_ios,
+                                                size: 15,
+                                                color: widget.prevColor,
+                                              ),
+                                              onPressed: () {
+                                                Navigator.pop(
+                                                    widget.buildContext!);
+                                              },
+                                            )
+                                          : (widget.change != null)
+                                              ? IconButton(
+                                                  icon: const Icon(
+                                                      Icons.arrow_back_ios),
+                                                  onPressed: () =>
+                                                      widget.change!.call(),
+                                                )
+                                              : Container(),
+                                    ),
+                                    Expanded(
+                                      flex: 3,
+                                      child: Container(
+                                          alignment: Alignment.center,
+                                          height: widget.headHeight ??
+                                              MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  0.1,
+                                          child: widget.titWidget ??
+                                              textWidget(
+                                                  text: widget.title ?? "",
+                                                  type: widget.headTexttype ??
+                                                      TextType.fun,
+                                                  color: widget.headTextColor,
+                                                  textAlign: TextAlign.center)),
+                                    ),
+                                    Expanded(
+                                      flex: 1,
+                                      child: Container(
+                                        child: widget.rightButton,
                                       ),
-                                      Expanded(
-                                        flex: 3,
-                                        child: Container(
-                                            alignment: Alignment.center,
-                                            height: widget.headHeight ??
-                                                MediaQuery.of(context)
-                                                        .size
-                                                        .height *
-                                                    0.1,
-                                            child: widget.titWidget ??
-                                                textWidget(
-                                                    text: widget.title ?? "",
-                                                    type: widget.headTexttype ??
-                                                        TextType.fun,
-                                                    color: widget.headTextColor,
-                                                    textAlign:
-                                                        TextAlign.center)),
-                                      ),
-                                      Expanded(
-                                        flex: 1,
-                                        child: Container(
-                                          child: widget.rightButton,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],

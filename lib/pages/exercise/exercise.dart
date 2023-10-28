@@ -9,6 +9,7 @@ import 'package:e_fu/request/invite/invite.dart';
 import 'package:e_fu/request/invite/invite_data.dart';
 
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 
 class ExerciseHome extends StatefulWidget {
   final String userName;

@@ -155,13 +155,12 @@ class EventState extends State<Event> {
     if (context.mounted) {
       int inviteIndex = forEventList.first.eventRecordInfo.id;
       if (inviteIndex == -1) {
-        Invite invite = Invite(m_id: widget.userName, friend: [widget.userName]);
+        Invite invite =
+            Invite(m_id: widget.userName, friend: [widget.userName]);
         await inviteRepo.createInvite(invite).then((value) async {
-          
           await inviteRepo
               .searchInvite(widget.userName, invite.time)
               .then((value) async {
-            
             inviteIndex = parseInviteList(jsonEncode(value.D))[0].id;
             logger.v("inviteIndex$inviteIndex");
             await historyRepo
@@ -330,6 +329,7 @@ class EventState extends State<Event> {
   }
 
   var recordRepo = RecordRepo();
+  
   Widget optional(EventRecord forEvent) {
     return Row(
       children: [
@@ -349,7 +349,6 @@ class EventState extends State<Event> {
     logger.v(forEvent.eventRecordInfo.name);
     return Container(
       height: 225,
-      margin: const EdgeInsets.all(3),
       decoration: const BoxDecoration(
           borderRadius: Box.normamBorderRadius, color: Colors.white),
       child: Column(
@@ -451,7 +450,7 @@ class EventState extends State<Event> {
                         builder: (ctx) => CupertinoAlertDialog(
                           content: Column(
                             children: const [
-                               SizedBox(
+                              SizedBox(
                                 height: 10,
                               ),
                               Align(
@@ -501,8 +500,12 @@ class EventState extends State<Event> {
     }
     return CustomPage(
       buildContext: context,
-      title: "肌力測試",
-      titWidget: Box.inviteInfo(Invite(), false),
+      title: '肌力運動',
+      titWidget: Padding(
+        padding: const EdgeInsets.only(top: 10),
+        child: Box.inviteInfo(Invite(), false),
+      ),
+      headHeight: 100,
       body: SizedBox(
         child: Padding(
           padding: const EdgeInsets.all(8.0),

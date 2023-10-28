@@ -191,7 +191,7 @@ class HomePageState extends State<HomePage> {
                   width: MediaQuery.of(context).size.width * 0.43,
                   height: MediaQuery.of(context).size.height * 0.13,
                   child: Center(
-                    child: textWidget(text: "肌力測試", type: TextType.sub),
+                    child: textWidget(text: '肌力運動', type: TextType.sub),
                   ),
                 ),
               ),

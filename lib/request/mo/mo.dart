@@ -8,11 +8,11 @@ import 'package:e_fu/request/api.dart';
 
 abstract class MoAPI {
   // 查詢mo伴列表
-  Future<GetMoListModel> getMoList(String id);
+  Future<Format> getMoList(String id);
   // 查詢隱藏mo伴列表
-  Future<GetHindMoListModel> getHindMoList(String id);
+  Future<Format> getHindMoList(String id);
   // 隱藏mo伴
-  Future<Format> hindMo(String id, mId);
+  Future<Format> hindMo(Mo mo, String userId);
   // 取消隱藏mo伴
   Future<Format> showMo(String id, mId);
 
@@ -25,109 +25,24 @@ abstract class MoAPI {
 
 class MoRepo extends API implements MoAPI {
   @override
-  getMoList(String id) async {
-    {
-      try {
-        final response = await client.get(
-          Uri.parse('$domain/mo/$id'),
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        );
-
-        Map responseBody = json.decode(utf8.decode(response.bodyBytes));
-        logger.v(responseBody);
-        if (response.statusCode == 200) {
-          logger.v(responseBody["D"]);
-          return GetMoListModel.fromJson(responseBody);
-        } else {
-          logger.v("not 200");
-          return GetMoListModel.fromJson(responseBody);
-        }
-      } catch (e) {
-        Map error = {"D": [], "message": "error", "success": false};
-        logger.v(e);
-        return GetMoListModel.fromJson(error);
-      }
-    }
+  Future<Format> getMoList(String userId) async {
+    return await lunch(client.get(Uri.parse("$domain/mo/$userId")));
   }
 
   @override
-  getHindMoList(String id) async {
-    {
-      try {
-        final response = await client.get(
-          Uri.parse('$domain/mo/$id/hide'),
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        );
-
-        Map responseBody = json.decode(utf8.decode(response.bodyBytes));
-        logger.v(responseBody);
-        if (response.statusCode == 200) {
-          logger.v(responseBody);
-          return GetHindMoListModel.fromJson(responseBody);
-        } else {
-          logger.v("not 200");
-          return GetHindMoListModel.fromJson(responseBody);
-        }
-      } catch (e) {
-        Map error = {"D": {}, "message": "error", "success": false};
-        logger.v(e);
-        return GetHindMoListModel.fromJson(error);
-      }
-    }
+  Future<Format> getHindMoList(String userId) async {
+    return await lunch(client.get(Uri.parse("$domain/mo/$userId/hide")));
   }
 
   @override
-  hindMo(String id, mId) async {
-    {
-      try {
-        final response = await client.post(Uri.parse('$domain/mo/$id/dohide'),
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: jsonEncode(Mo(id: mId).toJson()));
-
-        Map responseBody = json.decode(utf8.decode(response.bodyBytes));
-        if (response.statusCode == 200) {
-          logger.v(responseBody);
-          return Format.fromJson(responseBody);
-        } else {
-          logger.v("not 200");
-          return Format.fromJson(responseBody);
-        }
-      } catch (e) {
-        logger.v(e);
-        return Format.fromFields("error", false, "");
-      }
-    }
+  Future<Format> hindMo(Mo mo, String userId) async {
+    return await lunch(client.post(Uri.parse('$domain/mo/$userId/hide'),
+        headers: header, body: jsonEncode(mo.toJson())));
   }
 
   @override
-  showMo(String id, mId) async {
-    {
-      try {
-        final response = await client.post(Uri.parse('$domain/mo/$id/doshow'),
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: jsonEncode(Mo(id: mId).toJson()));
-
-        Map responseBody = json.decode(utf8.decode(response.bodyBytes));
-        if (response.statusCode == 200) {
-          logger.v(responseBody);
-          return Format.fromJson(responseBody);
-        } else {
-          logger.v("not 200");
-          return Format.fromJson(responseBody);
-        }
-      } catch (e) {
-        logger.v(e);
-        return Format.fromFields("error", false, "");
-      }
-    }
+  Future<Format> showMo(String userId, mId) async {
+    return await lunch(client.get(Uri.parse("$domain/mo/$userId/doshow")));
   }
 
   @override

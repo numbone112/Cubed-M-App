@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:e_fu/module/page.dart';
+import 'package:e_fu/request/mo/mo_data.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
@@ -19,7 +22,7 @@ class HindMoList extends StatefulWidget {
 
 class HindMoListState extends State<HindMoList> {
   MoRepo moRepo = MoRepo();
-  GetHindMoListModel? hindMoList;
+  List<Mo>? hindMoList;
   var logger = Logger();
   List<Widget> hindMoListWidget = [];
 
@@ -33,9 +36,9 @@ class HindMoListState extends State<HindMoList> {
     try {
       moRepo.getHindMoList(widget.userName).then((value) {
         setState(() {
-          hindMoList = value;
+          hindMoList = parseMo(jsonEncode(value.D));
           hindMoListWidget = [];
-          for (int i = 0; i < hindMoList!.d.length; i++) {
+          for (int i = 0; i < hindMoList!.length; i++) {
             hindMoListWidget.add(hindMoWiget(i));
           }
         });
@@ -59,13 +62,13 @@ class HindMoListState extends State<HindMoList> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("ID:${hindMoList!.d[i].id}",
+              Text("ID:${hindMoList![i].id}",
                   style: TextStyle(
                       color: MyTheme.black,
                       fontWeight: FontWeight.w400,
                       fontSize: MySize.body)),
               const SizedBox(height: 5),
-              Text(hindMoList!.d[i].name,
+              Text(hindMoList![i].name,
                   style: TextStyle(
                       color: MyTheme.black,
                       fontWeight: FontWeight.bold,
@@ -85,7 +88,7 @@ class HindMoListState extends State<HindMoList> {
               child: Text("取消", style: TextStyle(color: MyTheme.pink)),
             ),
             onTap: () {
-              showMo(hindMoList!.d[i].id);
+              showMo(hindMoList![i].id);
               getHindMoList();
             },
           ),

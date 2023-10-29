@@ -27,7 +27,7 @@ class History {
       required this.remark,
       required this.score,
       required this.m_id,
-      required this.avgScore,
+   this.avgScore=0,
       required this.done,
       required this.friend,
       required this.i_id,

@@ -100,11 +100,16 @@ class EAppointmentDetailBase {
 @JsonSerializable(explicitToJson: true)
 class EventRecordInfo {
   EventRecordInfo(
-      {this.id = -1, this.done = const [], this.name = "", this.remark = ""});
+      {this.id = -1,
+      this.done = const [],
+      this.name = "",
+      this.remark = "",
+      this.age = 65});
   int id;
   List<List<int>> done;
   String remark;
   String name;
+  int age;
   factory EventRecordInfo.fromJson(Map<String, dynamic> json) =>
       _$EventRecordInfoFromJson(json);
   Map<String, dynamic> toJson() => _$EventRecordInfoToJson(this);

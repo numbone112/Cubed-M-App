@@ -80,33 +80,33 @@ class EventNowResultState extends State<EventNowResult> {
   Logger logger = Logger();
   ERepo eRepo = ERepo();
   int currentPageIndex = 0;
-  List<PersonResult> reulstList = [];
+  List<PersonResult> resultList = [];
 
 
   @override
   Widget build(BuildContext context) {
-    if (reulstList.isEmpty) {
+    if (resultList.isEmpty) {
       try {
         final args = ModalRoute.of(context)!.settings.arguments as List<Object>;
         logger.v("args length ${args.length}");
-        final forEvnetList = args[0] as List<EventRecord>;
-        for (var element in forEvnetList) {
+        final eventRecordList = args[0] as List<EventRecord>;
+        for (var element in eventRecordList) {
           //補年紀
           element.processData(element.eventRecordInfo.id,true);
         }
-        logger.v('done data${forEvnetList[0].data}');
+        logger.v('done data${eventRecordList[0].data}');
 
         setState(() {
-          reulstList = List.generate(forEvnetList.length, (index) {
-            return PersonResult(forEvnetList[index].eventRecordInfo,
-                done: forEvnetList[index].data);
+          resultList = List.generate(eventRecordList.length, (index) {
+            return PersonResult(eventRecordList[index].eventRecordInfo,
+                done: eventRecordList[index].data);
           });
         });
       } catch (e) {
         logger.v("event result build $e");
       }
     } else {
-      logger.v('else ${reulstList.length}');
+      logger.v('else ${resultList.length}');
     }
 
     final PageController controller = PageController();
@@ -130,7 +130,7 @@ class EventNowResultState extends State<EventNowResult> {
                     });
                   },
                   controller: controller,
-                  children: reulstList,
+                  children: resultList,
                 ),
               ),
               Positioned(
@@ -139,7 +139,7 @@ class EventNowResultState extends State<EventNowResult> {
                 right: 0,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(reulstList.length, (i) {
+                  children: List.generate(resultList.length, (i) {
                     return Container(
                       margin: const EdgeInsets.symmetric(horizontal: 5),
                       width: 10,

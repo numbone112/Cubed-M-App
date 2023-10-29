@@ -18,7 +18,7 @@ class RecordRepo extends API implements RecordAPI {
   Future<Format> record(RecordSender recordSender) async {
     return await lunch(
       client.post(Uri.parse("$domain/record"),
-          body: jsonEncode(recordSender.toJson())),
+          body: jsonEncode(recordSender.toJson()),headers: header),
     );
   }
 }

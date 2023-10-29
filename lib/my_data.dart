@@ -76,11 +76,10 @@ Widget textWidget(
 
 class Name {
   static String userName = "user_name";
+  static String getUser="get_user";
 }
 
-class PageName {
-  static String welcome = "welcome";
-}
+
 
 class HexColor extends Color {
   HexColor(final String hexColor) : super(_getColorFromHex(hexColor));

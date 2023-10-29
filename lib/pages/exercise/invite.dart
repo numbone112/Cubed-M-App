@@ -98,11 +98,13 @@ class InviteState extends State<InvitePage> {
                         List<EventRecord> forEvent = [];
                         for (var element in detailList) {
                           logger.v(element.userName);
-                          forEvent.add(EventRecord(
-                              eventRecordDetail:
-                                  EventRecordDetail(item: element.targetSets),
-                              eventRecordInfo:
-                                  EventRecordInfo(name: element.userName)));
+                          if (element.accept == 1) {
+                            forEvent.add(EventRecord(
+                                eventRecordDetail:
+                                    EventRecordDetail(item: element.targetSets),
+                                eventRecordInfo:
+                                    EventRecordInfo(name: element.userName)));
+                          }
                         }
                         Navigator.pushReplacementNamed(context, Event.routeName,
                             arguments: forEvent);

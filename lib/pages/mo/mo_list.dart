@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:e_fu/pages/mo/mo_detail.dart';
+import 'package:e_fu/request/mo/mo_data.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
@@ -21,7 +24,7 @@ class MoList extends StatefulWidget {
 
 class MoListPageState extends State<MoList> {
   MoRepo moRepo = MoRepo();
-  GetMoListModel? moList;
+  List<Mo>? moList;
   var logger = Logger();
   List<Widget> moListWidget = [];
 
@@ -35,9 +38,10 @@ class MoListPageState extends State<MoList> {
     try {
       moRepo.getMoList(widget.userName).then((value) {
         setState(() {
-          moList = value;
+          
+          moList = parseMo(jsonEncode(value.D));
           moListWidget = [];
-          for (int i = 0; i < moList!.d.length; i++) {
+          for (int i = 0; i < moList!.length; i++) {
             moListWidget.add(moWiget(i));
           }
         });
@@ -64,13 +68,13 @@ class MoListPageState extends State<MoList> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("ID:${moList!.d[i].id}",
+                Text("ID:${moList![i].id}",
                     style: TextStyle(
                         color: MyTheme.black,
                         fontWeight: FontWeight.w400,
                         fontSize: MySize.body)),
                 const SizedBox(height: 5),
-                Text(moList!.d[i].name,
+                Text(moList![i].name,
                     style: TextStyle(
                         color: MyTheme.black,
                         fontWeight: FontWeight.bold,
@@ -91,7 +95,7 @@ class MoListPageState extends State<MoList> {
               child: Text("隱藏", style: TextStyle(color: MyTheme.lightColor)),
             ),
             onTap: () {
-              hindMo(moList!.d[i].id);
+              hindMo(moList![i].id);
               getMoList();
             },
           ),
@@ -101,7 +105,7 @@ class MoListPageState extends State<MoList> {
   }
 
   hindMo(String id) {
-    moRepo.hindMo(widget.userName, id).then((value) {
+    moRepo.hindMo(Mo(id: id), widget.userName).then((value) {
       if (value.message == "已隱藏") {
         toast(context, "已隱藏");
       } else {

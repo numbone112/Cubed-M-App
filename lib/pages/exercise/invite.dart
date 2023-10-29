@@ -112,8 +112,8 @@ class InviteState extends State<InvitePage> {
                             color: MyTheme.buttonColor,
                             child: GestureDetector(
                               onTap: null,
-                              child: Box.textRadiusBorder('開始運動',
-                                  border: MyTheme.buttonColor),
+                              child: Box.textRadiusBorder('準備運動',
+                                  border: MyTheme.buttonColor,width: 170),
                             )),
                       ),
                     )

@@ -65,9 +65,8 @@ class EventState extends State<Event> {
   InviteRepo inviteRepo = InviteRepo();
 
   Future<void> updateBleState() async {
-    if (await FlutterBluePlus.isSupported == false) {
-      return;
-    }
+    // if (await FlutterBluePlus.isSupported == false) {
+    // }
 
     FlutterBluePlus.adapterState.listen((BluetoothAdapterState state) async {
       if (state == BluetoothAdapterState.on) {
@@ -94,6 +93,9 @@ class EventState extends State<Event> {
         });
         if (Platform.isAndroid) {
           await FlutterBluePlus.turnOn();
+          setState(() {
+          isBleOn = true;
+        });
         }
       }
     });
@@ -104,6 +106,7 @@ class EventState extends State<Event> {
     super.initState();
     updateBleState();
   }
+
 
   @override
   void dispose() {
@@ -329,7 +332,7 @@ class EventState extends State<Event> {
   }
 
   var recordRepo = RecordRepo();
-  
+
   Widget optional(EventRecord forEvent) {
     return Row(
       children: [
@@ -348,13 +351,20 @@ class EventState extends State<Event> {
     EventRecord forEvent = forEventList[index];
     logger.v(forEvent.eventRecordInfo.name);
     return Container(
-      height: 225,
+      height: 200,
+      margin: const EdgeInsets.only(bottom: 10),
       decoration: const BoxDecoration(
           borderRadius: Box.normamBorderRadius, color: Colors.white),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          optional(forEvent),
+          Padding(
+            padding: const EdgeInsets.only(top: 10, bottom: 10),
+            child: textWidget(
+                text: forEvent.eventRecordInfo.name,
+                type: TextType.sub,
+                color: MyTheme.buttonColor),
+          ),
           Row(
             children: List.generate(
               exerciseItem.length,
@@ -371,34 +381,37 @@ class EventState extends State<Event> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      (forEvent.now == eIndex)
-                          ? Box.boxHasRadius(
-                              child: Text(
-                                exerciseItem[eIndex],
-                                style: textStyle(color: Colors.white),
-                              ),
-                              color: MyTheme.buttonColor,
-                              padding: const EdgeInsets.all(5))
-                          : Text(
-                              exerciseItem[eIndex],
-                            ),
+                      Box.boxHasRadius(
+                          child: textWidget(
+                              text: exerciseItem[eIndex],
+                              color:
+                                  forEvent.now == eIndex ? Colors.white : null,
+                              type: TextType.sub,
+                              textAlign: TextAlign.center),
+                          color: forEvent.now == eIndex
+                              ? MyTheme.color
+                              : Colors.white,
+                          width: 50,
+                          padding: const EdgeInsets.all(7)),
                       const Padding(padding: EdgeInsets.all(5)),
                       SizedBox(
-                        height: 50,
-                        width: 50,
+                        height: 60,
+                        width: 60,
                         child: EProgress(
                           progress: forEvent.progress[eIndex] ?? 0,
-                          colors: [MyTheme.buttonColor],
+                          colors: [MyTheme.color],
                           showText: true,
                           format: (progress) {
                             return '${forEvent.eventRecordDetail.item[eIndex]}';
                           },
                           textStyle: TextStyle(
+                              fontSize: 20,
+                              fontFamily: "taipei",
                               color: forEvent.now == eIndex
                                   ? MyTheme.buttonColor
                                   : Colors.black),
                           type: ProgressType.dashboard,
-                          backgroundColor: Colors.grey,
+                          backgroundColor: MyTheme.gray,
                         ),
                       )
                     ],
@@ -408,17 +421,15 @@ class EventState extends State<Event> {
             ),
           ),
           connectDeviec.containsKey(index)
-              ? const Text("已連接")
+              ? textWidget(
+                  text: '已連結', type: TextType.sub, color: MyTheme.color)
               : GestureDetector(
-                  child: Box.boxHasRadius(
-                      child: Text(
-                        "連接",
-                        style: textStyle(color: Colors.white),
-                        textAlign: TextAlign.center,
-                      ),
-                      margin: const EdgeInsets.all(3),
-                      padding: const EdgeInsets.all(10),
-                      color: MyTheme.color),
+                  child: Box.textRadiusBorder('連結',
+                      textType: TextType.sub,
+                      padding: const EdgeInsets.all(5),
+                      filling: MyTheme.buttonColor,
+                      width: 75,
+                      height: 40),
                   onTap: () async {
                     updateBleState();
                     if (isBleOn) {
@@ -445,7 +456,8 @@ class EventState extends State<Event> {
                         ),
                       );
                     } else {
-                      await showDialog(
+                      if(Platform.isIOS){
+                        await showDialog(
                         context: context,
                         builder: (ctx) => CupertinoAlertDialog(
                           content: Column(
@@ -483,6 +495,7 @@ class EventState extends State<Event> {
                           ],
                         ),
                       );
+                      }
                     }
                   },
                 ),
@@ -490,6 +503,41 @@ class EventState extends State<Event> {
         ],
       ),
     );
+  }
+
+  sendStart() async {
+    if (connectDeviec.isEmpty) {
+      showDialog(
+        context: context,
+        builder: (ctx) => const AlertDialog(
+          content: Text("尚未連接裝置"),
+        ),
+      );
+    } else {
+      EasyLoading.instance.indicatorWidget = SizedBox(
+        width: 75,
+        height: 75,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            SpinKitPouringHourGlassRefined(
+              color: MyTheme.color,
+            ),
+            const Text("運動中")
+          ],
+        ),
+      );
+
+      EasyLoading.show();
+
+      if (trainCount < 3) {}
+      for (var element in signCharList) {
+        await element.setNotifyValue(true);
+      }
+      for (var element in startCharList) {
+        element.write(utf8.encode("E-fu"));
+      }
+    }
   }
 
   @override
@@ -506,86 +554,46 @@ class EventState extends State<Event> {
         child: Box.inviteInfo(Invite(), false),
       ),
       headHeight: 100,
-      body: SizedBox(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              forEventList.isEmpty
-                  ? const Text(" ")
-                  : SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.65,
-                      child: ListView.builder(
-                        itemCount: forEventList.length,
-                        itemBuilder: ((context, index) {
-                          return (exerciseBox(index));
-                        }),
-                      ),
-                    ),
-              Box.boxHasRadius(
-                child: ExpansionTile(
-                  collapsedShape: Border.all(color: MyTheme.backgroudColor),
-                  title: const Text("運動分級表"),
-                  children: const [Text("運動分級表詳細資料")],
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+      body: Column(
+        children: [
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.73,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ListView(
                 children: [
-                  GestureDetector(
-                    child: Box.textRadiusBorder(
-                      "全部開始",
-                      filling: MyTheme.lightColor,
-                      width: 100,
+                  forEventList.isEmpty
+                      ? const Text(" ")
+                      : ListView.builder(
+                          physics: NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: forEventList.length,
+                          itemBuilder: ((context, index) {
+                            return (exerciseBox(index));
+                          }),
+                        ),
+                  Box.boxHasRadius(
+                    child: ExpansionTile(
+                      collapsedShape: Border.all(color: MyTheme.backgroudColor),
+                      title: const Text("運動分級表"),
+                      children: const [Text("運動分級表詳細資料")],
                     ),
-                    onTap: () async {
-                      if (connectDeviec.isEmpty) {
-                        showDialog(
-                          context: context,
-                          builder: (ctx) => const AlertDialog(
-                            content: Text("尚未連接裝置"),
-                          ),
-                        );
-                      } else {
-                        EasyLoading.instance.indicatorWidget = SizedBox(
-                          width: 75,
-                          height: 75,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              SpinKitPouringHourGlassRefined(
-                                color: MyTheme.color,
-                              ),
-                              const Text("運動中")
-                            ],
-                          ),
-                        );
-
-                        EasyLoading.show();
-
-                        if (trainCount < 3) {}
-                        for (var element in signCharList) {
-                          await element.setNotifyValue(true);
-                        }
-                        for (var element in startCharList) {
-                          element.write(utf8.encode("E-fu"));
-                        }
-                      }
-                    },
                   ),
-                  GestureDetector(
-                    onTap: () => finish(),
-                    child: Box.textRadiusBorder(
-                      "結束",
-                      filling: MyTheme.lightColor,
-                      width: 100,
-                    ),
-                  )
                 ],
-              )
-            ],
+              ),
+            ),
           ),
-        ),
+          Expanded(
+            child: SizedBox(
+              width: MediaQuery.of(context).size.width * 0.8,
+              child: Box.yesnoBox(() => sendStart(), () => finish(),
+                  noTitle: '開始運動',
+                  noColor: MyTheme.color,
+                  yestTitle: '結束',
+                  yesColor: MyTheme.lightColor),
+            ),
+          )
+        ],
       ),
     );
   }

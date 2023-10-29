@@ -68,7 +68,7 @@ class Box {
         margin: margin,
         alignment: const Alignment(0, 0),
         height: height ?? 30,
-        width: width ?? text.length.toDouble() * 50,
+        width: width ?? 110,
         decoration: BoxDecoration(
             color: filling ?? MyTheme.buttonColor,
             borderRadius: BorderRadius.all(Radius.circular(height ?? 25)),
@@ -132,7 +132,7 @@ class Box {
                       type: TextType.content,
                       color: MyTheme.hintColor),
                   textWidget(
-                      text: '共 ${invite.friend.length + 1} 人',
+                      text: '共 ${invite.friend.length} 人',
                       type: TextType.content,
                       color: MyTheme.hintColor),
                   textWidget(
@@ -433,7 +433,12 @@ class Box {
   }
 
   static Widget yesnoBox(Function() yes, Function() no,
-      {String? yestTitle, noTitle, double? height, width}) {
+      {String? yestTitle,
+      noTitle,
+      double? height,
+      width,
+      Color? noColor,
+      yesColor}) {
     return Container(
       alignment: Alignment.bottomCenter,
       padding: const EdgeInsets.only(top: 10, bottom: 10),
@@ -447,8 +452,9 @@ class Box {
                   behavior: HitTestBehavior.translucent,
                   onTap: no,
                   child: Box.textRadiusBorder(noTitle ?? '取消',
-                      border: MyTheme.lightColor, filling: MyTheme.lightColor)),
-              color: MyTheme.lightColor),
+                      border: noColor ?? MyTheme.lightColor,
+                      filling: noColor ?? MyTheme.lightColor)),
+              color: noColor ?? MyTheme.lightColor),
           Box.boxHasRadius(
             height: height,
             width: width,
@@ -456,9 +462,10 @@ class Box {
               behavior: HitTestBehavior.translucent,
               onTap: yes,
               child: Box.textRadiusBorder(yestTitle ?? '確定',
-                  border: MyTheme.buttonColor),
+                  border: yesColor ?? MyTheme.buttonColor,
+                  filling: yesColor ?? MyTheme.buttonColor),
             ),
-            color: MyTheme.buttonColor,
+            color: yesColor ?? MyTheme.buttonColor,
           )
         ],
       ),

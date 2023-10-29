@@ -103,7 +103,7 @@ class InviteState extends State<InvitePage> {
                                 eventRecordDetail:
                                     EventRecordDetail(item: element.targetSets),
                                 eventRecordInfo:
-                                    EventRecordInfo(name: element.userName)));
+                                    EventRecordInfo(name: invite.name,time: invite.time,remark: invite.remark)));
                           }
                         }
                         Navigator.pushReplacementNamed(context, Event.routeName,

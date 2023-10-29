@@ -565,7 +565,9 @@ class EventState extends State<Event> {
         title: '肌力運動',
         titWidget: Padding(
           padding: const EdgeInsets.only(top: 10),
-          child: Box.inviteInfo(Invite(), false),
+          child: Box.inviteInfo(
+            Invite(name: eventRecordList.first.eventRecordInfo.name,remark: eventRecordList.first.eventRecordInfo.remark,time: eventRecordList.first.eventRecordInfo.time)
+            , false),
         ),
         headHeight: 100,
         body: Padding(

@@ -18,16 +18,15 @@ List<HistoryDeep> parseHistoryDeepList(String responseBody) {
   return parsed.map<HistoryDeep>((json) => HistoryDeep.fromJson(json)).toList();
 }
 
-
 @JsonSerializable(explicitToJson: true)
 class History {
   History(
       {required this.name,
       required this.time,
       required this.remark,
-      required this.score,
+      this.score=0,
       required this.m_id,
-   this.avgScore=0,
+      this.avgScore = 0,
       required this.done,
       required this.friend,
       required this.i_id,
@@ -58,9 +57,14 @@ class History {
       _$HistoryFromJson(json);
   Map<String, dynamic> toJson() => _$HistoryToJson(this);
 }
+
 @JsonSerializable(explicitToJson: true)
 class HistoryDeep {
-  HistoryDeep({required this.user_id, required this.name, required this.done,required this.score});
+  HistoryDeep(
+      {required this.user_id,
+      required this.name,
+      required this.done,
+      required this.score});
   String user_id;
   String name;
   List<DoneItem> done;

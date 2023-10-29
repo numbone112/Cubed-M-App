@@ -64,14 +64,14 @@ class ExerciseHomeState extends State<ExerciseHome>
 
   List<Widget> getfilterButtons() {
     List<Widget> result = [];
-    final filters = ['未回覆',"已接受", '未接受'];
-    final filtersID=[3,1,2];
+    final filters = ['未回覆', "已接受", '未接受'];
+    final filtersID = [3, 1, 2];
 
     for (int i = 0; i < filters.length; i++) {
       result.add(GestureDetector(
         behavior: HitTestBehavior.translucent,
         onTap: () => filter(filtersID[i]),
-        child: Box.textRadiusBorder(filters[i ],
+        child: Box.textRadiusBorder(filters[i],
             margin: const EdgeInsets.all(5),
             color: mode == filtersID[i] ? Colors.white : MyTheme.color,
             filling: mode == filtersID[i] ? MyTheme.color : Colors.white,
@@ -133,20 +133,17 @@ class ExerciseHomeState extends State<ExerciseHome>
                     children: [textWidget(text: "篩選", type: TextType.content)],
                   ),
                 ),
-                Box.boxHasRadius(
-                  child: SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.6,
-                    child: Box.boxHasRadius(
-                      color: MyTheme.backgroudColor,
-                      child: ListView.builder(
-                          itemCount: hisotrylist.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return (Box.history(
-                                hisotrylist[index], context, widget.userName));
-                          }),
-                    ),
+                Expanded(
+                  child: Box.boxHasRadius(
+                    color: MyTheme.backgroudColor,
+                    child: ListView.builder(
+                        itemCount: hisotrylist.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return (Box.history(
+                              hisotrylist[index], context, widget.userName));
+                        }),
                   ),
-                )
+                ),
               ]),
             ],
           ),

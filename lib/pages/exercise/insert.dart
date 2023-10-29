@@ -72,10 +72,11 @@ class InsertInvitestate extends State<InsertInvite> {
       height: MediaQuery.of(context).size.height,
       child: CustomPage(
         body: ListView(
+    
           children: [
             Row(
               children: [
-                const Text("邀約名稱："),
+                textWidget(text: '邀約名稱：', type: TextType.sub),
                 Expanded(
                   child: TextInput.radius(' 請輸入邀約名稱', nameInput),
                 )
@@ -83,73 +84,55 @@ class InsertInvitestate extends State<InsertInvite> {
             ),
             Row(
               children: [
-                const Text("運動日期："),
+                textWidget(text: '運動日期：', type: TextType.sub),
                 Expanded(
                   child: TextInput.radius(
                     "請選擇運動日期",
                     dateInput,
-                    textField: TextField(
-                      controller:
-                          dateInput, //editing controller of this TextField
-                      decoration: const InputDecoration(
-                        hintText: "請選擇運動日期",
-                        border: InputBorder.none,
-                      ),
-                      readOnly:
-                          true, //set it true, so that user will not able to edit text
-                      onTap: () async {
-                        DateTime? pickedDate = await showDatePicker(
-                            context: context,
-                            initialDate: DateTime.now(),
-                            firstDate: DateTime(
-                                2000), //DateTime.now() - not to allow to choose before today.
-                            lastDate: DateTime(2101));
+                    readOnly: true,
+                    onTap: () async {
+                      DateTime? pickedDate = await showDatePicker(
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime(
+                              2000), //DateTime.now() - not to allow to choose before today.
+                          lastDate: DateTime(2101));
 
-                        if (pickedDate != null) {
-                          dateInput.text = dateFormat.format(pickedDate);
-                        } else {
-                          logger.v("Date is not selected");
-                        }
-                      },
-                    ),
+                      if (pickedDate != null) {
+                        dateInput.text = dateFormat.format(pickedDate);
+                      } else {
+                        logger.v("Date is not selected");
+                      }
+                    },
                   ),
                 )
               ],
             ),
             Row(
               children: [
-                const Text("運動時段："),
+                textWidget(text: '運動時段：', type: TextType.sub),
                 Expanded(
                   child: TextInput.radius(
-                    "請選擇運動時段",
+                    '請選擇運動時段',
                     timeInput,
-                    textField: TextField(
-                      controller:
-                          timeInput, //editing controller of this TextField
-                      decoration: const InputDecoration(
-                        hintText: "請選擇運動時段",
-                        border: InputBorder.none,
-                      ),
-                      readOnly:
-                          true, //set it true, so that user will not able to edit text
-                      onTap: () async {
-                        TimeOfDay? pickedTime = await showTimePicker(
-                            context: context, initialTime: TimeOfDay.now());
+                    readOnly: true,
+                    onTap: () async {
+                      TimeOfDay? pickedTime = await showTimePicker(
+                          context: context, initialTime: TimeOfDay.now());
 
-                        if (pickedTime != null && context.mounted) {
-                          timeInput.text = pickedTime.format(context);
-                        } else {
-                          logger.v("Date is not selected");
-                        }
-                      },
-                    ),
+                      if (pickedTime != null && context.mounted) {
+                        timeInput.text = pickedTime.format(context);
+                      } else {
+                        logger.v("Date is not selected");
+                      }
+                    },
                   ),
                 )
               ],
             ),
             Row(
               children: [
-                const Text("備註："),
+                textWidget(text: '備註：', type: TextType.sub),
                 Expanded(
                   child: TextInput.radius(' 例如：地點', remarkInput),
                 )
@@ -159,12 +142,11 @@ class InsertInvitestate extends State<InsertInvite> {
               margin: const EdgeInsets.all(10),
               child: const Divider(height: 1.0, color: Colors.grey),
             ),
-            const Text('邀請人'),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(25, 10, 25, 10),
-              child: Row(children: selectFriend.map((mosearch) => Box.boxWithX(mosearch.name)).toList()
-              ),
-            ),
+            textWidget(text: '欲邀請的人', type: TextType.sub),
+            Row(
+                children: selectFriend
+                    .map((mosearch) => Box.boxWithX(mosearch.name))
+                    .toList()),
             Padding(
               padding: const EdgeInsets.fromLTRB(25, 10, 25, 10),
               child: Row(
@@ -207,12 +189,12 @@ class InsertInvitestate extends State<InsertInvite> {
             Box.yesnoBox(() {
               EasyLoading.show(status: "loading...");
               Invite invite = Invite(
-                  m_id: widget.userName,
-                  name: nameInput.text,
-                  time: DateTime.now().toIso8601String(),
-                  remark: remarkInput.text,
-                  friend: selectFriend.map((select) => select.id).toList(),
-                  );
+                m_id: widget.userName,
+                name: nameInput.text,
+                time: DateTime.now().toIso8601String(),
+                remark: remarkInput.text,
+                friend: selectFriend.map((select) => select.id).toList(),
+              );
               api.createInvite(invite).then((value) => {
                     EasyLoading.dismiss(),
                     if (value.success!) {Navigator.pop(context)} else {}

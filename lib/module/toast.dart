@@ -28,6 +28,7 @@ setTarget(BuildContext context, List<ItemWithField> items,
             physics: const BouncingScrollPhysics(),
             child: SizedBox(
               height: MediaQuery.of(context).size.height * 0.38,
+              width: MediaQuery.of(context).size.height * 0.8,
               child: Column(
                 children: [
                   SizedBox(

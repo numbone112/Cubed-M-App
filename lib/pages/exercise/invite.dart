@@ -55,9 +55,10 @@ class InviteState extends State<InvitePage> {
   }
 
   sendReply(int accept) {
-    inviteRepo.replyInvite(accept, widget.userName, invite.id).then((value) {
+    inviteRepo.replyInvite(accept, widget.userName, invite.i_id).then((value) {
       setState(() {
         invite.accept = accept;
+        detailList = [];
       });
     });
   }
@@ -102,7 +103,7 @@ class InviteState extends State<InvitePage> {
                                 eventRecordDetail:
                                     EventRecordDetail(item: element.targetSets),
                                 eventRecordInfo:
-                                    EventRecordInfo(name: element.userName)));
+                                    EventRecordInfo(name: invite.name,time: invite.time,remark: invite.remark)));
                           }
                         }
                         Navigator.pushReplacementNamed(context, Event.routeName,
@@ -110,13 +111,11 @@ class InviteState extends State<InvitePage> {
                       },
                       child: Container(
                         padding: const EdgeInsets.all(10),
-                        child: Box.boxHasRadius(
-                            color: MyTheme.buttonColor,
-                            child: GestureDetector(
-                              onTap: null,
-                              child: Box.textRadiusBorder('準備運動',
-                                  border: MyTheme.buttonColor,width: 170),
-                            )),
+                        child: Box.textRadiusBorder('準備運動',
+                            textType: TextType.sub,
+                            border: MyTheme.buttonColor,
+                            width: 170,
+                            height: 50),
                       ),
                     )
                   : Container())

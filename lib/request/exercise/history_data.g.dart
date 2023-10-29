@@ -12,7 +12,7 @@ History _$HistoryFromJson(Map<String, dynamic> json) => History(
       remark: json['remark'] as String,
       score: (json['score'] as num).toDouble(),
       m_id: json['m_id'] as String,
-      avgScore: (json['avgScore'] as num).toDouble(),
+      avgScore: (json['avgScore'] as num?)?.toDouble() ?? 0,
       done: (json['done'] as List<dynamic>)
           .map((e) => DoneItem.fromJson(e as Map<String, dynamic>))
           .toList(),

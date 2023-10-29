@@ -47,6 +47,7 @@ List<MoSearch> parseMoSearchList(String responseBody) {
   return parsed.map<MoSearch>((json) => MoSearch.fromJson(json)).toList();
 }
 
+
 @JsonSerializable(explicitToJson: true)
 class MoSearch {
   MoSearch({this.name = "", this.id = ""});
@@ -56,3 +57,4 @@ class MoSearch {
       _$MoSearchFromJson(json);
   Map<String, dynamic> toJson() => _$MoSearchToJson(this);
 }
+

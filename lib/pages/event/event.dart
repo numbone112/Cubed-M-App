@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
-import 'package:age_calculator/age_calculator.dart';
 import 'package:e_fu/module/page.dart';
 import 'package:e_fu/pages/event/ble_device.dart';
 import 'package:e_fu/pages/exercise/event_record.dart';
@@ -46,11 +45,11 @@ class EventState extends State<Event> {
   bool isScan = false;
   FlutterBluePlus flutterBlue = FlutterBluePlus();
   //沒連線的裝置
-  List<BluetoothDevice> devicesList = <BluetoothDevice>[];
+  // List<BluetoothDevice> devicesList = <BluetoothDevice>[];
   Map<int, String> connectDeviec = {};
   List<BluetoothCharacteristic> startCharList = [];
   List<BluetoothCharacteristic> signCharList = [];
-  List<Map<String, dynamic>> toSave = [];
+  List<Record> toSave = [];
   List<BluetoothDevice> hasPair = [];
   AsciiDecoder asciiDecoder = const AsciiDecoder();
   List<String> exerciseItem = ["左手", "右手", "坐立"];
@@ -58,7 +57,7 @@ class EventState extends State<Event> {
   ERepo eRepo = ERepo();
   bool notyet = true;
   int trainCount = 0;
-  List<EventRecord> forEventList = [];
+  List<EventRecord> eventRecordList = [];
   int trainGoal = 0;
   var logger = Logger();
   HistoryRepo historyRepo = HistoryRepo();
@@ -94,8 +93,8 @@ class EventState extends State<Event> {
         if (Platform.isAndroid) {
           await FlutterBluePlus.turnOn();
           setState(() {
-          isBleOn = true;
-        });
+            isBleOn = true;
+          });
         }
       }
     });
@@ -106,7 +105,6 @@ class EventState extends State<Event> {
     super.initState();
     updateBleState();
   }
-
 
   @override
   void dispose() {
@@ -132,7 +130,7 @@ class EventState extends State<Event> {
 
   Future<void> finish() async {
     List<RecordSenderItem> detail = [];
-    for (var element in forEventList) {
+    for (var element in eventRecordList) {
       //補年紀
       element.processData(
           // AgeCalculator()
@@ -144,19 +142,14 @@ class EventState extends State<Event> {
           user_id: element.eventRecordInfo.name,
           i_id: element.eventRecordInfo.id));
     }
-    // 傳送資料給後端
-    Format a =
-        await recordRepo.record(RecordSender(raw: toSave, detail: detail));
-    if (a.message == "ok") {
-      logger.v("成功");
-    }
+
     for (var element in hasPair) {
       element.disconnect();
     }
 
     //跳結果頁
     if (context.mounted) {
-      int inviteIndex = forEventList.first.eventRecordInfo.id;
+      int inviteIndex = eventRecordList.first.eventRecordInfo.id;
       if (inviteIndex == -1) {
         Invite invite =
             Invite(m_id: widget.userName, friend: [widget.userName]);
@@ -165,18 +158,46 @@ class EventState extends State<Event> {
               .searchInvite(widget.userName, invite.time)
               .then((value) async {
             inviteIndex = parseInviteList(jsonEncode(value.D))[0].id;
-            logger.v("inviteIndex$inviteIndex");
-            await historyRepo
-                .historyList(widget.userName, iId: inviteIndex.toString())
-                .then((value) {
-              History history = parseHistoryList(jsonEncode(value.D))[0];
-              Navigator.pushReplacementNamed(
-                  context, HistoryDetailPage.routeName,
-                  arguments: history);
+            toSave = changeRecordID(toSave, inviteIndex);
+            detail = changeSenderItemID(detail, inviteIndex);
+            if (toSave.isEmpty) {
+              logger.v("to save empty");
+            } else {
+              logger.v("to detail length ${detail.length}");
+              logger.v("to detail score ${detail.first.score}");
+              logger.v("to detail done length ${detail.first.done.length}");
+              logger.v(
+                  "to detail done first ${detail.first.done.first.toJson()}");
+            }
+            // 傳送資料給後端
+            await recordRepo
+                .record(RecordSender(record: toSave, detail: detail))
+                .then((value) async {
+              if (value.message == "新增成功") {
+                logger.v("成功");
+                await historyRepo
+                    .historyList(widget.userName, iId: inviteIndex.toString())
+                    .then((value) {
+                  List<History> historyList =
+                      parseHistoryList(jsonEncode(value.D));
+                  logger.v("historyList${historyList.length}");
+                  if (historyList.isNotEmpty) {
+                    Navigator.pushReplacementNamed(
+                        context, HistoryDetailPage.routeName,
+                        arguments: historyList.first);
+                  }
+                });
+              }
             });
           });
         });
       } else {
+        // 傳送資料給後端
+        Format a = await recordRepo
+            .record(RecordSender(record: toSave, detail: detail));
+        if (a.message == "ok") {
+          logger.v("成功");
+        }
         await historyRepo
             .historyList(widget.userName, iId: inviteIndex.toString())
             .then((value) {
@@ -225,7 +246,7 @@ class EventState extends State<Event> {
                 logger.v("endsign not empty$string\n$value");
                 // await element.setNotifyValue(false);
 
-                if (!forEventList[pIndex].endSign.contains(string)) {
+                if (!eventRecordList[pIndex].endSign.contains(string)) {
                   FlutterRingtonePlayer.play(
                     android: AndroidSounds.notification,
                     ios: IosSounds.glass,
@@ -236,17 +257,11 @@ class EventState extends State<Event> {
                   logger.v("結束$trainCount / $trainGoal");
 
                   //結束後收到
-                  // int setsMax = 0;
-                  // for (var element in forEventList) {
-                  //   setsMax = max(setsMax, element.endSign.length);
-                  // }
-
-                  // forEvent.data[forEvent.now]!.add(toSave.last.times.toInt());
 
                   forEvent.reviceEndSign(string);
                   setState(() {
-                    forEventList[pIndex] = forEvent;
-                    trainCount = EventRecord.getMax(forEventList);
+                    eventRecordList[pIndex] = forEvent;
+                    trainCount = EventRecord.getMax(eventRecordList);
                   });
                   //全部結束
                   if (trainCount >= trainGoal) {
@@ -268,8 +283,8 @@ class EventState extends State<Event> {
                 String string = String.fromCharCodes(value);
                 List<String> raw = string.split(",");
                 if (string != "0.00,0.00,0.00,0.00,0.00,0.00,0.00,0") {
-                  toSave.add(Record.getRecordJson(raw, trainCount.toDouble(),
-                      forEvent.now.toDouble(), forEvent.eventRecordInfo.id));
+                  toSave.add(Record.getRecordJson(raw, trainCount, forEvent.now,
+                      forEvent.eventRecordInfo.id));
                 }
               } catch (e) {
                 logger.v("error:$e");
@@ -291,7 +306,7 @@ class EventState extends State<Event> {
   }
 
   Widget toPairDialog(int pIndex) {
-    EventRecord forEvent = forEventList[pIndex];
+    EventRecord forEvent = eventRecordList[pIndex];
     return SizedBox(
       width: double.minPositive,
       height: 200,
@@ -331,8 +346,7 @@ class EventState extends State<Event> {
     );
   }
 
-  var recordRepo = RecordRepo();
-
+  RecordRepo recordRepo = RecordRepo();
   Widget optional(EventRecord forEvent) {
     return Row(
       children: [
@@ -348,10 +362,10 @@ class EventState extends State<Event> {
   }
 
   Widget exerciseBox(index) {
-    EventRecord forEvent = forEventList[index];
+    EventRecord forEvent = eventRecordList[index];
     logger.v(forEvent.eventRecordInfo.name);
     return Container(
-      height: 200,
+      height: 210,
       margin: const EdgeInsets.only(bottom: 10),
       decoration: const BoxDecoration(
           borderRadius: Box.normamBorderRadius, color: Colors.white),
@@ -374,7 +388,7 @@ class EventState extends State<Event> {
                     if (!forEvent.hasLeft(eIndex)) {
                       forEvent.change(eIndex);
                       setState(() {
-                        forEventList[index] = forEvent;
+                        eventRecordList[index] = forEvent;
                       });
                     }
                   },
@@ -456,45 +470,45 @@ class EventState extends State<Event> {
                         ),
                       );
                     } else {
-                      if(Platform.isIOS){
+                      if (Platform.isIOS) {
                         await showDialog(
-                        context: context,
-                        builder: (ctx) => CupertinoAlertDialog(
-                          content: Column(
-                            children: const [
-                              SizedBox(
-                                height: 10,
+                          context: context,
+                          builder: (ctx) => CupertinoAlertDialog(
+                            content: const Column(
+                              children: [
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Align(
+                                  alignment: Alignment(0, 0),
+                                  child: Text("是否要開啟藍芽？"),
+                                )
+                              ],
+                            ),
+                            actions: [
+                              CupertinoDialogAction(
+                                child: const Text('取消'),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
                               ),
-                              Align(
-                                alignment: Alignment(0, 0),
-                                child: Text("是否要開啟藍芽？"),
-                              )
+                              CupertinoDialogAction(
+                                child: const Text('開啟藍芽'),
+                                onPressed: () async {
+                                  await FlutterBluePlus.turnOn().then((value) {
+                                    setState(() {
+                                      isBleOn = true;
+                                    });
+                                  });
+                                  _scan();
+                                  if (context.mounted) {
+                                    Navigator.pop(context);
+                                  }
+                                },
+                              ),
                             ],
                           ),
-                          actions: [
-                            CupertinoDialogAction(
-                              child: const Text('取消'),
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                            ),
-                            CupertinoDialogAction(
-                              child: const Text('開啟藍芽'),
-                              onPressed: () async {
-                                await FlutterBluePlus.turnOn().then((value) {
-                                  setState(() {
-                                    isBleOn = true;
-                                  });
-                                });
-                                _scan();
-                                if (context.mounted) {
-                                  Navigator.pop(context);
-                                }
-                              },
-                            ),
-                          ],
-                        ),
-                      );
+                        );
                       }
                     }
                   },
@@ -542,59 +556,63 @@ class EventState extends State<Event> {
 
   @override
   Widget build(BuildContext context) {
-    if (forEventList.isEmpty) {
-      forEventList =
+    if (eventRecordList.isEmpty) {
+      eventRecordList =
           ModalRoute.of(context)!.settings.arguments as List<EventRecord>;
     }
     return CustomPage(
-      buildContext: context,
-      title: '肌力運動',
-      titWidget: Padding(
-        padding: const EdgeInsets.only(top: 10),
-        child: Box.inviteInfo(Invite(), false),
-      ),
-      headHeight: 100,
-      body: Column(
-        children: [
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.73,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ListView(
-                children: [
-                  forEventList.isEmpty
-                      ? const Text(" ")
-                      : ListView.builder(
-                          physics: NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          itemCount: forEventList.length,
-                          itemBuilder: ((context, index) {
-                            return (exerciseBox(index));
-                          }),
-                        ),
-                  Box.boxHasRadius(
-                    child: ExpansionTile(
-                      collapsedShape: Border.all(color: MyTheme.backgroudColor),
-                      title: const Text("運動分級表"),
-                      children: const [Text("運動分級表詳細資料")],
+        buildContext: context,
+        title: '肌力運動',
+        titWidget: Padding(
+          padding: const EdgeInsets.only(top: 10),
+          child: Box.inviteInfo(
+            Invite(name: eventRecordList.first.eventRecordInfo.name,remark: eventRecordList.first.eventRecordInfo.remark,time: eventRecordList.first.eventRecordInfo.time)
+            , false),
+        ),
+        headHeight: 100,
+        body: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.7,
+                child: ListView(
+                  children: [
+                    eventRecordList.isEmpty
+                        ? const Text(" ")
+                        : SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.65,
+                            child: ListView.builder(
+                              // physics: const NeverScrollableScrollPhysics(),
+                           
+                              itemCount: eventRecordList.length,
+                              itemBuilder: ((context, index) {
+                                return (exerciseBox(index));
+                              }),
+                              
+                            ),
+                          ),
+                    Box.boxHasRadius(
+                      child: ExpansionTile(
+                        collapsedShape: Border.all(color: MyTheme.backgroudColor),
+                        title: const Text("運動分級表"),
+                        children: const [Text("運動分級表詳細資料")],
+                      ),
                     ),
-                  ),
-                ],
+                    
+                  ],
+                ),
               ),
-            ),
+              SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  child: Box.yesnoBox(() => sendStart(), () => finish(),
+                      noTitle: '開始運動',
+                      noColor: MyTheme.color,
+                      yestTitle: '結束',
+                      yesColor: MyTheme.lightColor),
+                ),
+            ],
           ),
-          Expanded(
-            child: SizedBox(
-              width: MediaQuery.of(context).size.width * 0.8,
-              child: Box.yesnoBox(() => sendStart(), () => finish(),
-                  noTitle: '開始運動',
-                  noColor: MyTheme.color,
-                  yestTitle: '結束',
-                  yesColor: MyTheme.lightColor),
-            ),
-          )
-        ],
-      ),
-    );
+        ));
   }
 }

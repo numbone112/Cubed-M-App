@@ -34,7 +34,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
         duration: const Duration(milliseconds: 600), vsync: this);
 
     super.initState();
-    tabBody = const HomePage();
+    tabBody =  HomePage(userName: widget.userName,);
   }
 
   @override
@@ -67,7 +67,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                   //   return;
                   // }
                   setState(() {
-                    tabBody = const HomePage();
+                    tabBody =  HomePage(userName: widget.userName,);
                   });
                 });
               } else if (index == 1) {

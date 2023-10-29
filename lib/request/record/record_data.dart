@@ -2,8 +2,28 @@
 
 import 'package:e_fu/request/exercise/history_data.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:logger/logger.dart';
 
 part 'record_data.g.dart';
+
+List<Record> changeRecordID(List<Record> record, int id) {
+  List<Record> res = [];
+  for (Record r in record) {
+    r.i_id = id;
+    res.add(r);
+  }
+  return res;
+}
+
+List<RecordSenderItem> changeSenderItemID(List<RecordSenderItem> senderItem, int id) {
+  List<RecordSenderItem> res = [];
+  for (RecordSenderItem r in senderItem) {
+    r.i_id = id;
+    
+    res.add(r);
+  }
+  return res;
+}
 
 @JsonSerializable(explicitToJson: true)
 class Record {
@@ -21,19 +41,19 @@ class Record {
     'i_id'
   ];
   Record(this.ax, this.ay, this.az, this.gx, this.gy, this.gz, this.pitch,
-      this.times, this.sets_no, this.item_id, this.i_id) {
-    timestream = DateTime.now();
-  }
-  static Map<String, dynamic> getRecordJson(
-      List<String> list, double sets_n, double item_i, int i_) {
+      this.times, this.sets_no, this.item_id, this.i_id) ;
+  static Record getRecordJson(
+      List<String> list, int sets_n, int item_i, int i_) {
     Map<String, dynamic> result = {};
-    for (int i = 0; i < list.length; i++) {
-      result[column[i]] = list[i];
-    }
     result["sets_no"] = sets_n;
     result["item_id"] = item_i;
     result["i_id"] = i_;
-    return result;
+    for (int i = 0; i < list.length; i++) {
+    
+      result[column[i]] = double.parse(list[i]);
+    }
+
+    return Record.fromJson(result);
   }
 
   double ax;
@@ -44,28 +64,18 @@ class Record {
   double gz;
   double pitch;
   double times;
-  double sets_no;
-  double item_id;
+  int sets_no;
+  int item_id;
   int i_id;
-  late DateTime timestream;
+  // late DateTime timestream;
   factory Record.fromJson(Map<String, dynamic> json) => _$RecordFromJson(json);
   Map<String, dynamic> toJson() => _$RecordToJson(this);
-  // @override
-  // String datatoJson(Data data) {
-  //   var d = json.encode(data.toJson());
-  //   return d.toString();
-  // }
-
-  // @override
-  // Map<String, dynamic> toJson() =>{
-  //   "ax":ax,"ay":ay,"az":az,"gx":gx,"gy":gy,"gz":gz
-  // };
 }
 
 @JsonSerializable(explicitToJson: true)
 class RecordSender {
-  RecordSender({required this.raw, required this.detail});
-  List<Map<String, dynamic>> raw;
+  RecordSender({required this.record, required this.detail});
+  List<Record> record;
   List<RecordSenderItem> detail;
 
   factory RecordSender.fromJson(Map<String, dynamic> json) =>
@@ -76,7 +86,10 @@ class RecordSender {
 @JsonSerializable(explicitToJson: true)
 class RecordSenderItem {
   RecordSenderItem(
-      {required this.done, required this.score, required this.user_id,required this.i_id});
+      {required this.done,
+      required this.score,
+      required this.user_id,
+      required this.i_id});
 
   String user_id;
   List<DoneItem> done;
@@ -87,4 +100,3 @@ class RecordSenderItem {
       _$RecordSenderItemFromJson(json);
   Map<String, dynamic> toJson() => _$RecordSenderItemToJson(this);
 }
-

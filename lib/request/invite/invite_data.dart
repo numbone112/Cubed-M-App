@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 
+import 'package:intl/intl.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'invite_data.g.dart';
@@ -33,12 +34,13 @@ class Invite {
       this.m_name = "",
       this.friend = const []}) {
     if (time == "") {
-      time = datetime.toIso8601String();
+      time = formatter.format(datetime);
+      
     }
   }
   int i_id;
   String name;
-
+  final formatter = DateFormat('yyyy-MM-dd THH:mm:ss');
   final DateTime datetime = DateTime.now();
   String time;
   String m_id;

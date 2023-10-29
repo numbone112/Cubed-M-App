@@ -590,36 +590,29 @@ class Box {
               ),
             ),
           );
-        } else {
-          widget = Container(
-            padding: const EdgeInsets.all(5),
-            child: ClipOval(
-              child: Container(
-                height: 30,
-                color: MyTheme.gray,
-                child: const Icon(
-                  Icons.done,
-                  color: Colors.white,
-                ),
+        }
+      } else {
+        widget = Container(
+          padding: const EdgeInsets.all(5),
+          child: ClipOval(
+            child: Container(
+              height: 30,
+              color: MyTheme.color,
+              child: const Icon(
+                Icons.done,
+                color: Colors.white,
               ),
             ),
-          );
-          // widget = Box.boxHasRadius(
-          //     child: Icon(
-          //       Icons.check_circle,
-          //       color: Colors.grey,
-          //     ),
-          //     height: 30);
-        }
+          ),
+        );
       }
-      // result.add(
-      //    check ? widget : Container(),
-      // );
+
       result.add(Expanded(
         flex: 1,
         child: check ? widget : Container(),
       ));
     }
+
     return result;
   }
 
@@ -683,15 +676,13 @@ class Chart {
 }
 
 class TextInput {
-  static Widget radius(
-    String text,
-    TextEditingController controller, {
-    TextField? textField,
-    Function()? onTap,
-    double? width,
-    double? height,
-    Color? color,
-  }) {
+  static Widget radius(String text, TextEditingController controller,
+      {TextField? textField,
+      Function()? onTap,
+      double? width,
+      double? height,
+      Color? color,
+      bool? readOnly}) {
     return Container(
         width: width,
         height: height ?? 45,
@@ -703,6 +694,7 @@ class TextInput {
             border: Border.all(color: color ?? MyTheme.lightColor)),
         child: textField ??
             TextField(
+              readOnly: readOnly ?? false,
               onTap: onTap,
               controller: controller,
               cursorColor: color ?? MyTheme.lightColor,

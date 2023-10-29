@@ -15,10 +15,10 @@ Record _$RecordFromJson(Map<String, dynamic> json) => Record(
       (json['gz'] as num).toDouble(),
       (json['pitch'] as num).toDouble(),
       (json['times'] as num).toDouble(),
-      (json['sets_no'] as num).toDouble(),
-      (json['item_id'] as num).toDouble(),
+      json['sets_no'] as int,
+      json['item_id'] as int,
       json['i_id'] as int,
-    )..timestream = DateTime.parse(json['timestream'] as String);
+    );
 
 Map<String, dynamic> _$RecordToJson(Record instance) => <String, dynamic>{
       'ax': instance.ax,
@@ -32,12 +32,11 @@ Map<String, dynamic> _$RecordToJson(Record instance) => <String, dynamic>{
       'sets_no': instance.sets_no,
       'item_id': instance.item_id,
       'i_id': instance.i_id,
-      'timestream': instance.timestream.toIso8601String(),
     };
 
 RecordSender _$RecordSenderFromJson(Map<String, dynamic> json) => RecordSender(
-      raw: (json['raw'] as List<dynamic>)
-          .map((e) => e as Map<String, dynamic>)
+      record: (json['record'] as List<dynamic>)
+          .map((e) => Record.fromJson(e as Map<String, dynamic>))
           .toList(),
       detail: (json['detail'] as List<dynamic>)
           .map((e) => RecordSenderItem.fromJson(e as Map<String, dynamic>))
@@ -46,7 +45,7 @@ RecordSender _$RecordSenderFromJson(Map<String, dynamic> json) => RecordSender(
 
 Map<String, dynamic> _$RecordSenderToJson(RecordSender instance) =>
     <String, dynamic>{
-      'raw': instance.raw,
+      'record': instance.record.map((e) => e.toJson()).toList(),
       'detail': instance.detail.map((e) => e.toJson()).toList(),
     };
 

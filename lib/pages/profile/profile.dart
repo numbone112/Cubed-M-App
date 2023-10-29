@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:e_fu/main.dart';
 import 'package:e_fu/module/box_ui.dart';
 import 'package:e_fu/module/page.dart';
@@ -21,17 +23,6 @@ class ProfileInfo extends StatefulWidget {
   ProfileCreateState createState() => ProfileCreateState();
 }
 
-// class RawDataSet {
-//   RawDataSet({
-//     required this.title,
-//     required this.color,
-//     required this.values,
-//   });
-
-//   final String title;
-//   final Color color;
-//   final List<double> values;
-// }
 
 class SubMenu {
   SubMenu({required this.title, this.function, required this.img, this.widget});
@@ -47,12 +38,23 @@ class ProfileCreateState extends State<ProfileInfo> {
   var logger = Logger();
 
 
-  getProfile() {
+  getProfile() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if(prefs.containsKey(Name.getUser)){
+      setState(() {
+        logger.v(jsonDecode(prefs.getString(Name.getUser)!));
+        profile=GetUser.fromJson(jsonDecode(prefs.getString(Name.getUser)!));
+      });
+    }
     try {
       userRepo.getUser(widget.userName).then((value) {
-        setState(() {
+        setState(()  {
+          
+          
           profile = GetUser.fromJson(value.D);
+          
         });
+        prefs.setString(Name.getUser, jsonEncode(value.D));
       });
     } catch (e) {
       logger.v(e);
@@ -62,6 +64,7 @@ class ProfileCreateState extends State<ProfileInfo> {
   @override
   void initState() {
     super.initState();
+    
     getProfile();
   }
 

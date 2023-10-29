@@ -4,12 +4,10 @@ import 'package:age_calculator/age_calculator.dart';
 import 'package:e_fu/module/box_ui.dart';
 import 'package:e_fu/module/page.dart';
 import 'package:e_fu/my_data.dart';
-import 'package:e_fu/pages/profile/profile.dart';
 import 'package:e_fu/request/exercise/history.dart';
 import 'package:e_fu/request/exercise/history_data.dart';
 import 'package:e_fu/request/mo/mo.dart';
 import 'package:e_fu/request/user/get_user_data.dart';
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 class MoDetail extends StatefulWidget {

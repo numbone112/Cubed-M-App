@@ -42,7 +42,7 @@ class InviteRepo extends API implements InviteAPI {
   @override
   Future<Format> inviteDetail(int inviteId) async {
     return await lunch(
-        client.get(Uri.parse('$domain/invite/omg/$inviteId'), headers: header));
+        client.get(Uri.parse('$domain/invite/detail/$inviteId'), headers: header));
   }
 
   @override

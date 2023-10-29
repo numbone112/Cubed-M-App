@@ -31,8 +31,9 @@ setTarget(BuildContext context, List<ItemWithField> items,
               width: MediaQuery.of(context).size.height * 0.8,
               child: Column(
                 children: [
-                  SizedBox(
+                  Container(
                     height: MediaQuery.of(context).size.height * 0.27,
+                    width: MediaQuery.of(context).size.width,
                     child: ListView(
                       children: items
                           .map((e) =>

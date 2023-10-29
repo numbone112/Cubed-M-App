@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:age_calculator/age_calculator.dart';
 import 'package:e_fu/module/exercise_process.dart';
 import 'package:e_fu/module/page.dart';
@@ -45,16 +47,16 @@ class HomePageState extends State<HomePage> {
   Logger logger = Logger();
 
   @override
-   initState()  {
+  initState() {
     super.initState();
     test();
-   
   }
 
   Future<void> test() async {
-      // prefs = await SharedPreferences.getInstance();
+    prefs = await SharedPreferences.getInstance();
     try {
-      getUser = prefs.get(Name.getUser) as GetUser;
+      getUser =
+          GetUser.fromJson(jsonDecode(prefs.get(Name.getUser).toString()));
     } catch (e) {
       logger.v(e);
     }
@@ -62,7 +64,6 @@ class HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-   
     return CustomPage(
       title: "Cubed M",
       headTexttype: TextType.page,

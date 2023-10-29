@@ -619,12 +619,14 @@ class Box {
 
   //設立組數的輸入框
   static Widget setsBox(String title, TextEditingController controller) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Flex(
+      direction: Axis.horizontal,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Container(width: 70, alignment: Alignment.center, child: Text(title)),
-        TextInput.radius('組數', controller, width: 80),
-        const SizedBox(width: 40, child: Text('組')),
+        Expanded(flex: 2, child: Text(title,textAlign:TextAlign.center)),
+        Expanded(flex: 2, child: TextInput.radius('組數', controller, width: 80)),
+        const Expanded(flex: 1, child: Text('組',textAlign:TextAlign.center,))
       ],
     );
   }

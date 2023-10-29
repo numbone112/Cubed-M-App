@@ -10,7 +10,7 @@ History _$HistoryFromJson(Map<String, dynamic> json) => History(
       name: json['name'] as String,
       time: DateTime.parse(json['time'] as String),
       remark: json['remark'] as String,
-      score: (json['score'] as num).toDouble(),
+      score: (json['score'] as num?)?.toDouble() ?? 0,
       m_id: json['m_id'] as String,
       avgScore: (json['avgScore'] as num?)?.toDouble() ?? 0,
       done: (json['done'] as List<dynamic>)

@@ -222,6 +222,7 @@ class Box {
     return Box.boxHasRadius(
       height: 160,
       padding: const EdgeInsets.fromLTRB(15, 0, 15, 15),
+      margin: EdgeInsets.only(top: 10),
       child: GestureDetector(
         behavior: HitTestBehavior.translucent,
         onTap: () {

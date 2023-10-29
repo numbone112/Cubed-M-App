@@ -11,9 +11,12 @@ abstract class HistoryAPI {
 class HistoryRepo extends API implements HistoryAPI {
   @override
   Future<Format> historyList(String userName, {String iId = ""}) async {
+    String url = iId != ""
+        ? '$domain/history/list/$userName?i_id=$iId'
+        : '$domain/history/list/$userName';
+
     return await lunch(
-      client.get(Uri.parse('$domain/history/list/$userName?i_id=$iId'),
-          headers: header),
+      client.get(Uri.parse(url), headers: header),
     );
   }
 

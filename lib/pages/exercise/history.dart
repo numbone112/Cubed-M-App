@@ -36,6 +36,7 @@ class HistoryDetailstate extends State<HistoryDetailPage> {
               width: MediaQuery.of(context).size.width * 0.3,
               height: MediaQuery.of(context).size.height * 0.15,
               child: GestureDetector(
+                behavior: HitTestBehavior.translucent,
                 onTap: () {
                   Navigator.pushNamed(context, HistoryDetailPerson.routeName,
                       arguments: historyDeep);
@@ -59,32 +60,11 @@ class HistoryDetailstate extends State<HistoryDetailPage> {
               ),
             ),
             Expanded(
-              child: ListView(
-                scrollDirection: Axis.vertical,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: textWidget(
-                        text: '左手*3',
-                        textAlign: TextAlign.center,
-                        type: TextType.content),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: textWidget(
-                        text: '右手*5',
-                        textAlign: TextAlign.center,
-                        type: TextType.content),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: textWidget(
-                        text: '椅子坐立*1',
-                        textAlign: TextAlign.center,
-                        type: TextType.content),
-                  ),
-                ],
-              ),
+              child: SizedBox(
+                width: 75,
+                height: 75,
+                child: Chart.avgChart([3,4,4])
+                )
             ),
             Box.textRadiusBorder(historyDeep.score.toString(),
                 width: 60, textType: TextType.sub)

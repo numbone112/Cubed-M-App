@@ -38,7 +38,9 @@ class InviteState extends State<InvitePage> {
               accept: Container(
                 padding: const EdgeInsets.only(top: 10, bottom: 10),
                 decoration: BoxDecoration(
-                    color: MyTheme.color,
+                      color:
+                     f.accept == 1 ?  MyTheme.green : (f.accept == 2 ? MyTheme.pink :  MyTheme.color),
+
                     borderRadius: BorderRadius.circular(30)),
                 child: textWidget(
                     text:

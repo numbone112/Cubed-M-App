@@ -10,8 +10,8 @@ import 'package:logger/logger.dart';
 
 class PlanInsertPage extends StatefulWidget {
   static const routeName = '/plan/insert';
-  final String userName;
-  const PlanInsertPage({super.key, required this.userName});
+  final String userID;
+  const PlanInsertPage({super.key, required this.userID});
 
   @override
   PlanInsertState createState() => PlanInsertState();
@@ -126,7 +126,7 @@ class PlanInsertState extends State<PlanInsertPage> {
           Box.yesnoBox(() {
             Plan plan = Plan(
                 name: nameInput.text,
-                user_id: widget.userName,
+                user_id: widget.userID,
                 str_date: DateTime.parse(strInput.text),
                 end_date: DateTime.parse(endInput.text),
                 execute: execute);

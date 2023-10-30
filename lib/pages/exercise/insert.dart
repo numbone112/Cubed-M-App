@@ -14,9 +14,9 @@ import 'package:logger/logger.dart';
 import '../../module/page.dart';
 
 class InsertInvite extends StatefulWidget {
-  final String userName;
+  final String userID;
 
-  const InsertInvite({super.key, required this.userName});
+  const InsertInvite({super.key, required this.userID});
   static const routeName = '/invite/insert';
 
   @override
@@ -189,7 +189,7 @@ class InsertInvitestate extends State<InsertInvite> {
             Box.yesnoBox(() {
               EasyLoading.show(status: "loading...");
               Invite invite = Invite(
-                m_id: widget.userName,
+                m_id: widget.userID,
                 name: nameInput.text,
                 time: DateTime.now().toIso8601String(),
                 remark: remarkInput.text,

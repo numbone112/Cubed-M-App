@@ -8,10 +8,10 @@ import 'package:flutter/material.dart';
 import '../../module/page.dart';
 
 class HistoryDetailPerson extends StatefulWidget {
-  final String userName;
+  final String userID;
   // final History history;
 
-  const HistoryDetailPerson({super.key, required this.userName});
+  const HistoryDetailPerson({super.key, required this.userID});
   static const routeName = '/history/detail/person';
 
   @override

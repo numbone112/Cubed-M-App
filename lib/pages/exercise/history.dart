@@ -11,8 +11,8 @@ import 'package:flutter/material.dart';
 import '../../module/page.dart';
 
 class HistoryDetailPage extends StatefulWidget {
-  final String userName;
-  const HistoryDetailPage({super.key, required this.userName});
+  final String userID;
+  const HistoryDetailPage({super.key, required this.userID});
   static const routeName = '/history/detail';
 
   @override

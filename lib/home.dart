@@ -10,8 +10,8 @@ import 'my_data.dart';
 
 class Home extends StatefulWidget {
   static const routeName = '/home';
-  const Home({super.key, required this.userName});
-  final String userName;
+  const Home({super.key, required this.userID});
+  final String userID;
 
   @override
   State<Home> createState() => _HomeState();
@@ -34,7 +34,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
         duration: const Duration(milliseconds: 600), vsync: this);
 
     super.initState();
-    tabBody =  HomePage(userName: widget.userName,);
+    tabBody =  HomePage(userID: widget.userID,);
   }
 
   @override
@@ -67,7 +67,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                   //   return;
                   // }
                   setState(() {
-                    tabBody =  HomePage(userName: widget.userName,);
+                    tabBody =  HomePage(userID: widget.userID,);
                   });
                 });
               } else if (index == 1) {
@@ -75,18 +75,18 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                 //   return;
                 // }
                 setState(() {
-                  tabBody =  Mo(userName: widget.userName,);
+                  tabBody =  Mo(userID: widget.userID,);
                 });
               } else if (index == 2) {
                 setState(() {
                   tabBody = ExerciseHome(
-                    userName: widget.userName,
+                    userID: widget.userID,
                   );
                 });
               } else if (index == 3) {
                 setState(() {
                   tabBody = ProfileInfo(
-                    userName: widget.userName,
+                    userID: widget.userID,
                   );
                 });
               }

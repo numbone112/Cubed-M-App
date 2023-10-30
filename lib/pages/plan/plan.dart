@@ -12,8 +12,8 @@ import 'package:flutter/material.dart';
 
 class PlanPage extends StatefulWidget {
   static const routeName = '/plan';
-  final String userName;
-  const PlanPage({super.key, required this.userName});
+  final String userID;
+  const PlanPage({super.key, required this.userID});
 
   @override
   PlanState createState() => PlanState();
@@ -39,7 +39,7 @@ class PlanState extends State<PlanPage> {
   void initState() {
     super.initState();
 
-    planRepo.getPlan(widget.userName).then((value) {
+    planRepo.getPlan(widget.userID).then((value) {
       setState(() {
         planlist = parsePlanList(jsonEncode(value.D));
         barChartGroupData = [

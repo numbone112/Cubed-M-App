@@ -12,9 +12,9 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
 class InvitePage extends StatefulWidget {
-  const InvitePage({super.key, required this.userName});
+  const InvitePage({super.key, required this.userID});
   static const routeName = '/invite/';
-  final String userName;
+  final String userID;
   @override
   State<StatefulWidget> createState() => InviteState();
 }
@@ -55,7 +55,7 @@ class InviteState extends State<InvitePage> {
   }
 
   sendReply(int accept) {
-    inviteRepo.replyInvite(accept, widget.userName, invite.i_id).then((value) {
+    inviteRepo.replyInvite(accept, widget.userID, invite.i_id).then((value) {
       setState(() {
         invite.accept = accept;
         detailList = [];
@@ -92,7 +92,7 @@ class InviteState extends State<InvitePage> {
             child: ListView(children: showOnInvite()),
           ),
           invite.accept != 3
-              ? (invite.m_id == widget.userName
+              ? (invite.m_id == widget.userID
                   ? GestureDetector(
                       onTap: () {
                         List<EventRecord> forEvent = [];

@@ -30,8 +30,8 @@ import 'package:e_fu/request/record/record_data.dart';
 class Event extends StatefulWidget {
   static const routeName = '/event';
 
-  const Event({super.key, required this.userName});
-  final String userName;
+  const Event({super.key, required this.userID});
+  final String userID;
 
   @override
   State<StatefulWidget> createState() => EventState();
@@ -152,10 +152,10 @@ class EventState extends State<Event> {
       int inviteIndex = eventRecordList.first.eventRecordInfo.id;
       if (inviteIndex == -1) {
         Invite invite =
-            Invite(m_id: widget.userName, friend: [widget.userName]);
+            Invite(m_id: widget.userID, friend: [widget.userID]);
         await inviteRepo.createInvite(invite).then((value) async {
           await inviteRepo
-              .searchInvite(widget.userName, invite.time)
+              .searchInvite(widget.userID, invite.time)
               .then((value) async {
             inviteIndex = parseInviteList(jsonEncode(value.D))[0].id;
             toSave = changeRecordID(toSave, inviteIndex);
@@ -176,7 +176,7 @@ class EventState extends State<Event> {
               if (value.message == "新增成功") {
                 logger.v("成功");
                 await historyRepo
-                    .historyList(widget.userName, iId: inviteIndex.toString())
+                    .historyList(widget.userID, iId: inviteIndex.toString())
                     .then((value) {
                   List<History> historyList =
                       parseHistoryList(jsonEncode(value.D));
@@ -199,7 +199,7 @@ class EventState extends State<Event> {
           logger.v("成功");
         }
         await historyRepo
-            .historyList(widget.userName, iId: inviteIndex.toString())
+            .historyList(widget.userID, iId: inviteIndex.toString())
             .then((value) {
           History history = parseHistoryList(jsonEncode(value.D))[0];
           Navigator.pushReplacementNamed(context, HistoryDetailPage.routeName,

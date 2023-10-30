@@ -32,8 +32,8 @@ class Invite {
 }
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key, required this.userName});
-  final String userName;
+  const HomePage({super.key, required this.userID});
+  final String userID;
 
   @override
   State<StatefulWidget> createState() => HomePageState();
@@ -206,7 +206,7 @@ class HomePageState extends State<HomePage> {
                                     .toList(),
                               ),
                               eventRecordInfo: EventRecordInfo(
-                                  name: widget.userName,
+                                  name: widget.userID,
                                   age: AgeCalculator.age(getUser.birthday)
                                       .years))
                         ],

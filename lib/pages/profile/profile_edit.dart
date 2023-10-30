@@ -7,8 +7,8 @@ import 'package:flutter/material.dart';
 
 class Profile extends StatefulWidget {
   static const routeName = '/profile';
-  final String userName;
-  const Profile({super.key, required this.userName});
+  final String userID;
+  const Profile({super.key, required this.userID});
 
   @override
   ProfilePageState createState() => ProfilePageState();

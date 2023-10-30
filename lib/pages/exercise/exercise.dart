@@ -12,8 +12,8 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
 class ExerciseHome extends StatefulWidget {
-  final String userName;
-  const ExerciseHome({super.key, required this.userName});
+  final String userID;
+  const ExerciseHome({super.key, required this.userID});
 
   @override
   State<StatefulWidget> createState() => ExerciseHomeState();
@@ -36,13 +36,13 @@ class ExerciseHomeState extends State<ExerciseHome>
     // 建立 TabController，vsync 接受的型態是 TickerProvider
     tabController = TabController(length: 2, vsync: this);
     super.initState();
-    inviteRepo.inviteList(widget.userName, mode).then((value) {
+    inviteRepo.inviteList(widget.userID, mode).then((value) {
       List<Invite> inviteList = parseInviteList(jsonEncode(value.D));
       setState(() {
         invitelist = inviteList;
       });
     });
-    historyRepo.historyList(widget.userName).then((value) {
+    historyRepo.historyList(widget.userID).then((value) {
       List<History> historyList = parseHistoryList(jsonEncode(value.D));
       setState(() {
         hisotrylist = historyList;
@@ -54,7 +54,7 @@ class ExerciseHomeState extends State<ExerciseHome>
     setState(() {
       mode = m;
     });
-    inviteRepo.inviteList(widget.userName, mode).then((value) {
+    inviteRepo.inviteList(widget.userID, mode).then((value) {
       List<Invite> inviteList = parseInviteList(jsonEncode(value.D));
       setState(() {
         invitelist = inviteList;
@@ -140,7 +140,7 @@ class ExerciseHomeState extends State<ExerciseHome>
                         itemCount: hisotrylist.length,
                         itemBuilder: (BuildContext context, int index) {
                           return (Box.history(
-                              hisotrylist[index], context, widget.userName));
+                              hisotrylist[index], context, widget.userID));
                         }),
                   ),
                 ),

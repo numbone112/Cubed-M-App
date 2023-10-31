@@ -376,7 +376,7 @@ class EventState extends State<Event> {
             padding: const EdgeInsets.only(top: 10, bottom: 10),
             child: textWidget(
                 text: forEvent.eventRecordInfo.name,
-                type: TextType.sub,
+                type: TextType.content,
                 color: MyTheme.buttonColor),
           ),
           Row(
@@ -436,10 +436,10 @@ class EventState extends State<Event> {
           ),
           connectDeviec.containsKey(index)
               ? textWidget(
-                  text: '已連結', type: TextType.sub, color: MyTheme.color)
+                  text: '已連結', type: TextType.content, color: MyTheme.color)
               : GestureDetector(
                   child: Box.textRadiusBorder('連結',
-                      textType: TextType.sub,
+                      textType: TextType.content,
                       padding: const EdgeInsets.all(5),
                       filling: MyTheme.buttonColor,
                       width: 75,
@@ -566,8 +566,11 @@ class EventState extends State<Event> {
         titWidget: Padding(
           padding: const EdgeInsets.only(top: 10),
           child: Box.inviteInfo(
-            Invite(name: eventRecordList.first.eventRecordInfo.name,remark: eventRecordList.first.eventRecordInfo.remark,time: eventRecordList.first.eventRecordInfo.time)
-            , false),
+              Invite(
+                  name: eventRecordList.first.eventRecordInfo.name,
+                  remark: eventRecordList.first.eventRecordInfo.remark,
+                  time: eventRecordList.first.eventRecordInfo.time),
+              false),
         ),
         headHeight: 100,
         body: Padding(
@@ -584,33 +587,32 @@ class EventState extends State<Event> {
                             height: MediaQuery.of(context).size.height * 0.65,
                             child: ListView.builder(
                               // physics: const NeverScrollableScrollPhysics(),
-                           
+
                               itemCount: eventRecordList.length,
                               itemBuilder: ((context, index) {
                                 return (exerciseBox(index));
                               }),
-                              
                             ),
                           ),
                     Box.boxHasRadius(
                       child: ExpansionTile(
-                        collapsedShape: Border.all(color: MyTheme.backgroudColor),
+                        collapsedShape:
+                            Border.all(color: MyTheme.backgroudColor),
                         title: const Text("運動分級表"),
                         children: const [Text("運動分級表詳細資料")],
                       ),
                     ),
-                    
                   ],
                 ),
               ),
               SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.8,
-                  child: Box.yesnoBox(() => sendStart(), () => finish(),
-                      noTitle: '開始運動',
-                      noColor: MyTheme.color,
-                      yestTitle: '結束',
-                      yesColor: MyTheme.lightColor),
-                ),
+                width: MediaQuery.of(context).size.width * 0.8,
+                child: Box.yesnoBox(() => sendStart(), () => finish(),
+                    noTitle: '開始運動',
+                    noColor: MyTheme.color,
+                    yestTitle: '結束',
+                    yesColor: MyTheme.lightColor),
+              ),
             ],
           ),
         ));

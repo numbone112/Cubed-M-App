@@ -25,7 +25,7 @@ class ProfilePageState extends State<Profile> {
       decoration: BoxDecoration(
           color: Colors.white, borderRadius: BorderRadius.circular(20)),
       child: ListTile(
-        title: textWidget(text: title ?? '', type: TextType.sub),
+        title: textWidget(text: title ?? '', type: TextType.content),
         subtitle: textWidget(
             text: subtitle == '' ? '無' : subtitle ?? '',
             type: TextType.content,
@@ -44,7 +44,7 @@ class ProfilePageState extends State<Profile> {
       body: ListView(children: [
         profileItem(title: 'ID', subtitle: args.id),
         profileItem(title: '姓名', subtitle: args.name),
-        profileItem(title: '性別', subtitle: args.sex),
+        profileItem(title: '性別', subtitle: args.sex != "female" ? "男" : "女"),
         profileItem(
             title: '生日',
             subtitle: args.birthday.toIso8601String().substring(0, 10)),

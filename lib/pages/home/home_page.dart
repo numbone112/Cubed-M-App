@@ -7,6 +7,7 @@ import 'package:e_fu/module/toast.dart';
 import 'package:e_fu/pages/event/event.dart';
 import 'package:e_fu/pages/exercise/event_record.dart';
 import 'package:e_fu/pages/exercise/insert.dart';
+import 'package:e_fu/pages/exercise/invite.dart';
 import 'package:e_fu/request/e/e_data.dart';
 import 'package:e_fu/request/home.dart/home.dart';
 import 'package:e_fu/request/home.dart/home_data.dart';
@@ -106,15 +107,21 @@ class HomePageState extends State<HomePage> {
                               delegate: SliverChildBuilderDelegate(
                                   (BuildContext context, int index) {
                                 return homeData != null
-                                    ? Container(
-                                        alignment: Alignment.center,
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(10),
-                                          child: textWidget(
-                                              text: "今天 ${index * 2 + 15}:00",
-                                              type: TextType.content),
+                                    ? GestureDetector(
+                                      onTap: ()=>Navigator.pushNamed(
+                                          context, InvitePage.routeName,
+                                          arguments: homeData?.execute[index]),
+
+                                      child: Container(
+                                          alignment: Alignment.center,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(10),
+                                            child: textWidget(
+                                                text: homeData!.execute[index].name,
+                                                type: TextType.content),
+                                          ),
                                         ),
-                                      )
+                                    )
                                     : Container();
                               },
                                   childCount: homeData == null
@@ -140,13 +147,14 @@ class HomePageState extends State<HomePage> {
                             alignment: Alignment.center,
                             child: textWidget(text: "分析圖", type: TextType.sub)),
                       ),
+                      homeData!=null?
                       Expanded(
                         child: Box.boxHasRadius(
                           width: MediaQuery.of(context).size.width * 0.33,
                           height: MediaQuery.of(context).size.width * 0.33,
-                          child: Chart.avgChart([5, 3, 1]),
+                          child: Chart.avgChart(getUser.sport_info.map((e) => e.score).toList()),
                         ),
-                      )
+                      ):Container()
                     ],
                   ),
                 ),

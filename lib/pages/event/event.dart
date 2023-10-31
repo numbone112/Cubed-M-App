@@ -369,7 +369,7 @@ class EventState extends State<Event> {
           Padding(
             padding: const EdgeInsets.only(top: 10, bottom: 10),
             child: textWidget(
-                text: forEvent.eventRecordInfo.name,
+                text: forEvent.eventRecordInfo.user_name,
                 type: TextType.content,
                 color: MyTheme.buttonColor),
           ),

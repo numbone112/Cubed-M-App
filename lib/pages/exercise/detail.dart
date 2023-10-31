@@ -53,6 +53,9 @@ class HistoryDetailPersonstate extends State<HistoryDetailPerson> {
   @override
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context)!.settings.arguments as HistoryDeep;
+    if(dones.isEmpty){
+      changeSelect(0, args.done);
+    }
     return (CustomPage(
       body: ListView(children: [
         const Padding(padding: EdgeInsets.only(top: 10, bottom: 10)),
@@ -70,12 +73,12 @@ class HistoryDetailPersonstate extends State<HistoryDetailPerson> {
                     type: TextType.fun,
                     color: MyTheme.buttonColor,
                   ),
+                  // textWidget(
+                  //   text: args.name,
+                  //   type: TextType.content,
+                  // ),
                   textWidget(
-                    text: args.user_id,
-                    type: TextType.content,
-                  ),
-                  textWidget(
-                    text: '男 66',
+                    text: args.sexAndAge(),
                     type: TextType.content,
                   ),
                 ],
@@ -105,7 +108,7 @@ class HistoryDetailPersonstate extends State<HistoryDetailPerson> {
               Expanded(
                 flex: 1,
                 child: textWidget(
-                    text: '組數',
+                    text: '流水號',
                     type: TextType.content,
                     textAlign: TextAlign.center),
               ),
@@ -141,7 +144,7 @@ class HistoryDetailPersonstate extends State<HistoryDetailPerson> {
                     Expanded(
                       flex: 1,
                       child: textWidget(
-                          text: index.toString(),
+                          text: (index+1).toString(),
                           type: TextType.content,
                           textAlign: TextAlign.center),
                     ),

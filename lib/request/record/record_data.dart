@@ -2,7 +2,6 @@
 
 import 'package:e_fu/request/exercise/history_data.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:logger/logger.dart';
 
 part 'record_data.g.dart';
 

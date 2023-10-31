@@ -35,9 +35,22 @@ class Invite {
       this.friend = const []}) {
     if (time == "") {
       time = formatter.format(datetime);
-      
+    }
+    if (id != -1) {
+      i_id = id;
     }
   }
+
+  String pretyTime() {
+    String result = time.toString().substring(0, 17).replaceAll("T", " ");
+    if (result.endsWith(":")) {
+      result = result.substring(0, 16);
+    }
+    return result;
+  }
+
+  String pretyRemark() => '備註：${remark.isEmpty ? '無' : remark}';
+
   int i_id;
   String name;
   final formatter = DateFormat('yyyy-MM-dd THH:mm:ss');
@@ -49,9 +62,6 @@ class Invite {
   int accept;
   String remark;
   List<String> friend;
-  DateTime transTime() {
-    return DateTime.now();
-  }
 
   factory Invite.fromJson(Map<String, dynamic> json) => _$InviteFromJson(json);
   Map<String, dynamic> toJson() => _$InviteToJson(this);
@@ -64,7 +74,7 @@ class InviteDetail {
       required this.user_id,
       this.targetSets = const [5, 5, 5],
       required this.userName,
-       this.m_id=""});
+      this.m_id = ""});
   String userName;
   String user_id;
   String m_id;

@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 
+import 'package:age_calculator/age_calculator.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'history_data.g.dart';
@@ -59,12 +60,26 @@ class HistoryDeep {
       required this.name,
       required this.done,
       required this.total_score,
-      required this.each_score});
+      required this.each_score,
+      this.age=0,
+      required this.sex,
+      required this.birthday}){
+        age=AgeCalculator.age(birthday).years;
+      }
   String user_id;
   String name;
   List<DoneItem> done;
   double total_score;
   List<double> each_score;
+  int age;
+  String sex;
+  DateTime birthday;
+
+  String pretySex()=>sex=="male"?"男":"女";
+
+  String sexAndAge(){
+    return "${pretySex()} $age";
+  }
 
   factory HistoryDeep.fromJson(Map<String, dynamic> json) =>
       _$HistoryDeepFromJson(json);

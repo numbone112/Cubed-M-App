@@ -106,6 +106,7 @@ class InviteState extends State<InvitePage> {
                                     EventRecordDetail(item: element.targetSets),
                                 eventRecordInfo:
                                   EventRecordInfo(
+                                    id: invite.i_id,
                                     m_id: element.m_id,
                                     user_id: element.user_id,
                                       user_name: element.userName,

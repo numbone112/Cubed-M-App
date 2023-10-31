@@ -8,8 +8,8 @@ import '../../module/page.dart';
 class Mo extends StatefulWidget {
   static const routeName = '/newhome';
   final int first = 1;
-  const Mo({super.key, required this.userName});
-  final String userName;
+  const Mo({super.key, required this.userID});
+  final String userID;
 
   @override
   State<Mo> createState() => _MoState();
@@ -45,12 +45,9 @@ class _MoState extends State<Mo> with SingleTickerProviderStateMixin {
           ],
         ),
         Expanded(
-          child: TabBarView(controller: tabController, children: [
-            MoRank(
-              userName: widget.userName,
-            ),
-            MoList(userName: widget.userName)
-          ]),
+          child: TabBarView(
+              controller: tabController,
+              children: [ MoRank(userID: widget.userID,), MoList(userID: widget.userID)]),
         ),
       ]),
     );

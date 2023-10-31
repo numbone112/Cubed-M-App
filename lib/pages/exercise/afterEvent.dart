@@ -10,16 +10,16 @@ import 'package:flutter/material.dart';
 
 import '../../module/page.dart';
 
-class HistoryDetailPage extends StatefulWidget {
+class AfterEventPage extends StatefulWidget {
   final String userID;
-  const HistoryDetailPage({super.key, required this.userID});
+  const AfterEventPage({super.key, required this.userID});
   static const routeName = '/history/detail';
 
   @override
-  State<StatefulWidget> createState() => HistoryDetailstate();
+  State<StatefulWidget> createState() => AfterEventstate();
 }
 
-class HistoryDetailstate extends State<HistoryDetailPage> {
+class AfterEventstate extends State<AfterEventPage> {
   List<HistoryDeep> historyDeepList = [];
   HistoryRepo historyRepo = HistoryRepo();
 
@@ -110,7 +110,7 @@ class HistoryDetailstate extends State<HistoryDetailPage> {
                       children: [
                         textWidget(
                           text: '平均',
-                          type: TextType.content,
+                          type: TextType.sub,
                         ),
                         Box.textRadiusBorder(history.avgScore.toString(),
                             width: 60,

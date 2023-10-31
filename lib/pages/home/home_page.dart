@@ -8,6 +8,8 @@ import 'package:e_fu/pages/event/event.dart';
 import 'package:e_fu/pages/exercise/event_record.dart';
 import 'package:e_fu/pages/exercise/insert.dart';
 import 'package:e_fu/request/e/e_data.dart';
+import 'package:e_fu/request/home.dart/home.dart';
+import 'package:e_fu/request/home.dart/home_data.dart';
 import 'package:e_fu/request/plan/plan_data.dart';
 
 import 'package:e_fu/module/box_ui.dart';
@@ -17,23 +19,9 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class Invite {
-  Invite(
-      {required this.host,
-      required this.remark,
-      required this.name,
-      required this.dateTime,
-      required this.accept});
-  String host;
-  String remark;
-  String name;
-  DateTime dateTime;
-  String accept;
-}
-
 class HomePage extends StatefulWidget {
-  const HomePage({super.key, required this.userName});
-  final String userName;
+  const HomePage({super.key, required this.userID});
+  final String userID;
 
   @override
   State<StatefulWidget> createState() => HomePageState();
@@ -45,11 +33,24 @@ class HomePageState extends State<HomePage> {
   late GetUser getUser;
   List<ItemWithField> targetCheck = ItemSets.withField();
   Logger logger = Logger();
+  HomeRepo homeRepo = HomeRepo();
+  HomeData? homeData;
 
   @override
   initState() {
     super.initState();
     test();
+    getData();
+  }
+
+  getData() {
+    homeRepo.homeData(widget.userID).then((value) {
+      logger.v(value.message);
+      setState(() {
+        homeData = HomeData.fromJson(value.D);
+      });
+      logger.v("home data length${homeData?.execute.length}");
+    });
   }
 
   Future<void> test() async {
@@ -104,16 +105,23 @@ class HomePageState extends State<HomePage> {
                             SliverList(
                               delegate: SliverChildBuilderDelegate(
                                   (BuildContext context, int index) {
-                                return Container(
-                                  alignment: Alignment.center,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(10),
-                                    child: textWidget(
-                                        text: "今天 ${index * 2 + 21}:00",
-                                        type: TextType.content),
+                                return homeData != null
+                                    ? Container(
+                                        alignment: Alignment.center,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(10),
+                                          child: textWidget(
+                                              text: "今天 ${index * 2 + 15}:00",
+                                              type: TextType.content),
+                                        ),
+                                      )
+                                    : Container();
+                              },
+                                  childCount: homeData == null
+                                      ? 0
+                                      : homeData?.execute.length
+                                  // homeData?.execute.length
                                   ),
-                                );
-                              }, childCount: 1),
                             ),
                           ],
                         ),
@@ -172,16 +180,22 @@ class HomePageState extends State<HomePage> {
                             end_date: DateTime.now(),
                             user_id: '',
                             str_date: DateTime.now(),
-                            execute: [
-                              true,
-                              true,
-                              false,
-                              false,
-                              true,
-                              true,
-                              false
-                            ]),
-                        exe: [true, true, false, false, false, true, false]),
+                            execute: homeData == null
+                                ? [
+                                    false,
+                                    false,
+                                    false,
+                                    false,
+                                    false,
+                                    false,
+                                    false
+                                  ]
+                                : homeData!.done_plan
+                                    .map((e) => e != 0)
+                                    .toList()),
+                        exe: homeData == null
+                            ? [false, false, false, false, false, false, false]
+                            : homeData!.done_plan.map((e) => e == 1).toList()),
                   ),
                 ],
               ),
@@ -206,9 +220,10 @@ class HomePageState extends State<HomePage> {
                                     .toList(),
                               ),
                               eventRecordInfo: EventRecordInfo(
-                                  name: widget.userName,
-                                  age: AgeCalculator.age(getUser.birthday)
-                                      .years))
+                                  m_id: widget.userID,
+                                  age:
+                                      AgeCalculator.age(getUser.birthday).years,
+                                  user_id: widget.userID))
                         ],
                       ),
                       no: () => Navigator.pop(context),

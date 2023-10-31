@@ -14,8 +14,8 @@ class MoDetail extends StatefulWidget {
   static const routeName = '/mo/detail';
   final int first = 1;
   final GetUser friend;
-  const MoDetail({super.key, required this.userName, required this.friend});
-  final String userName;
+  const MoDetail({super.key, required this.userID, required this.friend});
+  final String userID;
 
   @override
   State<MoDetail> createState() => MoDetailState();
@@ -30,7 +30,7 @@ class MoDetailState extends State<MoDetail> {
   @override
   void initState() {
     super.initState();
-    moRepo.detail(widget.userName, widget.friend.id).then((value) {
+    moRepo.detail(widget.userID, widget.friend.id).then((value) {
       setState(() {
         hisotrylist = parseHistoryList(jsonEncode(value.D));
       });
@@ -131,7 +131,7 @@ class MoDetailState extends State<MoDetail> {
               itemCount: hisotrylist.length,
               itemBuilder: (BuildContext context, int index) {
                 return (Box.history(
-                    hisotrylist[index], context, widget.userName));
+                    hisotrylist[index], context, widget.userID));
               }),
         ),
       ]),

@@ -151,7 +151,7 @@ class _LoginState extends State<Login> {
                   Format a = await userRepo.login(accountC.text, encryptStr);
                   if (a.message == "登入成功") {
                     prefs = await SharedPreferences.getInstance();
-                    prefs.setString(Name.userName, accountC.text);
+                    prefs.setString(Name.userID, accountC.text);
                     if (context.mounted) {
                       Navigator.pushReplacement(
                         context,

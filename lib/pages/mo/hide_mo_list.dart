@@ -13,8 +13,8 @@ import 'package:e_fu/request/mo/mo.dart';
 
 class HindMoList extends StatefulWidget {
   static const routeName = '/mo/hind';
-  final String userName;
-  const HindMoList({super.key, required this.userName});
+  final String userID;
+  const HindMoList({super.key, required this.userID});
 
   @override
   HindMoListState createState() => HindMoListState();
@@ -34,7 +34,7 @@ class HindMoListState extends State<HindMoList> {
 
   getHindMoList() {
     try {
-      moRepo.getHindMoList(widget.userName).then((value) {
+      moRepo.getHindMoList(widget.userID).then((value) {
         setState(() {
           hindMoList = parseMo(jsonEncode(value.D));
           hindMoListWidget = [];
@@ -97,7 +97,7 @@ class HindMoListState extends State<HindMoList> {
   }
 
   showMo(String id) {
-    moRepo.showMo(widget.userName, id).then((value) {
+    moRepo.showMo(widget.userID, id).then((value) {
       if (value.message == "已取消隱藏") {
         toast(context, "已取消隱藏");
       } else {

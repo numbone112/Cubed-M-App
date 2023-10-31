@@ -104,15 +104,20 @@ class EventRecordInfo {
       this.done = const [],
       this.name = "",
       this.remark = "",
-      this.age = 65,this.time=""
-
-      });
+      this.age = 65,
+      this.time = "",
+      this.user_name = "",
+      required this.m_id,
+      required this.user_id});
   int id;
   List<List<int>> done;
+  String m_id;
   String remark;
   String name;
   String time;
   int age;
+  String user_name;
+  String user_id;
   factory EventRecordInfo.fromJson(Map<String, dynamic> json) =>
       _$EventRecordInfoFromJson(json);
   Map<String, dynamic> toJson() => _$EventRecordInfoToJson(this);

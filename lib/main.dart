@@ -51,14 +51,14 @@ class MyApp extends StatefulWidget {
 }
 
 class MyappState extends State<MyApp> {
-  String userName = "";
+  String userID = "";
 
   _loadUser() async {
-    if (userName == "") {
+    if (userID == "") {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       setState(() {
-        if (prefs.containsKey(Name.userName)) {
-          userName = prefs.getString(Name.userName) ?? "";
+        if (prefs.containsKey(Name.userID)) {
+          userID = prefs.getString(Name.userID) ?? "";
         }
       });
     }
@@ -80,34 +80,34 @@ class MyappState extends State<MyApp> {
         color: MyTheme.backgroudColor,
         child: SafeArea(
           bottom: false,
-          child: userName.isEmpty
+          child: userID.isEmpty
               ? const Login()
               : Home(
-                  userName: userName,
+                  userID: userID,
                 ),
         ),
       ),
       debugShowCheckedModeBanner: false,
       routes: <String, WidgetBuilder>{
-        Home.routeName: (_) => Home(userName: userName),
+        Home.routeName: (_) => Home(userID: userID),
         Login.routeName: (_) => const Login(),
-        Event.routeName: (_) => Event(userName: userName),
+        Event.routeName: (_) => Event(userID: userID),
         ProfileUpdate.routeName: (_) => const ProfileUpdate(),
-        EventNowResult.routeName: (_) => EventNowResult(userName: userName),
-        MoList.routeName: (_) => MoList(userName: userName),
-        HindMoList.routeName: (_) => HindMoList(userName: userName),
-        InsertInvite.routeName: (_) => InsertInvite(userName: userName),
-        Profile.routeName: (_) => Profile(userName: userName),
+        EventNowResult.routeName: (_) => EventNowResult(userID: userID),
+        MoList.routeName: (_) => MoList(userID: userID),
+        HindMoList.routeName: (_) => HindMoList(userID: userID),
+        InsertInvite.routeName: (_) => InsertInvite(userID: userID),
+        Profile.routeName: (_) => Profile(userID: userID),
         // ProfileGoal.routeName: (_) => ProfileGoal(userName: userName),
-        InvitePage.routeName: (_) => InvitePage(userName: userName),
+        InvitePage.routeName: (_) => InvitePage(userID: userID),
         HistoryDetailPerson.routeName: (_) => HistoryDetailPerson(
-              userName: userName,
+              userID: userID,
             ),
         HistoryDetailPage.routeName: (_) => HistoryDetailPage(
-              userName: userName,
+              userID: userID,
             ),
-        PlanPage.routeName: (_) => PlanPage(userName: userName),
-        PlanInsertPage.routeName: (_) => PlanInsertPage(userName: userName),
+        PlanPage.routeName: (_) => PlanPage(userID: userID),
+        PlanInsertPage.routeName: (_) => PlanInsertPage(userID: userID),
         // MoDetail.routeName: (_) => MoDetail(userName: userName),
       },
     );

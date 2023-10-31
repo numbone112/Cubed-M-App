@@ -14,8 +14,8 @@ import 'package:e_fu/request/mo/mo.dart';
 
 class MoList extends StatefulWidget {
   static const routeName = '/mo';
-  final String userName;
-  const MoList({super.key, required this.userName});
+  final String userID;
+  const MoList({super.key, required this.userID});
 
   @override
   MoListPageState createState() => MoListPageState();
@@ -35,7 +35,7 @@ class MoListPageState extends State<MoList> {
 
   getMoList() {
     try {
-      moRepo.getMoList(widget.userName).then((value) {
+      moRepo.getMoList(widget.userID).then((value) {
         setState(() {
           moList = parseMo(jsonEncode(value.D));
           moListWidget = [];
@@ -96,7 +96,7 @@ class MoListPageState extends State<MoList> {
   }
 
   hindMo(String id) {
-    moRepo.hindMo(Mo(id: id), widget.userName).then((value) {
+    moRepo.hindMo(Mo(id: id), widget.userID).then((value) {
       if (value.message == "已隱藏") {
         toast(context, "已隱藏");
       } else {
@@ -134,7 +134,7 @@ class MoListPageState extends State<MoList> {
             ),
           ),
           onTap: () => Navigator.pushNamed(context, HindMoList.routeName,
-              arguments: widget.userName),
+              arguments: widget.userID),
         ),
         Container(
           margin: const EdgeInsets.fromLTRB(0, 15, 0, 5),

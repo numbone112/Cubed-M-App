@@ -30,8 +30,8 @@ import 'package:e_fu/request/record/record_data.dart';
 class Event extends StatefulWidget {
   static const routeName = '/event';
 
-  const Event({super.key, required this.userName});
-  final String userName;
+  const Event({super.key, required this.userID});
+  final String userID;
 
   @override
   State<StatefulWidget> createState() => EventState();
@@ -133,14 +133,16 @@ class EventState extends State<Event> {
     for (var element in eventRecordList) {
       //補年紀
       element.processData(
-          // AgeCalculator()
+          // AgeCalculator(element.eventRecordInfo.age)
           70,
           true);
       detail.add(RecordSenderItem(
           done: element.done,
-          score: element.avg,
-          user_id: element.eventRecordInfo.name,
+          total_score: element.total_avg,
+          each_score: element.each_score,
+          user_id: element.eventRecordInfo.user_id,
           i_id: element.eventRecordInfo.id));
+      print("from event finish ${element.total_avg}");
     }
 
     for (var element in hasPair) {
@@ -148,66 +150,58 @@ class EventState extends State<Event> {
     }
 
     //跳結果頁
-    if (context.mounted) {
-      int inviteIndex = eventRecordList.first.eventRecordInfo.id;
-      if (inviteIndex == -1) {
-        Invite invite =
-            Invite(m_id: widget.userName, friend: [widget.userName]);
-        await inviteRepo.createInvite(invite).then((value) async {
-          await inviteRepo
-              .searchInvite(widget.userName, invite.time)
-              .then((value) async {
-            inviteIndex = parseInviteList(jsonEncode(value.D))[0].id;
-            toSave = changeRecordID(toSave, inviteIndex);
-            detail = changeSenderItemID(detail, inviteIndex);
-            if (toSave.isEmpty) {
-              logger.v("to save empty");
-            } else {
-              logger.v("to detail length ${detail.length}");
-              logger.v("to detail score ${detail.first.score}");
-              logger.v("to detail done length ${detail.first.done.length}");
-              logger.v(
-                  "to detail done first ${detail.first.done.first.toJson()}");
-            }
-            // 傳送資料給後端
-            await recordRepo
-                .record(RecordSender(record: toSave, detail: detail))
-                .then((value) async {
-              if (value.message == "新增成功") {
-                logger.v("成功");
-                await historyRepo
-                    .historyList(widget.userName, iId: inviteIndex.toString())
-                    .then((value) {
-                  List<History> historyList =
-                      parseHistoryList(jsonEncode(value.D));
-                  logger.v("historyList${historyList.length}");
-                  if (historyList.isNotEmpty) {
-                    Navigator.pushReplacementNamed(
-                        context, HistoryDetailPage.routeName,
-                        arguments: historyList.first);
-                  }
-                });
-              }
-            });
-          });
+
+    int inviteIndex = eventRecordList.first.eventRecordInfo.id;
+    if (inviteIndex == -1) {
+      Invite invite = Invite(m_id: widget.userID, friend: [widget.userID]);
+      await inviteRepo.createInvite(invite).then((value) async {
+        await inviteRepo
+            .searchInvite(widget.userID, invite.time)
+            .then((value) async {
+          inviteIndex = parseInviteList(jsonEncode(value.D))[0].id;
+          invite.i_id = inviteIndex;
+          sendDataAndLeave(changeRecordID(toSave, inviteIndex),
+              changeSenderItemID(detail, inviteIndex), invite);
         });
-      } else {
-        // 傳送資料給後端
-        Format a = await recordRepo
-            .record(RecordSender(record: toSave, detail: detail));
-        if (a.message == "ok") {
-          logger.v("成功");
-        }
-        await historyRepo
-            .historyList(widget.userName, iId: inviteIndex.toString())
-            .then((value) {
-          History history = parseHistoryList(jsonEncode(value.D))[0];
-          Navigator.pushReplacementNamed(context, HistoryDetailPage.routeName,
-              arguments: history);
-        });
-      }
+      });
+    } else {
+      EventRecordInfo recordInfo = eventRecordList.first.eventRecordInfo;
+      Invite invite = Invite(
+          m_id: recordInfo.m_id,
+          name: recordInfo.name,
+          i_id: recordInfo.id,
+          remark: recordInfo.remark);
+
+      sendDataAndLeave(toSave, detail, invite);
     }
-    logger.v("enter else");
+    logger.v("end finish");
+  }
+
+  sendDataAndLeave(List<Record> recordList, List<RecordSenderItem> reSenderList,
+      Invite invite) async {
+        print("sendDataAndLeave${reSenderList.length}");
+        print("sendDataAndLeave${reSenderList.first.total_score}");
+        print("sendDataAndLeave${reSenderList.first.done.length}");
+    // 傳送資料給後端
+    await recordRepo
+        .record(RecordSender(record: recordList, detail: reSenderList))
+        .then((value) async {
+      if (value.message == "新增成功") {
+        logger.v("成功");
+        if (context.mounted) {
+          Navigator.pushReplacementNamed(context, HistoryDetailPage.routeName,
+              arguments: History(
+                  name: invite.name,
+                  time: invite.time,
+                  remark: invite.remark,
+                  m_id: invite.m_id,
+                  done: [],
+                  friend: invite.friend,
+                  i_id: invite.i_id,
+                  m_name: invite.m_name));
+        }
+      }
+    });
   }
 
   connect(BluetoothDevice device, int pIndex, EventRecord forEvent,
@@ -322,8 +316,8 @@ class EventState extends State<Event> {
                   String checkString = (Platform.isAndroid)
                       ? r.device.platformName
                       : r.advertisementData.localName;
-                  // logger.v(checkString);
-                  if (checkString.contains("e-fu")) {
+
+                  if (checkString.contains("cubed M")) {
                     return ListTile(
                       title: Text(checkString),
                       onTap: () =>
@@ -353,7 +347,7 @@ class EventState extends State<Event> {
         Expanded(
           flex: 2,
           child: Text(
-            forEvent.eventRecordInfo.name,
+            forEvent.eventRecordInfo.user_name,
             textAlign: TextAlign.center,
           ),
         ),
@@ -363,7 +357,7 @@ class EventState extends State<Event> {
 
   Widget exerciseBox(index) {
     EventRecord forEvent = eventRecordList[index];
-    logger.v(forEvent.eventRecordInfo.name);
+    logger.v(forEvent.eventRecordInfo.user_name);
     return Container(
       height: 210,
       margin: const EdgeInsets.only(bottom: 10),
@@ -400,7 +394,7 @@ class EventState extends State<Event> {
                               text: exerciseItem[eIndex],
                               color:
                                   forEvent.now == eIndex ? Colors.white : null,
-                              type: TextType.sub,
+                              type: TextType.content,
                               textAlign: TextAlign.center),
                           color: forEvent.now == eIndex
                               ? MyTheme.color
@@ -607,7 +601,7 @@ class EventState extends State<Event> {
               ),
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.8,
-                child: Box.yesnoBox(() => sendStart(), () => finish(),
+                child: Box.yesnoBox(() => finish(), () => sendStart(),
                     noTitle: '開始運動',
                     noColor: MyTheme.color,
                     yestTitle: '結束',

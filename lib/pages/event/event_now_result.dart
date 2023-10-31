@@ -14,9 +14,9 @@ import 'package:flutter/material.dart';
 
 class EventNowResult extends StatefulWidget {
   static const routeName = '/event/result/now';
-  final String userName;
+  final String userID;
 
-  const EventNowResult({super.key, required this.userName});
+  const EventNowResult({super.key, required this.userID});
 
   @override
   State<StatefulWidget> createState() => EventNowResultState();

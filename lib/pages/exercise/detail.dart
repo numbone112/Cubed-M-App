@@ -8,10 +8,10 @@ import 'package:flutter/material.dart';
 import '../../module/page.dart';
 
 class HistoryDetailPerson extends StatefulWidget {
-  final String userName;
+  final String userID;
   // final History history;
 
-  const HistoryDetailPerson({super.key, required this.userName});
+  const HistoryDetailPerson({super.key, required this.userID});
   static const routeName = '/history/detail/person';
 
   @override
@@ -87,7 +87,7 @@ class HistoryDetailPersonstate extends State<HistoryDetailPerson> {
                   text: '評分',
                   type: TextType.sub,
                 ),
-                Box.textRadiusBorder(args.score.toString(),
+                Box.textRadiusBorder(args.total_score.toString(),
                     width: 60, color: Colors.white, textType: TextType.content)
               ],
             )

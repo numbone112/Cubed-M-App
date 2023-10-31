@@ -10,9 +10,9 @@ import 'package:flutter/material.dart';
 import '../../module/cusbehiver.dart';
 
 class MoRank extends StatefulWidget {
-  final String userName;
+  final String userID;
   final int first = 1;
-  const MoRank({super.key, required this.userName});
+  const MoRank({super.key, required this.userID});
 
   @override
   State<MoRank> createState() => _MoState();
@@ -58,7 +58,7 @@ class _MoState extends State<MoRank> {
           context,
           MaterialPageRoute<void>(
             builder: (BuildContext context) => MoDetail(
-              userName: widget.userName,
+              userID: widget.userID,
               friend: r[index],
             ),
           ),
@@ -104,7 +104,7 @@ class _MoState extends State<MoRank> {
   @override
   Widget build(BuildContext context) {
     if (getuserList.isEmpty) {
-      moRepo.rank(widget.userName).then((value) {
+      moRepo.rank(widget.userID).then((value) {
         setState(() {
           getuserList = parseGetUserList(jsonEncode(value.D));
         });

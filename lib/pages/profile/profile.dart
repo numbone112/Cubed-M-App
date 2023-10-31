@@ -16,8 +16,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../module/cusbehiver.dart';
 
 class ProfileInfo extends StatefulWidget {
-  const ProfileInfo({super.key, required this.userName});
-  final String userName;
+  const ProfileInfo({super.key, required this.userID});
+  final String userID;
 
   @override
   ProfileCreateState createState() => ProfileCreateState();
@@ -45,8 +45,10 @@ class ProfileCreateState extends State<ProfileInfo> {
       });
     }
     try {
-      userRepo.getUser(widget.userName).then((value) {
-        setState(() {
+      userRepo.getUser(widget.userID).then((value) {
+        setState(()  {
+          
+          
           profile = GetUser.fromJson(value.D);
         });
         prefs.setString(Name.getUser, jsonEncode(value.D));
@@ -91,7 +93,7 @@ class ProfileCreateState extends State<ProfileInfo> {
         img: "assets/images/logout.png",
         function: () async {
           SharedPreferences prefs = await SharedPreferences.getInstance();
-          prefs.remove(Name.userName);
+          prefs.remove(Name.userID);
           if (context.mounted) {
             Navigator.pushReplacement(
               context,

@@ -12,9 +12,9 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
 class InvitePage extends StatefulWidget {
-  const InvitePage({super.key, required this.userName});
+  const InvitePage({super.key, required this.userID});
   static const routeName = '/invite/';
-  final String userName;
+  final String userID;
   @override
   State<StatefulWidget> createState() => InviteState();
 }
@@ -38,7 +38,9 @@ class InviteState extends State<InvitePage> {
               accept: Container(
                 padding: const EdgeInsets.only(top: 10, bottom: 10),
                 decoration: BoxDecoration(
-                    color: MyTheme.color,
+                      color:
+                     f.accept == 1 ?  MyTheme.green : (f.accept == 2 ? MyTheme.pink :  MyTheme.color),
+
                     borderRadius: BorderRadius.circular(30)),
                 child: textWidget(
                     text:
@@ -55,7 +57,7 @@ class InviteState extends State<InvitePage> {
   }
 
   sendReply(int accept) {
-    inviteRepo.replyInvite(accept, widget.userName, invite.i_id).then((value) {
+    inviteRepo.replyInvite(accept, widget.userID, invite.i_id).then((value) {
       setState(() {
         invite.accept = accept;
         detailList = [];
@@ -92,7 +94,7 @@ class InviteState extends State<InvitePage> {
             child: ListView(children: showOnInvite()),
           ),
           invite.accept != 3
-              ? (invite.m_id == widget.userName
+              ? (invite.m_id == widget.userID
                   ? GestureDetector(
                       onTap: () {
                         List<EventRecord> forEvent = [];
@@ -103,7 +105,12 @@ class InviteState extends State<InvitePage> {
                                 eventRecordDetail:
                                     EventRecordDetail(item: element.targetSets),
                                 eventRecordInfo:
-                                    EventRecordInfo(name: invite.name,time: invite.time,remark: invite.remark)));
+                                  EventRecordInfo(
+                                    m_id: element.m_id,
+                                    user_id: element.user_id,
+                                      user_name: element.userName,
+                                      name: invite.name,time: invite.time,remark: invite.remark)));
+                                    // EventRecordInfo(name: invite.name,time: invite.time,remark: invite.remark)));
                           }
                         }
                         Navigator.pushReplacementNamed(context, Event.routeName,

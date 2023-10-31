@@ -8,8 +8,8 @@
 
 // class ProfileGoal extends StatefulWidget {
 //   static const routeName = '/profile/goal';
-//   final String userName;
-//   const ProfileGoal({super.key, required this.userName});
+//   final String userID;
+//   const ProfileGoal({super.key, required this.userID});
 
 //   @override
 //   ProfileGoalState createState() => ProfileGoalState();

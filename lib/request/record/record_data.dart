@@ -87,13 +87,15 @@ class RecordSender {
 class RecordSenderItem {
   RecordSenderItem(
       {required this.done,
-      required this.score,
+      required this.each_score,
       required this.user_id,
-      required this.i_id});
+      required this.i_id,
+      required this.total_score});
 
   String user_id;
   List<DoneItem> done;
-  double score;
+  List<double> each_score;
+  double total_score;
   int i_id;
 
   factory RecordSenderItem.fromJson(Map<String, dynamic> json) =>

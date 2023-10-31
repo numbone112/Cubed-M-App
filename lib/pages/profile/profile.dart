@@ -23,7 +23,6 @@ class ProfileInfo extends StatefulWidget {
   ProfileCreateState createState() => ProfileCreateState();
 }
 
-
 class SubMenu {
   SubMenu({required this.title, this.function, required this.img, this.widget});
   final String title;
@@ -37,22 +36,18 @@ class ProfileCreateState extends State<ProfileInfo> {
   UserRepo userRepo = UserRepo();
   var logger = Logger();
 
-
   getProfile() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    if(prefs.containsKey(Name.getUser)){
+    if (prefs.containsKey(Name.getUser)) {
       setState(() {
         logger.v(jsonDecode(prefs.getString(Name.getUser)!));
-        profile=GetUser.fromJson(jsonDecode(prefs.getString(Name.getUser)!));
+        profile = GetUser.fromJson(jsonDecode(prefs.getString(Name.getUser)!));
       });
     }
     try {
       userRepo.getUser(widget.userName).then((value) {
-        setState(()  {
-          
-          
+        setState(() {
           profile = GetUser.fromJson(value.D);
-          
         });
         prefs.setString(Name.getUser, jsonEncode(value.D));
       });
@@ -64,7 +59,7 @@ class ProfileCreateState extends State<ProfileInfo> {
   @override
   void initState() {
     super.initState();
-    
+
     getProfile();
   }
 
@@ -114,7 +109,6 @@ class ProfileCreateState extends State<ProfileInfo> {
         Box.boxHasRadius(
           margin: const EdgeInsets.fromLTRB(0, 10, 0, 5),
           height: 70,
-          
           padding: const EdgeInsets.all(10),
           child: GestureDetector(
             behavior: HitTestBehavior.translucent,
@@ -172,31 +166,24 @@ class ProfileCreateState extends State<ProfileInfo> {
                               color: MyTheme.color,
                             ),
                             child: Container(
-                              padding: const EdgeInsets.fromLTRB(
-                                  20, 40, 20, 20),
+                              padding:
+                                  const EdgeInsets.only(top: 20, bottom: 20),
+                              height: MediaQuery.of(context).size.height * 0.15,
                               alignment: Alignment.center,
                               child: Column(
-                                crossAxisAlignment:
-                                    CrossAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 mainAxisAlignment:
-                                    MainAxisAlignment.center,
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Padding(
-                                    padding: const EdgeInsets.fromLTRB(
-                                        0, 0, 0, 20),
-                                    child: textWidget(
-                                        text: profile!.name,
-                                        type: TextType.sub,
-                                        color: Colors.white),
-                                  ),
-                                  Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          0, 0, 0, 10),
-                                      child: textWidget(
-                                          text:
-                                              "性別：${profile!.sex != "female" ? "男" : "女"}",
-                                          type: TextType.content,
-                                          color: Colors.white)),
+                                  textWidget(
+                                      text: profile!.name,
+                                      type: TextType.sub,
+                                      color: Colors.white),
+                                  textWidget(
+                                      text:
+                                          "性別：${profile!.sex != "female" ? "男" : "女"}",
+                                      type: TextType.content,
+                                      color: Colors.white),
                                   textWidget(
                                       text:
                                           "年齡：${DateTime.now().year - profile!.birthday.year}",
@@ -207,6 +194,7 @@ class ProfileCreateState extends State<ProfileInfo> {
                             ),
                           ),
                         ),
+                  const Padding(padding: EdgeInsets.all(5))
                 ] +
                 intos(),
           )),

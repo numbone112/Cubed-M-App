@@ -7,6 +7,7 @@ import 'package:e_fu/request/invite/invite_data.dart';
 import 'package:e_fu/request/plan/plan_data.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
 
 class Box {
@@ -75,7 +76,7 @@ class Box {
             border: Border.all(color: border ?? Colors.white)),
         child: textWidget(
             text: text,
-            type: textType ?? TextType.sub,
+            type: textType ?? TextType.content,
             color: color ?? Colors.white));
   }
 
@@ -126,7 +127,7 @@ class Box {
                           .toString()
                           .substring(0, 17)
                           .replaceAll('T', ''),
-                      type: TextType.sub),
+                      type: TextType.content),
                   textWidget(
                       text: '召集人：${invite.m_id}',
                       type: TextType.content,
@@ -160,7 +161,7 @@ class Box {
             width: MediaQuery.of(context).size.width * 0.2,
             child: textWidget(
               text: '運動評分',
-              type: TextType.sub,
+              type: TextType.content,
             ),
           ),
           Row(
@@ -222,7 +223,7 @@ class Box {
     return Box.boxHasRadius(
       height: 160,
       padding: const EdgeInsets.fromLTRB(15, 0, 15, 15),
-      margin: EdgeInsets.only(top: 10),
+      margin: const EdgeInsets.only(top: 10),
       child: GestureDetector(
         behavior: HitTestBehavior.translucent,
         onTap: () {
@@ -258,13 +259,13 @@ class Box {
                         children: [
                           textWidget(
                               text: history.time.toString().substring(0, 10),
-                              type: TextType.sub),
+                              type: TextType.content),
                           textWidget(
                               text: history.time
                                   .toString()
                                   .substring(11, 16)
                                   .replaceAll('T', ''),
-                              type: TextType.sub),
+                              type: TextType.content),
                           textWidget(
                               text: '召集人：${history.m_name}',
                               type: TextType.content,
@@ -295,11 +296,11 @@ class Box {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         Expanded(
-            flex: 2, child: textWidget(text: type ?? '', type: TextType.sub)),
+            flex: 2, child: textWidget(text: type ?? '', type: TextType.content)),
         Expanded(
             flex: 5,
             child: Center(
-                child: textWidget(text: name ?? '', type: TextType.sub))),
+                child: textWidget(text: name ?? '', type: TextType.content))),
         Expanded(flex: 2, child: accept ??= Container()),
       ],
     );
@@ -368,7 +369,7 @@ class Box {
                         .toString()
                         .substring(0, 17)
                         .replaceAll("T", " "),
-                    type: TextType.sub),
+                    type: TextType.content),
                 textWidget(
                     text: '備註：${invite.remark.isEmpty ? '無' : invite.remark}',
                     type: TextType.content,
@@ -518,26 +519,34 @@ class Box {
               ),
               Expanded(
                   flex: 2,
-                  child: Text(
-                    plan.name,
-                    textAlign: TextAlign.center,
-                  )),
+                  child: textWidget(
+                      text: plan.name,
+                      textAlign: TextAlign.center,
+                      type: TextType.content)),
               Expanded(
                   flex: 1,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       GestureDetector(
-                        child: const Text("編輯"),
+                        child: Icon(
+                          Icons.edit,
+                          color: MyTheme.color,
+                          size: 20,
+                        ),
                       ),
                       GestureDetector(
-                        child: const Text("刪除"),
-                      )
+                        child: Icon(
+                          Icons.delete,
+                          color: MyTheme.color,
+                          size: 20,
+                        ),
+                      ),
                     ],
                   ))
             ],
           ),
-          Text(plan.getRange()),
+          textWidget(text: plan.getRange(), color: MyTheme.hintColor),
           Row(children: executeWeek()),
           Row(children: planWeek(plan))
         ],
@@ -624,21 +633,40 @@ class Box {
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Expanded(flex: 2, child: Text(title,textAlign:TextAlign.center)),
+        Expanded(flex: 2, child: Text(title, textAlign: TextAlign.center)),
         Expanded(flex: 2, child: TextInput.radius('組數', controller, width: 80)),
-        const Expanded(flex: 1, child: Text('組',textAlign:TextAlign.center,))
+        const Expanded(
+            flex: 1,
+            child: Text(
+              '組',
+              textAlign: TextAlign.center,
+            ))
       ],
     );
   }
 
   //表單標題和輸入框
   static Widget textInput(
-      String title, String hintText, TextEditingController controller) {
+      String title, String hintText, TextEditingController controller,
+      {TextField? textField,
+      Function()? onTap,
+      double? width,
+      double? height,
+      Color? color,
+      bool? readOnly}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(title),
-        Expanded(child: TextInput.radius(hintText, controller)),
+        textWidget(text:title,type: TextType.content),
+        const Padding(padding: EdgeInsets.all(5)),
+        Expanded(
+            child: TextInput.radius(hintText, controller,
+                textField: textField,
+                onTap: onTap,
+                width: width,
+                height: height,
+                color: color,
+                readOnly: readOnly)),
       ],
     );
   }

@@ -52,8 +52,9 @@ class PlanInsertState extends State<PlanInsertPage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  "星期${Box.executeText[i]}",
+                textWidget(
+                  text: "星期${Box.executeText[i]}",
+                  color: execute[i] ? Colors.white:Colors.black
                 ),
               ],
             ),
@@ -76,8 +77,7 @@ class PlanInsertState extends State<PlanInsertPage> {
 
     if (pickedDate != null) {
       controller.text = dateFormat.format(pickedDate);
-    } else {
-    }
+    } else {}
   }
 
   @override
@@ -85,42 +85,28 @@ class PlanInsertState extends State<PlanInsertPage> {
     return CustomPage(
       title: "新增計畫",
       buildContext: context,
+      headColor: MyTheme.lightColor,
+      prevColor: Colors.white,
+      headTextColor: Colors.white,
       body: ListView(
         children: [
-          Row(
-            children: [
-              const Text("計畫名稱"),
-              Expanded(child: TextInput.radius("", nameInput))
-            ],
-          ),
-          Row(
-            children: [
-              const Text("開始時間"),
-              Expanded(
-                child: TextInput.radius("", strInput,
-                    onTap: () => dateInput(strInput)),
-              )
-            ],
-          ),
-          Row(
-            children: [
-              const Text("結束時間"),
-              Expanded(
-                child: TextInput.radius(
-                  "",
-                  endInput,
-                  onTap: () => dateInput(endInput),
-                ),
-              )
-            ],
-          ),
-          const Text(
-            "運動計畫表",
+          Box.textInput('計畫名稱', '請輸入運動計畫名稱', nameInput),
+          Box.textInput('開始時間', '請選擇開始時間', strInput,
+              onTap: () => dateInput(strInput), readOnly: true),
+          Box.textInput('結束時間', '請選擇結束時間', endInput,
+              onTap: () => dateInput(endInput), readOnly: true),
+          textWidget(
+            text: "運動計畫表",
             textAlign: TextAlign.center,
+            type: TextType.sub
           ),
-          const Text(
-            "請點選欲安排運動之星期",
-            textAlign: TextAlign.center,
+          Padding(
+            padding: const EdgeInsets.all(10),
+            child: textWidget(
+                text: "請點選欲安排運動之星期",
+                textAlign: TextAlign.center,
+                type: TextType.hint,
+                color: MyTheme.hintColor),
           ),
           choise(),
           Box.yesnoBox(() {

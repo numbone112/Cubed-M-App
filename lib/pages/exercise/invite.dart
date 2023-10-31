@@ -33,7 +33,7 @@ class InviteState extends State<InvitePage> {
           Padding(
             padding: const EdgeInsets.only(top: 10, bottom: 10),
             child: Box.inviteMember(
-              type: f.userName.contains(detailList.first.userName) ? '成員' : '',
+              type: result.isEmpty? '成員' : '',
               name: f.userName,
               accept: Container(
                 padding: const EdgeInsets.only(top: 10, bottom: 10),
@@ -110,12 +110,12 @@ class InviteState extends State<InvitePage> {
                             arguments: forEvent);
                       },
                       child: Container(
-                        padding: const EdgeInsets.all(10),
+                        padding: const EdgeInsets.all(5),
                         child: Box.textRadiusBorder('準備運動',
                             textType: TextType.sub,
                             border: MyTheme.buttonColor,
                             width: 170,
-                            height: 50),
+                            height: 45),
                       ),
                     )
                   : Container())

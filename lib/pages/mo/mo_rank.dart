@@ -70,23 +70,25 @@ class _MoState extends State<MoRank> {
             children: [
               Expanded(
                 flex: 1,
-                child: Text(
-                  (index + 1).toString(),
+                child: textWidget(
+                    text: (index + 1).toString(),
+                    textAlign: TextAlign.center,
+                    type: TextType.content),
+              ),
+              Expanded(
+                flex: 1,
+                child: textWidget(
+                  text:r[index].name,
                   textAlign: TextAlign.center,
+                  type: TextType.content
                 ),
               ),
               Expanded(
                 flex: 1,
-                child: Text(
-                  r[index].name,
+                child: textWidget(
+                  text:r[index].score.toString(),
                   textAlign: TextAlign.center,
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: Text(
-                  r[index].score.toString(),
-                  textAlign: TextAlign.center,
+                  type: TextType.content
                 ),
               ),
             ],
@@ -139,10 +141,10 @@ class _MoState extends State<MoRank> {
                             labels.length,
                             (index) => Expanded(
                               flex: 1,
-                              child: Text(
-                                labels[index],
-                                textAlign: TextAlign.center,
-                              ),
+                              child: textWidget(
+                                  text: labels[index],
+                                  textAlign: TextAlign.center,
+                                  type: TextType.content),
                             ),
                           ),
                         ),

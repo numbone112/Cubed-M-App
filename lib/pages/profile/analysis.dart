@@ -57,10 +57,10 @@ class DailyEarnings extends StatelessWidget {
                       return '88%';
                     },
                     type: ProgressType.dashboard,
-                    backgroundColor: Colors.grey,
+                    backgroundColor: MyTheme.gray,
                   ),
                 ),
-                textWidget(text: '運動達成率', type: TextType.sub),
+                textWidget(text: '運動達成率', type: TextType.content),
               ],
             ),
             Column(
@@ -77,10 +77,10 @@ class DailyEarnings extends StatelessWidget {
                     },
                     type: ProgressType.dashboard,
                     // textStyle: TextStyle(),
-                    backgroundColor: Colors.grey,
+                    backgroundColor: MyTheme.gray,
                   ),
                 ),
-                textWidget(text: '平均等級', type: TextType.sub),
+                textWidget(text: '平均等級', type: TextType.content),
               ],
             ),
           ],
@@ -105,7 +105,7 @@ class DailyEarnings extends StatelessWidget {
             ],
           ),
         ),
-        textWidget(text: '歷程等級與預測', type: TextType.sub),
+        textWidget(text: '歷程等級與預測', type: TextType.content),
       ]),
     );
   }

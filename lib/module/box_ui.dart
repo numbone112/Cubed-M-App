@@ -244,7 +244,7 @@ class Box {
                       history.isGroup()
                           ? textWidget(
                               text: history.name,
-                              type: TextType.sub,
+                              type: TextType.content,
                               color: MyTheme.buttonColor,
                               fontWeight: true)
                           : Container()

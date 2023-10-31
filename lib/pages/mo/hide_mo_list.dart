@@ -51,7 +51,7 @@ class HindMoListState extends State<HindMoList> {
   Widget hindMoWiget(int i) {
     return Box.boxHasRadius(
       color: Colors.white,
-      margin: const EdgeInsets.fromLTRB(0, 10, 0, 5),
+      margin: const EdgeInsets.fromLTRB(0, 20, 0, 5),
       height: 80,
       width: MediaQuery.of(context).size.width * 0.9,
       padding: const EdgeInsets.fromLTRB(30, 0, 20, 0),
@@ -62,17 +62,16 @@ class HindMoListState extends State<HindMoList> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("ID:${hindMoList![i].id}",
-                  style: TextStyle(
-                      color: MyTheme.black,
-                      fontWeight: FontWeight.w400,
-                      fontSize: MySize.body)),
+              textWidget(
+                text: "ID:${hindMoList![i].id}",
+                type: TextType.content,
+              ),
               const SizedBox(height: 5),
-              Text(hindMoList![i].name,
-                  style: TextStyle(
-                      color: MyTheme.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: MySize.subtitleSize))
+               textWidget(
+                text: hindMoList![i].name,
+                type: TextType.sub,
+              ),
+             
             ],
           ),
           GestureDetector(
@@ -82,10 +81,10 @@ class HindMoListState extends State<HindMoList> {
               height: 30,
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius:Box.normamBorderRadius,
+                borderRadius: Box.normamBorderRadius,
                 border: Border.all(width: 1, color: MyTheme.pink),
               ),
-              child: Text("取消", style: TextStyle(color: MyTheme.pink)),
+              child: textWidget(text: "取消", color: MyTheme.pink),
             ),
             onTap: () {
               showMo(hindMoList![i].id);
@@ -126,7 +125,7 @@ class HindMoListState extends State<HindMoList> {
           : ListView(
               children: hindMoListWidget,
             ),
-      title: "隱藏Mo伴",
+      title: "隱藏Mo 伴",
       headColor: MyTheme.lightColor,
       buildContext: context,
       headTextColor: Colors.white,

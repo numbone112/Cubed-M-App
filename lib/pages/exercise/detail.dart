@@ -72,11 +72,11 @@ class HistoryDetailPersonstate extends State<HistoryDetailPerson> {
                   ),
                   textWidget(
                     text: args.user_id,
-                    type: TextType.sub,
+                    type: TextType.content,
                   ),
                   textWidget(
                     text: '男 66',
-                    type: TextType.sub,
+                    type: TextType.content,
                   ),
                 ],
               ),
@@ -88,7 +88,7 @@ class HistoryDetailPersonstate extends State<HistoryDetailPerson> {
                   type: TextType.sub,
                 ),
                 Box.textRadiusBorder(args.score.toString(),
-                    width: 60, color: Colors.white, textType: TextType.sub)
+                    width: 60, color: Colors.white, textType: TextType.content)
               ],
             )
           ],

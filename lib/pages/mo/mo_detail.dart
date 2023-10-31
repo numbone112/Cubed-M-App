@@ -27,7 +27,6 @@ class MoDetailState extends State<MoDetail> {
   List<History> hisotrylist = [];
   MoRepo moRepo = MoRepo();
 
-
   @override
   void initState() {
     super.initState();
@@ -43,6 +42,8 @@ class MoDetailState extends State<MoDetail> {
     return CustomPage(
       title: "Mo 伴",
       headColor: MyTheme.lightColor,
+      prevColor: Colors.white,
+      headTextColor: Colors.white,
       buildContext: context,
       body: ListView(children: [
         const Padding(padding: EdgeInsets.all(10)),
@@ -53,30 +54,33 @@ class MoDetailState extends State<MoDetail> {
             children: [
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   textWidget(text: widget.friend.name, type: TextType.fun),
+                  const Padding(padding: EdgeInsets.all(10)),
                   textWidget(
                       text:
-                          "${widget.friend.sex} ${AgeCalculator.age(widget.friend.birthday).years}",
-                      type: TextType.fun)
+                          "${widget.friend.sex != "female" ? "男" : "女"} ${AgeCalculator.age(widget.friend.birthday).years}",
+                      type: TextType.content)
                 ],
               ),
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  textWidget(text: "運動評分",type: TextType.fun),
-                  Box.textRadiusBorder(widget.friend.score.toString(),width: 70)
+                  textWidget(text: "運動評分", type: TextType.sub),
+                  Box.textRadiusBorder(widget.friend.score.toString(),
+                      width: 70)
                 ],
               )
             ],
           ),
         ),
-        const Padding(padding: EdgeInsets.all(20)),
+        const Padding(padding: EdgeInsets.all(10)),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Box.boxHasRadius(
-              width: MediaQuery.of(context).size.width*0.4,
+                width: MediaQuery.of(context).size.width * 0.4,
                 height: 200,
                 // margin: const EdgeInsets.only(left: 30),
                 padding: const EdgeInsets.all(10),
@@ -86,49 +90,50 @@ class MoDetailState extends State<MoDetail> {
                     textWidget(text: "與好友一起運動"),
                     textWidget(
                         text: "共 ${hisotrylist.length} 次", type: TextType.fun),
-                    textWidget(text: "最後一次運動2023/04/05"),
+                    textWidget(
+                        text: "最後一次運動2023/04/05",
+                        textAlign: TextAlign.center,
+      
+                        type: TextType.hint,
+                        color: MyTheme.hintColor),
                   ],
                 )),
             Box.boxHasRadius(
-              width: MediaQuery.of(context).size.width*0.4,
+              margin: const EdgeInsets.only(left: 10),
+              width: MediaQuery.of(context).size.width * 0.45,
               height: 200,
               padding: const EdgeInsets.all(5),
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text("分析圖"),
+                  textWidget(text: "分析圖", type: TextType.sub),
+                  const Padding(padding: EdgeInsets.all(10)),
                   Container(
-                    margin: const EdgeInsets.only(top: 20),
-                    width: 150,
-                    height: 150,
-                    child: Chart.avgChart(widget.friend.sport_info.map((e) => e.score).toList())
-                  )
+                      margin: const EdgeInsets.only(top: 20),
+                      width: 100,
+                      height: 100,
+                      child: Chart.avgChart(widget.friend.sport_info
+                          .map((e) => e.score)
+                          .toList()))
                 ],
               ),
             )
           ],
         ),
-        const Padding(
-          padding: EdgeInsets.fromLTRB(30, 20, 0, 20),
-          child: Text(
-            "與您的運動紀錄",
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-          ),
+        Padding(
+            padding: const EdgeInsets.fromLTRB(00, 20, 0, 10),
+            child: textWidget(text: "與您的運動紀錄", type: TextType.sub)),
+        SizedBox(
+          // height: MediaQuery.of(context).size.height * 0.5,
+          child: ListView.builder(
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: hisotrylist.length,
+              itemBuilder: (BuildContext context, int index) {
+                return (Box.history(
+                    hisotrylist[index], context, widget.userID));
+              }),
         ),
-        Box.boxHasRadius(
-          child: SizedBox(
-            height: MediaQuery.of(context).size.height * 0.6,
-            width: MediaQuery.of(context).size.width * 0.8,
-            child: Box.boxHasRadius(
-              color: MyTheme.backgroudColor,
-              child: ListView.builder(
-                  itemCount: hisotrylist.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return (Box.history(
-                        hisotrylist[index], context, widget.userID));
-                  }),
-            ),
-          ),
-        )
       ]),
     );
   }

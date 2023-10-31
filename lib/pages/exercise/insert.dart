@@ -76,7 +76,7 @@ class InsertInvitestate extends State<InsertInvite> {
           children: [
             Row(
               children: [
-                textWidget(text: '邀約名稱：', type: TextType.sub),
+                textWidget(text: '邀約名稱：', type: TextType.content),
                 Expanded(
                   child: TextInput.radius(' 請輸入邀約名稱', nameInput),
                 )
@@ -84,7 +84,7 @@ class InsertInvitestate extends State<InsertInvite> {
             ),
             Row(
               children: [
-                textWidget(text: '運動日期：', type: TextType.sub),
+                textWidget(text: '運動日期：', type: TextType.content),
                 Expanded(
                   child: TextInput.radius(
                     "請選擇運動日期",
@@ -110,7 +110,7 @@ class InsertInvitestate extends State<InsertInvite> {
             ),
             Row(
               children: [
-                textWidget(text: '運動時段：', type: TextType.sub),
+                textWidget(text: '運動時段：', type: TextType.content),
                 Expanded(
                   child: TextInput.radius(
                     '請選擇運動時段',
@@ -132,7 +132,7 @@ class InsertInvitestate extends State<InsertInvite> {
             ),
             Row(
               children: [
-                textWidget(text: '備註：', type: TextType.sub),
+                textWidget(text: '備註：', type: TextType.content),
                 Expanded(
                   child: TextInput.radius(' 例如：地點', remarkInput),
                 )
@@ -142,18 +142,19 @@ class InsertInvitestate extends State<InsertInvite> {
               margin: const EdgeInsets.all(10),
               child: const Divider(height: 1.0, color: Colors.grey),
             ),
-            textWidget(text: '欲邀請的人', type: TextType.sub),
+            textWidget(text: '欲邀請的人', type: TextType.content),
             Row(
                 children: selectFriend
                     .map((mosearch) => Box.boxWithX(mosearch.name))
                     .toList()),
             Padding(
-              padding: const EdgeInsets.fromLTRB(25, 10, 25, 10),
+              padding: const EdgeInsets.fromLTRB(0, 10, 10, 0),
               child: Row(
                 children: [
                   Expanded(child: TextInput.radius(' 請搜尋姓名或ID', quaryInput)),
+                  const Padding(padding: EdgeInsets.all(5)),
                   GestureDetector(
-                    child: const Text("搜尋"),
+                    child:  textWidget(text: "搜尋" ,color: MyTheme.color),
                     onTap: () {
                       moRepo.search(quaryInput.text).then((value) {
                         setState(() {

@@ -1,4 +1,4 @@
-# e_fu_app
+# Cubed_M
 
 A new Flutter project.
 

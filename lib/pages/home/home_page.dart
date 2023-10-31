@@ -97,11 +97,11 @@ class HomePageState extends State<HomePage> {
                                   child: Padding(
                                     padding: const EdgeInsets.all(10),
                                     child: textWidget(
-                                        text: "今天 ${index * 2 + 15}:00",
+                                        text: "今天 ${index * 2 + 21}:00",
                                         type: TextType.content),
                                   ),
                                 );
-                              }, childCount: 2),
+                              }, childCount: 1),
                             ),
                           ],
                         ),

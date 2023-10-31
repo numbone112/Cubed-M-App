@@ -62,7 +62,7 @@ class PlanState extends State<PlanPage> {
         backDrawRodData: BackgroundBarChartRodData(
           show: true,
           toY: backY,
-          color: MyTheme.hintColor,
+          color: MyTheme.gray,
         ),
       ),
     ]);
@@ -94,14 +94,14 @@ class PlanState extends State<PlanPage> {
       body: ListView(
           children: [
                 Box.boxHasRadius(
-                    margin: const EdgeInsets.fromLTRB(0, 5, 0, 5),
+                    margin: const EdgeInsets.only(top: 10, bottom: 10),
                     padding: const EdgeInsets.all(10),
                     height: 200,
                     width: 500,
                     color: const Color(0xFFFFFFFF),
                     child: Column(
                       children: [
-                        textWidget(text: '運動長條圖', type: TextType.sub),
+                        textWidget(text: '運動長條圖', type: TextType.content),
                         SizedBox(
                           width: 500,
                           height: 150,
@@ -139,15 +139,29 @@ class PlanState extends State<PlanPage> {
                         ),
                       ],
                     )),
-                Align(
-                  alignment: Alignment.centerRight,
+                Container(
+                  margin: const EdgeInsets.only(left: 255),
+                  padding: const EdgeInsets.fromLTRB(5, 5, 10, 5),
+                  decoration: BoxDecoration(
+                      color: MyTheme.lightColor,
+                      borderRadius: BorderRadius.circular(30)),
                   child: GestureDetector(
-                    onTap: () => Navigator.pushNamed(
-                        context, PlanInsertPage.routeName),
-                    child: textWidget(
-                        text: '+ 新增',
-                        color: MyTheme.color,
-                        type: TextType.content),
+                    onTap: () =>
+                        Navigator.pushNamed(context, PlanInsertPage.routeName),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(
+                          Icons.add,
+                          color: Colors.white,
+                          size: 20,
+                        ),
+                        textWidget(
+                            text: '新增',
+                            type: TextType.content,
+                            color: Colors.white)
+                      ],
+                    ),
                   ),
                 ),
               ] +

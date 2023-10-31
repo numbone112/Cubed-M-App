@@ -7,13 +7,13 @@ import 'package:e_fu/request/mo/mo_data.dart';
 import 'package:e_fu/request/api.dart';
 
 abstract class MoAPI {
-  // 查詢mo伴列表
+  // 查詢Mo 伴列表
   Future<Format> getMoList(String id);
-  // 查詢隱藏mo伴列表
+  // 查詢隱藏Mo 伴列表
   Future<Format> getHindMoList(String id);
-  // 隱藏mo伴
+  // 隱藏Mo 伴
   Future<Format> hindMo(Mo mo, String userId);
-  // 取消隱藏mo伴
+  // 取消隱藏Mo 伴
   Future<Format> showMo(String id, mId);
 
   Future<Format> search(String keyword);

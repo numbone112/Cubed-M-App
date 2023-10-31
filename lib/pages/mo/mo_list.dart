@@ -10,7 +10,6 @@ import 'package:e_fu/module/box_ui.dart';
 import 'package:e_fu/module/cusbehiver.dart';
 import 'package:e_fu/module/toast.dart';
 import 'package:e_fu/my_data.dart';
-import 'package:e_fu/request/mo/get_mo_list_model.dart';
 import 'package:e_fu/request/mo/mo.dart';
 
 class MoList extends StatefulWidget {
@@ -38,7 +37,6 @@ class MoListPageState extends State<MoList> {
     try {
       moRepo.getMoList(widget.userID).then((value) {
         setState(() {
-          
           moList = parseMo(jsonEncode(value.D));
           moListWidget = [];
           for (int i = 0; i < moList!.length; i++) {
@@ -68,17 +66,10 @@ class MoListPageState extends State<MoList> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("ID:${moList![i].id}",
-                    style: TextStyle(
-                        color: MyTheme.black,
-                        fontWeight: FontWeight.w400,
-                        fontSize: MySize.body)),
+                textWidget(text: 'ID:${moList![i].id}', type: TextType.content),
                 const SizedBox(height: 5),
-                Text(moList![i].name,
-                    style: TextStyle(
-                        color: MyTheme.black,
-                        fontWeight: FontWeight.bold,
-                        fontSize: MySize.subtitleSize))
+                textWidget(text: moList![i].name,type: TextType.sub)
+               
               ],
             ),
           ),
@@ -92,7 +83,7 @@ class MoListPageState extends State<MoList> {
                 borderRadius: Box.normamBorderRadius,
                 border: Border.all(width: 1, color: MyTheme.lightColor),
               ),
-              child: Text("隱藏", style: TextStyle(color: MyTheme.lightColor)),
+              child: textWidget(text: "隱藏", color: MyTheme.lightColor),
             ),
             onTap: () {
               hindMo(moList![i].id);
@@ -123,20 +114,24 @@ class MoListPageState extends State<MoList> {
     return Column(
       children: [
         GestureDetector(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Text("隱藏名單",
-                  style:
-                      TextStyle(color: MyTheme.black, fontSize: MySize.body)),
-              Padding(
-                padding: const EdgeInsets.all(5),
-                child: Image.asset(
+          child: Padding(
+            padding: const EdgeInsets.only(top: 10, bottom: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                textWidget(
+                  text: "隱藏名單",
+                  type: TextType.content,
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(5),
+                ),
+                Image.asset(
                   'assets/images/hind.png',
                   scale: 2,
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
           onTap: () => Navigator.pushNamed(context, HindMoList.routeName,
               arguments: widget.userID),

@@ -60,14 +60,10 @@ class HistoryDetailstate extends State<HistoryDetailPage> {
               ),
             ),
             Expanded(
-              child: SizedBox(
-                width: 75,
-                height: 75,
-                child: Chart.avgChart([3,4,4])
-                )
-            ),
+                child: SizedBox(
+                    width: 75, height: 75, child: Chart.avgChart([3, 4, 4]))),
             Box.textRadiusBorder(historyDeep.score.toString(),
-                width: 60, textType: TextType.sub)
+                width: 60, textType: TextType.content)
           ],
         ),
       ),
@@ -110,12 +106,12 @@ class HistoryDetailstate extends State<HistoryDetailPage> {
                       children: [
                         textWidget(
                           text: '平均',
-                          type: TextType.sub,
+                          type: TextType.content,
                         ),
                         Box.textRadiusBorder(history.avgScore.toString(),
                             width: 60,
                             color: Colors.white,
-                            textType: TextType.sub)
+                            textType: TextType.content)
                       ],
                     )
                   ],

@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 class MyTheme {
@@ -57,17 +56,17 @@ Widget textWidget(
     case TextType.sub:
       return Text(text,
           style: TextStyle(
-              fontSize: 16,
+              fontSize: 18,
               color: color,
               fontWeight: fontWeight ? FontWeight.bold : null),
           textAlign: textAlign);
     case TextType.content:
       return Text(text,
-          style: TextStyle(fontSize: 14, color: color), textAlign: textAlign);
+          style: TextStyle(fontSize: 16, color: color), textAlign: textAlign);
 
     case TextType.hint:
       return Text(text,
-          style: TextStyle(fontSize: 12, color: color), textAlign: textAlign);
+          style: TextStyle(fontSize: 14, color: color), textAlign: textAlign);
     default:
       return Text(text,
           style: TextStyle(fontSize: 14, color: color), textAlign: textAlign);
@@ -79,8 +78,6 @@ class Name {
   static String getUser="get_user";
   static String userID="user_id";
 }
-
-
 
 class HexColor extends Color {
   HexColor(final String hexColor) : super(_getColorFromHex(hexColor));

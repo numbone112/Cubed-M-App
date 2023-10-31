@@ -379,7 +379,7 @@ class EventState extends State<Event> {
             padding: const EdgeInsets.only(top: 10, bottom: 10),
             child: textWidget(
                 text: forEvent.eventRecordInfo.name,
-                type: TextType.sub,
+                type: TextType.content,
                 color: MyTheme.buttonColor),
           ),
           Row(
@@ -439,10 +439,10 @@ class EventState extends State<Event> {
           ),
           connectDeviec.containsKey(index)
               ? textWidget(
-                  text: '已連結', type: TextType.sub, color: MyTheme.color)
+                  text: '已連結', type: TextType.content, color: MyTheme.color)
               : GestureDetector(
                   child: Box.textRadiusBorder('連結',
-                      textType: TextType.sub,
+                      textType: TextType.content,
                       padding: const EdgeInsets.all(5),
                       filling: MyTheme.buttonColor,
                       width: 75,

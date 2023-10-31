@@ -39,7 +39,7 @@ class _MoState extends State<Mo> with SingleTickerProviderStateMixin {
                     style: TextStyle(fontSize: 18),
                     textAlign: TextAlign.center)),
             Tab(
-                child: Text("mo伴",
+                child: Text("Mo 伴",
                     style: TextStyle(fontSize: 18),
                     textAlign: TextAlign.center)),
           ],

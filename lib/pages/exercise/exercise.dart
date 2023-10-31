@@ -64,7 +64,7 @@ class ExerciseHomeState extends State<ExerciseHome>
 
   List<Widget> getfilterButtons() {
     List<Widget> result = [];
-    final filters = ['未回覆', "已接受", '未接受'];
+    final filters = ['未回覆', "已接受", '已拒絕'];
     final filtersID = [3, 1, 2];
 
     for (int i = 0; i < filters.length; i++) {

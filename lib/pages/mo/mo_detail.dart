@@ -90,12 +90,23 @@ class MoDetailState extends State<MoDetail> {
                     textWidget(text: "與好友一起運動"),
                     textWidget(
                         text: "共 ${hisotrylist.length} 次", type: TextType.fun),
-                    textWidget(
-                        text: "最後一次運動2023/04/05",
+                    Column(
+                      children: [
+                        textWidget(
+                            text: "最後一次運動",
+                            textAlign: TextAlign.center,
+      
+                            type: TextType.hint,
+                            color: MyTheme.hintColor),
+                            textWidget(
+                        text: "2023/04/05",
                         textAlign: TextAlign.center,
       
                         type: TextType.hint,
                         color: MyTheme.hintColor),
+                      ],
+                    ),
+                        
                   ],
                 )),
             Box.boxHasRadius(

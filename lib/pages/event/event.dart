@@ -141,7 +141,7 @@ class EventState extends State<Event> {
           each_score: element.each_score,
           user_id: element.eventRecordInfo.user_id,
           i_id: element.eventRecordInfo.id));
-      print("from event finish ${element.total_avg}");
+      
     }
 
     for (var element in hasPair) {
@@ -181,9 +181,6 @@ class EventState extends State<Event> {
 
   sendDataAndLeave(List<Record> recordList, List<RecordSenderItem> reSenderList,
       Invite invite) async {
-    print("sendDataAndLeave${reSenderList.length}");
-    print("sendDataAndLeave${reSenderList.first.total_score}");
-    print("sendDataAndLeave${reSenderList.first.done.length}");
     // 傳送資料給後端
     await recordRepo
         .record(RecordSender(record: recordList, detail: reSenderList))

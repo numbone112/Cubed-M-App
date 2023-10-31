@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:e_fu/request/e/e_data.dart';
 import 'package:e_fu/request/exercise/history_data.dart';
 
@@ -117,7 +119,6 @@ class EventRecord {
         break;
       }
     }
-    print("from score$result");
     return result;
   }
 
@@ -136,12 +137,10 @@ class EventRecord {
       }
       //這邊有bug
       each_score[key]=each_avg/value.length;
-      print("total avg  ${each_score[key]}");
       // data[key] = temp;
     });
 
     total_avg=each_score.fold(0, (previousValue, element) => previousValue+element);
-    print("total avg add $total_avg");
     total_avg/=3;
 
   }

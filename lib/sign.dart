@@ -103,8 +103,6 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    
-
     SharedPreferences prefs;
     return Scaffold(
         resizeToAvoidBottomInset: true,
@@ -125,11 +123,12 @@ class _LoginState extends State<Login> {
                 TextInput.radius('帳號', accountC,
                     height: 50, color: MyTheme.color),
                 const Padding(padding: EdgeInsets.only(top: 10)),
-                TextInput.radius('密碼', pswC, height: 50, color: MyTheme.color,
-                isHidden: _isHidden,
-                hasHidden:true,
-                hiddenState: _togglePasswordView
-                ),
+                TextInput.radius('密碼', pswC,
+                    height: 50,
+                    color: MyTheme.color,
+                    isHidden: _isHidden,
+                    hasHidden: true,
+                    hiddenState: _togglePasswordView),
                 const Padding(padding: EdgeInsets.only(top: 10)),
                 Align(
                   alignment: Alignment.centerRight,
@@ -167,8 +166,11 @@ class _LoginState extends State<Login> {
                           builder: (BuildContext context) => const MyApp(),
                         ),
                       );
+                    }else{
+                      logger.v("context is not mounted");
                     }
                   } else {
+                    logger.v("is not login ok");
                     logger.v(a);
                   }
                 }),

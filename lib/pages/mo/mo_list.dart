@@ -123,8 +123,8 @@ class MoListPageState extends State<MoList> {
                   text: "隱藏名單",
                   type: TextType.content,
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(5),
+                const Padding(
+                  padding: EdgeInsets.all(5),
                 ),
                 Image.asset(
                   'assets/images/hind.png',

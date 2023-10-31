@@ -73,12 +73,12 @@ class HistoryDetailPersonstate extends State<HistoryDetailPerson> {
                     type: TextType.fun,
                     color: MyTheme.buttonColor,
                   ),
+                  // textWidget(
+                  //   text: args.name,
+                  //   type: TextType.content,
+                  // ),
                   textWidget(
-                    text: args.user_id,
-                    type: TextType.content,
-                  ),
-                  textWidget(
-                    text: '男 66',
+                    text: args.sexAndAge(),
                     type: TextType.content,
                   ),
                 ],

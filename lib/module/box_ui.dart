@@ -7,7 +7,6 @@ import 'package:e_fu/request/invite/invite_data.dart';
 import 'package:e_fu/request/plan/plan_data.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
 
 class Box {
@@ -196,21 +195,19 @@ class Box {
           border: HexColor("C6AC78"),
           width: 60);
     } else {
-      item = Container(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(
-              width: MediaQuery.of(context).size.width * 0.2,
-              child: textWidget(
-                text: '運動評分',
-                type: TextType.content,
-              ),
+      item = Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SizedBox(
+            width: MediaQuery.of(context).size.width * 0.2,
+            child: textWidget(
+              text: '運動評分',
+              type: TextType.content,
             ),
-            Box.textRadiusBorder(history.score.toString(),
-                margin: const EdgeInsets.only(top: 20), width: 60),
-          ],
-        ),
+          ),
+          Box.textRadiusBorder(history.score.toString(),
+              margin: const EdgeInsets.only(top: 20), width: 60),
+        ],
       );
 
       label = Box.textRadiusBorder('個人',
@@ -296,7 +293,8 @@ class Box {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         Expanded(
-            flex: 2, child: textWidget(text: type ?? '', type: TextType.content)),
+            flex: 2,
+            child: textWidget(text: type ?? '', type: TextType.content)),
         Expanded(
             flex: 5,
             child: Center(
@@ -364,14 +362,9 @@ class Box {
                     type: TextType.fun,
                     color: MyTheme.buttonColor,
                     fontWeight: true),
+                textWidget(text: invite.pretyTime(), type: TextType.content),
                 textWidget(
-                    text: invite.time
-                        .toString()
-                        .substring(0, 17)
-                        .replaceAll("T", " "),
-                    type: TextType.content),
-                textWidget(
-                    text: '備註：${invite.remark.isEmpty ? '無' : invite.remark}',
+                    text: invite.pretyRemark(),
                     type: TextType.content,
                     color: MyTheme.hintColor)
               ],
@@ -671,7 +664,7 @@ class Box {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        textWidget(text:title,type: TextType.content),
+        textWidget(text: title, type: TextType.content),
         const Padding(padding: EdgeInsets.all(5)),
         Expanded(
             child: TextInput.radius(hintText, controller,
@@ -721,7 +714,6 @@ class Chart {
 }
 
 class TextInput {
- 
   static Widget radius(String text, TextEditingController controller,
       {TextField? textField,
       Function()? onTap,
@@ -729,8 +721,8 @@ class TextInput {
       double? height,
       Color? color,
       bool? readOnly,
-      bool isHidden=false,
-      bool hasHidden=false,
+      bool isHidden = false,
+      bool hasHidden = false,
       Function()? hiddenState}) {
     return Container(
         width: width,
@@ -750,15 +742,15 @@ class TextInput {
               cursorColor: color ?? MyTheme.lightColor,
               textAlignVertical: TextAlignVertical.center,
               decoration: InputDecoration(
-                suffix: hasHidden?InkWell(
-                    onTap: hiddenState,
-                    child:Icon(
-                      color:Colors.black,
-                        isHidden 
-                        ? Icons.visibility 
-                        : Icons.visibility_off,
-                    ),
-                ):null,
+                suffix: hasHidden
+                    ? InkWell(
+                        onTap: hiddenState,
+                        child: Icon(
+                          color: Colors.black,
+                          isHidden ? Icons.visibility : Icons.visibility_off,
+                        ),
+                      )
+                    : null,
                 isCollapsed: true,
                 contentPadding: const EdgeInsets.all(10),
                 border: InputBorder.none,

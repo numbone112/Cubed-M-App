@@ -41,12 +41,14 @@ InviteDetail _$InviteDetailFromJson(Map<String, dynamic> json) => InviteDetail(
               .toList() ??
           const [5, 5, 5],
       userName: json['userName'] as String,
+      m_id: json['m_id'] as String? ?? "",
     );
 
 Map<String, dynamic> _$InviteDetailToJson(InviteDetail instance) =>
     <String, dynamic>{
       'userName': instance.userName,
       'user_id': instance.user_id,
+      'm_id': instance.m_id,
       'targetSets': instance.targetSets,
       'accept': instance.accept,
     };

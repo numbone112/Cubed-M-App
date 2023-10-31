@@ -600,6 +600,20 @@ class Box {
               ),
             ),
           );
+        } else {
+          widget = Container(
+            padding: const EdgeInsets.all(5),
+            child: ClipOval(
+              child: Container(
+                height: 30,
+                color: MyTheme.gray,
+                child: const Icon(
+                  Icons.done,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          );
         }
       } else {
         widget = Container(

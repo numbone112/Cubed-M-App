@@ -54,15 +54,19 @@ RecordSenderItem _$RecordSenderItemFromJson(Map<String, dynamic> json) =>
       done: (json['done'] as List<dynamic>)
           .map((e) => DoneItem.fromJson(e as Map<String, dynamic>))
           .toList(),
-      score: (json['score'] as num).toDouble(),
+      each_score: (json['each_score'] as List<dynamic>)
+          .map((e) => (e as num).toDouble())
+          .toList(),
       user_id: json['user_id'] as String,
       i_id: json['i_id'] as int,
+      total_score: (json['total_score'] as num).toDouble(),
     );
 
 Map<String, dynamic> _$RecordSenderItemToJson(RecordSenderItem instance) =>
     <String, dynamic>{
       'user_id': instance.user_id,
       'done': instance.done.map((e) => e.toJson()).toList(),
-      'score': instance.score,
+      'each_score': instance.each_score,
+      'total_score': instance.total_score,
       'i_id': instance.i_id,
     };

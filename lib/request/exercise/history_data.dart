@@ -36,7 +36,7 @@ class History {
   List<DoneItem> done;
   double score;
   String name;
-  DateTime time;
+  String time;
   String m_id;
   List<String> friend;
   String remark;
@@ -58,11 +58,13 @@ class HistoryDeep {
       {required this.user_id,
       required this.name,
       required this.done,
-      required this.score});
+      required this.total_score,
+      required this.each_score});
   String user_id;
   String name;
   List<DoneItem> done;
-  double score;
+  double total_score;
+  List<double> each_score;
 
   factory HistoryDeep.fromJson(Map<String, dynamic> json) =>
       _$HistoryDeepFromJson(json);

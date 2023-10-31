@@ -63,9 +63,11 @@ class InviteDetail {
       {required this.accept,
       required this.user_id,
       this.targetSets = const [5, 5, 5],
-      required this.userName});
+      required this.userName,
+       this.m_id=""});
   String userName;
   String user_id;
+  String m_id;
   List<int> targetSets;
   int accept;
   factory InviteDetail.fromJson(Map<String, dynamic> json) =>

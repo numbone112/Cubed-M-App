@@ -544,8 +544,13 @@ class EventState extends State<Event> {
       for (var element in signCharList) {
         await element.setNotifyValue(true);
       }
-      for (var element in startCharList) {
-        element.write(utf8.encode("E-fu"));
+      for (int i =0;i<startCharList.length;i++)
+        
+        {
+        
+        String sign=eventRecordList[i].now<2?"cubed-M hand":"cubed-M foot";
+
+        startCharList[i].write(utf8.encode(sign));
       }
     }
   }
@@ -557,9 +562,6 @@ class EventState extends State<Event> {
         eventRecordList =
           ModalRoute.of(context)!.settings.arguments as List<EventRecord>;
       });
-      print("build get info id");
-      print(eventRecordList.first.eventRecordInfo.id);
-      
     }
     return CustomPage(
         buildContext: context,

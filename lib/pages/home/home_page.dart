@@ -17,19 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class Invite {
-  Invite(
-      {required this.host,
-      required this.remark,
-      required this.name,
-      required this.dateTime,
-      required this.accept});
-  String host;
-  String remark;
-  String name;
-  DateTime dateTime;
-  String accept;
-}
+
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key, required this.userID});

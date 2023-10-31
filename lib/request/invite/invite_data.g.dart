@@ -35,6 +35,7 @@ Map<String, dynamic> _$InviteToJson(Invite instance) => <String, dynamic>{
 
 InviteDetail _$InviteDetailFromJson(Map<String, dynamic> json) => InviteDetail(
       accept: json['accept'] as int,
+      user_id: json['user_id'] as String,
       targetSets: (json['targetSets'] as List<dynamic>?)
               ?.map((e) => e as int)
               .toList() ??
@@ -45,6 +46,7 @@ InviteDetail _$InviteDetailFromJson(Map<String, dynamic> json) => InviteDetail(
 Map<String, dynamic> _$InviteDetailToJson(InviteDetail instance) =>
     <String, dynamic>{
       'userName': instance.userName,
+      'user_id': instance.user_id,
       'targetSets': instance.targetSets,
       'accept': instance.accept,
     };

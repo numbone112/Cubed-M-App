@@ -10,9 +10,9 @@ History _$HistoryFromJson(Map<String, dynamic> json) => History(
       name: json['name'] as String,
       time: DateTime.parse(json['time'] as String),
       remark: json['remark'] as String,
-      score: (json['score'] as num?)?.toDouble() ?? 0,
+      score: (json['score'] as num?)?.toDouble() ?? 1,
       m_id: json['m_id'] as String,
-      avgScore: (json['avgScore'] as num?)?.toDouble() ?? 0,
+      avgScore: (json['avgScore'] as num?)?.toDouble() ?? 1,
       done: (json['done'] as List<dynamic>)
           .map((e) => DoneItem.fromJson(e as Map<String, dynamic>))
           .toList(),

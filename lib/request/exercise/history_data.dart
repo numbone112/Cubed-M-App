@@ -24,9 +24,9 @@ class History {
       {required this.name,
       required this.time,
       required this.remark,
-      this.score=0,
+      this.score = 1,
       required this.m_id,
-      this.avgScore = 0,
+      this.avgScore = 1,
       required this.done,
       required this.friend,
       required this.i_id,
@@ -43,15 +43,9 @@ class History {
   double avgScore;
   String m_name;
 
-  bool isGroup() {
-    return friend.length <= 1;
-  }
+  bool isGroup() => friend.length > 1;
 
-  int peopleCount() {
-    return friend.length;
-  }
-
-  // List<int> items;
+  int peopleCount() => friend.length;
 
   factory History.fromJson(Map<String, dynamic> json) =>
       _$HistoryFromJson(json);

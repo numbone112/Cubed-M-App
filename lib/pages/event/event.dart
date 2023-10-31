@@ -151,8 +151,7 @@ class EventState extends State<Event> {
     if (context.mounted) {
       int inviteIndex = eventRecordList.first.eventRecordInfo.id;
       if (inviteIndex == -1) {
-        Invite invite =
-            Invite(m_id: widget.userID, friend: [widget.userID]);
+        Invite invite = Invite(m_id: widget.userID, friend: [widget.userID]);
         await inviteRepo.createInvite(invite).then((value) async {
           await inviteRepo
               .searchInvite(widget.userID, invite.time)
@@ -193,17 +192,21 @@ class EventState extends State<Event> {
         });
       } else {
         // 傳送資料給後端
-        Format a = await recordRepo
-            .record(RecordSender(record: toSave, detail: detail));
-        if (a.message == "ok") {
-          logger.v("成功");
-        }
-        await historyRepo
-            .historyList(widget.userID, iId: inviteIndex.toString())
-            .then((value) {
-          History history = parseHistoryList(jsonEncode(value.D))[0];
-          Navigator.pushReplacementNamed(context, HistoryDetailPage.routeName,
-              arguments: history);
+        await recordRepo
+            .record(RecordSender(record: toSave, detail: detail))
+            .then((value) async {
+          if (value.message == "新增成功") {
+            logger.v("成功");
+            await historyRepo.historyList(widget.userID).then((value) {
+              List<History> historyList = parseHistoryList(jsonEncode(value.D));
+              logger.v("historyList${historyList.length}");
+              if (historyList.isNotEmpty) {
+                Navigator.pushReplacementNamed(
+                    context, HistoryDetailPage.routeName,
+                    arguments: historyList.first);
+              }
+            });
+          }
         });
       }
     }
@@ -322,8 +325,8 @@ class EventState extends State<Event> {
                   String checkString = (Platform.isAndroid)
                       ? r.device.platformName
                       : r.advertisementData.localName;
-                  // logger.v(checkString);
-                  if (checkString.contains("e-fu")) {
+
+                  if (checkString.contains("cubed M")) {
                     return ListTile(
                       title: Text(checkString),
                       onTap: () =>
@@ -353,7 +356,7 @@ class EventState extends State<Event> {
         Expanded(
           flex: 2,
           child: Text(
-            forEvent.eventRecordInfo.name,
+            forEvent.eventRecordInfo.user_name,
             textAlign: TextAlign.center,
           ),
         ),
@@ -363,7 +366,7 @@ class EventState extends State<Event> {
 
   Widget exerciseBox(index) {
     EventRecord forEvent = eventRecordList[index];
-    logger.v(forEvent.eventRecordInfo.name);
+    logger.v(forEvent.eventRecordInfo.user_name);
     return Container(
       height: 210,
       margin: const EdgeInsets.only(bottom: 10),
@@ -566,8 +569,11 @@ class EventState extends State<Event> {
         titWidget: Padding(
           padding: const EdgeInsets.only(top: 10),
           child: Box.inviteInfo(
-            Invite(name: eventRecordList.first.eventRecordInfo.name,remark: eventRecordList.first.eventRecordInfo.remark,time: eventRecordList.first.eventRecordInfo.time)
-            , false),
+              Invite(
+                  name: eventRecordList.first.eventRecordInfo.name,
+                  remark: eventRecordList.first.eventRecordInfo.remark,
+                  time: eventRecordList.first.eventRecordInfo.time),
+              false),
         ),
         headHeight: 100,
         body: Padding(
@@ -584,33 +590,32 @@ class EventState extends State<Event> {
                             height: MediaQuery.of(context).size.height * 0.65,
                             child: ListView.builder(
                               // physics: const NeverScrollableScrollPhysics(),
-                           
+
                               itemCount: eventRecordList.length,
                               itemBuilder: ((context, index) {
                                 return (exerciseBox(index));
                               }),
-                              
                             ),
                           ),
                     Box.boxHasRadius(
                       child: ExpansionTile(
-                        collapsedShape: Border.all(color: MyTheme.backgroudColor),
+                        collapsedShape:
+                            Border.all(color: MyTheme.backgroudColor),
                         title: const Text("運動分級表"),
                         children: const [Text("運動分級表詳細資料")],
                       ),
                     ),
-                    
                   ],
                 ),
               ),
               SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.8,
-                  child: Box.yesnoBox(() => sendStart(), () => finish(),
-                      noTitle: '開始運動',
-                      noColor: MyTheme.color,
-                      yestTitle: '結束',
-                      yesColor: MyTheme.lightColor),
-                ),
+                width: MediaQuery.of(context).size.width * 0.8,
+                child: Box.yesnoBox( () => finish(),() => sendStart(),
+                    noTitle: '開始運動',
+                    noColor: MyTheme.color,
+                    yestTitle: '結束',
+                    yesColor: MyTheme.lightColor),
+              ),
             ],
           ),
         ));

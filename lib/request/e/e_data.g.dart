@@ -81,6 +81,8 @@ EventRecordInfo _$EventRecordInfoFromJson(Map<String, dynamic> json) =>
       remark: json['remark'] as String? ?? "",
       age: json['age'] as int? ?? 65,
       time: json['time'] as String? ?? "",
+      user_name: json['user_name'] as String? ?? "",
+      user_id: json['user_id'] as String,
     );
 
 Map<String, dynamic> _$EventRecordInfoToJson(EventRecordInfo instance) =>
@@ -91,6 +93,8 @@ Map<String, dynamic> _$EventRecordInfoToJson(EventRecordInfo instance) =>
       'name': instance.name,
       'time': instance.time,
       'age': instance.age,
+      'user_name': instance.user_name,
+      'user_id': instance.user_id,
     };
 
 ProfileData _$ProfileDataFromJson(Map<String, dynamic> json) => ProfileData(

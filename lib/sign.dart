@@ -94,12 +94,16 @@ class _LoginState extends State<Login> {
 
   var logger = Logger();
   var userRepo = UserRepo();
+  bool _isHidden = true;
+  void _togglePasswordView() {
+    setState(() {
+      _isHidden = !_isHidden;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    TextField accountField = inputBox(accountC, false, "帳號");
-
-    TextField passwordField = inputBox(pswC, true, '密碼');
+    
 
     SharedPreferences prefs;
     return Scaffold(
@@ -121,7 +125,11 @@ class _LoginState extends State<Login> {
                 TextInput.radius('帳號', accountC,
                     height: 50, color: MyTheme.color),
                 const Padding(padding: EdgeInsets.only(top: 10)),
-                TextInput.radius('密碼', pswC, height: 50, color: MyTheme.color),
+                TextInput.radius('密碼', pswC, height: 50, color: MyTheme.color,
+                isHidden: _isHidden,
+                hasHidden:true,
+                hiddenState: _togglePasswordView
+                ),
                 const Padding(padding: EdgeInsets.only(top: 10)),
                 Align(
                   alignment: Alignment.centerRight,

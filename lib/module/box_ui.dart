@@ -721,13 +721,17 @@ class Chart {
 }
 
 class TextInput {
+ 
   static Widget radius(String text, TextEditingController controller,
       {TextField? textField,
       Function()? onTap,
       double? width,
       double? height,
       Color? color,
-      bool? readOnly}) {
+      bool? readOnly,
+      bool isHidden=false,
+      bool hasHidden=false,
+      Function()? hiddenState}) {
     return Container(
         width: width,
         height: height ?? 45,
@@ -739,12 +743,22 @@ class TextInput {
             border: Border.all(color: color ?? MyTheme.lightColor)),
         child: textField ??
             TextField(
+              obscureText: isHidden,
               readOnly: readOnly ?? false,
               onTap: onTap,
               controller: controller,
               cursorColor: color ?? MyTheme.lightColor,
               textAlignVertical: TextAlignVertical.center,
               decoration: InputDecoration(
+                suffix: hasHidden?InkWell(
+                    onTap: hiddenState,
+                    child:Icon(
+                      color:Colors.black,
+                        isHidden 
+                        ? Icons.visibility 
+                        : Icons.visibility_off,
+                    ),
+                ):null,
                 isCollapsed: true,
                 contentPadding: const EdgeInsets.all(10),
                 border: InputBorder.none,

@@ -37,6 +37,7 @@ class Invite {
       time = formatter.format(datetime);
       
     }
+    if(id!=-1){i_id=id;}
   }
   int i_id;
   String name;

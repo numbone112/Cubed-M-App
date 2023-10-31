@@ -105,7 +105,7 @@ class HistoryDetailPersonstate extends State<HistoryDetailPerson> {
               Expanded(
                 flex: 1,
                 child: textWidget(
-                    text: '組數',
+                    text: '流水號',
                     type: TextType.content,
                     textAlign: TextAlign.center),
               ),
@@ -141,7 +141,7 @@ class HistoryDetailPersonstate extends State<HistoryDetailPerson> {
                     Expanded(
                       flex: 1,
                       child: textWidget(
-                          text: index.toString(),
+                          text: (index+1).toString(),
                           type: TextType.content,
                           textAlign: TextAlign.center),
                     ),

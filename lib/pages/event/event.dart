@@ -5,7 +5,6 @@ import 'package:e_fu/module/page.dart';
 import 'package:e_fu/pages/event/ble_device.dart';
 import 'package:e_fu/pages/exercise/event_record.dart';
 import 'package:e_fu/pages/exercise/history.dart';
-import 'package:e_fu/request/data.dart';
 import 'package:e_fu/request/exercise/history.dart';
 import 'package:e_fu/request/exercise/history_data.dart';
 import 'package:e_fu/request/invite/invite.dart';
@@ -153,6 +152,7 @@ class EventState extends State<Event> {
 
     int inviteIndex = eventRecordList.first.eventRecordInfo.id;
     if (inviteIndex == -1) {
+      logger.v("invite index=-1");
       Invite invite = Invite(m_id: widget.userID, friend: [widget.userID]);
       await inviteRepo.createInvite(invite).then((value) async {
         await inviteRepo
@@ -165,11 +165,13 @@ class EventState extends State<Event> {
         });
       });
     } else {
+      logger.v("invite index 有找到 ＱＱ");
       EventRecordInfo recordInfo = eventRecordList.first.eventRecordInfo;
       Invite invite = Invite(
           m_id: recordInfo.m_id,
           name: recordInfo.name,
           i_id: recordInfo.id,
+          id: recordInfo.id,
           remark: recordInfo.remark);
 
       sendDataAndLeave(toSave, detail, invite);
@@ -179,9 +181,9 @@ class EventState extends State<Event> {
 
   sendDataAndLeave(List<Record> recordList, List<RecordSenderItem> reSenderList,
       Invite invite) async {
-        print("sendDataAndLeave${reSenderList.length}");
-        print("sendDataAndLeave${reSenderList.first.total_score}");
-        print("sendDataAndLeave${reSenderList.first.done.length}");
+    print("sendDataAndLeave${reSenderList.length}");
+    print("sendDataAndLeave${reSenderList.first.total_score}");
+    print("sendDataAndLeave${reSenderList.first.done.length}");
     // 傳送資料給後端
     await recordRepo
         .record(RecordSender(record: recordList, detail: reSenderList))
@@ -551,8 +553,13 @@ class EventState extends State<Event> {
   @override
   Widget build(BuildContext context) {
     if (eventRecordList.isEmpty) {
-      eventRecordList =
+      setState(() {
+        eventRecordList =
           ModalRoute.of(context)!.settings.arguments as List<EventRecord>;
+      });
+      print("build get info id");
+      print(eventRecordList.first.eventRecordInfo.id);
+      
     }
     return CustomPage(
         buildContext: context,

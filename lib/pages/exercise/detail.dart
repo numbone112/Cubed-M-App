@@ -53,6 +53,9 @@ class HistoryDetailPersonstate extends State<HistoryDetailPerson> {
   @override
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context)!.settings.arguments as HistoryDeep;
+    if(dones.isEmpty){
+      changeSelect(0, args.done);
+    }
     return (CustomPage(
       body: ListView(children: [
         const Padding(padding: EdgeInsets.only(top: 10, bottom: 10)),

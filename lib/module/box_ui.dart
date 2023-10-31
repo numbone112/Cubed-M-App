@@ -204,7 +204,7 @@ class Box {
               width: MediaQuery.of(context).size.width * 0.2,
               child: textWidget(
                 text: '運動評分',
-                type: TextType.sub,
+                type: TextType.content,
               ),
             ),
             Box.textRadiusBorder(history.score.toString(),

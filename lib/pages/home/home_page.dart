@@ -194,9 +194,9 @@ class HomePageState extends State<HomePage> {
                                     .toList(),
                               ),
                               eventRecordInfo: EventRecordInfo(
-                                  name: widget.userID,
+                                  name: getUser.name,
                                   age: AgeCalculator.age(getUser.birthday)
-                                      .years))
+                                      .years, user_id: widget.userID))
                         ],
                       ),
                       no: () => Navigator.pop(context),

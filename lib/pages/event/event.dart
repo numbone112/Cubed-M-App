@@ -141,7 +141,6 @@ class EventState extends State<Event> {
           each_score: element.each_score,
           user_id: element.eventRecordInfo.user_id,
           i_id: element.eventRecordInfo.id));
-      
     }
 
     for (var element in hasPair) {
@@ -541,11 +540,9 @@ class EventState extends State<Event> {
       for (var element in signCharList) {
         await element.setNotifyValue(true);
       }
-      for (int i =0;i<startCharList.length;i++)
-        
-        {
-        
-        String sign=eventRecordList[i].now<2?"cubed-M hand":"cubed-M foot";
+      for (int i = 0; i < startCharList.length; i++) {
+        String sign =
+            eventRecordList[i].now < 2 ? "cubed-M hand" : "cubed-M foot";
 
         startCharList[i].write(utf8.encode(sign));
       }
@@ -557,7 +554,7 @@ class EventState extends State<Event> {
     if (eventRecordList.isEmpty) {
       setState(() {
         eventRecordList =
-          ModalRoute.of(context)!.settings.arguments as List<EventRecord>;
+            ModalRoute.of(context)!.settings.arguments as List<EventRecord>;
       });
     }
     return CustomPage(

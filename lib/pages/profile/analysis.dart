@@ -73,7 +73,7 @@ class DailyEarnings extends StatelessWidget {
                     colors: [MyTheme.buttonColor],
                     showText: true,
                     format: (progress) {
-                      return '  好\n4.12';
+                      return ' 好\n3.5';
                     },
                     type: ProgressType.dashboard,
                     // textStyle: TextStyle(),

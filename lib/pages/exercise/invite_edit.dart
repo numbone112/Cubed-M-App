@@ -13,17 +13,21 @@ import 'package:logger/logger.dart';
 
 import '../../module/page.dart';
 
-class InsertInvite extends StatefulWidget {
-  final String userID;
+class InviteEditPage extends StatefulWidget {
+  late String userID;
+  final Invite invite;
+  final List<InviteDetail> inviteDetail;
 
-  const InsertInvite({super.key, required this.userID});
-  static const routeName = '/invite/insert';
+  InviteEditPage({super.key, required this.invite,required this.inviteDetail}) {
+    userID = invite.m_id;
+  }
+  static const routeName = '/invite/edit';
 
   @override
-  State<StatefulWidget> createState() => InsertInvitestate();
+  State<StatefulWidget> createState() => EditInvitestate();
 }
 
-class InsertInvitestate extends State<InsertInvite> {
+class EditInvitestate extends State<InviteEditPage> {
   InviteAPI api = InviteRepo();
   TextEditingController nameInput = TextEditingController();
   TextEditingController remarkInput = TextEditingController();
@@ -35,6 +39,22 @@ class InsertInvitestate extends State<InsertInvite> {
   DateFormat dateFormat = DateFormat('yyyy-MM-dd ');
   TimeOfDayFormat timeFormat = TimeOfDayFormat.HH_colon_mm;
   MoRepo moRepo = MoRepo();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    MoSearch mo=MoSearch(name: "",id: "");
+    nameInput.text = widget.invite.name;
+    remarkInput.text = widget.invite.remark;
+    dateInput.text = widget.invite.time.substring(0,10);
+    timeInput.text=widget.invite.time.substring(12);
+    selectFriend=widget.inviteDetail.map((e) => e.user_id!=widget.userID?MoSearch(name: e.userName,id: e.user_id):mo).toSet();
+    selectFriend.remove(mo);
+    
+    
+    
+  }
 
   Widget peopleItem(String id, String name, {Color? select}) {
     return Box.boxHasRadius(
@@ -149,7 +169,8 @@ class InsertInvitestate extends State<InsertInvite> {
                 itemCount: selectFriend.length,
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (context, index) {
-                  return Box.boxWithX("  ${selectFriend.elementAt(index).name}  ");
+                  return Box.boxWithX(
+                      "  " + selectFriend.elementAt(index).name + "  ");
                 },
               ),
             ),
@@ -215,7 +236,7 @@ class InsertInvitestate extends State<InsertInvite> {
           ],
         ),
         buildContext: context,
-        title: '新增邀約',
+        title: '編輯邀約',
         headColor: MyTheme.lightColor,
         headTextColor: Colors.white,
         prevColor: Colors.white,

@@ -116,9 +116,12 @@ class HomePageState extends State<HomePage> {
                                           alignment: Alignment.center,
                                           child: Padding(
                                             padding: const EdgeInsets.all(10),
-                                            child: textWidget(
-                                                text: homeData!.execute[index].name,
-                                                type: TextType.content),
+                                            child: Box.dailyExercise(
+                                              homeData!.execute[index].name,
+                                              homeData!.execute[index].pretyTime()
+                                            )
+                                            
+                                         
                                           ),
                                         ),
                                     )

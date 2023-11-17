@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:e_fu/module/box_ui.dart';
 import 'package:e_fu/module/page.dart';
 import 'package:e_fu/my_data.dart';
+import 'package:e_fu/pages/plan/plan_edit.dart';
 import 'package:e_fu/pages/plan/plan_insert.dart';
 
 import 'package:e_fu/request/plan/plan.dart';
@@ -26,11 +27,13 @@ class PlanState extends State<PlanPage> {
   List<Widget> planBoxList() {
     List<Widget> result = [];
     for (var plan in planlist) {
-      result.add(Box.boxHasRadius(
-        margin: const EdgeInsets.fromLTRB(0, 10, 0, 5),
-        padding: const EdgeInsets.all(10),
-        child: Box.planBox(plan, context),
-      ));
+      result.add(
+        Box.boxHasRadius(
+          margin: const EdgeInsets.fromLTRB(0, 10, 0, 5),
+          padding: const EdgeInsets.all(10),
+          child: Box.planBox(plan, context, widget.userID),
+        ),
+      );
     }
     return result;
   }

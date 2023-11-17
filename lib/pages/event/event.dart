@@ -567,7 +567,7 @@ class EventState extends State<Event> {
                   name: eventRecordList.first.eventRecordInfo.name,
                   remark: eventRecordList.first.eventRecordInfo.remark,
                   time: eventRecordList.first.eventRecordInfo.time),
-              false),
+              false,context),
         ),
         headHeight: 100,
         body: Padding(

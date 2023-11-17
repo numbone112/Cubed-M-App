@@ -1,13 +1,17 @@
+import 'package:e_fu/module/toast.dart';
 import 'package:e_fu/my_data.dart';
 
 import 'package:e_fu/pages/exercise/history.dart';
 import 'package:e_fu/pages/exercise/invite.dart';
+import 'package:e_fu/pages/exercise/invite_edit.dart';
+import 'package:e_fu/pages/plan/plan_edit.dart';
 import 'package:e_fu/request/exercise/history_data.dart';
 import 'package:e_fu/request/invite/invite_data.dart';
 import 'package:e_fu/request/plan/plan_data.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+import 'package:jiffy/jiffy.dart';
 
 class Box {
   static final List<String> executeText = ["一", '二', '三', '四', '五', '六', '日'];
@@ -68,7 +72,11 @@ class Box {
         margin: margin,
         alignment: const Alignment(0, 0),
         height: height ?? 30,
-        width: width ?? 110,
+        width: width == null
+            ? 110
+            : width < 0
+                ? null
+                : width,
         decoration: BoxDecoration(
             color: filling ?? MyTheme.buttonColor,
             borderRadius: BorderRadius.all(Radius.circular(height ?? 25)),
@@ -344,7 +352,7 @@ class Box {
   }
 
   //邀約運動資訊
-  static Widget inviteInfo(Invite invite, bool isHost) {
+  static Widget inviteInfo(Invite invite, bool isHost, BuildContext context,{List<InviteDetail>? detailList}) {
     return Container(
       padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
       child: Row(
@@ -371,26 +379,87 @@ class Box {
             ),
           ),
           isHost
-              ? GestureDetector(
-                  child: Container(
-                    padding: const EdgeInsets.fromLTRB(5, 5, 10, 5),
-                    decoration: BoxDecoration(
-                        color: MyTheme.lightColor,
-                        borderRadius: BorderRadius.circular(30)),
-                    child: Row(
-                      children: [
-                        const Icon(
-                          Icons.add,
-                          color: Colors.white,
-                          size: 20,
+              ? Row(
+                  children: [
+                    GestureDetector(
+                      
+                      child: Container(
+                        margin: const EdgeInsets.only(left: 5),
+                        padding: const EdgeInsets.fromLTRB(5, 5, 10, 5),
+                        decoration: BoxDecoration(
+                            color: MyTheme.lightColor,
+                            borderRadius: BorderRadius.circular(30)),
+                        child: Row(
+                          children: [
+                            const Icon(
+                              Icons.add,
+                              color: Colors.white,
+                              size: 20,
+                            ),
+                            textWidget(
+                                text: '邀請',
+                                type: TextType.content,
+                                color: Colors.white)
+                          ],
                         ),
-                        textWidget(
-                            text: '邀請',
-                            type: TextType.content,
-                            color: Colors.white)
-                      ],
+                      ),
                     ),
-                  ),
+                    Container(
+                      margin: const EdgeInsets.only(left: 5),
+                      padding: const EdgeInsets.fromLTRB(5, 5, 10, 5),
+                      decoration: BoxDecoration(
+                          color: MyTheme.lightColor,
+                          borderRadius: BorderRadius.circular(30)),
+                      child: GestureDetector(
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute<void>(
+                            builder: (BuildContext context) => InviteEditPage(
+                              invite: invite,
+                              inviteDetail: detailList??[],
+                            ),
+                          ),
+                        ),
+                        child: Row(
+                          children: [
+                            const Icon(
+                              Icons.edit,
+                              color: Colors.white,
+                              size: 20,
+                            ),
+                            textWidget(
+                                text: '編輯',
+                                type: TextType.content,
+                                color: Colors.white)
+                          ],
+                        ),
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.only(left: 5),
+                      padding: const EdgeInsets.fromLTRB(5, 5, 10, 5),
+                      decoration: BoxDecoration(
+                          color: MyTheme.lightColor,
+                          borderRadius: BorderRadius.circular(30)),
+                      child: GestureDetector(
+                        onTap: () =>
+                            showDelDialog(context, '邀約「${invite.name}」'),
+                        child: Row(
+                          children: [
+                            const Icon(
+                              Icons.delete,
+                              color: Colors.white,
+                              size: 20,
+                            ),
+                            textWidget(
+                                text: '刪除',
+                                type: TextType.content,
+                                color: Colors.white)
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 )
               : Container()
         ],
@@ -398,10 +467,10 @@ class Box {
     );
   }
 
-  static Widget boxWithX(String title, {Function()? function}) {
+  static Widget boxWithX(String title, {Function()? close}) {
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
-      onTap: function,
+      onTap: close,
       child: Stack(
         alignment: Alignment.centerRight,
         children: [
@@ -411,6 +480,7 @@ class Box {
             filling: Colors.white,
             border: MyTheme.buttonColor,
             margin: const EdgeInsets.fromLTRB(5, 15, 5, 5),
+            width: -5,
           ),
           Box.boxHasRadius(
             child: const Text(
@@ -497,7 +567,7 @@ class Box {
   //   );
   // }
 
-  static Widget planBox(Plan plan, BuildContext context) {
+  static Widget planBox(Plan plan, BuildContext context, String userId) {
     return SizedBox(
       width: MediaQuery.of(context).size.width * 0.8,
       height: 150,
@@ -517,26 +587,35 @@ class Box {
                       textAlign: TextAlign.center,
                       type: TextType.content)),
               Expanded(
-                  flex: 1,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      GestureDetector(
-                        child: Icon(
-                          Icons.edit,
-                          color: MyTheme.color,
-                          size: 20,
+                flex: 1,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    GestureDetector(
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute<void>(
+                          builder: (BuildContext context) =>
+                              PlanEditPage(userID: userId, plan: plan),
                         ),
                       ),
-                      GestureDetector(
-                        child: Icon(
-                          Icons.delete,
-                          color: MyTheme.color,
-                          size: 20,
-                        ),
+                      child: Icon(
+                        Icons.edit,
+                        color: MyTheme.color,
+                        size: 20,
                       ),
-                    ],
-                  ))
+                    ),
+                    GestureDetector(
+                      onTap: () => showDelDialog(context, '計畫「${plan.name}」'),
+                      child: Icon(
+                        Icons.delete,
+                        color: MyTheme.color,
+                        size: 20,
+                      ),
+                    ),
+                  ],
+                ),
+              )
             ],
           ),
           textWidget(text: plan.getRange(), color: MyTheme.hintColor),
@@ -674,6 +753,17 @@ class Box {
                 height: height,
                 color: color,
                 readOnly: readOnly)),
+      ],
+    );
+  }
+
+  static Widget dailyExercise(String title, String time) {
+    return Column(
+      children: [
+        textWidget(text: title, type: TextType.content),
+        textWidget(
+            text: Jiffy.parse(time, pattern: 'yyyy-MM-dd  HH:mm').fromNow(),
+            type: TextType.hint)
       ],
     );
   }

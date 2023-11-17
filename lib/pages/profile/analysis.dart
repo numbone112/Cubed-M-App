@@ -21,10 +21,10 @@ class DailyEarnings extends StatelessWidget {
   };
 
   static Map<int, String> moneyMap = const {
-    -2: '很差',
+    -2: '不好',
     -1: '差',
     0: '普通',
-    1: '好',
+    1: '尚好',
     2: '很好',
   };
 

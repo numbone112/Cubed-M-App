@@ -8,12 +8,14 @@ import 'package:e_fu/pages/exercise/invite.dart';
 import 'package:e_fu/pages/mo/hide_mo_list.dart';
 import 'package:e_fu/pages/mo/mo_list.dart';
 import 'package:e_fu/pages/plan/plan.dart';
+import 'package:e_fu/pages/plan/plan_edit.dart';
 import 'package:e_fu/pages/plan/plan_insert.dart';
 import 'package:e_fu/pages/profile/profile_edit.dart';
 import 'package:e_fu/pages/profile/profile_update.dart';
+import 'package:e_fu/sign.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:e_fu/pages/event/event.dart';
-import 'package:e_fu/sign.dart';
+import 'package:e_fu/login.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
@@ -78,6 +80,7 @@ class MyappState extends State<MyApp> {
         color: MyTheme.backgroudColor,
         child: SafeArea(
           bottom: false,
+          
           child: userID.isEmpty
               ? const Login()
               : Home(
@@ -106,6 +109,7 @@ class MyappState extends State<MyApp> {
             ),
         PlanPage.routeName: (_) => PlanPage(userID: userID),
         PlanInsertPage.routeName: (_) => PlanInsertPage(userID: userID),
+        
         // MoDetail.routeName: (_) => MoDetail(userName: userName),
       },
     );

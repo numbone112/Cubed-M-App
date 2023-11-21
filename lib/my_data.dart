@@ -66,7 +66,7 @@ Widget textWidget(
 
     case TextType.hint:
       return Text(text,
-          style: TextStyle(fontSize: 14, color: color), textAlign: textAlign);
+          style: TextStyle(fontSize: 14, color: MyTheme.hintColor), textAlign: textAlign);
     default:
       return Text(text,
           style: TextStyle(fontSize: 14, color: color), textAlign: textAlign);

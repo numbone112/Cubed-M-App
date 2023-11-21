@@ -43,6 +43,9 @@ class History {
   String remark;
   double avgScore;
   String m_name;
+  String pretyTime() =>time.toString().substring(0, 10).replaceAll("T", " ");
+   
+    
 
   bool isGroup() => friend.length > 1;
 
@@ -74,7 +77,7 @@ class HistoryDeep {
   int age;
   String sex;
   DateTime birthday;
-
+  
   String pretySex()=>sex=="male"?"男":"女";
 
   String sexAndAge(){

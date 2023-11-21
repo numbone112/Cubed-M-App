@@ -79,7 +79,7 @@ class InviteState extends State<InvitePage> {
     return CustomPage(
       body: Column(
         children: [
-          Box.inviteInfo(invite, false),
+          Box.inviteInfo(invite, invite.m_id==widget.userID,context,detailList: detailList),
           Container(
               decoration: BoxDecoration(
                   color: Colors.white, borderRadius: BorderRadius.circular(30)),

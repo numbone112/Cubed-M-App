@@ -21,10 +21,10 @@ class DailyEarnings extends StatelessWidget {
   };
 
   static Map<int, String> moneyMap = const {
-    -2: '很差',
+    -2: '不好',
     -1: '差',
     0: '普通',
-    1: '好',
+    1: '尚好',
     2: '很好',
   };
 
@@ -73,7 +73,7 @@ class DailyEarnings extends StatelessWidget {
                     colors: [MyTheme.buttonColor],
                     showText: true,
                     format: (progress) {
-                      return '  好\n4.12';
+                      return ' 好\n3.5';
                     },
                     type: ProgressType.dashboard,
                     // textStyle: TextStyle(),
@@ -111,24 +111,7 @@ class DailyEarnings extends StatelessWidget {
   }
 
   LineChartData mainData() {
-    double nowScaleDouble = 4;
     return LineChartData(
-      extraLinesData: ExtraLinesData(
-        verticalLines: [
-          VerticalLine(
-            x: nowScaleDouble,
-            color: const Color.fromRGBO(197, 0, 0, 1),
-            strokeWidth: 2,
-            dashArray: [5, 10],
-            label: VerticalLineLabel(
-              show: true,
-              alignment: const Alignment(1, 0.5),
-              padding: const EdgeInsets.only(left: 10, top: 5),
-              labelResolver: (line) => "now",
-            ),
-          ),
-        ],
-      ),
       gridData: FlGridData(
         show: true,
         drawVerticalLine: true,

@@ -1,207 +1,74 @@
-import 'dart:convert';
-
-import 'package:e_fu/main.dart';
-import 'package:e_fu/module/box_ui.dart';
+import 'package:e_fu/changePassword.dart';
 import 'package:e_fu/module/page.dart';
 import 'package:e_fu/my_data.dart';
-import 'package:e_fu/pages/plan/plan.dart';
-import 'package:e_fu/pages/profile/analysis.dart';
-import 'package:e_fu/pages/profile/profile_edit.dart';
-import 'package:e_fu/request/user/account.dart';
+
+import 'package:e_fu/pages/profile/profile_update.dart';
 import 'package:e_fu/request/user/get_user_data.dart';
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../module/cusbehiver.dart';
-
-class ProfileInfo extends StatefulWidget {
-  const ProfileInfo({super.key, required this.userID});
+class Profile extends StatefulWidget {
+  static const routeName = '/profile';
   final String userID;
+  const Profile({super.key, required this.userID});
 
   @override
-  ProfileCreateState createState() => ProfileCreateState();
+  ProfilePageState createState() => ProfilePageState();
 }
 
-class SubMenu {
-  SubMenu({required this.title, this.function, required this.img, this.widget});
-  final String title;
-  final String img;
-  Widget? widget;
-  Function()? function;
-}
-
-class ProfileCreateState extends State<ProfileInfo> {
-  GetUser? profile;
-  UserRepo userRepo = UserRepo();
-  var logger = Logger();
-
-  getProfile() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    if (prefs.containsKey(Name.getUser)) {
-      setState(() {
-        logger.v(jsonDecode(prefs.getString(Name.getUser)!));
-        profile = GetUser.fromJson(jsonDecode(prefs.getString(Name.getUser)!));
-      });
-    }
-    try {
-      userRepo.getUser(widget.userID).then((value) {
-        setState(()  {
-          
-          
-          profile = GetUser.fromJson(value.D);
-        });
-        prefs.setString(Name.getUser, jsonEncode(value.D));
-      });
-    } catch (e) {
-      logger.v(e);
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-
-    getProfile();
-  }
-
-  List<Widget> intos() {
-    List<Widget> result = [];
-    List<SubMenu> subMenus = [
-      SubMenu(
-          title: "個人檔案",
-          img: "assets/images/profile.png",
-          function: () => Navigator.pushNamed(context, Profile.routeName,
-              arguments: profile)),
-      SubMenu(
-          title: "成效分析",
-          img: "",
-          function: () => Navigator.push(
-                context,
-                MaterialPageRoute<void>(
-                  builder: (BuildContext context) => const DailyEarnings(),
-                ),
-              ),
-          widget: const Icon(Icons.accessibility_new_rounded)),
-      SubMenu(
-          title: "管理運動計畫",
-          img: "assets/images/target.png",
-          function: () => Navigator.pushNamed(context, PlanPage.routeName,
-              arguments: profile)),
-      SubMenu(
-        title: "登出",
-        img: "assets/images/logout.png",
-        function: () async {
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          prefs.remove(Name.userID);
-          if (context.mounted) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute<void>(
-                builder: (BuildContext context) => const MyApp(),
-              ),
-            );
-          }
-        },
-      )
-    ];
-
-    for (var element in subMenus) {
-      result.add(
-        Box.boxHasRadius(
-          margin: const EdgeInsets.fromLTRB(0, 10, 0, 5),
-          height: 70,
-          padding: const EdgeInsets.all(10),
-          child: GestureDetector(
-            behavior: HitTestBehavior.translucent,
-            onTap: element.function,
-            child: Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.fromLTRB(20, 0, 15, 0),
-                  child: element.widget ??
-                      Image.asset(
-                        element.img,
-                        scale: 2.0,
-                      ),
-                ),
-                Text(
-                  element.title,
-                  style: const TextStyle(fontSize: 16),
-                ),
-              ],
-            ),
-          ),
-        ),
-      );
-    }
-
-    return result;
+class ProfilePageState extends State<Profile> {
+  Widget profileItem({String? title, String? subtitle, Function()? onTap}) {
+    return Container(
+      margin: const EdgeInsets.only(top: 10),
+      height: subtitle == null
+          ? MediaQuery.of(context).size.height * 0.07
+          : MediaQuery.of(context).size.height * 0.1,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+          color: Colors.white, borderRadius: BorderRadius.circular(20)),
+      child: ListTile(
+        title: textWidget(text: title ?? '', type: TextType.content),
+        subtitle: textWidget(
+            text: subtitle == '' ? '無' : subtitle ?? '',
+            type: TextType.content,
+            color: MyTheme.hintColor),
+        dense: true,
+        onTap: onTap,
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    final args = ModalRoute.of(context)!.settings.arguments as GetUser;
+
     return CustomPage(
-      title: "其他",
-      body: ScrollConfiguration(
-        behavior: CusBehavior(),
-        child: SingleChildScrollView(
-          child: (Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-                  (profile == null)
-                      ? Box.boxHasRadius(
-                          // height: MediaQuery.of(context).size.height * 0.33,
-                          color: MyTheme.backgroudColor,
-                          child: Center(
-                              child: CircularProgressIndicator(
-                            color: MyTheme.lightColor,
-                          )),
-                        )
-                      : Box.boxHasRadius(
-                          // height: MediaQuery.of(context).size.height * 0.25,
-                          color: Colors.white,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(20)),
-                              color: MyTheme.color,
-                            ),
-                            child: Container(
-                              padding:
-                                  const EdgeInsets.only(top: 20, bottom: 20),
-                              height: MediaQuery.of(context).size.height * 0.15,
-                              alignment: Alignment.center,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  textWidget(
-                                      text: profile!.name,
-                                      type: TextType.sub,
-                                      color: Colors.white),
-                                  textWidget(
-                                      text:
-                                          "性別：${profile!.sex != "female" ? "男" : "女"}",
-                                      type: TextType.content,
-                                      color: Colors.white),
-                                  textWidget(
-                                      text:
-                                          "年齡：${DateTime.now().year - profile!.birthday.year}",
-                                      type: TextType.content,
-                                      color: Colors.white),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                  const Padding(padding: EdgeInsets.all(5))
-                ] +
-                intos(),
-          )),
+      body: ListView(children: [
+        profileItem(title: 'ID', subtitle: args.id),
+        profileItem(title: '姓名', subtitle: args.name),
+        profileItem(title: '性別', subtitle: args.sex != "female" ? "男" : "女"),
+        profileItem(
+            title: '生日',
+            subtitle: args.birthday.toIso8601String().substring(0, 10)),
+        profileItem(title: '手機號碼', subtitle: args.phone),
+        profileItem(title: '身高', subtitle: args.height.toString()),
+        profileItem(title: '體重', subtitle: args.height.toString()),
+        profileItem(title: '疾病', subtitle: args.disease.join(" , ")),
+        profileItem(
+          title: '編輯個人檔案',
+          onTap: () => Navigator.pushNamed(context, ProfileUpdate.routeName,
+              arguments: args),
         ),
-      ),
+         profileItem(
+          title: '修改密碼',
+          onTap: () => Navigator.pushNamed(context, UpdatePsw.routeName,
+              arguments: args),
+        ),
+      ]),
+      title: "個人檔案",
+      headColor: MyTheme.lightColor,
+      prevColor: Colors.white,
+      headTextColor: Colors.white,
+      buildContext: context,
     );
   }
 }

@@ -137,7 +137,7 @@ class ProfileUpdateState extends State<ProfileUpdate> {
                           style: textStyle(color: Colors.white),
                           textAlign: TextAlign.center,
                         ),
-                        onTap: () => Navigator.pop(context, null),
+                        onTap: () => Navigator.pop(context),
                       ),
                     ),
                   ),

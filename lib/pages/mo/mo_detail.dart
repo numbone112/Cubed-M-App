@@ -99,7 +99,7 @@ class MoDetailState extends State<MoDetail> {
                             type: TextType.hint,
                             color: MyTheme.hintColor),
                             textWidget(
-                        text: "2023/04/05",
+                        text: hisotrylist.isNotEmpty?hisotrylist.first.pretyTime():"",
                         textAlign: TextAlign.center,
       
                         type: TextType.hint,

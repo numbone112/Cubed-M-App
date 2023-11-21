@@ -107,7 +107,7 @@ class AfterEventstate extends State<AfterEventPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Box.inviteInfo(Invite.fromJson(history.toJson()), false),
+                    Box.inviteInfo(Invite.fromJson(history.toJson()), false,context),
                     Column(
                       children: [
                         textWidget(

@@ -21,7 +21,7 @@ class HistoryDetailPerson extends StatefulWidget {
 class HistoryDetailPersonstate extends State<HistoryDetailPerson> {
   int select = 0;
   List<DoneItem> dones = [];
-  static final List<String> leveltable = ["很差", "差", "普通", "好", "很好"];
+  static final List<String> leveltable = ["不好", "差", "普通", "尚好", "很好"];
   static final List<String> type = ["左手", "右手", '椅子坐立'];
 
   changeSelect(int s, List<DoneItem> origin) {
@@ -73,10 +73,7 @@ class HistoryDetailPersonstate extends State<HistoryDetailPerson> {
                     type: TextType.fun,
                     color: MyTheme.buttonColor,
                   ),
-                  // textWidget(
-                  //   text: args.name,
-                  //   type: TextType.content,
-                  // ),
+                
                   textWidget(
                     text: args.sexAndAge(),
                     type: TextType.content,

@@ -53,9 +53,8 @@ class PlanInsertState extends State<PlanInsertPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 textWidget(
-                  text: "星期${Box.executeText[i]}",
-                  color: execute[i] ? Colors.white:Colors.black
-                ),
+                    text: "星期${Box.executeText[i]}",
+                    color: execute[i] ? Colors.white : Colors.black),
               ],
             ),
           ),
@@ -96,10 +95,7 @@ class PlanInsertState extends State<PlanInsertPage> {
           Box.textInput('結束時間', '請選擇結束時間', endInput,
               onTap: () => dateInput(endInput), readOnly: true),
           textWidget(
-            text: "運動計畫表",
-            textAlign: TextAlign.center,
-            type: TextType.sub
-          ),
+              text: "運動計畫表", textAlign: TextAlign.center, type: TextType.sub),
           Padding(
             padding: const EdgeInsets.all(10),
             child: textWidget(
@@ -116,11 +112,14 @@ class PlanInsertState extends State<PlanInsertPage> {
                 str_date: DateTime.parse(strInput.text),
                 end_date: DateTime.parse(endInput.text),
                 execute: execute);
-            planRepo.createPlan(plan).then((value) {
+            planRepo.createPlan(plan).then((value) async {
               logger.v(value.message);
               logger.v(value.D);
+              if (await value.D == true) {
+                Navigator.pop(context);
+              }
             });
-          }, () => Navigator.pop(context))
+          }, () {})
         ],
       ),
     );

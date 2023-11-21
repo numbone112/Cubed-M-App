@@ -58,11 +58,11 @@ showDelDialog(BuildContext context, String delName) {
     context: context,
     builder: ((context) => AlertDialog(
           content: SizedBox(
-            height: 100,
+            height: 150,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-              textWidget(text: "確定要刪除$delName",type: TextType.fun),
+              textWidget(text: "確定要刪除$delName?",type: TextType.fun),
               Box.yesnoBox(() => null, () => Navigator.pop(context))
             ]),
           ),

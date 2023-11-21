@@ -104,7 +104,7 @@ class PlanState extends State<PlanPage> {
                     color: const Color(0xFFFFFFFF),
                     child: Column(
                       children: [
-                        textWidget(text: '運動長條圖', type: TextType.content),
+                        textWidget(text: '運動次數', type: TextType.content),
                         SizedBox(
                           width: 500,
                           height: 150,

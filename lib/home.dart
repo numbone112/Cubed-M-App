@@ -1,7 +1,7 @@
 import 'package:e_fu/pages/exercise/exercise.dart';
 import 'package:e_fu/pages/home/home_page.dart';
 import 'package:e_fu/pages/mo/mo.dart';
-import 'package:e_fu/pages/profile/profile.dart';
+import 'package:e_fu/pages/profile/other.dart';
 import 'package:flutter/material.dart';
 
 import 'bottom_bar_view.dart';

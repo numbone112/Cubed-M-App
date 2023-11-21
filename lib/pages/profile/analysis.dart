@@ -111,24 +111,7 @@ class DailyEarnings extends StatelessWidget {
   }
 
   LineChartData mainData() {
-    double nowScaleDouble = 4;
     return LineChartData(
-      extraLinesData: ExtraLinesData(
-        verticalLines: [
-          VerticalLine(
-            x: nowScaleDouble,
-            color: const Color.fromRGBO(197, 0, 0, 1),
-            strokeWidth: 2,
-            dashArray: [5, 10],
-            label: VerticalLineLabel(
-              show: true,
-              alignment: const Alignment(1, 0.5),
-              padding: const EdgeInsets.only(left: 10, top: 5),
-              labelResolver: (line) => "now",
-            ),
-          ),
-        ],
-      ),
       gridData: FlGridData(
         show: true,
         drawVerticalLine: true,

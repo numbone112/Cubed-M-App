@@ -1,6 +1,7 @@
 import 'package:e_fu/module/box_ui.dart';
 import 'package:e_fu/module/exercise_process.dart';
 import 'package:e_fu/my_data.dart';
+import 'package:e_fu/request/plan/plan_data.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -50,4 +51,21 @@ setTarget(BuildContext context, List<ItemWithField> items,
           ),
         );
       });
+}
+
+showDelDialog(BuildContext context, String delName) {
+  showDialog(
+    context: context,
+    builder: ((context) => AlertDialog(
+          content: SizedBox(
+            height: 150,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+              textWidget(text: "確定要刪除$delName?",type: TextType.fun),
+              Box.yesnoBox(() => null, () => Navigator.pop(context))
+            ]),
+          ),
+        )),
+  );
 }

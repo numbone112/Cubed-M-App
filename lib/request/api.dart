@@ -7,12 +7,12 @@ import 'package:logger/logger.dart';
 
 class API {
   final client = http.Client();
-  // final String domain = "https://e-fu-back.onrender.com";
+  final String domain = "https://e-fu-back.onrender.com";
   final header={
           'Content-Type': 'application/json',
         };
   Logger logger=Logger();
-  final String domain = "https://968e-60-250-79-110.ngrok-free.app";
+  // final String domain = "https://c962-211-21-101-144.ngrok-free.app";
   Future<Format> lunch(Future<Response> function) async {
     Map responseBody = {"D": {}, "message": "error", "success": false};
     

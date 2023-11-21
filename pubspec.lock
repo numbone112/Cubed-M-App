@@ -169,14 +169,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.3"
-  cupertino_icons:
-    dependency: "direct main"
-    description:
-      name: cupertino_icons
-      sha256: d57953e10f9f8327ce64a508a355f0b1ec902193f66288e8cb5070e7c47eeb2d
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.6"
   dart_style:
     dependency: transitive
     description:
@@ -278,14 +270,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.3"
-  flutter_picker:
-    dependency: "direct main"
-    description:
-      name: flutter_picker
-      sha256: "2f94c6eefba8697b07e3cd008b75f06b4ba7053cb26d23ae0fcd5932b7dc75af"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.1.0"
   flutter_ringtone_player:
     dependency: "direct main"
     description:
@@ -384,6 +368,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.4"
+  jiffy:
+    dependency: "direct main"
+    description:
+      name: jiffy
+      sha256: cc1d4b75016a9156c29b5d61f0c9176c3e0fb0580cc5a0e0422b5d2cab3fbfff
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.2.1"
   js:
     dependency: "direct main"
     description:
@@ -408,14 +400,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.7.1"
-  linked_scroll_controller:
-    dependency: "direct main"
-    description:
-      name: linked_scroll_controller
-      sha256: e6020062bcf4ffc907ee7fd090fa971e65d8dfaac3c62baf601a3ced0b37986a
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.2.0"
   lints:
     dependency: transitive
     description:
@@ -648,14 +632,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.4"
-  simple_gesture_detector:
-    dependency: transitive
-    description:
-      name: simple_gesture_detector
-      sha256: "86d08f85f1f58583b7b4b941d989f48ea6ce08c1724a1d10954a277c2ec36592"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.2.0"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -717,30 +693,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.0"
-  syncfusion_flutter_core:
-    dependency: transitive
-    description:
-      name: syncfusion_flutter_core
-      sha256: "8db8f55c77f56968681447d3837c10f27a9e861e238a898fda116c7531def979"
-      url: "https://pub.dev"
-    source: hosted
-    version: "21.2.10"
-  syncfusion_flutter_gauges:
-    dependency: "direct main"
-    description:
-      name: syncfusion_flutter_gauges
-      sha256: "1745eb7cede9d5a67c5c13b706b821a33fead08d45d2354bc80c73a190ae61ad"
-      url: "https://pub.dev"
-    source: hosted
-    version: "21.2.10"
-  table_calendar:
-    dependency: "direct main"
-    description:
-      name: table_calendar
-      sha256: "1e3521a3e6d3fc7f645a58b135ab663d458ab12504f1ea7f9b4b81d47086c478"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.0.9"
   term_glyph:
     dependency: transitive
     description:

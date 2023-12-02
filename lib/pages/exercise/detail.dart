@@ -1,8 +1,11 @@
 // import 'dart:js_interop';
 
 import 'package:e_fu/module/box_ui.dart';
+import 'package:e_fu/module/toast.dart';
 import 'package:e_fu/my_data.dart';
+import 'package:e_fu/request/exercise/history.dart';
 import 'package:e_fu/request/exercise/history_data.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../module/page.dart';
@@ -21,8 +24,10 @@ class HistoryDetailPerson extends StatefulWidget {
 class HistoryDetailPersonstate extends State<HistoryDetailPerson> {
   int select = 0;
   List<DoneItem> dones = [];
+  HistoryRepo historyRepo=HistoryRepo();
   static final List<String> leveltable = ["不好", "差", "普通", "尚好", "很好"];
   static final List<String> type = ["左手", "右手", '椅子坐立'];
+  List<String> compare=["","",""];
 
   changeSelect(int s, List<DoneItem> origin) {
     setState(() {
@@ -30,7 +35,7 @@ class HistoryDetailPersonstate extends State<HistoryDetailPerson> {
       select = s;
     });
   }
-
+ 
   List<Widget> label(List<DoneItem> d) {
     List<Widget> result = [];
     for (var i = 0; i < type.length; i++) {
@@ -53,8 +58,13 @@ class HistoryDetailPersonstate extends State<HistoryDetailPerson> {
   @override
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context)!.settings.arguments as HistoryDeep;
-    if(dones.isEmpty){
+    if (dones.isEmpty) {
       changeSelect(0, args.done);
+      historyRepo.commend(args.user_id, args.i_id).then((value){
+        setState(() {
+          
+        });
+      });
     }
     return (CustomPage(
       body: ListView(children: [
@@ -73,7 +83,6 @@ class HistoryDetailPersonstate extends State<HistoryDetailPerson> {
                     type: TextType.fun,
                     color: MyTheme.buttonColor,
                   ),
-                
                   textWidget(
                     text: args.sexAndAge(),
                     type: TextType.content,
@@ -91,6 +100,64 @@ class HistoryDetailPersonstate extends State<HistoryDetailPerson> {
                     width: 60, color: Colors.white, textType: TextType.content)
               ],
             )
+          ],
+        ),
+        const Padding(padding: EdgeInsets.only(top: 10, bottom: 10)),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            SizedBox(
+              width: 50,
+              height: 100,
+              child: Chart.avgChart(args.each_score.isEmpty
+                  ? [3, 4, 5]
+                  : args.each_score
+                      .map(
+                        (e) => e,
+                      )
+                      .toList()),
+            ),
+            Column(
+              children: [
+                Row(
+                  children: [
+                    textWidget(
+                      text: '與過往相比',
+                      type: TextType.sub,
+                    ),
+                    GestureDetector(
+                      onTap: ()=>showCommendInfo(context),
+                      child: Icon(
+                        CupertinoIcons.question_circle,
+                        size: 20,
+                        color: MyTheme.hintColor,
+                      ),
+                    )
+                  ],
+                ),
+                const Padding(padding: EdgeInsets.all(5)),
+                Box.boxHasRadius(
+                    padding: EdgeInsets.all(10),
+                    color: Colors.white,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        textWidget(
+                          text: '左手：好，但稍有退步',
+                          type: TextType.content,
+                        ),
+                        textWidget(
+                          text: '右手：好，但有進步',
+                          type: TextType.content,
+                        ),
+                        textWidget(
+                          text: '椅子坐立：很差，有待進步',
+                          type: TextType.content,
+                        ),
+                      ],
+                    )),
+              ],
+            ),
           ],
         ),
         //各運動項目
@@ -141,7 +208,7 @@ class HistoryDetailPersonstate extends State<HistoryDetailPerson> {
                     Expanded(
                       flex: 1,
                       child: textWidget(
-                          text: (index+1).toString(),
+                          text: (index + 1).toString(),
                           type: TextType.content,
                           textAlign: TextAlign.center),
                     ),

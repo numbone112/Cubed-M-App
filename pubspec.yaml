@@ -28,6 +28,8 @@ dependencies:
   js: ^0.6.5
   fluttertoast: ^8.2.2
   jiffy: ^6.2.1
+  cupertino_icons: ^1.0.0
+
   
 
 

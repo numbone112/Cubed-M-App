@@ -561,13 +561,14 @@ class EventState extends State<Event> {
         buildContext: context,
         title: '肌力運動',
         titWidget: Padding(
-          padding: const EdgeInsets.only(top: 10),
+          padding: Space.onlyTopTen,
           child: Box.inviteInfo(
               Invite(
                   name: eventRecordList.first.eventRecordInfo.name,
                   remark: eventRecordList.first.eventRecordInfo.remark,
                   time: eventRecordList.first.eventRecordInfo.time),
-              false,context),
+              false,
+              context),
         ),
         headHeight: 100,
         body: Padding(
@@ -603,7 +604,7 @@ class EventState extends State<Event> {
                 ),
               ),
               SizedBox(
-                width: MediaQuery.of(context).size.width * 0.8,
+                width: Space.screenW8(context),
                 child: Box.yesnoBox(() => finish(), () => sendStart(),
                     noTitle: '開始運動',
                     noColor: MyTheme.color,

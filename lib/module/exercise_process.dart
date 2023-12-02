@@ -1,14 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:collection/collection.dart';
+
 
 class ItemSets {
   static final List<String> items = ["左手", "右手", "椅子坐立"];
-  static List<ItemWithField> withField(){
-    return items.map((e) => ItemWithField(item: e)).toList();
+  static List<ItemWithField> withField(List<String> setList) {
+    List<ItemWithField> result=[];
+    for (var pairs in IterableZip([setList,items])){
+      result.add(ItemWithField(item: pairs[0],text: pairs[1]));
+    }
+    return result;
   }
 }
 
 class ItemWithField {
-  ItemWithField({required this.item}) ;
+  ItemWithField({required this.item, required String text}) {
+    textEditingController = TextEditingController(text: text);
+  }
   final String item;
-  TextEditingController textEditingController = TextEditingController(text: "5");
+
+  late TextEditingController textEditingController;
 }

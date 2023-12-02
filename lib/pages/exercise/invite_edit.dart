@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:e_fu/module/box_ui.dart';
+import 'package:e_fu/module/toast.dart';
+import 'package:e_fu/module/util.dart';
 import 'package:e_fu/my_data.dart';
 import 'package:e_fu/request/invite/invite.dart';
 import 'package:e_fu/request/invite/invite_data.dart';
@@ -8,19 +10,20 @@ import 'package:e_fu/request/mo/mo.dart';
 import 'package:e_fu/request/mo/mo_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 
 import '../../module/page.dart';
 
 class InviteEditPage extends StatefulWidget {
-  late String userID;
+  final String userID;
   final Invite invite;
   final List<InviteDetail> inviteDetail;
 
-  InviteEditPage({super.key, required this.invite,required this.inviteDetail}) {
-    userID = invite.m_id;
-  }
+  const InviteEditPage(
+      {super.key,
+      required this.invite,
+      required this.inviteDetail,
+      required this.userID});
   static const routeName = '/invite/edit';
 
   @override
@@ -34,61 +37,39 @@ class EditInvitestate extends State<InviteEditPage> {
   TextEditingController quaryInput = TextEditingController();
   TextEditingController dateInput = TextEditingController();
   TextEditingController timeInput = TextEditingController();
+  DateTime selectDate = DateTime.now();
+  DateTime sendDate = DateTime.now();
   List<MoSearch> searchList = [];
   Set<MoSearch> selectFriend = {};
-  DateFormat dateFormat = DateFormat('yyyy-MM-dd ');
+
   TimeOfDayFormat timeFormat = TimeOfDayFormat.HH_colon_mm;
   MoRepo moRepo = MoRepo();
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    MoSearch mo=MoSearch(name: "",id: "");
+    MoSearch mo = MoSearch(name: "", id: "");
     nameInput.text = widget.invite.name;
     remarkInput.text = widget.invite.remark;
-    dateInput.text = widget.invite.time.substring(0,10);
-    timeInput.text=widget.invite.time.substring(12);
-    selectFriend=widget.inviteDetail.map((e) => e.user_id!=widget.userID?MoSearch(name: e.userName,id: e.user_id):mo).toSet();
+    dateInput.text = widget.invite.time.substring(0, 10);
+    timeInput.text = widget.invite.time.substring(12);
+    selectFriend = widget.inviteDetail
+        .map((e) => e.user_id != widget.userID
+            ? MoSearch(name: e.userName, id: e.user_id)
+            : mo)
+        .toSet();
     selectFriend.remove(mo);
-    
-    
-    
   }
 
-  Widget peopleItem(String id, String name, {Color? select}) {
-    return Box.boxHasRadius(
-      color: select,
-      margin: const EdgeInsets.only(right: 30, left: 30, top: 10),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 25, top: 5, bottom: 5),
-            child: Text(
-              'ID:$id',
-              textAlign: TextAlign.left,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 25, top: 5, bottom: 5),
-            child: Text(
-              name,
-              style: const TextStyle(fontWeight: FontWeight.bold),
-              textAlign: TextAlign.left,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+
+  
 
   @override
   Widget build(BuildContext context) {
     var logger = Logger();
 
     return SizedBox(
-      width: MediaQuery.of(context).size.width * 0.8,
+      width: Space.screenW8(context),
       height: MediaQuery.of(context).size.height,
       child: CustomPage(
         body: ListView(
@@ -113,12 +94,14 @@ class EditInvitestate extends State<InviteEditPage> {
                       DateTime? pickedDate = await showDatePicker(
                           context: context,
                           initialDate: DateTime.now(),
-                          firstDate: DateTime(
-                              2000), //DateTime.now() - not to allow to choose before today.
+                          firstDate: DateTime(2000),
                           lastDate: DateTime(2101));
 
                       if (pickedDate != null) {
-                        dateInput.text = dateFormat.format(pickedDate);
+                        selectDate = pickedDate;
+                        sendDate = pickedDate;
+                        dateInput.text =
+                            formatter.format(pickedDate).substring(0, 10);
                       } else {
                         logger.v("Date is not selected");
                       }
@@ -140,6 +123,9 @@ class EditInvitestate extends State<InviteEditPage> {
                           context: context, initialTime: TimeOfDay.now());
 
                       if (pickedTime != null && context.mounted) {
+                        sendDate = formatter.parse(
+                            "${formatter.format(selectDate).substring(0, 12)}${pickedTime.hour}:${pickedTime.minute}:00");
+
                         timeInput.text = pickedTime.format(context);
                       } else {
                         logger.v("Date is not selected");
@@ -174,11 +160,6 @@ class EditInvitestate extends State<InviteEditPage> {
                 },
               ),
             ),
-
-            // Row(
-            //     children: selectFriend
-            //         .map((mosearch) => Box.boxWithX(mosearch.name))
-            //         .toList()),
             Padding(
               padding: const EdgeInsets.fromLTRB(0, 10, 10, 0),
               child: Row(
@@ -210,7 +191,7 @@ class EditInvitestate extends State<InviteEditPage> {
                           selectFriend.add(searchList[index]);
                         });
                       },
-                      child: peopleItem(
+                      child: InviteBox.peopleItem(
                           select: selectFriend.contains(searchList[index])
                               ? MyTheme.lightColor
                               : null,
@@ -224,14 +205,18 @@ class EditInvitestate extends State<InviteEditPage> {
               Invite invite = Invite(
                 m_id: widget.userID,
                 name: nameInput.text,
-                time: DateTime.now().toIso8601String(),
+                id: widget.invite.i_id,
+                time: formatter.format(sendDate),
                 remark: remarkInput.text,
                 friend: selectFriend.map((select) => select.id).toList(),
               );
-              api.createInvite(invite).then((value) => {
-                    EasyLoading.dismiss(),
-                    if (value.success!) {Navigator.pop(context)} else {}
-                  });
+              api.updateInvite(invite).then((value) {
+                EasyLoading.dismiss();
+                if (value.success!) {
+                  toast(context, "編輯成功");
+                  Navigator.pop(context,true);
+                } else {}
+              });
             }, () => Navigator.pop(context))
           ],
         ),

@@ -1,70 +1,69 @@
-
 import 'dart:convert';
 
-GetUserModel getUserModelFromJson(String str) => GetUserModel.fromJson(json.decode(str));
+GetUserModel getUserModelFromJson(String str) =>
+    GetUserModel.fromJson(json.decode(str));
 
 String getUserModelToJson(GetUserModel data) => json.encode(data.toJson());
 
 class GetUserModel {
-    D d;
-    String message;
-    bool success;
+  D d;
+  String message;
+  bool success;
 
-    GetUserModel({
-        required this.d,
-        required this.message,
-        required this.success,
-    });
+  GetUserModel({
+    required this.d,
+    required this.message,
+    required this.success,
+  });
 
-    factory GetUserModel.fromJson(Map<dynamic, dynamic> json) => GetUserModel(
+  factory GetUserModel.fromJson(Map<dynamic, dynamic> json) => GetUserModel(
         d: D.fromJson(json["D"]),
         message: json["message"],
         success: json["success"],
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "D": d.toJson(),
         "message": message,
         "success": success,
-    };
+      };
 }
 
 class D {
-    String password;
-    String name;
-    String sex;
-    int phone;
-    DateTime birthday;
-    int role;
-    List<String> friend;
-    List<String> hideFriend;
-    List<String> weight;
-    int height;
-    List<String> disease;
-    String target;
-    List<String> targetSets;
-    List<String> targetLevel;
-    String id;
+  String password;
+  String name;
+  String sex;
+  int phone;
+  DateTime birthday;
+  int role;
+  List<String> friend;
+  List<String> hideFriend;
+  List<String> weight;
+  int height;
+  List<String> disease;
+  String target;
+  List<String> targetSets;
 
-    D({
-        required this.password,
-        required this.name,
-        required this.sex,
-        required this.phone,
-        required this.birthday,
-        required this.role,
-        required this.friend,
-        required this.hideFriend,
-        required this.weight,
-        required this.height,
-        required this.disease,
-        required this.target,
-        required this.targetSets,
-        required this.targetLevel,
-        required this.id,
-    });
+  String id;
 
-    factory D.fromJson(Map<String, dynamic> json) => D(
+  D({
+    required this.password,
+    required this.name,
+    required this.sex,
+    required this.phone,
+    required this.birthday,
+    required this.role,
+    required this.friend,
+    required this.hideFriend,
+    required this.weight,
+    required this.height,
+    required this.disease,
+    required this.target,
+    required this.targetSets,
+    required this.id,
+  });
+
+  factory D.fromJson(Map<String, dynamic> json) => D(
         password: json["password"],
         name: json["name"],
         sex: json["sex"],
@@ -78,11 +77,10 @@ class D {
         disease: List<String>.from(json["disease"].map((x) => x)),
         target: json["target"],
         targetSets: List<String>.from(json["target_sets"].map((x) => x)),
-        targetLevel: List<String>.from(json["target_level"].map((x) => x)),
         id: json["id"],
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "password": password,
         "name": name,
         "sex": sex,
@@ -96,7 +94,6 @@ class D {
         "disease": List<dynamic>.from(disease.map((x) => x)),
         "target": target,
         "target_sets": List<dynamic>.from(targetSets.map((x) => x)),
-        "target_level": List<dynamic>.from(targetLevel.map((x) => x)),
         "id": id,
-    };
+      };
 }

@@ -25,16 +25,16 @@ class HistoryDetailstate extends State<HistoryDetailPage> {
 
   Widget deepBox(HistoryDeep historyDeep, bool isM) {
     return Container(
-      margin: const EdgeInsets.only(top: 10),
+      margin: Space.onlyTopTen,
       child: Box.boxHasRadius(
-        height: MediaQuery.of(context).size.height * 0.15,
+        height: Space.screenH15(context),
         color: Colors.white,
         child: Row(
           children: [
             Box.boxHasRadius(
               color: isM ? MyTheme.color : MyTheme.lightColor,
               width: MediaQuery.of(context).size.width * 0.3,
-              height: MediaQuery.of(context).size.height * 0.15,
+              height: Space.screenH15(context),
               child: GestureDetector(
                 behavior: HitTestBehavior.translucent,
                 onTap: () {
@@ -60,12 +60,10 @@ class HistoryDetailstate extends State<HistoryDetailPage> {
               ),
             ),
             Expanded(
-              child: SizedBox(
-                width: 75,
-                height: 75,
-                child: Chart.avgChart(historyDeep.each_score)
-                )
-            ),
+                child: SizedBox(
+                    width: 75,
+                    height: 75,
+                    child: Chart.avgChart(historyDeep.each_score))),
             Box.textRadiusBorder(historyDeep.total_score.toString(),
                 width: 60, textType: TextType.content)
           ],
@@ -74,18 +72,8 @@ class HistoryDetailstate extends State<HistoryDetailPage> {
     );
   }
 
-  List<Widget> deepBoxs(String mId) {
-    List<Widget> result = [];
-
-    for (HistoryDeep historyDeep in historyDeepList) {
-      if (historyDeep.user_id == mId) {
-        result.insert(0, deepBox(historyDeep, true));
-      } else {
-        result.add(deepBox(historyDeep, false));
-      }
-    }
-    return result;
-  }
+  List<Widget> deepBoxs(String mId) =>
+      historyDeepList.map((e) => deepBox(e, e.user_id == mId)).toList();
 
   @override
   Widget build(BuildContext context) {
@@ -105,7 +93,8 @@ class HistoryDetailstate extends State<HistoryDetailPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Box.inviteInfo(Invite.fromJson(history.toJson()), false,context),
+                    Box.inviteInfo(
+                        Invite.fromJson(history.toJson()), false, context),
                     Column(
                       children: [
                         textWidget(

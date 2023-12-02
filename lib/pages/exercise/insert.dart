@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:e_fu/module/box_ui.dart';
+import 'package:e_fu/module/toast.dart';
+import 'package:e_fu/module/util.dart';
 import 'package:e_fu/my_data.dart';
 import 'package:e_fu/request/invite/invite.dart';
 import 'package:e_fu/request/invite/invite_data.dart';
@@ -8,7 +10,7 @@ import 'package:e_fu/request/mo/mo.dart';
 import 'package:e_fu/request/mo/mo_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:intl/intl.dart';
+
 import 'package:logger/logger.dart';
 
 import '../../module/page.dart';
@@ -30,37 +32,29 @@ class InsertInvitestate extends State<InsertInvite> {
   TextEditingController quaryInput = TextEditingController();
   TextEditingController dateInput = TextEditingController();
   TextEditingController timeInput = TextEditingController();
+  DateTime selectDate = DateTime.now();
+  DateTime sendDate = DateTime.now();
   List<MoSearch> searchList = [];
   Set<MoSearch> selectFriend = {};
-  DateFormat dateFormat = DateFormat('yyyy-MM-dd ');
+
   TimeOfDayFormat timeFormat = TimeOfDayFormat.HH_colon_mm;
   MoRepo moRepo = MoRepo();
 
-  Widget peopleItem(String id, String name, {Color? select}) {
-    return Box.boxHasRadius(
-      color: select,
-      margin: const EdgeInsets.only(right: 30, left: 30, top: 10),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 25, top: 5, bottom: 5),
-            child: Text(
-              'ID:$id',
-              textAlign: TextAlign.left,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 25, top: 5, bottom: 5),
-            child: Text(
-              name,
-              style: const TextStyle(fontWeight: FontWeight.bold),
-              textAlign: TextAlign.left,
-            ),
-          ),
-        ],
-      ),
-    );
+  bool alreadAdd(String name) {
+    bool result = false;
+    for (var element in selectFriend) {
+      if (element.name == name) {
+        result = true;
+        break;
+      }
+    }
+    return result;
+  }
+
+  List<String> getFriend() {
+    List<String> result = selectFriend.map((select) => select.id).toList();
+    result.add(widget.userID);
+    return result;
   }
 
   @override
@@ -68,7 +62,7 @@ class InsertInvitestate extends State<InsertInvite> {
     var logger = Logger();
 
     return SizedBox(
-      width: MediaQuery.of(context).size.width * 0.8,
+      width: Space.screenW8(context),
       height: MediaQuery.of(context).size.height,
       child: CustomPage(
         body: ListView(
@@ -91,14 +85,16 @@ class InsertInvitestate extends State<InsertInvite> {
                     readOnly: true,
                     onTap: () async {
                       DateTime? pickedDate = await showDatePicker(
-                          context: context,
-                          initialDate: DateTime.now(),
-                          firstDate: DateTime(
-                              2000), //DateTime.now() - not to allow to choose before today.
-                          lastDate: DateTime(2101));
-
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime(DateTime.now().year),
+                        lastDate: DateTime(2101),
+                      );
                       if (pickedDate != null) {
-                        dateInput.text = dateFormat.format(pickedDate);
+                        selectDate = pickedDate;
+                        sendDate = pickedDate;
+                        dateInput.text =
+                            formatter.format(pickedDate).substring(0, 10);
                       } else {
                         logger.v("Date is not selected");
                       }
@@ -120,6 +116,8 @@ class InsertInvitestate extends State<InsertInvite> {
                           context: context, initialTime: TimeOfDay.now());
 
                       if (pickedTime != null && context.mounted) {
+                        sendDate = formatter.parse(
+                            "${formatter.format(selectDate).substring(0, 12)}${pickedTime.hour}:${pickedTime.minute}:00");
                         timeInput.text = pickedTime.format(context);
                       } else {
                         logger.v("Date is not selected");
@@ -149,15 +147,15 @@ class InsertInvitestate extends State<InsertInvite> {
                 itemCount: selectFriend.length,
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (context, index) {
-                  return Box.boxWithX("  ${selectFriend.elementAt(index).name}  ");
+                  MoSearch moSearch = selectFriend.elementAt(index);
+                  return Box.boxWithX(close: () {
+                    setState(() {
+                      selectFriend.remove(moSearch);
+                    });
+                  }, "  ${moSearch.name}  ");
                 },
               ),
             ),
-
-            // Row(
-            //     children: selectFriend
-            //         .map((mosearch) => Box.boxWithX(mosearch.name))
-            //         .toList()),
             Padding(
               padding: const EdgeInsets.fromLTRB(0, 10, 10, 0),
               child: Row(
@@ -189,8 +187,8 @@ class InsertInvitestate extends State<InsertInvite> {
                           selectFriend.add(searchList[index]);
                         });
                       },
-                      child: peopleItem(
-                          select: selectFriend.contains(searchList[index])
+                      child: InviteBox.peopleItem(
+                          select: alreadAdd(searchList[index].name)
                               ? MyTheme.lightColor
                               : null,
                           searchList[index].id,
@@ -198,20 +196,28 @@ class InsertInvitestate extends State<InsertInvite> {
                     );
                   }),
             ),
-            Box.yesnoBox(() {
-              EasyLoading.show(status: "loading...");
-              Invite invite = Invite(
-                m_id: widget.userID,
-                name: nameInput.text,
-                time: DateTime.now().toIso8601String(),
-                remark: remarkInput.text,
-                friend: selectFriend.map((select) => select.id).toList(),
-              );
-              api.createInvite(invite).then((value) => {
-                    EasyLoading.dismiss(),
-                    if (value.success!) {Navigator.pop(context)} else {}
-                  });
-            }, () => Navigator.pop(context))
+            Box.yesnoBox(
+              () {
+                EasyLoading.show(status: "loading...");
+                Invite invite = Invite(
+                  m_id: widget.userID,
+                  name: nameInput.text,
+                  time: formatter.format(sendDate),
+                  remark: remarkInput.text,
+                  friend: getFriend(),
+                );
+                api.createInvite(invite).then(
+                  (value) {
+                    EasyLoading.dismiss();
+                    if (value.success!) {
+                      toast(context, "新增成功");
+                      Navigator.pop(context);
+                    } else {}
+                  },
+                );
+              },
+              () => Navigator.pop(context),
+            )
           ],
         ),
         buildContext: context,

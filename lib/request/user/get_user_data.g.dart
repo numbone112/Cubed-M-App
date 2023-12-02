@@ -49,13 +49,13 @@ Map<String, dynamic> _$GetUserToJson(GetUser instance) => <String, dynamic>{
 SportInfo _$SportInfoFromJson(Map<String, dynamic> json) => SportInfo(
       type_id: json['type_id'] as int,
       score: (json['score'] as num).toDouble(),
-      target_level: json['target_level'] as int,
+      
       target_sets: json['target_sets'] as int,
     );
 
 Map<String, dynamic> _$SportInfoToJson(SportInfo instance) => <String, dynamic>{
       'type_id': instance.type_id,
       'target_sets': instance.target_sets,
-      'target_level': instance.target_level,
+      
       'score': instance.score,
     };

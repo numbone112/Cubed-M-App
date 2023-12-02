@@ -27,7 +27,7 @@ class AfterEventstate extends State<AfterEventPage> {
 
   Widget deepBox(HistoryDeep historyDeep, bool isM) {
     return Container(
-      margin: const EdgeInsets.only(top: 10),
+      margin: Space.onlyTopTen,
       child: Box.boxHasRadius(
         height: MediaQuery.of(context).size.height * 0.15,
         color: Colors.white,

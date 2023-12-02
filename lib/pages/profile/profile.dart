@@ -1,5 +1,8 @@
 import 'package:e_fu/changePassword.dart';
+import 'package:e_fu/module/box_ui.dart';
+import 'package:e_fu/module/exercise_process.dart';
 import 'package:e_fu/module/page.dart';
+import 'package:e_fu/module/toast.dart';
 import 'package:e_fu/my_data.dart';
 
 import 'package:e_fu/pages/profile/profile_update.dart';
@@ -18,7 +21,7 @@ class Profile extends StatefulWidget {
 class ProfilePageState extends State<Profile> {
   Widget profileItem({String? title, String? subtitle, Function()? onTap}) {
     return Container(
-      margin: const EdgeInsets.only(top: 10),
+      margin: Space.onlyTopTen,
       height: subtitle == null
           ? MediaQuery.of(context).size.height * 0.07
           : MediaQuery.of(context).size.height * 0.1,
@@ -27,10 +30,12 @@ class ProfilePageState extends State<Profile> {
           color: Colors.white, borderRadius: BorderRadius.circular(20)),
       child: ListTile(
         title: textWidget(text: title ?? '', type: TextType.content),
-        subtitle: textWidget(
-            text: subtitle == '' ? '無' : subtitle ?? '',
-            type: TextType.content,
-            color: MyTheme.hintColor),
+        subtitle: subtitle == null
+            ? null
+            : textWidget(
+                text: subtitle == '' ? '無' : subtitle,
+                type: TextType.content,
+                color: MyTheme.hintColor),
         dense: true,
         onTap: onTap,
       ),
@@ -54,11 +59,19 @@ class ProfilePageState extends State<Profile> {
         profileItem(title: '體重', subtitle: args.height.toString()),
         profileItem(title: '疾病', subtitle: args.disease.join(" , ")),
         profileItem(
+          title: '修改運動組數',
+          onTap: () => setTarget(
+            context,
+            ItemSets.withField(
+                args.sport_info.map((e) => e.target_sets.toString()).toList()),
+          ),
+        ),
+        profileItem(
           title: '編輯個人檔案',
           onTap: () => Navigator.pushNamed(context, ProfileUpdate.routeName,
               arguments: args),
         ),
-         profileItem(
+        profileItem(
           title: '修改密碼',
           onTap: () => Navigator.pushNamed(context, UpdatePsw.routeName,
               arguments: args),

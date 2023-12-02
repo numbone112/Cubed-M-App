@@ -69,3 +69,48 @@ showDelDialog(BuildContext context, String delName) {
         )),
   );
 }
+
+showMoInfo(BuildContext context){
+  showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: SizedBox(
+              height: 150,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Box.titleText("Mo 伴是什麼？",
+                      gap: 10, fontSize: MySize.subtitleSize),
+                  Text("曾一起運動的朋友。", style: textStyle(color: MyTheme.hintColor)),
+                  Box.titleText("運動綜合評分如何計算？",
+                      gap: 10, fontSize: MySize.subtitleSize),
+                  Text("從運動者最後一次運動中，將各動作等級換算成數字，再以算術平均計算。",
+                      style: textStyle(color: MyTheme.hintColor)),
+                ],
+              ),
+            ),
+          );
+        });
+}
+
+showCommendInfo(BuildContext context){
+  showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: SizedBox(
+              height: 100,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Box.titleText("與過往相比？",
+                      gap: 10, fontSize: MySize.subtitleSize),
+                  Text("將前五筆的各種類的運動平均分數，與本次運動做比較。", style: textStyle(color: MyTheme.hintColor)),
+                  
+                ],
+              ),
+            ),
+          );
+        });
+}

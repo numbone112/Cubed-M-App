@@ -34,7 +34,9 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
         duration: const Duration(milliseconds: 600), vsync: this);
 
     super.initState();
-    tabBody =  HomePage(userID: widget.userID,);
+    tabBody = HomePage(
+      userID: widget.userID,
+    );
   }
 
   @override
@@ -42,11 +44,12 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     return Container(
       color: Colors.white,
       child: SafeArea(
-          top: false,
-          child: Scaffold(
-            backgroundColor: MyTheme.backgroudColor,
-            body: bottomBar(),
-          )),
+        top: false,
+        child: Scaffold(
+          backgroundColor: MyTheme.backgroudColor,
+          body: bottomBar(),
+        ),
+      ),
     );
   }
 
@@ -67,7 +70,9 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                   //   return;
                   // }
                   setState(() {
-                    tabBody =  HomePage(userID: widget.userID,);
+                    tabBody = HomePage(
+                      userID: widget.userID,
+                    );
                   });
                 });
               } else if (index == 1) {
@@ -75,7 +80,9 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                 //   return;
                 // }
                 setState(() {
-                  tabBody =  Mo(userID: widget.userID,);
+                  tabBody = Mo(
+                    userID: widget.userID,
+                  );
                 });
               } else if (index == 2) {
                 setState(() {

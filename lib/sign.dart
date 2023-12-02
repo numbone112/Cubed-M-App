@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:e_fu/main.dart';
 import 'package:e_fu/module/box_ui.dart';
+import 'package:e_fu/module/util.dart';
 import 'package:e_fu/request/data.dart';
 import 'package:e_fu/request/user/account.dart';
 import 'package:flutter/cupertino.dart';
@@ -31,7 +32,7 @@ class _SignState extends State<Sign> {
   TextEditingController phoneInput = TextEditingController();
   TextEditingController sexInput = TextEditingController();
   TextEditingController nameInput = TextEditingController();
-  DateFormat dateFormat = DateFormat('yyyy-MM-dd');
+  
   String _selectSex = "";
   List<String> _sexChoice = <String>[
     '男',

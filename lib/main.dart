@@ -82,13 +82,7 @@ class MyappState extends State<MyApp> {
         color: MyTheme.backgroudColor,
         child: SafeArea(
           bottom: false,
-        
-          
-          child: userID.isEmpty
-              ? const Login()
-              : Home(
-                  userID: userID,
-                ),
+          child: userID.isEmpty ? const Login() : Home(userID: userID),
         ),
       ),
       debugShowCheckedModeBanner: false,
@@ -102,18 +96,13 @@ class MyappState extends State<MyApp> {
         HindMoList.routeName: (_) => HindMoList(userID: userID),
         InsertInvite.routeName: (_) => InsertInvite(userID: userID),
         Profile.routeName: (_) => Profile(userID: userID),
-        UpdatePsw.routeName:(_) => UpdatePsw(userID: userID),
+        UpdatePsw.routeName: (_) => UpdatePsw(userID: userID),
         InvitePage.routeName: (_) => InvitePage(userID: userID),
-        HistoryDetailPerson.routeName: (_) => HistoryDetailPerson(
-              userID: userID,
-            ),
-        HistoryDetailPage.routeName: (_) => HistoryDetailPage(
-              userID: userID,
-            ),
+        HistoryDetailPerson.routeName: (_) =>
+            HistoryDetailPerson(userID: userID),
+        HistoryDetailPage.routeName: (_) => HistoryDetailPage(userID: userID),
         PlanPage.routeName: (_) => PlanPage(userID: userID),
         PlanInsertPage.routeName: (_) => PlanInsertPage(userID: userID),
-        
-        
       },
     );
   }

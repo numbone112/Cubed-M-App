@@ -105,7 +105,7 @@ class DailyEarnings extends StatelessWidget {
             ],
           ),
         ),
-        textWidget(text: '歷程等級與預測', type: TextType.content),
+        textWidget(text: '歷程等級趨勢圖', type: TextType.content),
       ]),
     );
   }

@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 
+import 'package:e_fu/module/util.dart';
 import 'package:intl/intl.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -53,7 +54,7 @@ class Invite {
 
   int i_id;
   String name;
-  final formatter = DateFormat('yyyy-MM-dd THH:mm:ss');
+  // final formatter = DateFormat('yyyy-MM-dd THH:mm:ss');
   final DateTime datetime = DateTime.now();
   String time;
   String m_id;

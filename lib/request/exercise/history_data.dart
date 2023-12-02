@@ -14,9 +14,17 @@ List<History> parseHistoryList(String responseBody) {
 }
 
 List<HistoryDeep> parseHistoryDeepList(String responseBody) {
+  List<HistoryDeep> result = [];
   final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
 
-  return parsed.map<HistoryDeep>((json) => HistoryDeep.fromJson(json)).toList();
+  result =
+      parsed.map<HistoryDeep>((json) => HistoryDeep.fromJson(json)).toList();
+  result.sort(((a, b) => a.total_score.compareTo(b.total_score)));
+
+result=result.reversed.toList();
+  
+
+  return result;
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -43,9 +51,7 @@ class History {
   String remark;
   double avgScore;
   String m_name;
-  String pretyTime() =>time.toString().substring(0, 10).replaceAll("T", " ");
-   
-    
+  String pretyTime() => time.toString().substring(0, 10).replaceAll("T", " ");
 
   bool isGroup() => friend.length > 1;
 
@@ -64,23 +70,25 @@ class HistoryDeep {
       required this.done,
       required this.total_score,
       required this.each_score,
-      this.age=0,
+      this.age = 0,
+      this.i_id=-1,
       required this.sex,
-      required this.birthday}){
-        age=AgeCalculator.age(birthday).years;
-      }
+      required this.birthday}) {
+    age = AgeCalculator.age(birthday).years;
+  }
   String user_id;
   String name;
+  int i_id;
   List<DoneItem> done;
   double total_score;
   List<double> each_score;
   int age;
   String sex;
   DateTime birthday;
-  
-  String pretySex()=>sex=="male"?"男":"女";
 
-  String sexAndAge(){
+  String pretySex() => sex == "male" ? "男" : "女";
+
+  String sexAndAge() {
     return "${pretySex()} $age";
   }
 

@@ -32,7 +32,7 @@ class HomePageState extends State<HomePage> {
   String userName = "柯明朗";
   late SharedPreferences prefs;
   late GetUser getUser;
-  List<ItemWithField> targetCheck = ItemSets.withField();
+  List<ItemWithField> targetCheck = ItemSets.withField(["5","5","5"]);
   Logger logger = Logger();
   HomeRepo homeRepo = HomeRepo();
   HomeData? homeData;
@@ -89,7 +89,7 @@ class HomePageState extends State<HomePage> {
                           ),
                           color: MyTheme.color,
                         ),
-                        height: MediaQuery.of(context).size.height * 0.05,
+                        height: Space.screenH05(context),
                         child: Container(
                             alignment: Alignment.center,
                             child: textWidget(
@@ -144,7 +144,7 @@ class HomePageState extends State<HomePage> {
                   child: Column(
                     children: [
                       SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.05,
+                        height: Space.screenH05(context),
                         child: Container(
                             alignment: Alignment.center,
                             child: textWidget(text: "分析圖", type: TextType.sub)),
@@ -170,7 +170,7 @@ class HomePageState extends State<HomePage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.05,
+                    height: Space.screenH05(context),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [

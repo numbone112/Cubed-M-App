@@ -56,11 +56,11 @@ class SportInfo {
   SportInfo(
       {required this.type_id,
       required this.score,
-      required this.target_level,
+      
       required this.target_sets});
   int type_id;
   int target_sets;
-  int target_level;
+  
   double score;
 
   factory SportInfo.fromJson(Map<String, dynamic> json) =>

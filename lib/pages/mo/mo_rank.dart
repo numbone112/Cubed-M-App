@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:e_fu/module/box_ui.dart';
+import 'package:e_fu/module/toast.dart';
 import 'package:e_fu/my_data.dart';
 import 'package:e_fu/pages/mo/mo_detail.dart';
 import 'package:e_fu/request/mo/mo.dart';
@@ -26,29 +27,7 @@ class Rank {
 }
 
 class _MoState extends State<MoRank> {
-  showInfo() {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            content: SizedBox(
-              height: 150,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Box.titleText("好友是什麼？",
-                      gap: 10, fontSize: MySize.subtitleSize),
-                  Text("曾一起運動的朋友。", style: textStyle(color: MyTheme.hintColor)),
-                  Box.titleText("運動綜合評分如何計算？",
-                      gap: 10, fontSize: MySize.subtitleSize),
-                  Text("從運動者最後一次運動中，將各動作等級換算成數字，再以算術平均計算。",
-                      style: textStyle(color: MyTheme.hintColor)),
-                ],
-              ),
-            ),
-          );
-        });
-  }
+
 
   List<Widget> rankTable(List<GetUser> r) {
     return List.generate(
@@ -122,7 +101,7 @@ class _MoState extends State<MoRank> {
                       Align(
                         alignment: Alignment.centerRight,
                         child: GestureDetector(
-                          onTap: () => showInfo(),
+                          onTap: () => showMoInfo(context),
                           child: Box.boxHasRadius(
                               child: Icon(
                                 Icons.question_mark_outlined,

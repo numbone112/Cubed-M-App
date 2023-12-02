@@ -43,8 +43,7 @@ setTarget(BuildContext context, List<ItemWithField> items,
                     ),
                   ),
                   Expanded(
-                      child:
-                          Box.yesnoBox(yes ?? () {}, no ?? () {}, width: 100.0))
+                      child: Box.yesnoBox(context, () {}, () {}, width: 100.0))
                 ],
               ),
             ),
@@ -60,11 +59,12 @@ showDelDialog(BuildContext context, String delName) {
           content: SizedBox(
             height: 150,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-              textWidget(text: "確定要刪除$delName?",type: TextType.fun),
-              Box.yesnoBox(() => null, () => Navigator.pop(context))
-            ]),
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  textWidget(text: "確定要刪除$delName?", type: TextType.fun),
+                  Box.yesnoBox(
+                      context, () => null, () => Navigator.pop(context))
+                ]),
           ),
         )),
   );

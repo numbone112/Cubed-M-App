@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:e_fu/module/alert.dart';
 import 'package:e_fu/module/box_ui.dart';
 import 'package:e_fu/module/toast.dart';
 import 'package:e_fu/module/util.dart';
@@ -200,7 +201,7 @@ class EditInvitestate extends State<InviteEditPage> {
                     );
                   }),
             ),
-            Box.yesnoBox(() {
+            Box.yesnoBox(context,() {
               EasyLoading.show(status: "loading...");
               Invite invite = Invite(
                 m_id: widget.userID,
@@ -215,7 +216,9 @@ class EditInvitestate extends State<InviteEditPage> {
                 if (value.success!) {
                   toast(context, "編輯成功");
                   Navigator.pop(context,true);
-                } else {}
+                } else {
+                  alert(context, '錯誤', value.message.toString());
+                }
               });
             }, () => Navigator.pop(context))
           ],

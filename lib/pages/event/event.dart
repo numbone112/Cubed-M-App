@@ -670,7 +670,7 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
               ),
               SizedBox(
                 width: Space.screenW8(context),
-                child: Box.yesnoBox(() => finish(), () => sendStart(),
+                child: Box.yesnoBox(context,() => finish(), () => sendStart(),
                     noTitle: '開始運動',
                     noColor: MyTheme.color,
                     yestTitle: '結束',

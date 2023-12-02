@@ -499,7 +499,7 @@ class Box {
     );
   }
 
-  static Widget yesnoBox(Function() yes, Function() no,
+  static Widget yesnoBox(context, Function() yes, Function() no,
       {String? yestTitle,
       noTitle,
       double? height,
@@ -517,7 +517,7 @@ class Box {
               width: width,
               child: GestureDetector(
                   behavior: HitTestBehavior.translucent,
-                  onTap: no,
+                  onTap: () => Navigator.pop(context),
                   child: Box.textRadiusBorder(noTitle ?? '取消',
                       border: noColor ?? MyTheme.lightColor,
                       filling: noColor ?? MyTheme.lightColor)),

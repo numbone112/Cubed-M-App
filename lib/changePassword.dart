@@ -163,7 +163,7 @@ class _UpdatePswState extends State<UpdatePsw> {
                     isHidden: _isHidden,
                     hasHidden: true,
                     hiddenState: _togglePasswordView),
-                    Box.yesnoBox(() => null, () => null)
+                    Box.yesnoBox(context,() => null, () => null)
                
                 
 

@@ -182,6 +182,7 @@ class InviteState extends State<InvitePage> {
                     : SizedBox(
                         width: Space.screenW8(context),
                         child: Box.yesnoBox(
+                          context,
                           () => sendReply(1),
                           () => sendReply(2),
                           noTitle: "拒絕",

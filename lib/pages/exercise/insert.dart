@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:e_fu/module/alert.dart';
 import 'package:e_fu/module/box_ui.dart';
 import 'package:e_fu/module/toast.dart';
 import 'package:e_fu/module/util.dart';
@@ -197,6 +198,7 @@ class InsertInvitestate extends State<InsertInvite> {
                   }),
             ),
             Box.yesnoBox(
+              context,
               () {
                 EasyLoading.show(status: "loading...");
                 Invite invite = Invite(
@@ -212,7 +214,9 @@ class InsertInvitestate extends State<InsertInvite> {
                     if (value.success!) {
                       toast(context, "新增成功");
                       Navigator.pop(context);
-                    } else {}
+                    } else {
+                      alert(context, '錯誤', value.message.toString());
+                    }
                   },
                 );
               },

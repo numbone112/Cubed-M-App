@@ -115,7 +115,7 @@ class HomePageState extends State<HomePage> {
                                       child: Container(
                                           alignment: Alignment.center,
                                           child: Padding(
-                                            padding: const EdgeInsets.all(10),
+                                            padding: Space.allTen,
                                             child: Box.dailyExercise(
                                               homeData!.execute[index].name,
                                               homeData!.execute[index].pretyTime()

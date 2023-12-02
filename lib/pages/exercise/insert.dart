@@ -136,7 +136,7 @@ class InsertInvitestate extends State<InsertInvite> {
               ],
             ),
             Container(
-              margin: const EdgeInsets.all(10),
+              margin: Space.allTen,
               child: const Divider(height: 1.0, color: Colors.grey),
             ),
             textWidget(text: '欲邀請的人', type: TextType.content),

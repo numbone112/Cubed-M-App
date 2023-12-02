@@ -97,7 +97,7 @@ class PlanInsertState extends State<PlanInsertPage> {
           textWidget(
               text: "運動計畫表", textAlign: TextAlign.center, type: TextType.sub),
           Padding(
-            padding: const EdgeInsets.all(10),
+            padding: Space.allTen,
             child: textWidget(
                 text: "請點選欲安排運動之星期",
                 textAlign: TextAlign.center,

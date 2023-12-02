@@ -105,7 +105,7 @@ class PlanEditState extends State<PlanEditPage> {
             type: TextType.sub
           ),
           Padding(
-            padding: const EdgeInsets.all(10),
+            padding: Space.allTen,
             child: textWidget(
                 text: "請點選欲安排運動之星期",
                 textAlign: TextAlign.center,

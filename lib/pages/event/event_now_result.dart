@@ -35,7 +35,7 @@ class PersonResult extends StatelessWidget {
 
     done.forEach((key, value) {
       results.add(Box.boxHasRadius(
-        margin: const EdgeInsets.all(10),
+        margin: Space.allTen,
         child: Column(
           children: [
             Column(
@@ -52,7 +52,7 @@ class PersonResult extends StatelessWidget {
                     children: List.generate(
                       value.length,
                       (index) => Box.boxHasRadius(
-                        margin: const EdgeInsets.all(10),
+                        margin: Space.allTen,
                         child: Center(
                             child: Text(
                           "${value[index]}",

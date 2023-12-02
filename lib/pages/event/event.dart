@@ -36,9 +36,11 @@ class Event extends StatefulWidget {
   State<StatefulWidget> createState() => EventState();
 }
 
-class EventState extends State<Event> {
+class EventState extends State<Event> with SingleTickerProviderStateMixin {
   List<EventRecordInfo> selectedArrange = [];
   List<EventRecordInfo> doing = [];
+
+  int mode = 1;
 
   bool isBleOn = false;
   bool isScan = false;
@@ -52,6 +54,7 @@ class EventState extends State<Event> {
   List<BluetoothDevice> hasPair = [];
   AsciiDecoder asciiDecoder = const AsciiDecoder();
   List<String> exerciseItem = ["左手", "右手", "坐立"];
+  List<String> levelItem = ["手臂屈舉", "椅子坐立"];
   Map<int, Set<String>> hasFinish = {};
   ERepo eRepo = ERepo();
   bool notyet = true;
@@ -549,6 +552,48 @@ class EventState extends State<Event> {
     }
   }
 
+  List<Widget> levelBtn() {
+    List<Widget> result = [];
+    final filtersID = [1, 2];
+
+    for (int i = 0; i < levelItem.length; i++) {
+      result.add(GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: () => setState(() {
+          mode = filtersID[i];
+        }),
+        child: Box.textRadiusBorder(levelItem[i],
+            margin: const EdgeInsets.only(right: 10),
+            color: mode == filtersID[i] ? Colors.white : MyTheme.color,
+            filling: mode == filtersID[i] ? MyTheme.color : Colors.white,
+            border: MyTheme.color,
+            width: 75),
+      ));
+    }
+    return result;
+  }
+
+  Widget levelPic() {
+    String typeTxt = '';
+    mode == 1 ? typeTxt = 'biceps' : typeTxt = 'chair_stand';
+    return Container(
+      margin: const EdgeInsets.all(10),
+      child: Column(
+        children: [
+          Image.asset(
+            'assets/images/male_$typeTxt.png',
+            scale: 1,
+          ),
+          const Padding(padding: EdgeInsets.all(5)),
+          Image.asset(
+            'assets/images/female_$typeTxt.png',
+            scale: 1,
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     if (eventRecordList.isEmpty) {
@@ -582,7 +627,7 @@ class EventState extends State<Event> {
                     eventRecordList.isEmpty
                         ? const Text(" ")
                         : SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.65,
+                            height: MediaQuery.of(context).size.height * 0.63,
                             child: ListView.builder(
                               // physics: const NeverScrollableScrollPhysics(),
 
@@ -593,11 +638,31 @@ class EventState extends State<Event> {
                             ),
                           ),
                     Box.boxHasRadius(
-                      child: ExpansionTile(
-                        collapsedShape:
-                            Border.all(color: MyTheme.backgroudColor),
-                        title: const Text("運動分級表"),
-                        children: const [Text("運動分級表詳細資料")],
+                      child: Theme(
+                        data: Theme.of(context).copyWith(
+                          unselectedWidgetColor: Colors.white,
+                          colorScheme: const ColorScheme.light(
+                            primary: Colors.white,
+                          ),
+                          dividerColor: Colors.transparent,
+                        ),
+                        child: ExpansionTile(
+                          collapsedShape:
+                              Border.all(color: MyTheme.backgroudColor),
+                          iconColor: Colors.black,
+                          collapsedIconColor: Colors.black,
+                          title: textWidget(text: "運動分級表"),
+                          children: [
+                            Container(
+                              margin:
+                                  const EdgeInsets.only(left: 10, right: 10),
+                              child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: levelBtn()),
+                            ),
+                            levelPic(),
+                          ],
+                        ),
                       ),
                     ),
                   ],

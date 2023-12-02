@@ -55,7 +55,7 @@ class ProfilePageState extends State<Profile> {
             title: '生日',
             subtitle: args.birthday.toIso8601String().substring(0, 10)),
         profileItem(title: '手機號碼', subtitle: args.phone),
-        profileItem(title: '身高', subtitle: args.height.toString()),
+        profileItem(title: '身高', subtitle: args.weight.toString()),
         profileItem(title: '體重', subtitle: args.height.toString()),
         profileItem(title: '疾病', subtitle: args.disease.join(" , ")),
         profileItem(

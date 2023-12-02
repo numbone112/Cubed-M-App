@@ -316,7 +316,7 @@ class Box {
       {List<Widget>? widget}) {
     return Box.boxHasRadius(
       padding: const EdgeInsets.fromLTRB(30, 10, 10, 10),
-      margin: const EdgeInsets.all(10),
+      margin: Space.allTen,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -333,7 +333,7 @@ class Box {
       String title, TextEditingController controller) {
     return Box.boxHasRadius(
       padding: const EdgeInsets.fromLTRB(30, 10, 10, 10),
-      margin: const EdgeInsets.all(10),
+      margin: Space.allTen,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -796,6 +796,13 @@ class Chart {
               entryRadius: 2.3,
               dataEntries: values.map((e) => RadarEntry(value: e)).toList(),
               borderWidth: 2.3,
+            ),
+             RadarDataSet(
+              fillColor: Colors.transparent,
+              borderColor: Colors.transparent,
+              entryRadius: 0,
+              dataEntries: values.map((e) => const RadarEntry(value: 5)).toList(),
+              borderWidth: 0,
             )
           ]),
 
@@ -844,7 +851,7 @@ class TextInput {
                       )
                     : null,
                 isCollapsed: true,
-                contentPadding: const EdgeInsets.all(10),
+                contentPadding: Space.allTen,
                 border: InputBorder.none,
                 hintText: text,
                 hintStyle: TextStyle(color: MyTheme.hintColor, fontSize: 14),
@@ -861,7 +868,7 @@ class TextInput {
         children: [
           Text(text),
           Container(
-            margin: const EdgeInsets.all(10),
+            margin: Space.allTen,
             padding: const EdgeInsets.all(0),
             decoration: BoxDecoration(
                 color: Colors.white,
@@ -915,6 +922,7 @@ class InviteBox {
 
 class Space {
   static EdgeInsets onlyTopTen = const  EdgeInsets.only(top: 10);
+  static EdgeInsets allTen = const EdgeInsets.all(10);
   static screenH15(BuildContext context) =>
       MediaQuery.of(context).size.height * 0.15;
   static screenW8(BuildContext context) =>
@@ -925,4 +933,7 @@ class Space {
       MediaQuery.of(context).size.width * 0.1;
   static screenW2(BuildContext context) =>
       MediaQuery.of(context).size.width * 0.2;
+
+  static Padding tenPadding()=>  Padding(padding:Space.allTen);
+  
 }

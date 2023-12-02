@@ -108,3 +108,13 @@ class DoneItem {
       _$DoneItemFromJson(json);
   Map<String, dynamic> toJson() => _$DoneItemToJson(this);
 }
+
+@JsonSerializable(explicitToJson: true)
+class Commend {
+  Commend({required this.commend});
+  List<String> commend;
+
+  factory Commend.fromJson(Map<String, dynamic> json) =>
+      _$CommendFromJson(json);
+  Map<String, dynamic> toJson() => _$CommendToJson(this);
+}

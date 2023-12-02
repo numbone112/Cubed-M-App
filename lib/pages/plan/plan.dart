@@ -30,7 +30,7 @@ class PlanState extends State<PlanPage> {
       result.add(
         Box.boxHasRadius(
           margin: const EdgeInsets.fromLTRB(0, 10, 0, 5),
-          padding: const EdgeInsets.all(10),
+          padding: Space.allTen,
           child: Box.planBox(plan, context, widget.userID),
         ),
       );
@@ -98,7 +98,7 @@ class PlanState extends State<PlanPage> {
           children: [
                 Box.boxHasRadius(
                     margin: const EdgeInsets.only(top: 10, bottom: 10),
-                    padding: const EdgeInsets.all(10),
+                    padding: Space.allTen,
                     height: 200,
                     width: 500,
                     color: const Color(0xFFFFFFFF),

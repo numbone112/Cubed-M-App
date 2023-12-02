@@ -23,7 +23,8 @@ class HistoryDetailstate extends State<HistoryDetailPage> {
   List<HistoryDeep> historyDeepList = [];
   HistoryRepo historyRepo = HistoryRepo();
 
-  Widget deepBox(HistoryDeep historyDeep, bool isM) {
+  Widget deepBox(HistoryDeep historyDeep, bool isM, int i_id) {
+    historyDeep.i_id = i_id;
     return Container(
       margin: Space.onlyTopTen,
       child: Box.boxHasRadius(
@@ -60,10 +61,11 @@ class HistoryDetailstate extends State<HistoryDetailPage> {
               ),
             ),
             Expanded(
-                child: SizedBox(
-                    width: 75,
-                    height: 75,
-                    child: Chart.avgChart(historyDeep.each_score))),
+              child: SizedBox(
+                  width: 75,
+                  height: 75,
+                  child: Chart.avgChart(historyDeep.each_score)),
+            ),
             Box.textRadiusBorder(historyDeep.total_score.toString(),
                 width: 60, textType: TextType.content)
           ],
@@ -72,11 +74,12 @@ class HistoryDetailstate extends State<HistoryDetailPage> {
     );
   }
 
-  List<Widget> deepBoxs(String mId) =>
-      historyDeepList.map((e) => deepBox(e, e.user_id == mId)).toList();
+  List<Widget> deepBoxs(String mId, int i_id) =>
+      historyDeepList.map((e) => deepBox(e, e.user_id == mId, i_id)).toList();
 
   @override
   Widget build(BuildContext context) {
+    
     final history = ModalRoute.of(context)!.settings.arguments as History;
     if (historyDeepList.isEmpty) {
       historyRepo.hisotry(history.i_id).then((value) async {
@@ -86,36 +89,40 @@ class HistoryDetailstate extends State<HistoryDetailPage> {
       });
     }
 
-    return (CustomPage(
+    return CustomPage(
       body: ListView(
-          children: <Widget>[
-                const Padding(padding: EdgeInsets.only(bottom: 10)),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Box.inviteInfo(
-                        Invite.fromJson(history.toJson()), false, context),
-                    Column(
-                      children: [
-                        textWidget(
-                          text: '平均',
-                          type: TextType.content,
-                        ),
-                        Box.textRadiusBorder(history.avgScore.toString(),
-                            width: 60,
-                            color: Colors.white,
-                            textType: TextType.content)
-                      ],
-                    )
-                  ],
-                ),
-              ] +
-              deepBoxs(history.m_id)),
+        children: <Widget>[
+              const Padding(padding: EdgeInsets.only(bottom: 10)),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Box.inviteInfo(
+                    Invite.fromJson(history.toJson()),
+                    false,
+                    context,
+                  ),
+                  Column(
+                    children: [
+                      textWidget(
+                        text: '平均',
+                        type: TextType.content,
+                      ),
+                      Box.textRadiusBorder(history.avgScore.toString(),
+                          width: 60,
+                          color: Colors.white,
+                          textType: TextType.content)
+                    ],
+                  )
+                ],
+              ),
+            ] +
+            deepBoxs(history.m_id, history.i_id),
+      ),
       title: '運動明細',
       headColor: MyTheme.lightColor,
       headTextColor: Colors.white,
       prevColor: Colors.white,
       buildContext: context,
-    ));
+    );
   }
 }

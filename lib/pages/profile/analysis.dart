@@ -1,3 +1,4 @@
+import 'package:e_fu/module/box_ui.dart';
 import 'package:e_fu/module/page.dart';
 import 'package:e_fu/my_data.dart';
 import 'package:ele_progress/ele_progress.dart';
@@ -40,7 +41,7 @@ class DailyEarnings extends StatelessWidget {
       prevColor: Colors.white,
       buildContext: context,
       body: Column(children: [
-        const Padding(padding: EdgeInsets.all(10)),
+        Space.tenPadding(),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [

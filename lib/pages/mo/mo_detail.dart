@@ -46,7 +46,7 @@ class MoDetailState extends State<MoDetail> {
       headTextColor: Colors.white,
       buildContext: context,
       body: ListView(children: [
-        const Padding(padding: EdgeInsets.all(10)),
+        Space.tenPadding(),
         Box.boxHasRadius(
           height: 100,
           child: Row(
@@ -57,7 +57,7 @@ class MoDetailState extends State<MoDetail> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   textWidget(text: widget.friend.name, type: TextType.fun),
-                  const Padding(padding: EdgeInsets.all(10)),
+                  Space.tenPadding(),
                   textWidget(
                       text:
                           "${widget.friend.sex != "female" ? "男" : "女"} ${AgeCalculator.age(widget.friend.birthday).years}",
@@ -83,7 +83,7 @@ class MoDetailState extends State<MoDetail> {
                 width: MediaQuery.of(context).size.width * 0.4,
                 height: 200,
                 // margin: const EdgeInsets.only(left: 30),
-                padding: const EdgeInsets.all(10),
+                padding: Space.allTen,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
@@ -118,7 +118,7 @@ class MoDetailState extends State<MoDetail> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   textWidget(text: "分析圖", type: TextType.sub),
-                  const Padding(padding: EdgeInsets.all(10)),
+                  Space.tenPadding(),
                   Container(
                       margin: const EdgeInsets.only(top: 20),
                       width: 100,

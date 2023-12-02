@@ -1,13 +1,7 @@
-import 'dart:convert';
 
-import 'package:e_fu/main.dart';
 import 'package:e_fu/module/box_ui.dart';
-import 'package:e_fu/request/data.dart';
-import 'package:e_fu/request/user/account.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
-import 'package:crypto/crypto.dart';
 
 import 'my_data.dart';
 import 'package:flutter/material.dart';

@@ -112,7 +112,7 @@ class ProfileCreateState extends State<ProfileInfo> {
         Box.boxHasRadius(
           margin: const EdgeInsets.fromLTRB(0, 10, 0, 5),
           height: 70,
-          padding: const EdgeInsets.all(10),
+          padding: Space.allTen,
           child: GestureDetector(
             behavior: HitTestBehavior.translucent,
             onTap: element.function,

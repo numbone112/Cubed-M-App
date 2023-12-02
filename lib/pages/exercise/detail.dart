@@ -1,5 +1,7 @@
 // import 'dart:js_interop';
 
+import 'dart:convert';
+
 import 'package:e_fu/module/box_ui.dart';
 import 'package:e_fu/module/toast.dart';
 import 'package:e_fu/my_data.dart';
@@ -24,10 +26,10 @@ class HistoryDetailPerson extends StatefulWidget {
 class HistoryDetailPersonstate extends State<HistoryDetailPerson> {
   int select = 0;
   List<DoneItem> dones = [];
-  HistoryRepo historyRepo=HistoryRepo();
+  HistoryRepo historyRepo = HistoryRepo();
   static final List<String> leveltable = ["不好", "差", "普通", "尚好", "很好"];
   static final List<String> type = ["左手", "右手", '椅子坐立'];
-  List<String> compare=["","",""];
+  List<String> compare = ["", "", ""];
 
   changeSelect(int s, List<DoneItem> origin) {
     setState(() {
@@ -35,7 +37,27 @@ class HistoryDetailPersonstate extends State<HistoryDetailPerson> {
       select = s;
     });
   }
- 
+
+  getCommend(HistoryDeep historyDeep) async {
+    await historyRepo
+        .commend(historyDeep.user_id, historyDeep.i_id)
+        .then((value) {
+      List<String> commendTemp = [];
+      print(value.D);
+      Commend reply = Commend.fromJson(jsonDecode(jsonEncode(value.D)));
+
+      for (int i = 0; i < type.length; i++) {
+        print(historyDeep.each_score[i].floor() - 1);
+        String level = leveltable[historyDeep.each_score[i].floor() - 1];
+        commendTemp.add("$level,${reply.commend[i]}");
+      }
+      print(commendTemp.length);
+      setState(() {
+        compare = commendTemp;
+      });
+    });
+  }
+
   List<Widget> label(List<DoneItem> d) {
     List<Widget> result = [];
     for (var i = 0; i < type.length; i++) {
@@ -60,11 +82,7 @@ class HistoryDetailPersonstate extends State<HistoryDetailPerson> {
     final args = ModalRoute.of(context)!.settings.arguments as HistoryDeep;
     if (dones.isEmpty) {
       changeSelect(0, args.done);
-      historyRepo.commend(args.user_id, args.i_id).then((value){
-        setState(() {
-          
-        });
-      });
+      getCommend(args);
     }
     return (CustomPage(
       body: ListView(children: [
@@ -126,7 +144,7 @@ class HistoryDetailPersonstate extends State<HistoryDetailPerson> {
                       type: TextType.sub,
                     ),
                     GestureDetector(
-                      onTap: ()=>showCommendInfo(context),
+                      onTap: () => showCommendInfo(context),
                       child: Icon(
                         CupertinoIcons.question_circle,
                         size: 20,
@@ -137,21 +155,21 @@ class HistoryDetailPersonstate extends State<HistoryDetailPerson> {
                 ),
                 const Padding(padding: EdgeInsets.all(5)),
                 Box.boxHasRadius(
-                    padding: EdgeInsets.all(10),
+                    padding: Space.allTen,
                     color: Colors.white,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         textWidget(
-                          text: '左手：好，但稍有退步',
+                          text: '左手：${compare[0]}',
                           type: TextType.content,
                         ),
                         textWidget(
-                          text: '右手：好，但有進步',
+                          text: '右手：${compare[1]}',
                           type: TextType.content,
                         ),
                         textWidget(
-                          text: '椅子坐立：很差，有待進步',
+                          text: '椅子坐立：${compare[2]}',
                           type: TextType.content,
                         ),
                       ],

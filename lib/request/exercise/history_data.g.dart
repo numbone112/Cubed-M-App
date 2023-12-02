@@ -46,6 +46,7 @@ HistoryDeep _$HistoryDeepFromJson(Map<String, dynamic> json) => HistoryDeep(
           .map((e) => (e as num).toDouble())
           .toList(),
       age: json['age'] as int? ?? 0,
+      i_id: json['i_id'] as int? ?? -1,
       sex: json['sex'] as String,
       birthday: DateTime.parse(json['birthday'] as String),
     );
@@ -54,6 +55,7 @@ Map<String, dynamic> _$HistoryDeepToJson(HistoryDeep instance) =>
     <String, dynamic>{
       'user_id': instance.user_id,
       'name': instance.name,
+      'i_id': instance.i_id,
       'done': instance.done.map((e) => e.toJson()).toList(),
       'total_score': instance.total_score,
       'each_score': instance.each_score,
@@ -72,4 +74,13 @@ Map<String, dynamic> _$DoneItemToJson(DoneItem instance) => <String, dynamic>{
       'type_id': instance.type_id,
       'times': instance.times,
       'level': instance.level,
+    };
+
+Commend _$CommendFromJson(Map<String, dynamic> json) => Commend(
+      commend:
+          (json['commend'] as List<dynamic>).map((e) => e as String).toList(),
+    );
+
+Map<String, dynamic> _$CommendToJson(Commend instance) => <String, dynamic>{
+      'commend': instance.commend,
     };

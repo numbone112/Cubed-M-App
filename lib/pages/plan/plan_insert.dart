@@ -1,10 +1,13 @@
+import 'package:e_fu/module/alert.dart';
 import 'package:e_fu/module/box_ui.dart';
 import 'package:e_fu/module/page.dart';
+import 'package:e_fu/module/toast.dart';
 import 'package:e_fu/my_data.dart';
 
 import 'package:e_fu/request/plan/plan.dart';
 import 'package:e_fu/request/plan/plan_data.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 
@@ -105,21 +108,29 @@ class PlanInsertState extends State<PlanInsertPage> {
                 color: MyTheme.hintColor),
           ),
           choise(),
-          Box.yesnoBox(() {
-            Plan plan = Plan(
-                name: nameInput.text,
-                user_id: widget.userID,
-                str_date: DateTime.parse(strInput.text),
-                end_date: DateTime.parse(endInput.text),
-                execute: execute);
-            planRepo.createPlan(plan).then((value) async {
-              logger.v(value.message);
-              logger.v(value.D);
-              if (await value.D == true) {
-                Navigator.pop(context);
-              }
-            });
-          }, () {})
+          Box.yesnoBox(
+            context,
+            () {
+              Plan plan = Plan(
+                  name: nameInput.text,
+                  user_id: widget.userID,
+                  str_date: DateTime.parse(strInput.text),
+                  end_date: DateTime.parse(endInput.text),
+                  execute: execute);
+              planRepo.createPlan(plan).then((value) async {
+                logger.v(value.message);
+                logger.v(value.D);
+                EasyLoading.dismiss();
+                if (value.success!) {
+                  toast(context, "新增成功");
+                  Navigator.pop(context);
+                } else {
+                  alert(context, '錯誤', value.message.toString());
+                }
+              });
+            },
+            () => Navigator.pop(context)
+          )
         ],
       ),
     );

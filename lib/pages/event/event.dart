@@ -39,8 +39,6 @@ class Event extends StatefulWidget {
 }
 
 class EventState extends State<Event> with SingleTickerProviderStateMixin {
-
-
   int mode = 1;
 
   bool isBleOn = false;
@@ -65,8 +63,8 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
   var logger = Logger();
   HistoryRepo historyRepo = HistoryRepo();
   InviteRepo inviteRepo = InviteRepo();
-  ScrollController scrollController=ScrollController();
-  ExpansionTileController expansionTileController=ExpansionTileController();
+  ScrollController scrollController = ScrollController();
+  ExpansionTileController expansionTileController = ExpansionTileController();
 
   Future<void> updateBleState() async {
     // if (await FlutterBluePlus.isSupported == false) {
@@ -613,12 +611,14 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
         titWidget: Padding(
           padding: Space.onlyTopTen,
           child: Box.inviteInfo(
-              Invite(
-                  name: eventRecordList.first.eventRecordInfo.name,
-                  remark: eventRecordList.first.eventRecordInfo.remark,
-                  time: eventRecordList.first.eventRecordInfo.time),
-              false,
-              context),
+            Invite(
+              name: eventRecordList.first.eventRecordInfo.name,
+              remark: eventRecordList.first.eventRecordInfo.remark,
+              time: eventRecordList.first.eventRecordInfo.time,
+            ),
+            false,
+            context,
+          ),
         ),
         headHeight: 118,
         body: Padding(
@@ -651,10 +651,13 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
                           dividerColor: Colors.transparent,
                         ),
                         child: ExpansionTile(
-                          
                           onExpansionChanged: ((value) {
-                            if(value){
-                              scrollController.animateTo(MediaQuery.of(context).size.height * 0.63, duration: Duration(milliseconds: 500),curve: Curves.linear, );
+                            if (value) {
+                              scrollController.animateTo(
+                                MediaQuery.of(context).size.height * 0.63,
+                                duration: Duration(milliseconds: 500),
+                                curve: Curves.linear,
+                              );
                             }
                           }),
                           collapsedShape:

@@ -23,20 +23,14 @@ class PlanPage extends StatefulWidget {
 class PlanState extends State<PlanPage> {
   List<Plan> planlist = [];
   PlanRepo planRepo = PlanRepo();
-  ScrollController _scrollController=ScrollController();
-  List<Widget> planBoxList() {
-    List<Widget> result = [];
-    for (var plan in planlist) {
-      result.add(
-        Box.boxHasRadius(
-          margin: const EdgeInsets.fromLTRB(0, 10, 0, 5),
-          padding: Space.allTen,
-          child: Box.planBox(plan, context, widget.userID),
-        ),
-      );
-    }
-    return result;
-  }
+  final ScrollController _scrollController = ScrollController();
+  int mode = 1;
+  List<Widget> planBoxList = [];
+
+  List<BarChartGroupData> barChartGroupData = [];
+  // List<Widget> planBoxListOld() {
+
+  // }
 
   @override
   void initState() {
@@ -45,6 +39,7 @@ class PlanState extends State<PlanPage> {
     planRepo.getPlan(widget.userID).then((value) {
       setState(() {
         planlist = parsePlanList(jsonEncode(value.D));
+
         barChartGroupData = [
           groupData(1, 5, 10),
           groupData(2, 5, 10),
@@ -54,11 +49,13 @@ class PlanState extends State<PlanPage> {
           groupData(6, 4, 10),
         ];
       });
+    }).then((value) {
+      filter(1);
     });
     planRepo.getExeCount(widget.userID).then((value) {
       List<ExeCount> exeCountList = parseExeCount(jsonEncode(value.D));
       List<BarChartGroupData> temp = [];
-      int max=getMaxExecount(exeCountList);
+      int max = getMaxExecount(exeCountList);
       print(exeCountList.first);
       for (int i = 0; i < 12; i++) {
         int c = 0;
@@ -73,7 +70,83 @@ class PlanState extends State<PlanPage> {
       });
       _scrollController.jumpTo(500);
     });
-  
+  }
+
+  void filter(int m) {
+    List<Widget> result = [];
+    for (Plan plan in planlist) {
+      //要找現在的=尚未結束計畫
+      if (m != 1 && plan.end_date.isAfter(DateTime.now())) {
+        continue;
+      }
+      //要找過去的且該計畫
+      if (m != 2 && plan.end_date.isBefore(DateTime.now())) {
+        continue;
+      }
+
+      result.add(
+        Box.boxHasRadius(
+          margin: const EdgeInsets.fromLTRB(0, 10, 0, 5),
+          padding: Space.allTen,
+          child: Box.planBox(plan, context, widget.userID,m==2),
+        ),
+      );
+    }
+    if(m==2){
+      result=result.reversed.toList();
+    }
+
+    setState(() {
+      planBoxList = result;
+      mode = m;
+    });
+  }
+
+  List<Widget> getfilterButtons() {
+    List<Widget> result = [];
+    final filters = ['近期計畫', "歷史計畫"];
+    final filtersID = [1, 2];
+
+    for (int i = 0; i < filters.length; i++) {
+      result.add(
+        GestureDetector(
+          behavior: HitTestBehavior.translucent,
+          onTap: () => filter(filtersID[i]),
+          child: Box.textRadiusBorder(
+            filters[i],
+            margin: const EdgeInsets.all(5),
+            color: mode == filtersID[i] ? Colors.white : MyTheme.color,
+            filling: mode == filtersID[i] ? MyTheme.color : Colors.white,
+            border: MyTheme.color,
+          ),
+        ),
+      );
+    }
+    result.add(Expanded(child: Container()));
+    result.add(
+      Container(
+        // margin: const EdgeInsets.only(left: 255),
+        padding: const EdgeInsets.fromLTRB(5, 5, 10, 5),
+        decoration: BoxDecoration(
+            color: MyTheme.lightColor, borderRadius: BorderRadius.circular(30)),
+        child: GestureDetector(
+          onTap: () => Navigator.pushNamed(context, PlanInsertPage.routeName),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(
+                Icons.add,
+                color: Colors.white,
+                size: 20,
+              ),
+              textWidget(
+                  text: '新增', type: TextType.content, color: Colors.white)
+            ],
+          ),
+        ),
+      ),
+    );
+    return result;
   }
 
   BarChartGroupData groupData(int x, double y, double backY) {
@@ -89,8 +162,6 @@ class PlanState extends State<PlanPage> {
       ),
     ]);
   }
-
-  List<BarChartGroupData> barChartGroupData = [];
 
   String getTitles(value) {
     switch (value.toInt()) {
@@ -124,39 +195,40 @@ class PlanState extends State<PlanPage> {
 
   @override
   Widget build(BuildContext context) {
-    
-
     return CustomPage(
       body: ListView(
           children: [
                 Box.boxHasRadius(
-                    margin: const EdgeInsets.only(top: 10, bottom: 10),
-                    padding: Space.allTen,
-                    height: 200,
-                    // width: 500,
-                    color: const Color(0xFFFFFFFF),
-                    child: Column(
-                      children: [
-                        textWidget(text: '運動次數', type: TextType.content),
-                        SizedBox(
-                          width: 500,
-                          height: 150,
-                          child: ListView(
-                            controller: _scrollController,
-                            scrollDirection: Axis.horizontal,
-                            children: [
-                              SizedBox(
-                                width: 750,
-                                height: 150,
-                                child: BarChart(BarChartData(
+                  margin: const EdgeInsets.only(top: 10, bottom: 10),
+                  padding: Space.allTen,
+                  height: 200,
+                  color: Colors.white,
+                  child: Column(
+                    children: [
+                      textWidget(text: '運動次數', type: TextType.content),
+                      SizedBox(
+                        width: 500,
+                        height: 150,
+                        child: ListView(
+                          controller: _scrollController,
+                          scrollDirection: Axis.horizontal,
+                          children: [
+                            SizedBox(
+                              width: 750,
+                              height: 150,
+                              child: BarChart(
+                                BarChartData(
                                   gridData: FlGridData(show: false),
                                   titlesData: FlTitlesData(
                                     topTitles: AxisTitles(
-                                        sideTitles: SideTitles(showTitles: false)),
+                                        sideTitles:
+                                            SideTitles(showTitles: false)),
                                     leftTitles: AxisTitles(
-                                        sideTitles: SideTitles(showTitles: false)),
+                                        sideTitles:
+                                            SideTitles(showTitles: false)),
                                     rightTitles: AxisTitles(
-                                        sideTitles: SideTitles(showTitles: false)),
+                                        sideTitles:
+                                            SideTitles(showTitles: false)),
                                     bottomTitles: AxisTitles(
                                       sideTitles: SideTitles(
                                         showTitles: true,
@@ -178,40 +250,24 @@ class PlanState extends State<PlanPage> {
                                   alignment: BarChartAlignment.spaceEvenly,
                                   maxY: 16,
                                   barGroups: barChartGroupData,
-                                )),
+                                ),
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                      ],
-                    )),
+                      ),
+                    ],
+                  ),
+                ),
                 Container(
-                  margin: const EdgeInsets.only(left: 255),
-                  padding: const EdgeInsets.fromLTRB(5, 5, 10, 5),
-                  decoration: BoxDecoration(
-                      color: MyTheme.lightColor,
-                      borderRadius: BorderRadius.circular(30)),
-                  child: GestureDetector(
-                    onTap: () =>
-                        Navigator.pushNamed(context, PlanInsertPage.routeName),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(
-                          Icons.add,
-                          color: Colors.white,
-                          size: 20,
-                        ),
-                        textWidget(
-                            text: '新增',
-                            type: TextType.content,
-                            color: Colors.white)
-                      ],
-                    ),
+                  margin: const EdgeInsets.only(top: 10, bottom: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: getfilterButtons(),
                   ),
                 ),
               ] +
-              planBoxList()),
+              planBoxList),
       title: "運動計畫",
       headColor: MyTheme.lightColor,
       prevColor: Colors.white,

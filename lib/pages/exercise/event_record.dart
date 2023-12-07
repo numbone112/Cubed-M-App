@@ -28,8 +28,8 @@ class EventRecord {
   bool isConnect = false;
   Set<String> endSign = {};
   List<DoneItem> done = [];
-  double total_avg=0;
-  List<double> each_score=[0,0,0];
+  double total_avg = 0;
+  List<double> each_score = [0, 0, 0];
 
   void record(int count) {
     data[now]!.add(count);
@@ -114,7 +114,7 @@ class EventRecord {
     int typeIndex = type > 2 ? 1 : 0;
 
     for (int i = 0; i < scoreTable[sexIndex][typeIndex][ageIndex].length; i++) {
-      if (count > scoreTable[sexIndex][typeIndex][ageIndex][i]) {
+      if (count >= scoreTable[sexIndex][typeIndex][ageIndex][i]) {
         result = 5 - i;
         break;
       }
@@ -125,26 +125,26 @@ class EventRecord {
   void processData(int age, bool isMan) {
     tempData.forEach((key, value) {
       List<int> temp = [];
-      double each_avg=0;
+      double each_avg = 0;
       //各組去找平均
       for (var element in value) {
         int times = int.parse(element.split(',')[1]);
         temp.add(times);
-        int s=score(times, age, isMan, key);
-        each_avg+=s;
-        done.add(DoneItem(
-            level: s, times: times, type_id: key));
+        int s = score(times, age, isMan, key);
+        each_avg += s;
+        done.add(
+          DoneItem(level: s, times: times, type_id: key),
+        );
       }
       //這邊有bug
-      each_score[key]=each_avg/value.length;
+      each_score[key] = each_avg / value.length;
       // data[key] = temp;
     });
 
-    total_avg=each_score.fold(0, (previousValue, element) => previousValue+element);
-    total_avg/=3;
-
+    total_avg =
+        each_score.fold(0, (previousValue, element) => previousValue + element);
+    total_avg /= 3;
   }
-
 
   static int getMax(List<EventRecord> eventRecordList) {
     int max = 0;

@@ -29,6 +29,7 @@ dependencies:
   fluttertoast: ^8.2.2
   jiffy: ^6.2.1
   cupertino_icons: ^1.0.0
+  auto_size_text:
 
   
 

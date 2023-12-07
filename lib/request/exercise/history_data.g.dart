@@ -79,8 +79,14 @@ Map<String, dynamic> _$DoneItemToJson(DoneItem instance) => <String, dynamic>{
 Commend _$CommendFromJson(Map<String, dynamic> json) => Commend(
       commend:
           (json['commend'] as List<dynamic>).map((e) => e as String).toList(),
+      birthday: DateTime.parse(json['birthday'] as String),
+      name: json['name'] as String,
+      sex: json['sex'] as String,
     );
 
 Map<String, dynamic> _$CommendToJson(Commend instance) => <String, dynamic>{
       'commend': instance.commend,
+      'name': instance.name,
+      'sex': instance.sex,
+      'birthday': instance.birthday.toIso8601String(),
     };

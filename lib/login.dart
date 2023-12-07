@@ -133,22 +133,23 @@ class _LoginState extends State<Login> {
                 Align(
                   alignment: Alignment.centerRight,
                   child: GestureDetector(
-                      child: Container(
-                    padding: const EdgeInsets.only(
-                      bottom: 2,
+                    child: Container(
+                      padding: const EdgeInsets.only(
+                        bottom: 2,
+                      ),
+                      decoration: BoxDecoration(
+                          border: Border(
+                              bottom: BorderSide(
+                        color: MyTheme.color,
+                        width: 1,
+                      ))),
+                      child: textWidget(
+                        text: '忘記密碼',
+                        type: TextType.content,
+                        color: MyTheme.color,
+                      ),
                     ),
-                    decoration: BoxDecoration(
-                        border: Border(
-                            bottom: BorderSide(
-                      color: MyTheme.color,
-                      width: 1,
-                    ))),
-                    child: textWidget(
-                      text: '忘記密碼',
-                      type: TextType.content,
-                      color: MyTheme.color,
-                    ),
-                  )),
+                  ),
                 ),
                 const Padding(padding: EdgeInsets.only(top: 30)),
                 buttonCustom("登入", () async {
@@ -166,7 +167,7 @@ class _LoginState extends State<Login> {
                           builder: (BuildContext context) => const MyApp(),
                         ),
                       );
-                    }else{
+                    } else {
                       logger.v("context is not mounted");
                     }
                   } else {

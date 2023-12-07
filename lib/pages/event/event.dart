@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
+import 'package:age_calculator/age_calculator.dart';
 import 'package:e_fu/module/page.dart';
 import 'package:e_fu/pages/event/ble_device.dart';
+import 'package:e_fu/pages/exercise/afterEvent.dart';
 import 'package:e_fu/pages/exercise/event_record.dart';
 import 'package:e_fu/pages/exercise/history.dart';
 import 'package:e_fu/request/exercise/history.dart';
@@ -37,8 +39,7 @@ class Event extends StatefulWidget {
 }
 
 class EventState extends State<Event> with SingleTickerProviderStateMixin {
-  List<EventRecordInfo> selectedArrange = [];
-  List<EventRecordInfo> doing = [];
+
 
   int mode = 1;
 
@@ -64,6 +65,8 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
   var logger = Logger();
   HistoryRepo historyRepo = HistoryRepo();
   InviteRepo inviteRepo = InviteRepo();
+  ScrollController scrollController=ScrollController();
+  ExpansionTileController expansionTileController=ExpansionTileController();
 
   Future<void> updateBleState() async {
     // if (await FlutterBluePlus.isSupported == false) {
@@ -134,27 +137,26 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
     List<RecordSenderItem> detail = [];
     for (var element in eventRecordList) {
       //補年紀
-      element.processData(
-          // AgeCalculator(element.eventRecordInfo.age)
-          70,
-          true);
-      detail.add(RecordSenderItem(
-          done: element.done,
-          total_score: element.total_avg,
-          each_score: element.each_score,
-          user_id: element.eventRecordInfo.user_id,
-          i_id: element.eventRecordInfo.id));
+      element.processData(element.eventRecordInfo.age, true);
+      detail.add(
+        RecordSenderItem(
+            done: element.done,
+            total_score: element.total_avg,
+            each_score: element.each_score,
+            user_id: element.eventRecordInfo.user_id,
+            i_id: element.eventRecordInfo.id),
+      );
     }
 
     for (var element in hasPair) {
       element.disconnect();
     }
 
-    //跳結果頁
+    //進入結果頁
 
     int inviteIndex = eventRecordList.first.eventRecordInfo.id;
     if (inviteIndex == -1) {
-      logger.v("invite index=-1");
+      // logger.v("invite index=-1");
       Invite invite = Invite(m_id: widget.userID, friend: [widget.userID]);
       await inviteRepo.createInvite(invite).then((value) async {
         await inviteRepo
@@ -167,7 +169,6 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
         });
       });
     } else {
-      logger.v("invite index 有找到 ＱＱ");
       EventRecordInfo recordInfo = eventRecordList.first.eventRecordInfo;
       Invite invite = Invite(
           m_id: recordInfo.m_id,
@@ -183,26 +184,27 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
 
   sendDataAndLeave(List<Record> recordList, List<RecordSenderItem> reSenderList,
       Invite invite) async {
-    // 傳送資料給後端
-    await recordRepo
-        .record(RecordSender(record: recordList, detail: reSenderList))
-        .then((value) async {
-      if (value.message == "新增成功") {
-        logger.v("成功");
-        if (context.mounted) {
-          Navigator.pushReplacementNamed(context, HistoryDetailPage.routeName,
-              arguments: History(
-                  name: invite.name,
-                  time: invite.time,
-                  remark: invite.remark,
-                  m_id: invite.m_id,
-                  done: [],
-                  friend: invite.friend,
-                  i_id: invite.i_id,
-                  m_name: invite.m_name));
-        }
-      }
-    });
+    if (context.mounted) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute<void>(
+          builder: (BuildContext context) => AfterEventPage(
+            userID: widget.userID,
+            recordList: recordList,
+            reSenderList: reSenderList,
+            history: History(
+                name: invite.name,
+                time: invite.time,
+                remark: invite.remark,
+                m_id: invite.m_id,
+                done: [],
+                friend: invite.friend,
+                i_id: invite.i_id,
+                m_name: invite.m_name),
+          ),
+        ),
+      );
+    }
   }
 
   connect(BluetoothDevice device, int pIndex, EventRecord forEvent,
@@ -341,7 +343,6 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
     );
   }
 
-  RecordRepo recordRepo = RecordRepo();
   Widget optional(EventRecord forEvent) {
     return Row(
       children: [
@@ -562,12 +563,13 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
         onTap: () => setState(() {
           mode = filtersID[i];
         }),
-        child: Box.textRadiusBorder(levelItem[i],
-            margin: const EdgeInsets.only(right: 10),
-            color: mode == filtersID[i] ? Colors.white : MyTheme.color,
-            filling: mode == filtersID[i] ? MyTheme.color : Colors.white,
-            border: MyTheme.color,
-            width: 75),
+        child: Box.textRadiusBorder(
+          levelItem[i],
+          margin: const EdgeInsets.only(right: 10),
+          color: mode == filtersID[i] ? Colors.white : MyTheme.color,
+          filling: mode == filtersID[i] ? MyTheme.color : Colors.white,
+          border: MyTheme.color,
+        ),
       ));
     }
     return result;
@@ -601,6 +603,9 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
         eventRecordList =
             ModalRoute.of(context)!.settings.arguments as List<EventRecord>;
       });
+    } else {
+      logger.v("not empty");
+      logger.v(eventRecordList.first.eventRecordInfo.m_id);
     }
     return CustomPage(
         buildContext: context,
@@ -615,7 +620,7 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
               false,
               context),
         ),
-        headHeight: 100,
+        headHeight: 118,
         body: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
@@ -623,14 +628,13 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.7,
                 child: ListView(
+                  controller: scrollController,
                   children: [
                     eventRecordList.isEmpty
                         ? const Text(" ")
                         : SizedBox(
                             height: MediaQuery.of(context).size.height * 0.63,
                             child: ListView.builder(
-                              // physics: const NeverScrollableScrollPhysics(),
-
                               itemCount: eventRecordList.length,
                               itemBuilder: ((context, index) {
                                 return (exerciseBox(index));
@@ -647,6 +651,12 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
                           dividerColor: Colors.transparent,
                         ),
                         child: ExpansionTile(
+                          
+                          onExpansionChanged: ((value) {
+                            if(value){
+                              scrollController.animateTo(MediaQuery.of(context).size.height * 0.63, duration: Duration(milliseconds: 500),curve: Curves.linear, );
+                            }
+                          }),
                           collapsedShape:
                               Border.all(color: MyTheme.backgroudColor),
                           iconColor: Colors.black,
@@ -670,7 +680,7 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
               ),
               SizedBox(
                 width: Space.screenW8(context),
-                child: Box.yesnoBox(context,() => finish(), () => sendStart(),
+                child: Box.yesnoBox(context, () => finish(), () => sendStart(),
                     noTitle: '開始運動',
                     noColor: MyTheme.color,
                     yestTitle: '結束',

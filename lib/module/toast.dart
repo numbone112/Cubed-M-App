@@ -70,47 +70,119 @@ showDelDialog(BuildContext context, String delName) {
   );
 }
 
-showMoInfo(BuildContext context){
+showMoInfo(BuildContext context) {
   showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            content: SizedBox(
-              height: 150,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Box.titleText("Mo 伴是什麼？",
-                      gap: 10, fontSize: MySize.subtitleSize),
-                  Text("曾一起運動的朋友。", style: textStyle(color: MyTheme.hintColor)),
-                  Box.titleText("運動綜合評分如何計算？",
-                      gap: 10, fontSize: MySize.subtitleSize),
-                  Text("從運動者最後一次運動中，將各動作等級換算成數字，再以算術平均計算。",
-                      style: textStyle(color: MyTheme.hintColor)),
-                ],
-              ),
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: SizedBox(
+            height: 150,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Box.titleText("Mo 伴是什麼？",
+                    gap: 10, fontSize: MySize.subtitleSize),
+                Text("曾一起運動的朋友。", style: textStyle(color: MyTheme.hintColor)),
+                Box.titleText("運動綜合評分如何計算？",
+                    gap: 10, fontSize: MySize.subtitleSize),
+                Text("從運動者最後一次運動中，將各動作等級換算成數字，再以算術平均計算。",
+                    style: textStyle(color: MyTheme.hintColor)),
+              ],
             ),
-          );
-        });
+          ),
+        );
+      });
 }
 
-showCommendInfo(BuildContext context){
+showCommendInfo(BuildContext context) {
   showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            content: SizedBox(
-              height: 100,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Box.titleText("與過往相比？",
-                      gap: 10, fontSize: MySize.subtitleSize),
-                  Text("將前五筆的各種類的運動平均分數，與本次運動做比較。", style: textStyle(color: MyTheme.hintColor)),
-                  
-                ],
-              ),
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: SizedBox(
+            height: 100,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Box.titleText("與過往相比？", gap: 10, fontSize: MySize.subtitleSize),
+                Text("將前五筆的各種類的運動平均分數，與本次運動做比較。",
+                    style: textStyle(color: MyTheme.hintColor)),
+              ],
             ),
-          );
-        });
+          ),
+        );
+      });
+}
+
+showplanInfo(BuildContext context) {
+  showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: SizedBox(
+            height: 250,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Box.titleText("當週運動計畫", gap: 10, fontSize: MySize.subtitleSize),
+                Row(
+                  children: [
+                    ClipOval(
+                      child: Container(
+                        height: 30,
+                        color: MyTheme.gray,
+                        child: const Icon(
+                          Icons.done,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    Text("表示未來預計要運動",
+                        style: textStyle(color: MyTheme.hintColor)),
+                  ],
+                ),
+                Row(
+                  children: [
+                    ClipOval(
+                      child: Container(
+                        height: 30,
+                        color: MyTheme.green,
+                        child: const Icon(
+                          Icons.done,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 200,
+                      child: Text("表示過去預計要運動，也確實完成運動",
+                          style: textStyle(color: MyTheme.hintColor)),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    ClipOval(
+                      child: Container(
+                        height: 30,
+                        color: MyTheme.pink,
+                        child: const Icon(
+                          Icons.done,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 200,
+                      child: Text("表示過去預計要運動，卻沒有運動",
+                          style: textStyle(color: MyTheme.hintColor)),
+                    ),
+                  ],
+                )
+              ],
+            ),
+          ),
+        );
+      });
 }

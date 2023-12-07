@@ -103,6 +103,7 @@ class MyappState extends State<MyApp> {
         HistoryDetailPage.routeName: (_) => HistoryDetailPage(userID: userID),
         PlanPage.routeName: (_) => PlanPage(userID: userID),
         PlanInsertPage.routeName: (_) => PlanInsertPage(userID: userID),
+        
       },
     );
   }

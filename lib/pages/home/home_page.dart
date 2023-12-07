@@ -16,6 +16,7 @@ import 'package:e_fu/request/plan/plan_data.dart';
 import 'package:e_fu/module/box_ui.dart';
 import 'package:e_fu/my_data.dart';
 import 'package:e_fu/request/user/get_user_data.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -29,10 +30,9 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
-  String userName = "柯明朗";
   late SharedPreferences prefs;
   late GetUser getUser;
-  List<ItemWithField> targetCheck = ItemSets.withField(["5","5","5"]);
+  List<ItemWithField> targetCheck = ItemSets.withField(["5", "5", "5"]);
   Logger logger = Logger();
   HomeRepo homeRepo = HomeRepo();
   HomeData? homeData;
@@ -108,29 +108,25 @@ class HomePageState extends State<HomePage> {
                                   (BuildContext context, int index) {
                                 return homeData != null
                                     ? GestureDetector(
-                                      onTap: ()=>Navigator.pushNamed(
-                                          context, InvitePage.routeName,
-                                          arguments: homeData?.execute[index]),
-
-                                      child: Container(
+                                        onTap: () => Navigator.pushNamed(
+                                            context, InvitePage.routeName,
+                                            arguments:
+                                                homeData?.execute[index]),
+                                        child: Container(
                                           alignment: Alignment.center,
                                           child: Padding(
-                                            padding: Space.allTen,
-                                            child: Box.dailyExercise(
-                                              homeData!.execute[index].name,
-                                              homeData!.execute[index].pretyTime()
-                                            )
-                                            
-                                         
-                                          ),
+                                              padding: Space.allTen,
+                                              child: Box.dailyExercise(
+                                                  homeData!.execute[index].name,
+                                                  homeData!.execute[index]
+                                                      .pretyTime())),
                                         ),
-                                    )
+                                      )
                                     : Container();
                               },
                                   childCount: homeData == null
                                       ? 0
-                                      : homeData?.execute.length
-                                  ),
+                                      : homeData?.execute.length),
                             ),
                           ],
                         ),
@@ -149,14 +145,18 @@ class HomePageState extends State<HomePage> {
                             alignment: Alignment.center,
                             child: textWidget(text: "分析圖", type: TextType.sub)),
                       ),
-                      homeData!=null?
-                      Expanded(
-                        child: Box.boxHasRadius(
-                          width: MediaQuery.of(context).size.width * 0.33,
-                          height: MediaQuery.of(context).size.width * 0.33,
-                          child: Chart.avgChart(getUser.sport_info.map((e) => e.score).toList()),
-                        ),
-                      ):Container()
+                      homeData != null
+                          ? Expanded(
+                              child: Box.boxHasRadius(
+                                width: MediaQuery.of(context).size.width * 0.33,
+                                height:
+                                    MediaQuery.of(context).size.width * 0.33,
+                                child: Chart.avgChart(getUser.sport_info
+                                    .map((e) => e.score)
+                                    .toList()),
+                              ),
+                            )
+                          : Container()
                     ],
                   ),
                 ),
@@ -174,10 +174,15 @@ class HomePageState extends State<HomePage> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Container(
-                            alignment: Alignment.center,
-                            child:
-                                textWidget(text: "運動計畫", type: TextType.sub)),
+                        Row(children: [
+                          Container(
+                          alignment: Alignment.center,
+                          child: textWidget(text: "運動計畫", type: TextType.sub),
+                        ),
+                        GestureDetector(
+                          onTap: ()=>showplanInfo(context),
+                          child: Icon(CupertinoIcons.question_circle,color: MyTheme.color,)),
+                        ],),
                         const Icon(Icons.chevron_right),
                       ],
                     ),

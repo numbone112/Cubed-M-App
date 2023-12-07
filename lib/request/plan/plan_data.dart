@@ -7,10 +7,23 @@ import 'package:json_annotation/json_annotation.dart';
 part 'plan_data.g.dart';
 
 List<Plan> parsePlanList(String responseBody) {
-  
   final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
 
   return parsed.map<Plan>((json) => Plan.fromJson(json)).toList();
+}
+
+List<ExeCount> parseExeCount(String responseBody) {
+  final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
+
+  return parsed.map<ExeCount>((json) => ExeCount.fromJson(json)).toList();
+}
+
+int getMaxExecount(List<ExeCount> list) {
+  int max = 0;
+  for (ExeCount element in list) {
+    if (element.count > max) max = element.count;
+  }
+  return max;
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -29,10 +42,21 @@ class Plan {
   String user_id;
 
   List<bool> execute;
-  String getRange(){
+  String getRange() {
     return "${str_date.toIso8601String().substring(0, 10)} - ${end_date.toIso8601String().substring(0, 10)}";
   }
 
   factory Plan.fromJson(Map<String, dynamic> json) => _$PlanFromJson(json);
   Map<String, dynamic> toJson() => _$PlanToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class ExeCount {
+  ExeCount({required this.count, required this.month});
+  int month;
+  int count;
+
+  factory ExeCount.fromJson(Map<String, dynamic> json) =>
+      _$ExeCountFromJson(json);
+  Map<String, dynamic> toJson() => _$ExeCountToJson(this);
 }

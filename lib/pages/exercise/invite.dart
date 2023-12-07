@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:age_calculator/age_calculator.dart';
 import 'package:e_fu/module/box_ui.dart';
 import 'package:e_fu/module/page.dart';
 import 'package:e_fu/my_data.dart';
@@ -67,7 +68,7 @@ class InviteState extends State<InvitePage> {
 
   getInvites() {
     inviteRepo.inviteDetail(invite.i_id).then((value) {
-      logger.v(value.D);
+      
       setState(() {
         detailList = parseInviteDetailList(jsonEncode(value.D));
       });
@@ -119,7 +120,7 @@ class InviteState extends State<InvitePage> {
                         ? ""
                         : detailList
                             .where(
-                                (element) => element.user_id == widget.userID)
+                                (element) => element.user_id == invite.m_id)
                             .toList()
                             .first
                             .userName,
@@ -131,7 +132,7 @@ class InviteState extends State<InvitePage> {
                     borderRadius: BorderRadius.circular(30),
                   ),
                   padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-                  height: MediaQuery.of(context).size.height * 0.51,
+                  height: MediaQuery.of(context).size.height -445,
                   child: detailList.isEmpty
                       ? Container()
                       : ListView(children: showOnInvite()),
@@ -141,8 +142,8 @@ class InviteState extends State<InvitePage> {
                         ? GestureDetector(
                             onTap: () {
                               List<EventRecord> forEvent = [];
-                              for (var element in detailList) {
-                                logger.v(element.userName);
+                              for (InviteDetail element in detailList) {
+                               
                                 if (element.accept == 1) {
                                   forEvent.add(
                                     EventRecord(
@@ -151,12 +152,13 @@ class InviteState extends State<InvitePage> {
                                       ),
                                       eventRecordInfo: EventRecordInfo(
                                         id: invite.i_id,
-                                        m_id: element.m_id,
+                                        m_id: invite.m_id,
                                         user_id: element.user_id,
                                         user_name: element.userName,
                                         name: invite.name,
                                         time: invite.time,
                                         remark: invite.remark,
+                                        age:AgeCalculator.age(element.birthday).years
                                       ),
                                     ),
                                   );

@@ -23,7 +23,7 @@ class PlanPage extends StatefulWidget {
 class PlanState extends State<PlanPage> {
   List<Plan> planlist = [];
   PlanRepo planRepo = PlanRepo();
-
+  ScrollController _scrollController=ScrollController();
   List<Widget> planBoxList() {
     List<Widget> result = [];
     for (var plan in planlist) {
@@ -55,6 +55,25 @@ class PlanState extends State<PlanPage> {
         ];
       });
     });
+    planRepo.getExeCount(widget.userID).then((value) {
+      List<ExeCount> exeCountList = parseExeCount(jsonEncode(value.D));
+      List<BarChartGroupData> temp = [];
+      int max=getMaxExecount(exeCountList);
+      print(exeCountList.first);
+      for (int i = 0; i < 12; i++) {
+        int c = 0;
+        List<ExeCount> filter =
+            exeCountList.where((element) => element.month == (i + 1)).toList();
+        if (filter.isNotEmpty) c = filter.first.count;
+
+        temp.add(groupData(i + 1, c.toDouble(), max.toDouble()));
+      }
+      setState(() {
+        barChartGroupData = temp;
+      });
+      _scrollController.jumpTo(500);
+    });
+  
   }
 
   BarChartGroupData groupData(int x, double y, double backY) {
@@ -76,23 +95,37 @@ class PlanState extends State<PlanPage> {
   String getTitles(value) {
     switch (value.toInt()) {
       case 1:
-        return 'Apr';
+        return 'Jan';
       case 2:
-        return 'May';
+        return 'Feb';
       case 3:
-        return 'Jun';
+        return 'Mar';
       case 4:
-        return 'Jul';
+        return 'Apr';
       case 5:
-        return 'Aug';
+        return 'May';
       case 6:
-        return 'Sep';
+        return 'Jun';
+      case 7:
+        return "Jui";
+      case 8:
+        return "Aug";
+      case 9:
+        return "Sep";
+      case 10:
+        return "Oct";
+      case 11:
+        return "Nov";
+      case 12:
+        return "Dec";
     }
     return '';
   }
 
   @override
   Widget build(BuildContext context) {
+    
+
     return CustomPage(
       body: ListView(
           children: [
@@ -100,7 +133,7 @@ class PlanState extends State<PlanPage> {
                     margin: const EdgeInsets.only(top: 10, bottom: 10),
                     padding: Space.allTen,
                     height: 200,
-                    width: 500,
+                    // width: 500,
                     color: const Color(0xFFFFFFFF),
                     child: Column(
                       children: [
@@ -108,37 +141,47 @@ class PlanState extends State<PlanPage> {
                         SizedBox(
                           width: 500,
                           height: 150,
-                          child: BarChart(BarChartData(
-                            gridData: FlGridData(show: false),
-                            titlesData: FlTitlesData(
-                              topTitles: AxisTitles(
-                                  sideTitles: SideTitles(showTitles: false)),
-                              leftTitles: AxisTitles(
-                                  sideTitles: SideTitles(showTitles: false)),
-                              rightTitles: AxisTitles(
-                                  sideTitles: SideTitles(showTitles: false)),
-                              bottomTitles: AxisTitles(
-                                sideTitles: SideTitles(
-                                  showTitles: true,
-                                  getTitlesWidget: (value, meta) {
-                                    return Text(
-                                      getTitles(value),
-                                      style: const TextStyle(
-                                          // color: Colors.white,
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.bold),
-                                    );
-                                  },
-                                ),
+                          child: ListView(
+                            controller: _scrollController,
+                            scrollDirection: Axis.horizontal,
+                            children: [
+                              SizedBox(
+                                width: 750,
+                                height: 150,
+                                child: BarChart(BarChartData(
+                                  gridData: FlGridData(show: false),
+                                  titlesData: FlTitlesData(
+                                    topTitles: AxisTitles(
+                                        sideTitles: SideTitles(showTitles: false)),
+                                    leftTitles: AxisTitles(
+                                        sideTitles: SideTitles(showTitles: false)),
+                                    rightTitles: AxisTitles(
+                                        sideTitles: SideTitles(showTitles: false)),
+                                    bottomTitles: AxisTitles(
+                                      sideTitles: SideTitles(
+                                        showTitles: true,
+                                        getTitlesWidget: (value, meta) {
+                                          return Text(
+                                            getTitles(value),
+                                            style: const TextStyle(
+                                                // color: Colors.white,
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.bold),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                  borderData: FlBorderData(
+                                      border: Border.all(
+                                          color: Colors.white, width: 0.5)),
+                                  alignment: BarChartAlignment.spaceEvenly,
+                                  maxY: 16,
+                                  barGroups: barChartGroupData,
+                                )),
                               ),
-                            ),
-                            borderData: FlBorderData(
-                                border: Border.all(
-                                    color: Colors.white, width: 0.5)),
-                            alignment: BarChartAlignment.spaceEvenly,
-                            maxY: 16,
-                            barGroups: barChartGroupData,
-                          )),
+                            ],
+                          ),
                         ),
                       ],
                     )),

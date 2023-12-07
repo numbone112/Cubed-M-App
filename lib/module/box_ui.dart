@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:e_fu/module/toast.dart';
 import 'package:e_fu/my_data.dart';
 
@@ -247,11 +248,12 @@ class Box {
                     children: [
                       label,
                       history.isGroup()
-                          ? textWidget(
-                              text: history.name,
-                              type: TextType.content,
-                              color: MyTheme.buttonColor,
-                              fontWeight: true)
+                          ?SizedBox(
+                            width: 100,
+                            child: AutoSizeText(history.name,minFontSize: 16,maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(color:MyTheme.buttonColor,fontWeight: FontWeight.bold ),) ,
+                          )
+                          
+                          
                           : Container()
                     ],
                   ),
@@ -357,112 +359,110 @@ class Box {
     return Container(
       padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
       child: SizedBox(
-        height: 80,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             textWidget(
-                text: invite.name,
-                type: TextType.fun,
-                color: MyTheme.buttonColor,
-                fontWeight: true),
+              text: invite.name,
+              type: TextType.fun,
+              color: MyTheme.buttonColor,
+              fontWeight: true,
+            ),
+            Padding(padding: Space.onlyTopTen),
             textWidget(text: invite.pretyTime(), type: TextType.content),
-            Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  textWidget(
-                      text: invite.pretyRemark(),
-                      type: TextType.content,
-                      color: MyTheme.hintColor),
-                  isHost
-                      ? Row(
-                          children: [
-                            GestureDetector(
-                              child: Container(
-                                margin: const EdgeInsets.only(left: 5),
-                                padding: const EdgeInsets.fromLTRB(5, 5, 10, 5),
-                                decoration: BoxDecoration(
-                                    color: MyTheme.lightColor,
-                                    borderRadius: BorderRadius.circular(30)),
-                                child: Row(
-                                  children: [
-                                    const Icon(
-                                      Icons.add,
-                                      color: Colors.white,
-                                      size: 20,
-                                    ),
-                                    textWidget(
-                                        text: '邀請',
-                                        type: TextType.content,
-                                        color: Colors.white)
-                                  ],
-                                ),
+            Padding(padding: Space.onlyTopTen),
+            textWidget(
+                text: invite.pretyRemark(),
+                type: TextType.content,
+                color: MyTheme.hintColor),
+            Padding(padding: Space.onlyTopTen),
+            isHost
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      GestureDetector(
+                        child: Container(
+                          margin: const EdgeInsets.only(left: 5),
+                          padding: const EdgeInsets.fromLTRB(5, 5, 10, 5),
+                          decoration: BoxDecoration(
+                              color: MyTheme.lightColor,
+                              borderRadius: BorderRadius.circular(30)),
+                          child: Row(
+                            children: [
+                              const Icon(
+                                Icons.add,
+                                color: Colors.white,
+                                size: 20,
+                              ),
+                              textWidget(
+                                  text: '邀請',
+                                  type: TextType.content,
+                                  color: Colors.white)
+                            ],
+                          ),
+                        ),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.only(left: 5),
+                        padding: const EdgeInsets.fromLTRB(5, 5, 10, 5),
+                        decoration: BoxDecoration(
+                            color: MyTheme.lightColor,
+                            borderRadius: BorderRadius.circular(30)),
+                        child: GestureDetector(
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute<void>(
+                              builder: (BuildContext context) => InviteEditPage(
+                                userID: invite.m_id,
+                                invite: invite,
+                                inviteDetail: detailList ?? [],
                               ),
                             ),
-                            Container(
-                              margin: const EdgeInsets.only(left: 5),
-                              padding: const EdgeInsets.fromLTRB(5, 5, 10, 5),
-                              decoration: BoxDecoration(
-                                  color: MyTheme.lightColor,
-                                  borderRadius: BorderRadius.circular(30)),
-                              child: GestureDetector(
-                                onTap: () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute<void>(
-                                    builder: (BuildContext context) =>
-                                        InviteEditPage(
-                                      userID: invite.m_id,
-                                      invite: invite,
-                                      inviteDetail: detailList ?? [],
-                                    ),
-                                  ),
-                                ).then((value) {
-                                  afterUpdate!();
-                                }),
-                                child: Row(
-                                  children: [
-                                    const Icon(
-                                      Icons.edit,
-                                      color: Colors.white,
-                                      size: 20,
-                                    ),
-                                    textWidget(
-                                        text: '編輯',
-                                        type: TextType.content,
-                                        color: Colors.white)
-                                  ],
-                                ),
+                          ).then((value) {
+                            afterUpdate!();
+                          }),
+                          child: Row(
+                            children: [
+                              const Icon(
+                                Icons.edit,
+                                color: Colors.white,
+                                size: 20,
                               ),
-                            ),
-                            Container(
-                              margin: const EdgeInsets.only(left: 5),
-                              padding: const EdgeInsets.fromLTRB(5, 5, 10, 5),
-                              decoration: BoxDecoration(
-                                  color: MyTheme.lightColor,
-                                  borderRadius: BorderRadius.circular(30)),
-                              child: GestureDetector(
-                                onTap: () => showDelDialog(
-                                    context, '邀約「${invite.name}」'),
-                                child: Row(
-                                  children: [
-                                    const Icon(
-                                      Icons.delete,
-                                      color: Colors.white,
-                                      size: 20,
-                                    ),
-                                    textWidget(
-                                        text: '刪除',
-                                        type: TextType.content,
-                                        color: Colors.white)
-                                  ],
-                                ),
+                              textWidget(
+                                  text: '編輯',
+                                  type: TextType.content,
+                                  color: Colors.white)
+                            ],
+                          ),
+                        ),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.only(left: 5),
+                        padding: const EdgeInsets.fromLTRB(5, 5, 10, 5),
+                        decoration: BoxDecoration(
+                            color: MyTheme.lightColor,
+                            borderRadius: BorderRadius.circular(30)),
+                        child: GestureDetector(
+                          onTap: () =>
+                              showDelDialog(context, '邀約「${invite.name}」'),
+                          child: Row(
+                            children: [
+                              const Icon(
+                                Icons.delete,
+                                color: Colors.white,
+                                size: 20,
                               ),
-                            )
-                          ],
-                        )
-                      : Container()
-                ])
+                              textWidget(
+                                  text: '刪除',
+                                  type: TextType.content,
+                                  color: Colors.white)
+                            ],
+                          ),
+                        ),
+                      )
+                    ],
+                  )
+                : Container()
           ],
         ),
       ),
@@ -499,7 +499,7 @@ class Box {
     );
   }
 
-  static Widget yesnoBox(context, Function() yes, Function() no,
+  static Widget yesnoBox(context, Function() yes, Function()? no,
       {String? yestTitle,
       noTitle,
       double? height,
@@ -517,7 +517,7 @@ class Box {
               width: width,
               child: GestureDetector(
                   behavior: HitTestBehavior.translucent,
-                  onTap: () => Navigator.pop(context),
+                  onTap:  no ??() => Navigator.pop(context),
                   child: Box.textRadiusBorder(noTitle ?? '取消',
                       border: noColor ?? MyTheme.lightColor,
                       filling: noColor ?? MyTheme.lightColor)),
@@ -762,7 +762,12 @@ class Box {
   static Widget dailyExercise(String title, String time) {
     return Column(
       children: [
-        textWidget(text: title, type: TextType.content),
+        AutoSizeText(
+          title,
+          maxLines: 1,
+          minFontSize: 16,
+          overflow: TextOverflow.ellipsis,
+        ),
         textWidget(
             text: Jiffy.parse(time, pattern: 'yyyy-MM-dd  HH:mm').fromNow(),
             type: TextType.hint)
@@ -797,11 +802,12 @@ class Chart {
               dataEntries: values.map((e) => RadarEntry(value: e)).toList(),
               borderWidth: 2.3,
             ),
-             RadarDataSet(
+            RadarDataSet(
               fillColor: Colors.transparent,
               borderColor: Colors.transparent,
               entryRadius: 0,
-              dataEntries: values.map((e) => const RadarEntry(value: 5)).toList(),
+              dataEntries:
+                  values.map((e) => const RadarEntry(value: 5)).toList(),
               borderWidth: 0,
             )
           ]),
@@ -921,7 +927,7 @@ class InviteBox {
 }
 
 class Space {
-  static EdgeInsets onlyTopTen = const  EdgeInsets.only(top: 10);
+  static EdgeInsets onlyTopTen = const EdgeInsets.only(top: 10);
   static EdgeInsets allTen = const EdgeInsets.all(10);
   static screenH15(BuildContext context) =>
       MediaQuery.of(context).size.height * 0.15;
@@ -934,6 +940,5 @@ class Space {
   static screenW2(BuildContext context) =>
       MediaQuery.of(context).size.width * 0.2;
 
-  static Padding tenPadding()=>  Padding(padding:Space.allTen);
-  
+  static Padding tenPadding() => Padding(padding: Space.allTen);
 }

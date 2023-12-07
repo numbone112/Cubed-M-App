@@ -108,13 +108,15 @@ class EventRecordInfo {
       this.time = "",
       this.user_name = "",
       required this.m_id,
-      required this.user_id});
+      required this.user_id,
+      });
   int id;
   List<List<int>> done;
   String m_id;
   String remark;
   String name;
   String time;
+  
   int age;
   String user_name;
   String user_id;

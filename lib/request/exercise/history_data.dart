@@ -111,8 +111,11 @@ class DoneItem {
 
 @JsonSerializable(explicitToJson: true)
 class Commend {
-  Commend({required this.commend});
+  Commend({required this.commend,required this.birthday,required this.name,required this.sex});
   List<String> commend;
+  String name;
+  String sex;
+  DateTime birthday;
 
   factory Commend.fromJson(Map<String, dynamic> json) =>
       _$CommendFromJson(json);

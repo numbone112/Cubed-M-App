@@ -22,3 +22,13 @@ Map<String, dynamic> _$PlanToJson(Plan instance) => <String, dynamic>{
       'user_id': instance.user_id,
       'execute': instance.execute,
     };
+
+ExeCount _$ExeCountFromJson(Map<String, dynamic> json) => ExeCount(
+      count: json['count'] as int,
+      month: json['month'] as int,
+    );
+
+Map<String, dynamic> _$ExeCountToJson(ExeCount instance) => <String, dynamic>{
+      'month': instance.month,
+      'count': instance.count,
+    };

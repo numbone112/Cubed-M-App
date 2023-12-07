@@ -8,14 +8,26 @@ import 'package:e_fu/pages/exercise/detail.dart';
 import 'package:e_fu/request/exercise/history.dart';
 import 'package:e_fu/request/exercise/history_data.dart';
 import 'package:e_fu/request/invite/invite_data.dart';
+import 'package:e_fu/request/record/record.dart';
+import 'package:e_fu/request/record/record_data.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 
 import '../../module/page.dart';
 
 class AfterEventPage extends StatefulWidget {
   final String userID;
-  const AfterEventPage({super.key, required this.userID});
-  static const routeName = '/history/detail';
+  final List<Record> recordList;
+  final List<RecordSenderItem> reSenderList;
+  final History history;
+  const AfterEventPage(
+      {super.key,
+      required this.userID,
+      required this.reSenderList,
+      required this.recordList,
+      required this.history});
+
+  static const routeName = '/after/history/detail';
 
   @override
   State<StatefulWidget> createState() => AfterEventstate();
@@ -24,8 +36,33 @@ class AfterEventPage extends StatefulWidget {
 class AfterEventstate extends State<AfterEventPage> {
   List<HistoryDeep> historyDeepList = [];
   HistoryRepo historyRepo = HistoryRepo();
+  RecordRepo recordRepo = RecordRepo();
+  Logger logger = Logger();
+
+  sendData() async {
+    await recordRepo
+        .record(
+      RecordSender(
+        record: widget.recordList,
+        detail: widget.reSenderList,
+      ),
+    )
+        .then((value) async {
+      if (value.message == "新增成功") {
+        logger.v("成功");
+      } else {
+        logger.v(value);
+      }
+    });
+    // historyRepo.hisotry(widget.history.i_id).then((value) async {
+    //     setState(() {
+    //       historyDeepList = parseHistoryDeepList(jsonEncode(value.D));
+    //     });
+    //   });
+  }
 
   Widget deepBox(HistoryDeep historyDeep, bool isM) {
+    historyDeep.i_id = widget.history.i_id;
     return Container(
       margin: Space.onlyTopTen,
       child: Box.boxHasRadius(
@@ -63,10 +100,9 @@ class AfterEventstate extends State<AfterEventPage> {
             ),
             Expanded(
               child: SizedBox(
-                width: 75,
-                height: 75,
-                child: Chart.avgChart(historyDeep.each_score)
-                )
+                  width: 75,
+                  height: 75,
+                  child: Chart.avgChart(historyDeep.each_score)),
             ),
             Box.textRadiusBorder(historyDeep.total_score.toString(),
                 width: 60, textType: TextType.content)
@@ -90,14 +126,28 @@ class AfterEventstate extends State<AfterEventPage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+
+    sendData();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final history = ModalRoute.of(context)!.settings.arguments as History;
+    // print();
+    print(widget.history.m_id);
+    // final history = ModalRoute.of(context)!.settings.arguments as History;
     if (historyDeepList.isEmpty) {
-      historyRepo.hisotry(history.i_id).then((value) async {
-        setState(() {
-          historyDeepList = parseHistoryDeepList(jsonEncode(value.D));
-        });
-      });
+      historyDeepList = widget.reSenderList
+          .map((e) => HistoryDeep(
+              user_id: e.user_id,
+              name: e.user_id,
+              done: e.done,
+              total_score: e.total_score,
+              each_score: e.each_score,
+              sex: "",
+              birthday: DateTime.now()))
+          .toList();
     }
 
     return (CustomPage(
@@ -107,14 +157,15 @@ class AfterEventstate extends State<AfterEventPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Box.inviteInfo(Invite.fromJson(history.toJson()), false,context),
+                    Box.inviteInfo(Invite.fromJson(widget.history.toJson()),
+                        false, context),
                     Column(
                       children: [
                         textWidget(
                           text: '平均',
                           type: TextType.sub,
                         ),
-                        Box.textRadiusBorder(history.avgScore.toString(),
+                        Box.textRadiusBorder(widget.history.avgScore.toString(),
                             width: 60,
                             color: Colors.white,
                             textType: TextType.content)
@@ -123,7 +174,7 @@ class AfterEventstate extends State<AfterEventPage> {
                   ],
                 ),
               ] +
-              deepBoxs(history.m_id)),
+              deepBoxs(widget.history.m_id)),
       title: '運動明細',
       headColor: MyTheme.lightColor,
       headTextColor: Colors.white,

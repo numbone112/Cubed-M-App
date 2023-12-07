@@ -108,29 +108,27 @@ class PlanInsertState extends State<PlanInsertPage> {
                 color: MyTheme.hintColor),
           ),
           choise(),
-          Box.yesnoBox(
-            context,
-            () {
-              Plan plan = Plan(
-                  name: nameInput.text,
-                  user_id: widget.userID,
-                  str_date: DateTime.parse(strInput.text),
-                  end_date: DateTime.parse(endInput.text),
-                  execute: execute);
-              planRepo.createPlan(plan).then((value) async {
-                logger.v(value.message);
-                logger.v(value.D);
-                EasyLoading.dismiss();
+          Box.yesnoBox(context, () {
+            Plan plan = Plan(
+                name: nameInput.text,
+                user_id: widget.userID,
+                str_date: DateTime.parse(strInput.text),
+                end_date: DateTime.parse(endInput.text),
+                execute: execute);
+            planRepo.createPlan(plan).then((value) async {
+              logger.v(value.message);
+              logger.v(value.D);
+
+              if (context.mounted) {
                 if (value.success!) {
                   toast(context, "新增成功");
                   Navigator.pop(context);
                 } else {
                   alert(context, '錯誤', value.message.toString());
                 }
-              });
-            },
-            () => Navigator.pop(context)
-          )
+              }
+            });
+          }, () {})
         ],
       ),
     );

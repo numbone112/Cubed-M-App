@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 
+import 'package:age_calculator/age_calculator.dart';
 import 'package:e_fu/module/box_ui.dart';
 import 'package:e_fu/module/toast.dart';
 import 'package:e_fu/my_data.dart';
@@ -27,9 +28,10 @@ class HistoryDetailPersonstate extends State<HistoryDetailPerson> {
   int select = 0;
   List<DoneItem> dones = [];
   HistoryRepo historyRepo = HistoryRepo();
-  static final List<String> leveltable = ["不好", "差", "普通", "尚好", "很好"];
+  static final List<String> leveltable = ["不好", "稍差", "普通", "尚好", "很好"];
   static final List<String> type = ["左手", "右手", '椅子坐立'];
   List<String> compare = ["", "", ""];
+  Commend? commend;
 
   changeSelect(int s, List<DoneItem> origin) {
     setState(() {
@@ -54,6 +56,8 @@ class HistoryDetailPersonstate extends State<HistoryDetailPerson> {
       print(commendTemp.length);
       setState(() {
         compare = commendTemp;
+        commend=reply;
+
       });
     });
   }
@@ -84,6 +88,7 @@ class HistoryDetailPersonstate extends State<HistoryDetailPerson> {
       changeSelect(0, args.done);
       getCommend(args);
     }
+    
     return (CustomPage(
       body: ListView(children: [
         const Padding(padding: EdgeInsets.only(top: 10, bottom: 10)),
@@ -97,12 +102,12 @@ class HistoryDetailPersonstate extends State<HistoryDetailPerson> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   textWidget(
-                    text: args.name,
+                    text: commend?.name??"",
                     type: TextType.fun,
                     color: MyTheme.buttonColor,
                   ),
                   textWidget(
-                    text: args.sexAndAge(),
+                    text: commend==null?"":"${commend!.sex=="male" ? "男" : "女"} ${AgeCalculator.age(commend!.birthday).years}",
                     type: TextType.content,
                   ),
                 ],
@@ -148,7 +153,7 @@ class HistoryDetailPersonstate extends State<HistoryDetailPerson> {
                       child: Icon(
                         CupertinoIcons.question_circle,
                         size: 20,
-                        color: MyTheme.hintColor,
+                        color: MyTheme.color,
                       ),
                     )
                   ],
@@ -240,7 +245,7 @@ class HistoryDetailPersonstate extends State<HistoryDetailPerson> {
                     Expanded(
                       flex: 1,
                       child: textWidget(
-                          text: leveltable[dones[index].level],
+                          text: leveltable[dones[index].level-1],
                           type: TextType.content,
                           textAlign: TextAlign.center),
                     )

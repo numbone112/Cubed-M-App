@@ -75,11 +75,13 @@ class InviteDetail {
       required this.user_id,
       this.targetSets = const [5, 5, 5],
       required this.userName,
+      required this.birthday,
       this.m_id = ""});
   String userName;
   String user_id;
   String m_id;
   List<int> targetSets;
+  DateTime birthday;
   int accept;
   factory InviteDetail.fromJson(Map<String, dynamic> json) =>
       _$InviteDetailFromJson(json);

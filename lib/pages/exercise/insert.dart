@@ -168,7 +168,7 @@ class InsertInvitestate extends State<InsertInvite> {
                     onTap: () {
                       moRepo.search(quaryInput.text).then((value) {
                         setState(() {
-                          searchList = parseMoSearchList(jsonEncode(value.D));
+                          searchList = parseMoSearchList(jsonEncode(value.D)).where((element) => element.id!=widget.userID).toList();
                         });
                       });
                     },

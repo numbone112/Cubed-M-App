@@ -40,11 +40,11 @@ class Plan {
   DateTime str_date;
   DateTime end_date;
   String user_id;
-
   List<bool> execute;
-  String getRange() {
-    return "${str_date.toIso8601String().substring(0, 10)} - ${end_date.toIso8601String().substring(0, 10)}";
-  }
+  String getRange() =>
+     "${str_date.toIso8601String().substring(0, 10)} - ${end_date.toIso8601String().substring(0, 10)}";
+  
+  bool isNowPlan()=> str_date.isBefore(DateTime.now())&&end_date.isAfter(DateTime.now());
 
   factory Plan.fromJson(Map<String, dynamic> json) => _$PlanFromJson(json);
   Map<String, dynamic> toJson() => _$PlanToJson(this);

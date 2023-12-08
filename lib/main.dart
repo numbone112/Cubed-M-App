@@ -1,5 +1,6 @@
 import 'package:e_fu/changePassword.dart';
 import 'package:e_fu/home.dart';
+import 'package:e_fu/module/notification.dart';
 import 'package:e_fu/pages/event/event_now_result.dart';
 
 import 'package:e_fu/pages/exercise/detail.dart';
@@ -22,10 +23,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
+// 引入 timezone 相關的套件
 
 import 'my_data.dart';
 
-void main() {
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  // 加入這行，使得 NotificationPlugin 呼叫 init 將本地通知註冊於應用程式中
+  await NotificationPlugin().init();
+  
+  
   runApp(const MyApp());
   const MyApp();
   EasyLoading.instance

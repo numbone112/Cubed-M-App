@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:e_fu/module/box_ui.dart';
+import 'package:e_fu/module/notification.dart';
 import 'package:e_fu/module/page.dart';
 import 'package:e_fu/my_data.dart';
 import 'package:e_fu/pages/plan/plan_edit.dart';
@@ -28,9 +29,6 @@ class PlanState extends State<PlanPage> {
   List<Widget> planBoxList = [];
 
   List<BarChartGroupData> barChartGroupData = [];
-  // List<Widget> planBoxListOld() {
-
-  // }
 
   @override
   void initState() {
@@ -39,18 +37,16 @@ class PlanState extends State<PlanPage> {
     planRepo.getPlan(widget.userID).then((value) {
       setState(() {
         planlist = parsePlanList(jsonEncode(value.D));
-
-        barChartGroupData = [
-          groupData(1, 5, 10),
-          groupData(2, 5, 10),
-          groupData(3, 3, 10),
-          groupData(4, 8, 10),
-          groupData(5, 7, 10),
-          groupData(6, 4, 10),
-        ];
       });
     }).then((value) {
       filter(1);
+    }).then((value) async {
+      //設定通知
+      List<Plan> temp =
+          planlist.where((element) => element.isNowPlan()).toList();
+      if (temp.length == 1) {
+        NotificationPlugin().setCostomize(temp.first);
+      }
     });
     planRepo.getExeCount(widget.userID).then((value) {
       List<ExeCount> exeCountList = parseExeCount(jsonEncode(value.D));
@@ -88,12 +84,12 @@ class PlanState extends State<PlanPage> {
         Box.boxHasRadius(
           margin: const EdgeInsets.fromLTRB(0, 10, 0, 5),
           padding: Space.allTen,
-          child: Box.planBox(plan, context, widget.userID,m==2),
+          child: Box.planBox(plan, context, widget.userID, m == 2),
         ),
       );
     }
-    if(m==2){
-      result=result.reversed.toList();
+    if (m == 2) {
+      result = result.reversed.toList();
     }
 
     setState(() {

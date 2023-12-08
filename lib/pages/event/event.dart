@@ -507,7 +507,7 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
                     }
                   },
                 ),
-          const Padding(padding: EdgeInsets.all(2))
+          const Padding(padding: EdgeInsets.all(1))
         ],
       ),
     );

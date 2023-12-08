@@ -23,8 +23,8 @@ class HistoryDetailstate extends State<HistoryDetailPage> {
   List<HistoryDeep> historyDeepList = [];
   HistoryRepo historyRepo = HistoryRepo();
 
-  Widget deepBox(HistoryDeep historyDeep, bool isM, int i_id) {
-    historyDeep.i_id = i_id;
+  Widget deepBox(HistoryDeep historyDeep, bool isM, int iId) {
+    historyDeep.i_id = iId;
     return Container(
       margin: Space.onlyTopTen,
       child: Box.boxHasRadius(
@@ -74,8 +74,8 @@ class HistoryDetailstate extends State<HistoryDetailPage> {
     );
   }
 
-  List<Widget> deepBoxs(String mId, int i_id) =>
-      historyDeepList.map((e) => deepBox(e, e.user_id == mId, i_id)).toList();
+  List<Widget> deepBoxs(String mId, int iId) =>
+      historyDeepList.map((e) => deepBox(e, e.user_id == mId, iId)).toList();
 
   @override
   Widget build(BuildContext context) {

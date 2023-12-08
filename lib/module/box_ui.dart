@@ -755,7 +755,7 @@ class Box {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         textWidget(text: title, type: TextType.content),
-        Padding(padding: EdgeInsets.all(5)),
+        const Padding(padding: EdgeInsets.all(5)),
         Expanded(
             child: TextInput.radius(hintText, controller,
                 textField: textField,

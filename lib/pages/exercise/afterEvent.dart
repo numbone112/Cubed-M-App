@@ -1,6 +1,5 @@
 // ignore_for_file: file_names
 
-import 'dart:convert';
 
 import 'package:e_fu/module/box_ui.dart';
 import 'package:e_fu/my_data.dart';
@@ -134,9 +133,6 @@ class AfterEventstate extends State<AfterEventPage> {
 
   @override
   Widget build(BuildContext context) {
-    // print();
-    print(widget.history.m_id);
-    // final history = ModalRoute.of(context)!.settings.arguments as History;
     if (historyDeepList.isEmpty) {
       historyDeepList = widget.reSenderList
           .map((e) => HistoryDeep(

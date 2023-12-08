@@ -4,7 +4,6 @@ import 'package:e_fu/module/box_ui.dart';
 import 'package:e_fu/module/notification.dart';
 import 'package:e_fu/module/page.dart';
 import 'package:e_fu/my_data.dart';
-import 'package:e_fu/pages/plan/plan_edit.dart';
 import 'package:e_fu/pages/plan/plan_insert.dart';
 
 import 'package:e_fu/request/plan/plan.dart';
@@ -52,7 +51,6 @@ class PlanState extends State<PlanPage> {
       List<ExeCount> exeCountList = parseExeCount(jsonEncode(value.D));
       List<BarChartGroupData> temp = [];
       int max = getMaxExecount(exeCountList);
-      print(exeCountList.first);
       for (int i = 0; i < 12; i++) {
         int c = 0;
         List<ExeCount> filter =

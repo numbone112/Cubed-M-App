@@ -1,3 +1,5 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'package:e_fu/request/plan/plan_data.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
@@ -58,12 +60,11 @@ class NotificationPlugin {
   }
 
   setSchedule(DateTime dateTime) async {
-    
     await np.zonedSchedule(
         0,
         '今天已設立運動計畫',
         '記得要運動喔！',
-        tz.TZDateTime.now(tz.local).add(const Duration(seconds: 5)),
+        _convertTime(dateTime),
         await notificatinoDetails(),
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime);

@@ -1,12 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
-import 'package:age_calculator/age_calculator.dart';
 import 'package:e_fu/module/page.dart';
 import 'package:e_fu/pages/event/ble_device.dart';
 import 'package:e_fu/pages/exercise/afterEvent.dart';
 import 'package:e_fu/pages/exercise/event_record.dart';
-import 'package:e_fu/pages/exercise/history.dart';
 import 'package:e_fu/request/exercise/history.dart';
 import 'package:e_fu/request/exercise/history_data.dart';
 import 'package:e_fu/request/invite/invite.dart';
@@ -16,7 +14,6 @@ import 'package:logger/logger.dart';
 import 'package:e_fu/module/box_ui.dart';
 import 'package:e_fu/request/e/e.dart';
 import 'package:e_fu/request/e/e_data.dart';
-import 'package:e_fu/request/record/record.dart';
 import 'package:e_fu/my_data.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -72,24 +69,11 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
 
     FlutterBluePlus.adapterState.listen((BluetoothAdapterState state) async {
       if (state == BluetoothAdapterState.on) {
-        logger.v('藍牙狀態爲開啓');
-        Set<DeviceIdentifier> seen = {};
-        var subscription = FlutterBluePlus.scanResults.listen(
-          (results) {
-            for (ScanResult r in results) {
-              if (seen.contains(r.device.remoteId) == false) {
-                seen.add(r.device.remoteId);
-              }
-            }
-          },
-        );
         await FlutterBluePlus.startScan();
-
         setState(() {
           isBleOn = true;
         });
       } else {
-        logger.v('藍牙狀態爲關閉');
         setState(() {
           isBleOn = false;
         });
@@ -655,7 +639,7 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
                             if (value) {
                               scrollController.animateTo(
                                 MediaQuery.of(context).size.height * 0.63,
-                                duration: Duration(milliseconds: 500),
+                                duration: const Duration(milliseconds: 500),
                                 curve: Curves.linear,
                               );
                             }

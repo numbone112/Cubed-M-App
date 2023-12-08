@@ -6,7 +6,7 @@ abstract class HistoryAPI {
 
   Future<Format> historyList(String userName);
   Future<Format> hisotry(int iId);
-  Future<Format> commend(String user_id, int i_id);
+  Future<Format> commend(String userId, int iId);
 }
 
 class HistoryRepo extends API implements HistoryAPI {
@@ -30,8 +30,8 @@ class HistoryRepo extends API implements HistoryAPI {
   }
 
   @override
-  Future<Format> commend(String user_id, int i_id) async {
-    String url = '$domain/history/detail/$i_id/$user_id';
+  Future<Format> commend(String userId, int iId) async {
+    String url = '$domain/history/detail/$iId/$userId';
 
     return await lunch(
       client.get(Uri.parse(url), headers: header),

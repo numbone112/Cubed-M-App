@@ -3,7 +3,6 @@
 import 'dart:convert';
 
 import 'package:e_fu/module/util.dart';
-import 'package:intl/intl.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'invite_data.g.dart';

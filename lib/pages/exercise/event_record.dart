@@ -159,3 +159,17 @@ class EventRecord {
     progress[now] = (p / eventRecordDetail.item[now] * 100).round();
   }
 }
+
+class EventRace {
+  EventRace(
+      {required this.name,
+      required this.times,
+      required this.m_id,
+      required this.user_id});
+  String name;
+  String user_id;
+  String m_id;
+  int times;
+
+  bool isHost() => m_id == user_id;
+}

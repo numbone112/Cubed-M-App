@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 import 'package:e_fu/module/page.dart';
+import 'package:e_fu/module/toast.dart';
 import 'package:e_fu/pages/event/ble_device.dart';
 import 'package:e_fu/pages/exercise/afterEvent.dart';
 import 'package:e_fu/pages/exercise/event_record.dart';
@@ -62,7 +63,8 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
   InviteRepo inviteRepo = InviteRepo();
   ScrollController scrollController = ScrollController();
   ExpansionTileController expansionTileController = ExpansionTileController();
-
+  List<EventRace> event_race = [];
+  bool exercising = false;
   Future<void> updateBleState() async {
     // if (await FlutterBluePlus.isSupported == false) {
     // }
@@ -115,10 +117,15 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
     });
   }
 
+  closeExercising(){
+    setState(() {
+      exercising = false;
+    });
+  }
+
   Future<void> finish() async {
     List<RecordSenderItem> detail = [];
     for (var element in eventRecordList) {
-      //補年紀
       element.processData(element.eventRecordInfo.age, true);
       detail.add(
         RecordSenderItem(
@@ -204,6 +211,13 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
     }
     setState(() {
       hasPair.add(device);
+      event_race.add(
+        EventRace(
+            name: forEvent.eventRecordInfo.user_name,
+            times: 0,
+            m_id: forEvent.eventRecordInfo.m_id,
+            user_id: forEvent.eventRecordInfo.user_id),
+      );
       trainGoal = max(
           trainGoal, forEvent.eventRecordDetail.item.fold(0, (p, c) => p + c));
       connectDeviec[pIndex] = device.toString();
@@ -239,6 +253,7 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
 
                   forEvent.reviceEndSign(string);
                   setState(() {
+                    
                     eventRecordList[pIndex] = forEvent;
                     trainCount = EventRecord.getMax(eventRecordList);
                   });
@@ -247,6 +262,7 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
                     //關閉所有連線
                   }
                 }
+
                 EasyLoading.dismiss();
               }
             });
@@ -262,8 +278,16 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
                 String string = String.fromCharCodes(value);
                 List<String> raw = string.split(",");
                 if (string != "0.00,0.00,0.00,0.00,0.00,0.00,0.00,0") {
-                  toSave.add(Record.getRecordJson(raw, trainCount, forEvent.now,
-                      forEvent.eventRecordInfo.id));
+                  Record record = Record.getRecordJson(raw, trainCount,
+                      forEvent.now, forEvent.eventRecordInfo.id);
+                  toSave.add(record);
+                  int index = event_race.indexWhere((element) =>
+                      element.user_id == forEvent.eventRecordInfo.user_id);
+                  EventRace temp = event_race[index];
+                  temp.times = record.times.toInt();
+                  setState(() {
+                    event_race[index] = temp;
+                  });
                 }
               } catch (e) {
                 logger.v("error:$e");
@@ -426,11 +450,6 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
                     updateBleState();
                     if (isBleOn) {
                       _scan();
-                      //沒在列印的時候再startScan
-                      if (!isScan) {
-                        // flutterBlue.startScan(
-                        //     timeout: const Duration(seconds: 4));
-                      }
                       await showDialog(
                         context: context,
                         builder: (ctx) => AlertDialog(
@@ -498,6 +517,7 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
   }
 
   sendStart() async {
+    // showRace(event_race);
     if (connectDeviec.isEmpty) {
       showDialog(
         context: context,
@@ -506,6 +526,9 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
         ),
       );
     } else {
+      setState(() {
+        exercising = true;
+      });
       EasyLoading.instance.indicatorWidget = SizedBox(
         width: 75,
         height: 75,
@@ -589,7 +612,8 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
       logger.v("not empty");
       logger.v(eventRecordList.first.eventRecordInfo.m_id);
     }
-    return CustomPage(
+    return Stack(children: [
+      CustomPage(
         buildContext: context,
         title: '肌力運動',
         titWidget: Padding(
@@ -675,6 +699,9 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
               ),
             ],
           ),
-        ));
+        ),
+      ),
+      // exercising ? showRace(context, event_race,closeExercising) : Container()
+    ]);
   }
 }

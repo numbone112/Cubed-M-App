@@ -10,6 +10,7 @@ abstract class PlanAPI {
   Future<Format> createPlan(Plan invite);
   Future<Format> getPlan(String userId);
   Future<Format> getExeCount(String userId);
+  Future<Format> getChart(String userId);
   // Future<Format> inviteList(String userName, int mode);
 }
 
@@ -29,6 +30,13 @@ class PlanRepo extends API implements PlanAPI {
   @override
   Future<Format> getExeCount(String userId) async {
      return await lunch(
-        client.get(Uri.parse('$domain/plan/barchart/$userId'), headers: header));
+        client.get(Uri.parse('$domain/plan/bar/$userId'), headers: header));
+  }
+  
+  @override
+  Future<Format> getChart(String userId) async {
+    return await lunch(
+        client.get(Uri.parse('$domain/plan/chart/$userId'), headers: header));
+    
   }
 }

@@ -71,12 +71,15 @@ class NotificationPlugin {
   }
 
   setCostomize(Plan plan) {
-    for (DateTime dateTime = DateTime.now();
-        dateTime.isBefore(plan.end_date);
-        dateTime.add(const Duration(days: 1))) {
-      if (plan.execute[dateTime.weekday - 1]) {
+    DateTime dateTime = DateTime.now();
+    print(plan.end_date);
+    do {
+      print(dateTime);
+      if (plan.execute[dateTime.weekday ]) {
         setSchedule(dateTime);
-      }
-    }
+      }  
+      dateTime.add(const Duration(days: 1));
+    } while (dateTime.isBefore(plan.end_date));
+    
   }
 }

@@ -32,3 +32,33 @@ Map<String, dynamic> _$ExeCountToJson(ExeCount instance) => <String, dynamic>{
       'month': instance.month,
       'count': instance.count,
     };
+
+HistoryCount _$HistoryCountFromJson(Map<String, dynamic> json) => HistoryCount(
+      count: json['count'] as int,
+      score: (json['score'] as num).toDouble(),
+      id: json['_id'] as String,
+      avg: (json['avg'] as num).toDouble(),
+    );
+
+Map<String, dynamic> _$HistoryCountToJson(HistoryCount instance) =>
+    <String, dynamic>{
+      'score': instance.score,
+      'avg': instance.avg,
+      'count': instance.count,
+      'id': instance.id,
+    };
+
+AnalysisChart _$AnalysisChartFromJson(Map<String, dynamic> json) =>
+    AnalysisChart(
+      runChart: (json['runChart'] as List<dynamic>?)
+              ?.map((e) => HistoryCount.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
+      sportChart: (json['sportChart'] as num?)?.toDouble() ?? 0,
+    );
+
+Map<String, dynamic> _$AnalysisChartToJson(AnalysisChart instance) =>
+    <String, dynamic>{
+      'runChart': instance.runChart.map((e) => e.toJson()).toList(),
+      'sportChart': instance.sportChart,
+    };

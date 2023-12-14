@@ -60,3 +60,37 @@ class ExeCount {
       _$ExeCountFromJson(json);
   Map<String, dynamic> toJson() => _$ExeCountToJson(this);
 }
+
+@JsonSerializable(explicitToJson: true)
+class HistoryCount {
+  HistoryCount({required this.count, required this.score,required this.id,required this.avg});
+  double score;
+  double avg;
+  int count;
+  String id;
+
+  factory HistoryCount.fromJson(Map<String, dynamic> json) =>
+      _$HistoryCountFromJson(json);
+  Map<String, dynamic> toJson() => _$HistoryCountToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class AnalysisChart{
+  AnalysisChart({ this.runChart=const [], this.sportChart=0});
+  List<HistoryCount> runChart;
+  double sportChart;
+
+   int sportRate(){
+    if(sportChart==null){
+      return 0;
+    }
+    else{
+      return (sportChart!*100).round();
+    }
+  }
+
+  factory AnalysisChart.fromJson(Map<String, dynamic> json) =>
+      _$AnalysisChartFromJson(json);
+  Map<String, dynamic> toJson() => _$AnalysisChartToJson(this);
+
+}

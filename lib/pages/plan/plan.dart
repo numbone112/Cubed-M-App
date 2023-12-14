@@ -32,21 +32,6 @@ class PlanState extends State<PlanPage> {
   @override
   void initState() {
     super.initState();
-
-    planRepo.getPlan(widget.userID).then((value) {
-      setState(() {
-        planlist = parsePlanList(jsonEncode(value.D));
-      });
-    }).then((value) {
-      filter(1);
-    }).then((value) async {
-      //設定通知
-      List<Plan> temp =
-          planlist.where((element) => element.isNowPlan()).toList();
-      if (temp.length == 1) {
-        NotificationPlugin().setCostomize(temp.first);
-      }
-    });
     planRepo.getExeCount(widget.userID).then((value) {
       List<ExeCount> exeCountList = parseExeCount(jsonEncode(value.D));
       List<BarChartGroupData> temp = [];
@@ -63,6 +48,22 @@ class PlanState extends State<PlanPage> {
         barChartGroupData = temp;
       });
       _scrollController.jumpTo(500);
+    });
+    planRepo.getPlan(widget.userID).then((value) {
+      setState(() {
+        planlist = parsePlanList(jsonEncode(value.D));
+      });
+    }).then((value) {
+      filter(1);
+    }).then((value) async {
+      //設定通知
+      List<Plan> temp =
+          planlist.where((element) => element.isNowPlan()).toList();
+      if (temp.length == 1) {
+        print("is now");
+        // print()
+        // NotificationPlugin().setCostomize(temp.first);
+      }
     });
   }
 

@@ -45,19 +45,16 @@ class HistoryDetailPersonstate extends State<HistoryDetailPerson> {
         .commend(historyDeep.user_id, historyDeep.i_id)
         .then((value) {
       List<String> commendTemp = [];
-      print(value.D);
       Commend reply = Commend.fromJson(jsonDecode(jsonEncode(value.D)));
 
       for (int i = 0; i < type.length; i++) {
-        print(historyDeep.each_score[i].floor() - 1);
         String level = leveltable[historyDeep.each_score[i].floor() - 1];
         commendTemp.add("$level,${reply.commend[i]}");
       }
-      print(commendTemp.length);
+      
       setState(() {
         compare = commendTemp;
         commend=reply;
-
       });
     });
   }

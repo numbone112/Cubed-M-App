@@ -5,7 +5,7 @@ alert(BuildContext context, String alertTitle, String alertTxt) async {
   return showDialog<String>(
     context: context,
     builder: (_) => AlertDialog(
-      shape: RoundedRectangleBorder(
+      shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(10))),
       title: Text(alertTitle),
       content: Text(alertTxt),

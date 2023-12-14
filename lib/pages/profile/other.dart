@@ -80,7 +80,7 @@ class ProfileCreateState extends State<ProfileInfo> {
           function: () => Navigator.push(
                 context,
                 MaterialPageRoute<void>(
-                  builder: (BuildContext context) => const DailyEarnings(),
+                  builder: (BuildContext context) =>  AnalysisPage(userId: widget.userID,),
                 ),
               ),
           widget: const Icon(Icons.accessibility_new_rounded)),

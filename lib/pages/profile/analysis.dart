@@ -1,24 +1,43 @@
+import 'dart:convert';
+
 import 'package:e_fu/module/box_ui.dart';
 import 'package:e_fu/module/page.dart';
 import 'package:e_fu/my_data.dart';
+import 'package:e_fu/request/plan/plan.dart';
+import 'package:e_fu/request/plan/plan_data.dart';
 import 'package:ele_progress/ele_progress.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 
-class DailyEarnings extends StatelessWidget {
+class AnalysisPage extends StatefulWidget {
+  final String userId;
   final List<Color> gradientColors = const [
     Color.fromARGB(255, 5, 122, 189),
     Color(0xff02d39a),
   ];
 
+  const AnalysisPage({super.key, required this.userId});
+
+  @override
+  State<StatefulWidget> createState() => AnalysisPageState();
+}
+
+class AnalysisPageState extends State<AnalysisPage> {
+  PlanRepo planRepo = PlanRepo();
+  AnalysisChart _analysisChart = AnalysisChart();
   static Map<int, String> monthMap = const {
-    0: '5月',
-    1: '6月',
-    2: '7月',
-    3: "8月",
-    4: '9月',
-    5: '10月',
-    6: "11月"
+    1: '1月',
+    2: '2月',
+    3: '3月',
+    4: '4月',
+    5: '5月',
+    6: '6月',
+    7: '7月',
+    8: "8月",
+    9: '9月',
+    10: '10月',
+    11: "11月",
+    12: "12月"
   };
 
   static Map<int, String> moneyMap = const {
@@ -28,8 +47,21 @@ class DailyEarnings extends StatelessWidget {
     1: '尚好',
     2: '很好',
   };
-
-  const DailyEarnings({super.key});
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    planRepo.getChart(widget.userId).then((value) {
+      setState(() {
+        _analysisChart =
+            AnalysisChart.fromJson(jsonDecode(jsonEncode(value.D)));
+      });
+      print(_analysisChart.runChart
+          .map((e) => FlSpot(double.parse(e.id.split("-")[1]), e.avg))
+          .toList()
+          .length);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,11 +83,11 @@ class DailyEarnings extends StatelessWidget {
                   height: 100,
                   width: 100,
                   child: EProgress(
-                    progress: 88,
+                    progress: _analysisChart.sportRate(),
                     colors: [MyTheme.buttonColor],
                     showText: true,
                     format: (progress) {
-                      return '88%';
+                      return '${_analysisChart.sportRate()}%';
                     },
                     type: ProgressType.dashboard,
                     backgroundColor: MyTheme.gray,
@@ -157,24 +189,17 @@ class DailyEarnings extends StatelessWidget {
         show: true,
         border: Border.all(color: const Color(0xff37434d), width: 1),
       ),
-      minX: 0,
-      maxX: 6,
+      minX: 10,
+      maxX: 12,
       minY: -2,
       maxY: 2,
+      baselineX: 10,
       lineBarsData: [
         LineChartBarData(
           color: MyTheme.color,
-          spots: [
-            const FlSpot(0, -2),
-
-            const FlSpot(1, -1),
-            const FlSpot(2, -1),
-            // FlSpot(2, 4),
-            const FlSpot(3, 1),
-            const FlSpot(4, 0),
-            const FlSpot(5.1, 1.5),
-            const FlSpot(5.8, 1.7),
-          ],
+          spots: _analysisChart.runChart
+              .map((e) => FlSpot(double.parse(e.id.split("-")[1]), e.avg))
+              .toList(),
           isCurved: true,
           // colors: gradientColors,
           barWidth: 5,

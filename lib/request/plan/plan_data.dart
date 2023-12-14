@@ -40,11 +40,11 @@ class Plan {
   DateTime str_date;
   DateTime end_date;
   String user_id;
-
   List<bool> execute;
-  String getRange() {
-    return "${str_date.toIso8601String().substring(0, 10)} - ${end_date.toIso8601String().substring(0, 10)}";
-  }
+  String getRange() =>
+     "${str_date.toIso8601String().substring(0, 10)} - ${end_date.toIso8601String().substring(0, 10)}";
+  
+  bool isNowPlan()=> str_date.isBefore(DateTime.now())&&end_date.isAfter(DateTime.now());
 
   factory Plan.fromJson(Map<String, dynamic> json) => _$PlanFromJson(json);
   Map<String, dynamic> toJson() => _$PlanToJson(this);
@@ -59,4 +59,38 @@ class ExeCount {
   factory ExeCount.fromJson(Map<String, dynamic> json) =>
       _$ExeCountFromJson(json);
   Map<String, dynamic> toJson() => _$ExeCountToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class HistoryCount {
+  HistoryCount({required this.count, required this.score,required this.id,required this.avg});
+  double score;
+  double avg;
+  int count;
+  String id;
+
+  factory HistoryCount.fromJson(Map<String, dynamic> json) =>
+      _$HistoryCountFromJson(json);
+  Map<String, dynamic> toJson() => _$HistoryCountToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class AnalysisChart{
+  AnalysisChart({ this.runChart=const [], this.sportChart=0});
+  List<HistoryCount> runChart;
+  double sportChart;
+
+   int sportRate(){
+    if(sportChart==null){
+      return 0;
+    }
+    else{
+      return (sportChart!*100).round();
+    }
+  }
+
+  factory AnalysisChart.fromJson(Map<String, dynamic> json) =>
+      _$AnalysisChartFromJson(json);
+  Map<String, dynamic> toJson() => _$AnalysisChartToJson(this);
+
 }

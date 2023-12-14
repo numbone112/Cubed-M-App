@@ -7,7 +7,6 @@ import 'package:e_fu/my_data.dart';
 import 'package:e_fu/request/plan/plan.dart';
 import 'package:e_fu/request/plan/plan_data.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 

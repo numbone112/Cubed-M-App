@@ -248,12 +248,18 @@ class Box {
                     children: [
                       label,
                       history.isGroup()
-                          ?SizedBox(
-                            width: 100,
-                            child: AutoSizeText(history.name,minFontSize: 16,maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(color:MyTheme.buttonColor,fontWeight: FontWeight.bold ),) ,
-                          )
-                          
-                          
+                          ? SizedBox(
+                              width: 100,
+                              child: AutoSizeText(
+                                history.name,
+                                minFontSize: 16,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                    color: MyTheme.buttonColor,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            )
                           : Container()
                     ],
                   ),
@@ -517,7 +523,7 @@ class Box {
               width: width,
               child: GestureDetector(
                   behavior: HitTestBehavior.translucent,
-                  onTap:  no ??() => Navigator.pop(context),
+                  onTap: no ?? () => Navigator.pop(context),
                   child: Box.textRadiusBorder(noTitle ?? '取消',
                       border: noColor ?? MyTheme.lightColor,
                       filling: noColor ?? MyTheme.lightColor)),
@@ -569,7 +575,8 @@ class Box {
   //   );
   // }
 
-  static Widget planBox(Plan plan, BuildContext context, String userId) {
+  static Widget planBox(
+      Plan plan, BuildContext context, String userId, bool history) {
     return SizedBox(
       width: Space.screenW8(context),
       height: 150,
@@ -583,16 +590,18 @@ class Box {
                 child: Container(),
               ),
               Expanded(
-                  flex: 2,
-                  child: textWidget(
-                      text: plan.name,
-                      textAlign: TextAlign.center,
-                      type: TextType.content)),
+                flex: 2,
+                child: textWidget(
+                    text: plan.name,
+                    textAlign: TextAlign.center,
+                    type: TextType.content),
+              ),
               Expanded(
                 flex: 1,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
+                    history?Container():
                     GestureDetector(
                       onTap: () => Navigator.push(
                         context,
@@ -746,7 +755,7 @@ class Box {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         textWidget(text: title, type: TextType.content),
-        Padding(padding: EdgeInsets.all(5)),
+        const Padding(padding: EdgeInsets.all(5)),
         Expanded(
             child: TextInput.radius(hintText, controller,
                 textField: textField,

@@ -157,7 +157,7 @@ class EditInvitestate extends State<InviteEditPage> {
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (context, index) {
                   return Box.boxWithX(
-                      "  " + selectFriend.elementAt(index).name + "  ");
+                      "  ${selectFriend.elementAt(index).name}  ");
                 },
               ),
             ),

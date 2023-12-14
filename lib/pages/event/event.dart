@@ -1,12 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
-import 'package:age_calculator/age_calculator.dart';
 import 'package:e_fu/module/page.dart';
+import 'package:e_fu/module/toast.dart';
 import 'package:e_fu/pages/event/ble_device.dart';
 import 'package:e_fu/pages/exercise/afterEvent.dart';
 import 'package:e_fu/pages/exercise/event_record.dart';
-import 'package:e_fu/pages/exercise/history.dart';
 import 'package:e_fu/request/exercise/history.dart';
 import 'package:e_fu/request/exercise/history_data.dart';
 import 'package:e_fu/request/invite/invite.dart';
@@ -16,7 +15,6 @@ import 'package:logger/logger.dart';
 import 'package:e_fu/module/box_ui.dart';
 import 'package:e_fu/request/e/e.dart';
 import 'package:e_fu/request/e/e_data.dart';
-import 'package:e_fu/request/record/record.dart';
 import 'package:e_fu/my_data.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -39,8 +37,6 @@ class Event extends StatefulWidget {
 }
 
 class EventState extends State<Event> with SingleTickerProviderStateMixin {
-
-
   int mode = 1;
 
   bool isBleOn = false;
@@ -65,33 +61,21 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
   var logger = Logger();
   HistoryRepo historyRepo = HistoryRepo();
   InviteRepo inviteRepo = InviteRepo();
-  ScrollController scrollController=ScrollController();
-  ExpansionTileController expansionTileController=ExpansionTileController();
-
+  ScrollController scrollController = ScrollController();
+  ExpansionTileController expansionTileController = ExpansionTileController();
+  List<EventRace> event_race = [];
+  bool exercising = false;
   Future<void> updateBleState() async {
     // if (await FlutterBluePlus.isSupported == false) {
     // }
 
     FlutterBluePlus.adapterState.listen((BluetoothAdapterState state) async {
       if (state == BluetoothAdapterState.on) {
-        logger.v('藍牙狀態爲開啓');
-        Set<DeviceIdentifier> seen = {};
-        var subscription = FlutterBluePlus.scanResults.listen(
-          (results) {
-            for (ScanResult r in results) {
-              if (seen.contains(r.device.remoteId) == false) {
-                seen.add(r.device.remoteId);
-              }
-            }
-          },
-        );
         await FlutterBluePlus.startScan();
-
         setState(() {
           isBleOn = true;
         });
       } else {
-        logger.v('藍牙狀態爲關閉');
         setState(() {
           isBleOn = false;
         });
@@ -133,10 +117,15 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
     });
   }
 
+  closeExercising(){
+    setState(() {
+      exercising = false;
+    });
+  }
+
   Future<void> finish() async {
     List<RecordSenderItem> detail = [];
     for (var element in eventRecordList) {
-      //補年紀
       element.processData(element.eventRecordInfo.age, true);
       detail.add(
         RecordSenderItem(
@@ -222,6 +211,13 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
     }
     setState(() {
       hasPair.add(device);
+      event_race.add(
+        EventRace(
+            name: forEvent.eventRecordInfo.user_name,
+            times: 0,
+            m_id: forEvent.eventRecordInfo.m_id,
+            user_id: forEvent.eventRecordInfo.user_id),
+      );
       trainGoal = max(
           trainGoal, forEvent.eventRecordDetail.item.fold(0, (p, c) => p + c));
       connectDeviec[pIndex] = device.toString();
@@ -257,6 +253,7 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
 
                   forEvent.reviceEndSign(string);
                   setState(() {
+                    
                     eventRecordList[pIndex] = forEvent;
                     trainCount = EventRecord.getMax(eventRecordList);
                   });
@@ -265,6 +262,7 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
                     //關閉所有連線
                   }
                 }
+
                 EasyLoading.dismiss();
               }
             });
@@ -280,8 +278,16 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
                 String string = String.fromCharCodes(value);
                 List<String> raw = string.split(",");
                 if (string != "0.00,0.00,0.00,0.00,0.00,0.00,0.00,0") {
-                  toSave.add(Record.getRecordJson(raw, trainCount, forEvent.now,
-                      forEvent.eventRecordInfo.id));
+                  Record record = Record.getRecordJson(raw, trainCount,
+                      forEvent.now, forEvent.eventRecordInfo.id);
+                  toSave.add(record);
+                  int index = event_race.indexWhere((element) =>
+                      element.user_id == forEvent.eventRecordInfo.user_id);
+                  EventRace temp = event_race[index];
+                  temp.times = record.times.toInt();
+                  setState(() {
+                    event_race[index] = temp;
+                  });
                 }
               } catch (e) {
                 logger.v("error:$e");
@@ -444,11 +450,6 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
                     updateBleState();
                     if (isBleOn) {
                       _scan();
-                      //沒在列印的時候再startScan
-                      if (!isScan) {
-                        // flutterBlue.startScan(
-                        //     timeout: const Duration(seconds: 4));
-                      }
                       await showDialog(
                         context: context,
                         builder: (ctx) => AlertDialog(
@@ -509,13 +510,14 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
                     }
                   },
                 ),
-          const Padding(padding: EdgeInsets.all(2))
+          const Padding(padding: EdgeInsets.all(1))
         ],
       ),
     );
   }
 
   sendStart() async {
+    // showRace(event_race);
     if (connectDeviec.isEmpty) {
       showDialog(
         context: context,
@@ -524,6 +526,9 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
         ),
       );
     } else {
+      setState(() {
+        exercising = true;
+      });
       EasyLoading.instance.indicatorWidget = SizedBox(
         width: 75,
         height: 75,
@@ -607,18 +612,21 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
       logger.v("not empty");
       logger.v(eventRecordList.first.eventRecordInfo.m_id);
     }
-    return CustomPage(
+    return Stack(children: [
+      CustomPage(
         buildContext: context,
         title: '肌力運動',
         titWidget: Padding(
           padding: Space.onlyTopTen,
           child: Box.inviteInfo(
-              Invite(
-                  name: eventRecordList.first.eventRecordInfo.name,
-                  remark: eventRecordList.first.eventRecordInfo.remark,
-                  time: eventRecordList.first.eventRecordInfo.time),
-              false,
-              context),
+            Invite(
+              name: eventRecordList.first.eventRecordInfo.name,
+              remark: eventRecordList.first.eventRecordInfo.remark,
+              time: eventRecordList.first.eventRecordInfo.time,
+            ),
+            false,
+            context,
+          ),
         ),
         headHeight: 118,
         body: Padding(
@@ -651,10 +659,13 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
                           dividerColor: Colors.transparent,
                         ),
                         child: ExpansionTile(
-                          
                           onExpansionChanged: ((value) {
-                            if(value){
-                              scrollController.animateTo(MediaQuery.of(context).size.height * 0.63, duration: Duration(milliseconds: 500),curve: Curves.linear, );
+                            if (value) {
+                              scrollController.animateTo(
+                                MediaQuery.of(context).size.height * 0.63,
+                                duration: const Duration(milliseconds: 500),
+                                curve: Curves.linear,
+                              );
                             }
                           }),
                           collapsedShape:
@@ -688,6 +699,9 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
               ),
             ],
           ),
-        ));
+        ),
+      ),
+      // exercising ? showRace(context, event_race,closeExercising) : Container()
+    ]);
   }
 }

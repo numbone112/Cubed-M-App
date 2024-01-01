@@ -64,6 +64,8 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
   ScrollController scrollController = ScrollController();
   ExpansionTileController expansionTileController = ExpansionTileController();
   List<EventRace> event_race = [];
+  List<EventRace> originEvent_race=[];
+  String exerciseText="運動中";
   bool exercising = false;
   Future<void> updateBleState() async {
     // if (await FlutterBluePlus.isSupported == false) {
@@ -105,6 +107,7 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
       color: MyTheme.backgroudColor,
       trackColor: MyTheme.color,
       waveColor: MyTheme.buttonColor,
+    
     );
   }
 
@@ -117,7 +120,7 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
     });
   }
 
-  closeExercising(){
+  closeExercising() {
     setState(() {
       exercising = false;
     });
@@ -182,14 +185,15 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
             recordList: recordList,
             reSenderList: reSenderList,
             history: History(
-                name: invite.name,
-                time: invite.time,
-                remark: invite.remark,
-                m_id: invite.m_id,
-                done: [],
-                friend: invite.friend,
-                i_id: invite.i_id,
-                m_name: invite.m_name),
+              name: invite.name,
+              time: invite.time,
+              remark: invite.remark,
+              m_id: invite.m_id,
+              done: [],
+              friend: invite.friend,
+              i_id: invite.i_id,
+              m_name: invite.m_name,
+            ),
           ),
         ),
       );
@@ -212,6 +216,13 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
     setState(() {
       hasPair.add(device);
       event_race.add(
+        EventRace(
+            name: forEvent.eventRecordInfo.user_name,
+            times: 0,
+            m_id: forEvent.eventRecordInfo.m_id,
+            user_id: forEvent.eventRecordInfo.user_id),
+      );
+        originEvent_race.add(
         EventRace(
             name: forEvent.eventRecordInfo.user_name,
             times: 0,
@@ -253,17 +264,17 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
 
                   forEvent.reviceEndSign(string);
                   setState(() {
-                    
                     eventRecordList[pIndex] = forEvent;
                     trainCount = EventRecord.getMax(eventRecordList);
+                    exerciseText="運動結束";
                   });
                   //全部結束
                   if (trainCount >= trainGoal) {
                     //關閉所有連線
                   }
                 }
-
-                EasyLoading.dismiss();
+                
+                // EasyLoading.dismiss();
               }
             });
 
@@ -517,7 +528,7 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
   }
 
   sendStart() async {
-    // showRace(event_race);
+    
     if (connectDeviec.isEmpty) {
       showDialog(
         context: context,
@@ -528,22 +539,24 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
     } else {
       setState(() {
         exercising = true;
+        exerciseText="運動中";
+        event_race=originEvent_race;
       });
-      EasyLoading.instance.indicatorWidget = SizedBox(
-        width: 75,
-        height: 75,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            SpinKitPouringHourGlassRefined(
-              color: MyTheme.color,
-            ),
-            const Text("運動中")
-          ],
-        ),
-      );
+      // EasyLoading.instance.indicatorWidget = SizedBox(
+      //   width: 75,
+      //   height: 75,
+      //   child: Column(
+      //     mainAxisAlignment: MainAxisAlignment.spaceAround,
+      //     children: [
+      //       SpinKitPouringHourGlassRefined(
+      //         color: MyTheme.color,
+      //       ),
+      //       const Text("運動中")
+      //     ],
+      //   ),
+      // );
 
-      EasyLoading.show();
+      // EasyLoading.show();
 
       if (trainCount < 3) {}
       for (var element in signCharList) {
@@ -701,7 +714,7 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
           ),
         ),
       ),
-      // exercising ? showRace(context, event_race,closeExercising) : Container()
+      exercising ? showRace(context, event_race,closeExercising,exerciseText) : Container()
     ]);
   }
 }

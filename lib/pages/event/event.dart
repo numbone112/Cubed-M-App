@@ -1,11 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
+import 'package:e_fu/module/mqttHelper.dart';
 import 'package:e_fu/module/page.dart';
 import 'package:e_fu/module/toast.dart';
 import 'package:e_fu/pages/event/ble_device.dart';
 import 'package:e_fu/pages/exercise/afterEvent.dart';
 import 'package:e_fu/pages/exercise/event_record.dart';
+import 'package:e_fu/request/exercise/eventRace_data.dart';
 import 'package:e_fu/request/exercise/history.dart';
 import 'package:e_fu/request/exercise/history_data.dart';
 import 'package:e_fu/request/invite/invite.dart';
@@ -62,6 +64,9 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
   ScrollController scrollController = ScrollController();
   ExpansionTileController expansionTileController = ExpansionTileController();
   List<EventRace> event_race = [];
+  List<EventRace> originEvent_race = [];
+  MqttHandler mqttHandler = MqttHandler();
+  String exerciseText = "運動中";
   bool exercising = false;
   Future<void> updateBleState() async {
     //判斷裝置是否支援藍芽套件
@@ -86,6 +91,7 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
   void initState() {
     super.initState();
     updateBleState();
+    mqttHandler.connect(widget.userID);
   }
 
   @override
@@ -166,14 +172,15 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
             recordList: recordList,
             reSenderList: reSenderList,
             history: History(
-                name: invite.name,
-                time: invite.time,
-                remark: invite.remark,
-                m_id: invite.m_id,
-                done: [],
-                friend: invite.friend,
-                i_id: invite.i_id,
-                m_name: invite.m_name),
+              name: invite.name,
+              time: invite.time,
+              remark: invite.remark,
+              m_id: invite.m_id,
+              done: [],
+              friend: invite.friend,
+              i_id: invite.i_id,
+              m_name: invite.m_name,
+            ),
           ),
         ),
       );
@@ -196,6 +203,13 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
     setState(() {
       hasPair.add(device);
       event_race.add(
+        EventRace(
+            name: forEvent.eventRecordInfo.user_name,
+            times: 0,
+            m_id: forEvent.eventRecordInfo.m_id,
+            user_id: forEvent.eventRecordInfo.user_id),
+      );
+      originEvent_race.add(
         EventRace(
             name: forEvent.eventRecordInfo.user_name,
             times: 0,
@@ -239,6 +253,7 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
                   setState(() {
                     eventRecordList[pIndex] = forEvent;
                     trainCount = EventRecord.getMax(eventRecordList);
+                    exerciseText = "運動結束";
                   });
                   //全部結束
                   if (trainCount >= trainGoal) {
@@ -246,7 +261,7 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
                   }
                 }
 
-                EasyLoading.dismiss();
+                // EasyLoading.dismiss();
               }
             });
 
@@ -346,7 +361,7 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
 
   Widget exerciseBox(int index, BuildContext context) {
     EventRecord forEvent = eventRecordList[index];
-    logger.v(forEvent.eventRecordInfo.user_name);
+    
     return Container(
       height: 210,
       margin: const EdgeInsets.only(bottom: 10),
@@ -502,7 +517,6 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
   }
 
   sendStart() async {
-    // showRace(event_race);
     if (connectDeviec.isEmpty) {
       showDialog(
         context: context,
@@ -513,22 +527,24 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
     } else {
       setState(() {
         exercising = true;
+        exerciseText = "運動中";
+        event_race = originEvent_race;
       });
-      EasyLoading.instance.indicatorWidget = SizedBox(
-        width: 75,
-        height: 75,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            SpinKitPouringHourGlassRefined(
-              color: MyTheme.color,
-            ),
-            const Text("運動中")
-          ],
-        ),
-      );
+      // EasyLoading.instance.indicatorWidget = SizedBox(
+      //   width: 75,
+      //   height: 75,
+      //   child: Column(
+      //     mainAxisAlignment: MainAxisAlignment.spaceAround,
+      //     children: [
+      //       SpinKitPouringHourGlassRefined(
+      //         color: MyTheme.color,
+      //       ),
+      //       const Text("運動中")
+      //     ],
+      //   ),
+      // );
 
-      EasyLoading.show();
+      // EasyLoading.show();
 
       if (trainCount < 3) {}
       for (var element in signCharList) {
@@ -588,14 +604,14 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    if (event_race.isNotEmpty) {
+      mqttHandler.publishMessage(jsonEncode(event_race), widget.userID);
+    }
     if (eventRecordList.isEmpty) {
       setState(() {
         eventRecordList =
             ModalRoute.of(context)!.settings.arguments as List<EventRecord>;
       });
-    } else {
-      logger.v("not empty");
-      logger.v(eventRecordList.first.eventRecordInfo.m_id);
     }
     return Stack(children: [
       CustomPage(
@@ -686,7 +702,9 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
           ),
         ),
       ),
-      // exercising ? showRace(context, event_race,closeExercising) : Container()
+      exercising
+          ? showRace(context, event_race, closeExercising, exerciseText)
+          : Container()
     ]);
   }
 }

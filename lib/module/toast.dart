@@ -2,7 +2,9 @@ import 'package:e_fu/module/box_ui.dart';
 import 'package:e_fu/module/exercise_process.dart';
 import 'package:e_fu/my_data.dart';
 import 'package:e_fu/pages/exercise/event_record.dart';
+import 'package:e_fu/request/exercise/eventRace_data.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 toast(BuildContext context, String msg) {
@@ -187,8 +189,9 @@ showplanInfo(BuildContext context) {
       });
 }
 
-showRace(BuildContext context, List<EventRace> list, Function() function) {
-  list.sort(((a, b) => a.times));
+showRace(BuildContext context, List<EventRace> list, Function() close,String text) {
+  list.sort(((a, b) => b.times.compareTo(a.times)));
+  //發送mqtt
   double h = MediaQuery.of(context).size.height;
   double m = (h - 300) / 2;
   return Stack(children: [
@@ -198,11 +201,24 @@ showRace(BuildContext context, List<EventRace> list, Function() function) {
     ),
     Box.boxHasRadius(
       color: Colors.white,
-      margin: EdgeInsets.fromLTRB(50, m, 50, m),
-      height: 300,
+      margin: EdgeInsets.fromLTRB(50, m, 50, m-200),
+      height: 400,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          SizedBox(
+        width: 75,
+        height: 75,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            SpinKitPouringHourGlassRefined(
+              color: MyTheme.color,
+            ),
+             Text(text)
+          ],
+        ),
+      ),
           Box.titleText("即時排行榜",
               gap: 10,
               fontSize: MySize.subtitleSize,
@@ -280,7 +296,9 @@ showRace(BuildContext context, List<EventRace> list, Function() function) {
                         )),
                   ),
           ),
-          GestureDetector(child: textWidget(text: "關閉"), onTap: function),
+          GestureDetector(
+            behavior: HitTestBehavior.translucent, onTap: close,
+            child: textWidget(text: "關閉")),
         ],
       ),
     ),

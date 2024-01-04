@@ -29,7 +29,7 @@ void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   
   // 加入這行，使得 NotificationPlugin 呼叫 init 將本地通知註冊於應用程式中
-  await NotificationPlugin().init();
+  // await NotificationPlugin().init();
   
   
   runApp(const MyApp());

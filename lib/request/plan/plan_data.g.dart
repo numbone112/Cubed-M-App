@@ -36,7 +36,7 @@ Map<String, dynamic> _$ExeCountToJson(ExeCount instance) => <String, dynamic>{
 HistoryCount _$HistoryCountFromJson(Map<String, dynamic> json) => HistoryCount(
       count: json['count'] as int,
       score: (json['score'] as num).toDouble(),
-      id: json['_id'] as String,
+      id: json['id'] as String,
       avg: (json['avg'] as num).toDouble(),
     );
 

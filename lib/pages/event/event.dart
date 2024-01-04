@@ -1,11 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
+import 'package:e_fu/module/mqttHelper.dart';
 import 'package:e_fu/module/page.dart';
 import 'package:e_fu/module/toast.dart';
 import 'package:e_fu/pages/event/ble_device.dart';
 import 'package:e_fu/pages/exercise/afterEvent.dart';
 import 'package:e_fu/pages/exercise/event_record.dart';
+import 'package:e_fu/request/exercise/eventRace_data.dart';
 import 'package:e_fu/request/exercise/history.dart';
 import 'package:e_fu/request/exercise/history_data.dart';
 import 'package:e_fu/request/invite/invite.dart';
@@ -42,8 +44,6 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
   bool isBleOn = false;
   bool isScan = false;
   FlutterBluePlus flutterBlue = FlutterBluePlus();
-  //沒連線的裝置
-  // List<BluetoothDevice> devicesList = <BluetoothDevice>[];
   Map<int, String> connectDeviec = {};
   List<BluetoothCharacteristic> startCharList = [];
   List<BluetoothCharacteristic> signCharList = [];
@@ -64,10 +64,12 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
   ScrollController scrollController = ScrollController();
   ExpansionTileController expansionTileController = ExpansionTileController();
   List<EventRace> event_race = [];
-  List<EventRace> originEvent_race=[];
-  String exerciseText="運動中";
+  List<EventRace> originEvent_race = [];
+  MqttHandler mqttHandler = MqttHandler();
+  String exerciseText = "運動中";
   bool exercising = false;
   Future<void> updateBleState() async {
+    //判斷裝置是否支援藍芽套件
     // if (await FlutterBluePlus.isSupported == false) {
     // }
 
@@ -81,12 +83,6 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
         setState(() {
           isBleOn = false;
         });
-        if (Platform.isAndroid) {
-          await FlutterBluePlus.turnOn();
-          setState(() {
-            isBleOn = true;
-          });
-        }
       }
     });
   }
@@ -95,6 +91,7 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
   void initState() {
     super.initState();
     updateBleState();
+    mqttHandler.connect(widget.userID);
   }
 
   @override
@@ -107,17 +104,7 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
       color: MyTheme.backgroudColor,
       trackColor: MyTheme.color,
       waveColor: MyTheme.buttonColor,
-    
     );
-  }
-
-  //偵測是否在列印裝置
-  _scan() {
-    FlutterBluePlus.isScanning.listen((event) {
-      setState(() {
-        isScan = event;
-      });
-    });
   }
 
   closeExercising() {
@@ -222,7 +209,7 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
             m_id: forEvent.eventRecordInfo.m_id,
             user_id: forEvent.eventRecordInfo.user_id),
       );
-        originEvent_race.add(
+      originEvent_race.add(
         EventRace(
             name: forEvent.eventRecordInfo.user_name,
             times: 0,
@@ -266,14 +253,14 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
                   setState(() {
                     eventRecordList[pIndex] = forEvent;
                     trainCount = EventRecord.getMax(eventRecordList);
-                    exerciseText="運動結束";
+                    exerciseText = "運動結束";
                   });
                   //全部結束
                   if (trainCount >= trainGoal) {
                     //關閉所有連線
                   }
                 }
-                
+
                 // EasyLoading.dismiss();
               }
             });
@@ -333,9 +320,7 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
               if (r.advertisementData.connectable &&
                   r.device.platformName != "") {
                 try {
-                  String checkString = (Platform.isAndroid)
-                      ? r.device.platformName
-                      : r.advertisementData.localName;
+                  String checkString = r.device.platformName;
 
                   if (checkString.contains("cubed M")) {
                     return ListTile(
@@ -374,9 +359,9 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
     );
   }
 
-  Widget exerciseBox(index) {
+  Widget exerciseBox(int index, BuildContext context) {
     EventRecord forEvent = eventRecordList[index];
-    logger.v(forEvent.eventRecordInfo.user_name);
+    
     return Container(
       height: 210,
       margin: const EdgeInsets.only(bottom: 10),
@@ -460,7 +445,6 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
                   onTap: () async {
                     updateBleState();
                     if (isBleOn) {
-                      _scan();
                       await showDialog(
                         context: context,
                         builder: (ctx) => AlertDialog(
@@ -508,7 +492,6 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
                                       isBleOn = true;
                                     });
                                   });
-                                  _scan();
                                   if (context.mounted) {
                                     Navigator.pop(context);
                                   }
@@ -517,6 +500,12 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
                             ],
                           ),
                         );
+                      }
+                      if (Platform.isAndroid) {
+                        await FlutterBluePlus.turnOn();
+                        setState(() {
+                          isBleOn = true;
+                        });
                       }
                     }
                   },
@@ -528,7 +517,6 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
   }
 
   sendStart() async {
-    
     if (connectDeviec.isEmpty) {
       showDialog(
         context: context,
@@ -539,8 +527,8 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
     } else {
       setState(() {
         exercising = true;
-        exerciseText="運動中";
-        event_race=originEvent_race;
+        exerciseText = "運動中";
+        event_race = originEvent_race;
       });
       // EasyLoading.instance.indicatorWidget = SizedBox(
       //   width: 75,
@@ -616,14 +604,14 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    if (event_race.isNotEmpty) {
+      mqttHandler.publishMessage(jsonEncode(event_race), widget.userID);
+    }
     if (eventRecordList.isEmpty) {
       setState(() {
         eventRecordList =
             ModalRoute.of(context)!.settings.arguments as List<EventRecord>;
       });
-    } else {
-      logger.v("not empty");
-      logger.v(eventRecordList.first.eventRecordInfo.m_id);
     }
     return Stack(children: [
       CustomPage(
@@ -647,7 +635,7 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
           child: Column(
             children: [
               SizedBox(
-                height: MediaQuery.of(context).size.height * 0.7,
+                height: MediaQuery.of(context).size.height * 0.68,
                 child: ListView(
                   controller: scrollController,
                   children: [
@@ -658,7 +646,7 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
                             child: ListView.builder(
                               itemCount: eventRecordList.length,
                               itemBuilder: ((context, index) {
-                                return (exerciseBox(index));
+                                return (exerciseBox(index, context));
                               }),
                             ),
                           ),
@@ -714,7 +702,9 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
           ),
         ),
       ),
-      exercising ? showRace(context, event_race,closeExercising,exerciseText) : Container()
+      exercising
+          ? showRace(context, event_race, closeExercising, exerciseText)
+          : Container()
     ]);
   }
 }

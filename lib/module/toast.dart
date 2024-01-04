@@ -2,6 +2,7 @@ import 'package:e_fu/module/box_ui.dart';
 import 'package:e_fu/module/exercise_process.dart';
 import 'package:e_fu/my_data.dart';
 import 'package:e_fu/pages/exercise/event_record.dart';
+import 'package:e_fu/request/exercise/eventRace_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';

@@ -32,6 +32,7 @@ dependencies:
   cupertino_icons: ^1.0.0
   auto_size_text:
   collection: ^1.17.2
+  mqtt_client: ^10.0.1
 
   
 

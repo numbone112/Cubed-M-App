@@ -42,8 +42,6 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
   bool isBleOn = false;
   bool isScan = false;
   FlutterBluePlus flutterBlue = FlutterBluePlus();
-  //沒連線的裝置
-  // List<BluetoothDevice> devicesList = <BluetoothDevice>[];
   Map<int, String> connectDeviec = {};
   List<BluetoothCharacteristic> startCharList = [];
   List<BluetoothCharacteristic> signCharList = [];
@@ -66,6 +64,7 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
   List<EventRace> event_race = [];
   bool exercising = false;
   Future<void> updateBleState() async {
+    //判斷裝置是否支援藍芽套件
     // if (await FlutterBluePlus.isSupported == false) {
     // }
 
@@ -79,12 +78,6 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
         setState(() {
           isBleOn = false;
         });
-        if (Platform.isAndroid) {
-          await FlutterBluePlus.turnOn();
-          setState(() {
-            isBleOn = true;
-          });
-        }
       }
     });
   }
@@ -108,16 +101,7 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
     );
   }
 
-  //偵測是否在列印裝置
-  _scan() {
-    FlutterBluePlus.isScanning.listen((event) {
-      setState(() {
-        isScan = event;
-      });
-    });
-  }
-
-  closeExercising(){
+  closeExercising() {
     setState(() {
       exercising = false;
     });
@@ -253,7 +237,6 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
 
                   forEvent.reviceEndSign(string);
                   setState(() {
-                    
                     eventRecordList[pIndex] = forEvent;
                     trainCount = EventRecord.getMax(eventRecordList);
                   });
@@ -322,9 +305,7 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
               if (r.advertisementData.connectable &&
                   r.device.platformName != "") {
                 try {
-                  String checkString = (Platform.isAndroid)
-                      ? r.device.platformName
-                      : r.advertisementData.localName;
+                  String checkString = r.device.platformName;
 
                   if (checkString.contains("cubed M")) {
                     return ListTile(
@@ -363,7 +344,7 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
     );
   }
 
-  Widget exerciseBox(index) {
+  Widget exerciseBox(int index, BuildContext context) {
     EventRecord forEvent = eventRecordList[index];
     logger.v(forEvent.eventRecordInfo.user_name);
     return Container(
@@ -449,7 +430,6 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
                   onTap: () async {
                     updateBleState();
                     if (isBleOn) {
-                      _scan();
                       await showDialog(
                         context: context,
                         builder: (ctx) => AlertDialog(
@@ -497,7 +477,6 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
                                       isBleOn = true;
                                     });
                                   });
-                                  _scan();
                                   if (context.mounted) {
                                     Navigator.pop(context);
                                   }
@@ -506,6 +485,12 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
                             ],
                           ),
                         );
+                      }
+                      if (Platform.isAndroid) {
+                        await FlutterBluePlus.turnOn();
+                        setState(() {
+                          isBleOn = true;
+                        });
                       }
                     }
                   },
@@ -634,7 +619,7 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
           child: Column(
             children: [
               SizedBox(
-                height: MediaQuery.of(context).size.height * 0.7,
+                height: MediaQuery.of(context).size.height * 0.68,
                 child: ListView(
                   controller: scrollController,
                   children: [
@@ -645,7 +630,7 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
                             child: ListView.builder(
                               itemCount: eventRecordList.length,
                               itemBuilder: ((context, index) {
-                                return (exerciseBox(index));
+                                return (exerciseBox(index, context));
                               }),
                             ),
                           ),

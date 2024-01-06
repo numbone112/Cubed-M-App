@@ -44,7 +44,7 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
   bool isBleOn = false;
   bool isScan = false;
   FlutterBluePlus flutterBlue = FlutterBluePlus();
-  Map<int, String> connectDeviec = {};
+  Map<int, String> connectDevice = {};
   List<BluetoothCharacteristic> startCharList = [];
   List<BluetoothCharacteristic> signCharList = [];
   List<Record> toSave = [];
@@ -66,8 +66,10 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
   List<EventRace> event_race = [];
   List<EventRace> originEvent_race = [];
   MqttHandler mqttHandler = MqttHandler();
-  String exerciseText = "運動中";
+  bool isExercise = false;
   bool exercising = false;
+
+  //判斷裝置藍牙是否開啟
   Future<void> updateBleState() async {
     //判斷裝置是否支援藍芽套件
     // if (await FlutterBluePlus.isSupported == false) {
@@ -188,37 +190,56 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
   }
 
   connect(BluetoothDevice device, int pIndex, EventRecord forEvent,
-      String checkString) async {
+      String checkString, BuildContext context) async {
     List<BluetoothService> services = [];
 
     try {
       await device.connect();
+      if (context.mounted) {
+        Navigator.of(context).pop();
+      }
+      toast(context, "已連結到$checkString");
+      setState(() {
+        connectDevice[pIndex] = device.toString();
+      });
     } on PlatformException catch (e) {
       if (e.code != 'already_connected') {
         rethrow;
       } else {}
     } finally {
       services = await device.discoverServices();
+      final subscription = device.mtu.listen((int mtu) {
+        // iOS: initial value is always 23, but iOS will quickly negotiate a higher value
+        print("mtu $mtu");
+      });
+
+      device.cancelWhenDisconnected(subscription);
+
+      if (Platform.isAndroid) {
+        await device.requestMtu(512);
+      }
     }
     setState(() {
-      hasPair.add(device);
-      event_race.add(
-        EventRace(
-            name: forEvent.eventRecordInfo.user_name,
-            times: 0,
-            m_id: forEvent.eventRecordInfo.m_id,
-            user_id: forEvent.eventRecordInfo.user_id),
-      );
-      originEvent_race.add(
-        EventRace(
-            name: forEvent.eventRecordInfo.user_name,
-            times: 0,
-            m_id: forEvent.eventRecordInfo.m_id,
-            user_id: forEvent.eventRecordInfo.user_id),
-      );
+      if (!hasPair.contains(device)) {
+        hasPair.add(device);
+        event_race.add(
+          EventRace(
+              name: forEvent.eventRecordInfo.user_name,
+              times: 0,
+              m_id: forEvent.eventRecordInfo.m_id,
+              user_id: forEvent.eventRecordInfo.user_id),
+        );
+        originEvent_race.add(
+          EventRace(
+              name: forEvent.eventRecordInfo.user_name,
+              times: 0,
+              m_id: forEvent.eventRecordInfo.m_id,
+              user_id: forEvent.eventRecordInfo.user_id),
+        );
+      }
+
       trainGoal = max(
           trainGoal, forEvent.eventRecordDetail.item.fold(0, (p, c) => p + c));
-      connectDeviec[pIndex] = device.toString();
     });
     for (var service in services) {
       for (BluetoothCharacteristic element in service.characteristics) {
@@ -253,15 +274,13 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
                   setState(() {
                     eventRecordList[pIndex] = forEvent;
                     trainCount = EventRecord.getMax(eventRecordList);
-                    exerciseText = "運動結束";
+                    isExercise = false;
                   });
                   //全部結束
                   if (trainCount >= trainGoal) {
                     //關閉所有連線
                   }
                 }
-
-                // EasyLoading.dismiss();
               }
             });
 
@@ -274,6 +293,8 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
                 element.onValueReceived.listen((value) async {
               try {
                 String string = String.fromCharCodes(value);
+                logger.v('value length${value.length}');
+
                 List<String> raw = string.split(",");
                 if (string != "0.00,0.00,0.00,0.00,0.00,0.00,0.00,0") {
                   Record record = Record.getRecordJson(raw, trainCount,
@@ -288,7 +309,7 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
                   });
                 }
               } catch (e) {
-                logger.v("error:$e");
+                logger.v('error$e');
               }
             });
             device.cancelWhenDisconnected(chrSubscription);
@@ -301,9 +322,6 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
     logger.v("連接到$checkString");
 
     await FlutterBluePlus.stopScan();
-    if (context.mounted) {
-      Navigator.of(context).pop();
-    }
   }
 
   Widget toPairDialog(int pIndex) {
@@ -324,10 +342,11 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
 
                   if (checkString.contains("cubed M")) {
                     return ListTile(
-                      title: Text(checkString),
-                      onTap: () =>
-                          connect(r.device, pIndex, forEvent, checkString),
-                    );
+                        title: Text(checkString),
+                        onTap: () {
+                          connect(
+                              r.device, pIndex, forEvent, checkString, context);
+                        });
                   } else {
                     return Container();
                   }
@@ -361,7 +380,7 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
 
   Widget exerciseBox(int index, BuildContext context) {
     EventRecord forEvent = eventRecordList[index];
-    
+
     return Container(
       height: 210,
       margin: const EdgeInsets.only(bottom: 10),
@@ -432,7 +451,7 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
               ),
             ),
           ),
-          connectDeviec.containsKey(index)
+          connectDevice.containsKey(index)
               ? textWidget(
                   text: '已連結', type: TextType.content, color: MyTheme.color)
               : GestureDetector(
@@ -516,8 +535,9 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
     );
   }
 
+  //開始運動
   sendStart() async {
-    if (connectDeviec.isEmpty) {
+    if (connectDevice.isEmpty) {
       showDialog(
         context: context,
         builder: (ctx) => const AlertDialog(
@@ -527,24 +547,9 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
     } else {
       setState(() {
         exercising = true;
-        exerciseText = "運動中";
+        isExercise = true;
         event_race = originEvent_race;
       });
-      // EasyLoading.instance.indicatorWidget = SizedBox(
-      //   width: 75,
-      //   height: 75,
-      //   child: Column(
-      //     mainAxisAlignment: MainAxisAlignment.spaceAround,
-      //     children: [
-      //       SpinKitPouringHourGlassRefined(
-      //         color: MyTheme.color,
-      //       ),
-      //       const Text("運動中")
-      //     ],
-      //   ),
-      // );
-
-      // EasyLoading.show();
 
       if (trainCount < 3) {}
       for (var element in signCharList) {
@@ -602,6 +607,21 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
     );
   }
 
+  //排序自己到第一位
+  List<Widget> deepBoxs() {
+    List<Widget> result = [];
+
+    for (int i = 0; i < eventRecordList.length; i++) {
+      EventRecord event = eventRecordList[i];
+      if (event.eventRecordInfo.user_id == widget.userID) {
+        result.insert(0, exerciseBox(i, context));
+      } else {
+        result.add(exerciseBox(i, context));
+      }
+    }
+    return result;
+  }
+
   @override
   Widget build(BuildContext context) {
     if (event_race.isNotEmpty) {
@@ -643,13 +663,7 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
                         ? const Text(" ")
                         : SizedBox(
                             height: MediaQuery.of(context).size.height * 0.63,
-                            child: ListView.builder(
-                              itemCount: eventRecordList.length,
-                              itemBuilder: ((context, index) {
-                                return (exerciseBox(index, context));
-                              }),
-                            ),
-                          ),
+                            child: ListView(children: deepBoxs())),
                     Box.boxHasRadius(
                       child: Theme(
                         data: Theme.of(context).copyWith(
@@ -703,7 +717,7 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
         ),
       ),
       exercising
-          ? showRace(context, event_race, closeExercising, exerciseText)
+          ? showRace(context, event_race, closeExercising, isExercise)
           : Container()
     ]);
   }

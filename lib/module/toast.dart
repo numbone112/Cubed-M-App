@@ -1,4 +1,5 @@
 import 'package:e_fu/module/box_ui.dart';
+import 'package:e_fu/module/cusbehiver.dart';
 import 'package:e_fu/module/exercise_process.dart';
 import 'package:e_fu/my_data.dart';
 import 'package:e_fu/pages/exercise/event_record.dart';
@@ -189,7 +190,8 @@ showplanInfo(BuildContext context) {
       });
 }
 
-showRace(BuildContext context, List<EventRace> list, Function() close,String text) {
+showRace(BuildContext context, List<EventRace> list, Function() close,
+    bool isExercise) {
   list.sort(((a, b) => b.times.compareTo(a.times)));
   //發送mqtt
   double h = MediaQuery.of(context).size.height;
@@ -201,40 +203,25 @@ showRace(BuildContext context, List<EventRace> list, Function() close,String tex
     ),
     Box.boxHasRadius(
       color: Colors.white,
-      margin: EdgeInsets.fromLTRB(50, m, 50, m-200),
+      margin: EdgeInsets.fromLTRB(50, m, 50, m - 200),
+      padding: const EdgeInsets.all(10),
       height: 400,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          SizedBox(
-        width: 75,
-        height: 75,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            SpinKitPouringHourGlassRefined(
-              color: MyTheme.color,
-            ),
-             Text(text)
-          ],
-        ),
-      ),
           Box.titleText("即時排行榜",
-              gap: 10,
-              fontSize: MySize.subtitleSize,
-              alignment: Alignment.center),
+              gap: 10, fontSize: MySize.titleSize, alignment: Alignment.center),
           const SizedBox(
             width: 300,
             height: 30,
             child: Row(
               children: [
                 Expanded(
-                  flex: 1,
-                  child: Text(
-                    "排名",
-                    textAlign: TextAlign.center,
-                  ),
-                ),
+                    flex: 1,
+                    child: Text(
+                      "排名",
+                      textAlign: TextAlign.center,
+                    )),
                 Expanded(
                   flex: 2,
                   child: Text(
@@ -254,51 +241,76 @@ showRace(BuildContext context, List<EventRace> list, Function() close,String tex
           ),
           SizedBox(
             width: 300,
-            height: 200,
+            height: 230,
             child: list.isEmpty
                 ? Container()
-                : ListView.builder(
-                    itemCount: list.length,
-                    itemBuilder: ((context, index) => Box.boxHasRadius(
-                          child: Box.boxHasRadius(
-                            margin: const EdgeInsets.only(bottom: 5),
-                            color: list[index].isHost()
-                                ? MyTheme.lightColor
-                                : Colors.white,
-                            height: 30,
-                            width: 200,
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  flex: 1,
-                                  child: Text(
-                                    (index + 1).toString(),
-                                    textAlign: TextAlign.center,
+                : ScrollConfiguration(
+                    behavior: CusBehavior(),
+                    child: ListView.builder(
+                      itemCount: list.length,
+                      itemBuilder: ((context, index) => Box.boxHasRadius(
+                            child: Box.boxHasRadius(
+                              margin: const EdgeInsets.only(bottom: 5),
+                              color: list[index].isHost()
+                                  ? MyTheme.lightColor
+                                  : Colors.white,
+                              height: 30,
+                              width: 200,
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    flex: 1,
+                                    child: Text(
+                                      (index + 1).toString(),
+                                      textAlign: TextAlign.center,
+                                    ),
                                   ),
-                                ),
-                                Expanded(
-                                  flex: 2,
-                                  child: Text(
-                                    list[index].name,
-                                    textAlign: TextAlign.center,
+                                  Expanded(
+                                    flex: 2,
+                                    child: Text(
+                                      list[index].name,
+                                      textAlign: TextAlign.center,
+                                    ),
                                   ),
-                                ),
-                                Expanded(
-                                  flex: 1,
-                                  child: Text(
-                                    list[index].times.toString(),
-                                    textAlign: TextAlign.center,
+                                  Expanded(
+                                    flex: 1,
+                                    child: Text(
+                                      list[index].times.toString(),
+                                      textAlign: TextAlign.center,
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                        )),
+                          )),
+                    ),
                   ),
           ),
-          GestureDetector(
-            behavior: HitTestBehavior.translucent, onTap: close,
-            child: textWidget(text: "關閉")),
+          (isExercise)
+              ? SizedBox(
+                  width: 75,
+                  height: 70,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      SpinKitPouringHourGlassRefined(
+                        color: MyTheme.color,
+                      ),
+                      const Padding(padding: EdgeInsets.all(5)),
+                      textWidget(text: '運動中', color: MyTheme.color)
+                    ],
+                  ),
+                )
+              : Container(
+                  height: 70,
+                  alignment: Alignment.bottomCenter,
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.translucent,
+                    onTap: close,
+                    child: Box.textRadiusBorder('關閉',
+                        textType: TextType.sub, height: 40),
+                  ),
+                )
         ],
       ),
     ),

@@ -102,6 +102,7 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
     for (var element in hasPair) {
       element.disconnect();
     }
+    mqttHandler.client.disconnect();
     EasyLoading.instance.indicatorWidget = SpinKitWaveSpinner(
       color: MyTheme.backgroudColor,
       trackColor: MyTheme.color,
@@ -117,6 +118,7 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
 
   Future<void> finish() async {
     List<RecordSenderItem> detail = [];
+
     for (var element in eventRecordList) {
       element.processData(element.eventRecordInfo.age, true);
       detail.add(
@@ -133,11 +135,12 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
       element.disconnect();
     }
 
+    mqttHandler.client.disconnect();
     //進入結果頁
 
     int inviteIndex = eventRecordList.first.eventRecordInfo.id;
     if (inviteIndex == -1) {
-      // logger.v("invite index=-1");
+      logger.v("invite index=-1");
       Invite invite = Invite(m_id: widget.userID, friend: [widget.userID]);
       await inviteRepo.createInvite(invite).then((value) async {
         await inviteRepo
@@ -150,6 +153,7 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
         });
       });
     } else {
+      logger.v("invite index: ${eventRecordList.first.eventRecordInfo.id}");
       EventRecordInfo recordInfo = eventRecordList.first.eventRecordInfo;
       Invite invite = Invite(
           m_id: recordInfo.m_id,

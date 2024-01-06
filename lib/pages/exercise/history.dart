@@ -66,7 +66,7 @@ class HistoryDetailstate extends State<HistoryDetailPage> {
                   height: 75,
                   child: Chart.avgChart(historyDeep.each_score)),
             ),
-            Box.textRadiusBorder(historyDeep.total_score.toString(),
+            Box.textRadiusBorder(historyDeep.total_score.toStringAsFixed(1),
                 width: 60, textType: TextType.content)
           ],
         ),
@@ -107,7 +107,7 @@ class HistoryDetailstate extends State<HistoryDetailPage> {
                         text: '平均',
                         type: TextType.content,
                       ),
-                      Box.textRadiusBorder(history.avgScore.toString(),
+                      Box.textRadiusBorder(history.avgScore.toStringAsFixed(1),
                           width: 60,
                           color: Colors.white,
                           textType: TextType.content)

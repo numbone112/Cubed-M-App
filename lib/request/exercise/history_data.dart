@@ -21,8 +21,7 @@ List<HistoryDeep> parseHistoryDeepList(String responseBody) {
       parsed.map<HistoryDeep>((json) => HistoryDeep.fromJson(json)).toList();
   result.sort(((a, b) => a.total_score.compareTo(b.total_score)));
 
-result=result.reversed.toList();
-  
+  result = result.reversed.toList();
 
   return result;
 }
@@ -36,7 +35,7 @@ class History {
       this.score = 1,
       required this.m_id,
       this.avgScore = 1,
-      required this.done,
+      this.done = const [],
       required this.friend,
       required this.i_id,
       required this.m_name});
@@ -71,7 +70,7 @@ class HistoryDeep {
       required this.total_score,
       required this.each_score,
       this.age = 0,
-      this.i_id=-1,
+      this.i_id = -1,
       required this.sex,
       required this.birthday}) {
     age = AgeCalculator.age(birthday).years;
@@ -111,7 +110,11 @@ class DoneItem {
 
 @JsonSerializable(explicitToJson: true)
 class Commend {
-  Commend({required this.commend,required this.birthday,required this.name,required this.sex});
+  Commend(
+      {required this.commend,
+      required this.birthday,
+      required this.name,
+      required this.sex});
   List<String> commend;
   String name;
   String sex;

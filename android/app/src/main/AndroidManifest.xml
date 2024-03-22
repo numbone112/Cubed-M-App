@@ -45,6 +45,7 @@ https://developer.android.com/about/versions/12/features/bluetooth-permissions -
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data
             android:name="flutterEmbedding"
+            android:allowBackup="false"
             android:value="2" />
     </application>
 </manifest>

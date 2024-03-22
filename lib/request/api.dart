@@ -1,12 +1,11 @@
 import 'dart:convert';
 
 import 'package:e_fu/request/data.dart';
-import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:logger/logger.dart';
 
 class API {
-  final client = http.Client();
+  final client = Client();
   final String domain = "https://e-fu-back.onrender.com";
   final header={
           'Content-Type': 'application/json',

@@ -14,6 +14,7 @@ import 'package:e_fu/pages/plan/plan_insert.dart';
 import 'package:e_fu/pages/profile/profile.dart';
 
 import 'package:e_fu/pages/profile/profile_update.dart';
+import 'package:e_fu/util/user_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:e_fu/pages/event/event.dart';
 import 'package:e_fu/login.dart';
@@ -72,10 +73,19 @@ class MyappState extends State<MyApp> {
     }
   }
 
+  checkLoginRemembered(Map<String,dynamic> loginData){
+    if(loginData!={}){
+      userID=loginData['username'];
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-    _loadUser();
+    UserSecureStorage.getLoginData().then((loginData)=>{
+      checkLoginRemembered(loginData)
+    });
+    // _loadUser();
   }
 
   @override

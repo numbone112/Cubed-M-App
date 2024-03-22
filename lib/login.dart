@@ -4,6 +4,7 @@ import 'package:e_fu/main.dart';
 import 'package:e_fu/module/box_ui.dart';
 import 'package:e_fu/request/data.dart';
 import 'package:e_fu/request/user/account.dart';
+import 'package:e_fu/util/user_secure_storage.dart';
 import 'package:logger/logger.dart';
 import 'package:crypto/crypto.dart';
 
@@ -46,9 +47,35 @@ class _LoginState extends State<Login> {
     });
   }
 
+  onLogin() async {
+    final utf = utf8.encode(pswC.text);
+    final encryptStr = sha256.convert(utf).toString().toUpperCase();
+    Format response = await userRepo.login(accountC.text, encryptStr);
+    if (response.message == "登入成功") {
+      //儲存方式1
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString(Name.userID, accountC.text);
+      //儲存方式2
+      UserSecureStorage.saveLoginData(accountC.text, encryptStr);
+
+      if (context.mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute<void>(
+            builder: (BuildContext context) => const MyApp(),
+          ),
+        );
+      } else {
+        logger.v("系統發生錯誤");
+      }
+    } else {
+      logger.v("使用者帳戶或密碼輸入錯誤");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    SharedPreferences prefs;
+    // SharedPreferences prefs;
     return Scaffold(
         resizeToAvoidBottomInset: true,
         backgroundColor: MyTheme.backgroudColor,
@@ -97,29 +124,7 @@ class _LoginState extends State<Login> {
                   ),
                 ),
                 const Padding(padding: EdgeInsets.only(top: 30)),
-                buttonCustom("登入", () async {
-                  final utf = utf8.encode(pswC.text);
-                  final encryptStr =
-                      sha256.convert(utf).toString().toUpperCase();
-                  Format a = await userRepo.login(accountC.text, encryptStr);
-                  if (a.message == "登入成功") {
-                    prefs = await SharedPreferences.getInstance();
-                    prefs.setString(Name.userID, accountC.text);
-                    if (context.mounted) {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute<void>(
-                          builder: (BuildContext context) => const MyApp(),
-                        ),
-                      );
-                    } else {
-                      logger.v("context is not mounted");
-                    }
-                  } else {
-                    logger.v("is not login ok");
-                    logger.v(a);
-                  }
-                }),
+                buttonCustom("登入", () => onLogin()),
                 const Padding(padding: EdgeInsets.only(top: 30)),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,

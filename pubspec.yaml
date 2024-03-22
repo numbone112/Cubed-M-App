@@ -20,6 +20,7 @@ dependencies:
   ele_progress: ^0.0.1
   intl: ^0.18.1
   json_annotation: ^4.8.0
+  flutter_secure_storage: ^9.0.0
   logger: ^1.3.0
   flutter_ringtone_player: ^3.2.0
   fl_chart: ^0.62.0

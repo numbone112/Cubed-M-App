@@ -25,63 +25,6 @@ class _UpdatePswState extends State<UpdatePsw> {
   TextEditingController confirmPswInput = TextEditingController();
   
   
-  final BorderRadius _borderRadius =
-      const BorderRadius.all(Radius.circular(10));
-
-  TextField inputBox(TextEditingController t, bool h, String hintText) {
-    return (TextField(
-      obscureText: h,
-      controller: t,
-      scrollPadding: EdgeInsets.only(
-          bottom: MediaQuery.of(context).viewInsets.bottom + 25 * 4),
-      decoration: InputDecoration(
-        hintText: hintText,
-        fillColor: Colors.white,
-        filled: true,
-        border: OutlineInputBorder(
-          ///设置边框四个角的弧度
-          borderRadius: _borderRadius,
-
-          ///用来配置边框的样式
-          borderSide: BorderSide(
-            ///设置边框的颜色
-            color: MyTheme.color,
-
-            ///设置边框的粗细
-            width: 2.0,
-          ),
-        ),
-
-        ///设置输入框可编辑时的边框样式
-        enabledBorder: OutlineInputBorder(
-          ///设置边框四个角的弧度
-          borderRadius: _borderRadius,
-
-          ///用来配置边框的样式
-          borderSide: BorderSide(
-            ///设置边框的颜色
-            color: MyTheme.color,
-
-            ///设置边框的粗细
-            width: 2.0,
-          ),
-        ),
-        disabledBorder: OutlineInputBorder(
-          ///设置边框四个角的弧度
-          borderRadius: _borderRadius,
-
-          ///用来配置边框的样式
-          borderSide: const BorderSide(
-            ///设置边框的颜色
-            color: Colors.red,
-
-            ///设置边框的粗细
-            width: 2.0,
-          ),
-        ),
-      ),
-    ));
-  }
 
   Widget buttonCustom(String s, Function f) {
     return Box.boxHasRadius(

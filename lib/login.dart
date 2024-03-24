@@ -4,6 +4,7 @@ import 'package:e_fu/main.dart';
 import 'package:e_fu/module/box_ui.dart';
 import 'package:e_fu/request/data.dart';
 import 'package:e_fu/request/user/account.dart';
+import 'package:e_fu/util/user_secure_storage.dart';
 import 'package:logger/logger.dart';
 import 'package:crypto/crypto.dart';
 
@@ -25,71 +26,16 @@ class _LoginState extends State<Login> {
   String psw = "";
   TextEditingController accountC = TextEditingController();
   TextEditingController pswC = TextEditingController();
-  final BorderRadius _borderRadius =
-      const BorderRadius.all(Radius.circular(10));
 
-  TextField inputBox(TextEditingController t, bool h, String hintText) {
-    return (TextField(
-      obscureText: h,
-      controller: t,
-      scrollPadding: EdgeInsets.only(
-          bottom: MediaQuery.of(context).viewInsets.bottom + 25 * 4),
-      decoration: InputDecoration(
-        hintText: hintText,
-        fillColor: Colors.white,
-        filled: true,
-        border: OutlineInputBorder(
-          ///设置边框四个角的弧度
-          borderRadius: _borderRadius,
-
-          ///用来配置边框的样式
-          borderSide: BorderSide(
-            ///设置边框的颜色
-            color: MyTheme.color,
-
-            ///设置边框的粗细
-            width: 2.0,
-          ),
-        ),
-
-        ///设置输入框可编辑时的边框样式
-        enabledBorder: OutlineInputBorder(
-          ///设置边框四个角的弧度
-          borderRadius: _borderRadius,
-
-          ///用来配置边框的样式
-          borderSide: BorderSide(
-            ///设置边框的颜色
-            color: MyTheme.color,
-
-            ///设置边框的粗细
-            width: 2.0,
-          ),
-        ),
-        disabledBorder: OutlineInputBorder(
-          ///设置边框四个角的弧度
-          borderRadius: _borderRadius,
-
-          ///用来配置边框的样式
-          borderSide: const BorderSide(
-            ///设置边框的颜色
-            color: Colors.red,
-
-            ///设置边框的粗细
-            width: 2.0,
-          ),
-        ),
-      ),
-    ));
-  }
 
   Widget buttonCustom(String s, Function f) {
     return Box.boxHasRadius(
-        color: MyTheme.buttonColor,
-        child: GestureDetector(
-          onTap: () => f.call(),
-          child: Box.textRadiusBorder(s, border: MyTheme.buttonColor),
-        ));
+      color: MyTheme.buttonColor,
+      child: GestureDetector(
+        onTap: () => f.call(),
+        child: Box.textRadiusBorder(s, border: MyTheme.buttonColor),
+      ),
+    );
   }
 
   var logger = Logger();
@@ -101,9 +47,35 @@ class _LoginState extends State<Login> {
     });
   }
 
+  onLogin() async {
+    final utf = utf8.encode(pswC.text);
+    final encryptStr = sha256.convert(utf).toString().toUpperCase();
+    Format response = await userRepo.login(accountC.text, encryptStr);
+    if (response.message == "登入成功") {
+      //儲存方式1
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString(Name.userID, accountC.text);
+      //儲存方式2
+      UserSecureStorage.saveLoginData(accountC.text, encryptStr);
+
+      if (context.mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute<void>(
+            builder: (BuildContext context) => const MyApp(),
+          ),
+        );
+      } else {
+        logger.v("系統發生錯誤");
+      }
+    } else {
+      logger.v("使用者帳戶或密碼輸入錯誤");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    SharedPreferences prefs;
+    // SharedPreferences prefs;
     return Scaffold(
         resizeToAvoidBottomInset: true,
         backgroundColor: MyTheme.backgroudColor,
@@ -152,29 +124,7 @@ class _LoginState extends State<Login> {
                   ),
                 ),
                 const Padding(padding: EdgeInsets.only(top: 30)),
-                buttonCustom("登入", () async {
-                  final utf = utf8.encode(pswC.text);
-                  final encryptStr =
-                      sha256.convert(utf).toString().toUpperCase();
-                  Format a = await userRepo.login(accountC.text, encryptStr);
-                  if (a.message == "登入成功") {
-                    prefs = await SharedPreferences.getInstance();
-                    prefs.setString(Name.userID, accountC.text);
-                    if (context.mounted) {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute<void>(
-                          builder: (BuildContext context) => const MyApp(),
-                        ),
-                      );
-                    } else {
-                      logger.v("context is not mounted");
-                    }
-                  } else {
-                    logger.v("is not login ok");
-                    logger.v(a);
-                  }
-                }),
+                buttonCustom("登入", () => onLogin()),
                 const Padding(padding: EdgeInsets.only(top: 30)),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,

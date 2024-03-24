@@ -138,8 +138,8 @@ class InviteState extends State<InvitePage> {
                       : ListView(children: showOnInvite()),
                 ),
                 invite.accept != 3
-                    ? (invite.m_id == widget.userID
-                        ? GestureDetector(
+                    ? 
+                         GestureDetector(
                             onTap: () {
                               List<EventRecord> forEvent = [];
                               for (InviteDetail element in detailList) {
@@ -180,7 +180,7 @@ class InviteState extends State<InvitePage> {
                                   height: 45),
                             ),
                           )
-                        : Container())
+                        
                     : SizedBox(
                         width: Space.screenW8(context),
                         child: Box.yesnoBox(

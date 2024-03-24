@@ -14,8 +14,7 @@ class MqttHandler with ChangeNotifier {
     var topic = 'cubedM/$user_id';
     logger.v('connect-$topic');
     client = MqttServerClient.withPort(
-        'broker.MQTTGO.io', 'MQTTGO-7505450446', 1883);
-    client.logging(on: true);
+        'broker.MQTTGO.io', 'MQTTGO-7505450447', 1883);
     client.onConnected = onConnected;
     client.onDisconnected = onDisconnected;
     client.onUnsubscribed = onUnsubscribed;
@@ -47,7 +46,7 @@ class MqttHandler with ChangeNotifier {
 
     if (client.connectionStatus!.state == MqttConnectionState.connected) {
       print('MQTT_LOGS::Mosquitto client connected');
-      publishMessage("message", "11136024");
+      // publishMessage("message", "11136024");
     } else {
       print(
           'MQTT_LOGS::ERROR Mosquitto client connection failed - disconnecting, status is ${client.connectionStatus}');
@@ -114,12 +113,12 @@ class MqttHandler with ChangeNotifier {
 
   void publishMessage(String message, String user_id) {
     String pubTopic = 'cubedM/$user_id';
-    logger.v("pubTopic$pubTopic");
+    logger.v("pubTopic$pubTopic message$message");
     final builder = MqttClientPayloadBuilder();
     builder.addString(message);
 
     if (client.connectionStatus?.state == MqttConnectionState.connected) {
-      client.publishMessage(pubTopic, MqttQos.atMostOnce, builder.payload!);
+      client.publishMessage(pubTopic, MqttQos.exactlyOnce, builder.payload!);
     } else {
       print(
           'MQTT_LOGS::ERROR Mosquitto client connection failed - disconnecting, status is ${client.connectionStatus}');

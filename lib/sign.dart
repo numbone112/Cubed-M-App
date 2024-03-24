@@ -5,8 +5,8 @@ import 'package:e_fu/module/box_ui.dart';
 import 'package:e_fu/module/util.dart';
 import 'package:e_fu/request/data.dart';
 import 'package:e_fu/request/user/account.dart';
+import 'package:e_fu/util/user_secure_storage.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import 'package:crypto/crypto.dart';
 
@@ -32,69 +32,12 @@ class _SignState extends State<Sign> {
   TextEditingController phoneInput = TextEditingController();
   TextEditingController sexInput = TextEditingController();
   TextEditingController nameInput = TextEditingController();
-  
+
   String _selectSex = "";
-  List<String> _sexChoice = <String>[
+  final List<String> _sexChoice = <String>[
     '男',
     '女',
   ];
-  final BorderRadius _borderRadius =
-      const BorderRadius.all(Radius.circular(10));
-
-  TextField inputBox(TextEditingController t, bool h, String hintText) {
-    return (TextField(
-      obscureText: h,
-      controller: t,
-      scrollPadding: EdgeInsets.only(
-          bottom: MediaQuery.of(context).viewInsets.bottom + 25 * 4),
-      decoration: InputDecoration(
-        hintText: hintText,
-        fillColor: Colors.white,
-        filled: true,
-        border: OutlineInputBorder(
-          ///设置边框四个角的弧度
-          borderRadius: _borderRadius,
-
-          ///用来配置边框的样式
-          borderSide: BorderSide(
-            ///设置边框的颜色
-            color: MyTheme.color,
-
-            ///设置边框的粗细
-            width: 2.0,
-          ),
-        ),
-
-        ///设置输入框可编辑时的边框样式
-        enabledBorder: OutlineInputBorder(
-          ///设置边框四个角的弧度
-          borderRadius: _borderRadius,
-
-          ///用来配置边框的样式
-          borderSide: BorderSide(
-            ///设置边框的颜色
-            color: MyTheme.color,
-
-            ///设置边框的粗细
-            width: 2.0,
-          ),
-        ),
-        disabledBorder: OutlineInputBorder(
-          ///设置边框四个角的弧度
-          borderRadius: _borderRadius,
-
-          ///用来配置边框的样式
-          borderSide: const BorderSide(
-            ///设置边框的颜色
-            color: Colors.red,
-
-            ///设置边框的粗细
-            width: 2.0,
-          ),
-        ),
-      ),
-    ));
-  }
 
   Widget buttonCustom(String s, Function f) {
     return Box.boxHasRadius(
@@ -107,12 +50,35 @@ class _SignState extends State<Sign> {
   }
 
   var logger = Logger();
-  // var userRepo = UserRepo();
+  UserRepo userRepo = UserRepo();
   bool _isHidden = true;
   void _togglePasswordView() {
     setState(() {
       _isHidden = !_isHidden;
     });
+  }
+
+  onSign() async {
+    final utf = utf8.encode(pswInput.text);
+    final encryptStr = sha256.convert(utf).toString().toUpperCase();
+    Format response = await userRepo.login(accountInput.text, encryptStr);
+    if (response.message == "註冊成功") {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString(Name.userID, accountInput.text);
+      UserSecureStorage.saveLoginData(accountInput.text, "password");
+      if (context.mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute<void>(
+            builder: (BuildContext context) => const MyApp(),
+          ),
+        );
+      } else {
+        logger.v("系統發生錯誤");
+      }
+    } else {
+      logger.v("輸入資料不正確");
+    }
   }
 
   void _showDialog(Widget child) {
@@ -138,7 +104,6 @@ class _SignState extends State<Sign> {
 
   @override
   Widget build(BuildContext context) {
-    SharedPreferences prefs;
     return Scaffold(
         resizeToAvoidBottomInset: true,
         backgroundColor: MyTheme.backgroudColor,
@@ -157,7 +122,6 @@ class _SignState extends State<Sign> {
                 ),
                 TextInput.radius('帳號', accountInput,
                     height: 50, color: MyTheme.color),
-
                 const Padding(padding: EdgeInsets.only(top: 10)),
                 TextInput.radius('密碼', pswInput,
                     height: 50,
@@ -178,7 +142,7 @@ class _SignState extends State<Sign> {
                       controller:
                           dateinput, //editing controller of this TextField
                       decoration: const InputDecoration(
-                        border: InputBorder.none,
+                          border: InputBorder.none,
                           icon: Icon(Icons.calendar_today), //icon of text field
                           labelText: "出生年月日" //label text of field
                           ),
@@ -199,7 +163,6 @@ class _SignState extends State<Sign> {
                         }
                       },
                     )),
-
                 const Padding(padding: EdgeInsets.only(top: 10)),
                 TextInput.radius('手機號碼', phoneInput,
                     height: 50, color: MyTheme.color),
@@ -207,7 +170,10 @@ class _SignState extends State<Sign> {
                   "text",
                   sexInput,
                   textField: TextField(
-                    decoration: const InputDecoration(labelText: "性別",border: InputBorder.none,),
+                    decoration: const InputDecoration(
+                      labelText: "性別",
+                      border: InputBorder.none,
+                    ),
                     controller: sexInput,
                     readOnly: true,
                     onTap: () {
@@ -238,35 +204,9 @@ class _SignState extends State<Sign> {
                     },
                   ),
                 ),
-
                 const Padding(padding: EdgeInsets.only(top: 30)),
-                buttonCustom("註冊", () async {
-                  final utf = utf8.encode(pswInput.text);
-                  final encryptStr =
-                      sha256.convert(utf).toString().toUpperCase();
-                  // Format a = await userRepo.login(accountInput.text, encryptStr);
-                  // if (a.message == "登入成功") {
-                  //   prefs = await SharedPreferences.getInstance();
-                  //   prefs.setString(Name.userID, accountInput.text);
-                  //   if (context.mounted) {
-                  //     Navigator.pushReplacement(
-                  //       context,
-                  //       MaterialPageRoute<void>(
-                  //         builder: (BuildContext context) => const MyApp(),
-                  //       ),
-                  //     );
-                  //   } else {
-                  //     logger.v("context is not mounted");
-                  //   }
-                  // } else {
-                  //   logger.v("is not login ok");
-                  //   logger.v(a);
-                  // }
-                }),
+                buttonCustom("註冊", () => onSign()),
                 const Padding(padding: EdgeInsets.only(top: 30)),
-
-              
-              
               ],
             ),
           ),

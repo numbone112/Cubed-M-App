@@ -103,11 +103,7 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
       element.disconnect();
     }
     mqttHandler.client.disconnect();
-    EasyLoading.instance.indicatorWidget = SpinKitWaveSpinner(
-      color: MyTheme.backgroudColor,
-      trackColor: MyTheme.color,
-      waveColor: MyTheme.buttonColor,
-    );
+  
   }
 
   closeExercising() {
@@ -297,8 +293,7 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
                 element.onValueReceived.listen((value) async {
               try {
                 String string = String.fromCharCodes(value);
-                logger.v('value length${value.length}');
-
+                logger.v("value length ${value.length}");
                 List<String> raw = string.split(",");
                 if (string != "0.00,0.00,0.00,0.00,0.00,0.00,0.00,0") {
                   Record record = Record.getRecordJson(raw, trainCount,
@@ -342,7 +337,9 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
               if (r.advertisementData.connectable &&
                   r.device.platformName != "") {
                 try {
-                  String checkString = r.device.platformName;
+                  String checkString = (Platform.isAndroid)
+                      ? r.device.platformName
+                      : r.advertisementData.localName;
 
                   if (checkString.contains("cubed M")) {
                     return ListTile(
@@ -628,8 +625,9 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    if (event_race.isNotEmpty) {
-      mqttHandler.publishMessage(jsonEncode(event_race), widget.userID);
+    if (event_race.isNotEmpty && eventRecordList.isNotEmpty) {
+      mqttHandler.publishMessage(
+          jsonEncode(event_race), eventRecordList.first.eventRecordInfo.m_id);
     }
     if (eventRecordList.isEmpty) {
       setState(() {

@@ -47,9 +47,7 @@ class ProfileCreateState extends State<ProfileInfo> {
     }
     try {
       userRepo.getUser(widget.userID).then((value) {
-        setState(()  {
-          
-          
+        setState(() {
           profile = GetUser.fromJson(value.D);
         });
         prefs.setString(Name.getUser, jsonEncode(value.D));
@@ -155,9 +153,10 @@ class ProfileCreateState extends State<ProfileInfo> {
                           // height: MediaQuery.of(context).size.height * 0.33,
                           color: MyTheme.backgroudColor,
                           child: Center(
-                              child: CircularProgressIndicator(
-                            color: MyTheme.lightColor,
-                          )),
+                            child: CircularProgressIndicator(
+                              color: MyTheme.lightColor,
+                            ),
+                          ),
                         )
                       : Box.boxHasRadius(
                           // height: MediaQuery.of(context).size.height * 0.25,

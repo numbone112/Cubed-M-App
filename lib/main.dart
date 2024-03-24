@@ -15,24 +15,25 @@ import 'package:e_fu/pages/profile/profile.dart';
 
 import 'package:e_fu/pages/profile/profile_update.dart';
 import 'package:e_fu/util/user_secure_storage.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:e_fu/pages/event/event.dart';
 import 'package:e_fu/login.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:freerasp/freerasp.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 // 引入 timezone 相關的套件
 
 import 'my_data.dart';
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   // 加入這行，使得 NotificationPlugin 呼叫 init 將本地通知註冊於應用程式中
   // await NotificationPlugin().init();
-  
-  
+
   runApp(const MyApp());
   const MyApp();
   EasyLoading.instance
@@ -73,19 +74,48 @@ class MyappState extends State<MyApp> {
     }
   }
 
-  checkLoginRemembered(Map<String,dynamic> loginData){
-    if(loginData!={}){
-      userID=loginData['username'];
+  checkLoginRemembered(Map<String, dynamic> loginData) {
+    if (loginData != {}) {
+      userID = loginData['username'];
     }
+  }
+
+  Future<void> initSecurityState() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    TalsecConfig config = TalsecConfig(
+        androidConfig:
+            AndroidConfig(packageName: "packageName", signingCertHashes: []),
+        iosConfig: IOSConfig(bundleIds: ["com.ntubimd.112203"], teamId: "cubed-M-app.ios"),
+        watcherMail: 'numbone112@gmail.com');
+
+    ThreatCallback callback = ThreatCallback(
+        onAppIntegrity: () => closeApp(),
+        onObfuscationIssues: () => print("Obfuscation issues"),
+        onDebug: () => closeApp(),
+        onDeviceBinding: () => print("Device binding"),
+        onDeviceID: () => print("Device ID"),
+        onHooks: () => closeApp(),
+        onPasscode: () => print("Passcode not set"),
+        
+        onPrivilegedAccess: () => print("Privileged access"),
+        onSecureHardwareNotAvailable: () =>
+            print("Secure hardware not available"),
+        onSimulator: () => closeApp(),
+        onUnofficialStore: () => print("Unofficial store"));
+        Talsec.instance.attachListener(callback);
+        await Talsec.instance.start(config);
   }
 
   @override
   void initState() {
     super.initState();
-    UserSecureStorage.getLoginData().then((loginData)=>{
-      checkLoginRemembered(loginData)
-    });
+    UserSecureStorage.getLoginData()
+        .then((loginData) => {checkLoginRemembered(loginData)});
     // _loadUser();
+  }
+
+  void closeApp() {
+    // SystemChannels.platform.invokeMapMethod("SystemNavigator.pop");
   }
 
   @override
@@ -119,7 +149,6 @@ class MyappState extends State<MyApp> {
         HistoryDetailPage.routeName: (_) => HistoryDetailPage(userID: userID),
         PlanPage.routeName: (_) => PlanPage(userID: userID),
         PlanInsertPage.routeName: (_) => PlanInsertPage(userID: userID),
-        
       },
     );
   }

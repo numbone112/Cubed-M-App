@@ -102,11 +102,8 @@ class EventState extends State<Event> with SingleTickerProviderStateMixin {
     for (var element in hasPair) {
       element.disconnect();
     }
-    EasyLoading.instance.indicatorWidget = SpinKitWaveSpinner(
-      color: MyTheme.backgroudColor,
-      trackColor: MyTheme.color,
-      waveColor: MyTheme.buttonColor,
-    );
+    mqttHandler.client.disconnect();
+  
   }
 
   closeExercising() {

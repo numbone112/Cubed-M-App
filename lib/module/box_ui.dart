@@ -249,7 +249,7 @@ class Box {
                       label,
                       history.isGroup()
                           ? SizedBox(
-                              width: 100,
+                              width: 95,
                               child: AutoSizeText(
                                 history.name,
                                 minFontSize: 16,
@@ -601,21 +601,22 @@ class Box {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    history?Container():
-                    GestureDetector(
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute<void>(
-                          builder: (BuildContext context) =>
-                              PlanEditPage(userID: userId, plan: plan),
-                        ),
-                      ),
-                      child: Icon(
-                        Icons.edit,
-                        color: MyTheme.color,
-                        size: 20,
-                      ),
-                    ),
+                    history
+                        ? Container()
+                        : GestureDetector(
+                            onTap: () => Navigator.push(
+                              context,
+                              MaterialPageRoute<void>(
+                                builder: (BuildContext context) =>
+                                    PlanEditPage(userID: userId, plan: plan),
+                              ),
+                            ),
+                            child: Icon(
+                              Icons.edit,
+                              color: MyTheme.color,
+                              size: 20,
+                            ),
+                          ),
                     GestureDetector(
                       onTap: () => showDelDialog(context, '計畫「${plan.name}」'),
                       child: Icon(

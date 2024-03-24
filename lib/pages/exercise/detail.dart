@@ -116,7 +116,7 @@ class HistoryDetailPersonstate extends State<HistoryDetailPerson> {
                   text: '評分',
                   type: TextType.sub,
                 ),
-                Box.textRadiusBorder(args.total_score.toString(),
+                Box.textRadiusBorder(args.total_score.toStringAsFixed(1),
                     width: 60, color: Colors.white, textType: TextType.content)
               ],
             )

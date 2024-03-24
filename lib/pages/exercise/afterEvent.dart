@@ -1,6 +1,5 @@
 // ignore_for_file: file_names
 
-
 import 'package:e_fu/module/box_ui.dart';
 import 'package:e_fu/my_data.dart';
 import 'package:e_fu/pages/exercise/detail.dart';
@@ -39,25 +38,37 @@ class AfterEventstate extends State<AfterEventPage> {
   Logger logger = Logger();
 
   sendData() async {
-    await recordRepo
-        .record(
-      RecordSender(
-        record: widget.recordList,
-        detail: widget.reSenderList,
-      ),
-    )
-        .then((value) async {
-      if (value.message == "新增成功") {
-        logger.v("成功");
-      } else {
-        logger.v(value);
+    logger.v('await recordRepo');
+    List<RecordSenderItem> tempRecorsender = [];
+    widget.reSenderList.forEach((element) {
+      if (!element.total_score.isNaN) {
+        tempRecorsender.add(element);
       }
     });
-    // historyRepo.hisotry(widget.history.i_id).then((value) async {
-    //     setState(() {
-    //       historyDeepList = parseHistoryDeepList(jsonEncode(value.D));
-    //     });
-    //   });
+    try {
+      await recordRepo
+          .record(
+        RecordSender(
+          record: widget.recordList,
+          detail: tempRecorsender,
+        ),
+      )
+          .then((value) async {
+        if (value.message == "新增成功") {
+          logger.v("成功");
+        } else {
+          logger.v("失敗:${value}");
+        }
+      });
+    } catch (e) {
+      logger.v("omg$e");
+    }
+  }
+
+  @override
+  void initState() {
+    sendData();
+    super.initState();
   }
 
   Widget deepBox(HistoryDeep historyDeep, bool isM) {
@@ -101,9 +112,9 @@ class AfterEventstate extends State<AfterEventPage> {
               child: SizedBox(
                   width: 75,
                   height: 75,
-                  child: Chart.avgChart(historyDeep.each_score)),
+                  child: Chart.avgChart(historyDeep.each_score ?? [0, 0, 0])),
             ),
-            Box.textRadiusBorder(historyDeep.total_score.toString(),
+            Box.textRadiusBorder(historyDeep.total_score.toStringAsFixed(1),
                 width: 60, textType: TextType.content)
           ],
         ),
@@ -125,25 +136,22 @@ class AfterEventstate extends State<AfterEventPage> {
   }
 
   @override
-  void initState() {
-    super.initState();
-
-    sendData();
-  }
-
-  @override
   Widget build(BuildContext context) {
     if (historyDeepList.isEmpty) {
-      historyDeepList = widget.reSenderList
-          .map((e) => HistoryDeep(
+      List<HistoryDeep> temp = [];
+      widget.reSenderList.forEach((e) {
+        if (!e.total_score.isNaN) {
+          temp.add(HistoryDeep(
               user_id: e.user_id,
               name: e.user_id,
               done: e.done,
               total_score: e.total_score,
               each_score: e.each_score,
               sex: "",
-              birthday: DateTime.now()))
-          .toList();
+              birthday: DateTime.now()));
+        }
+      });
+      historyDeepList = temp;
     }
 
     return (CustomPage(

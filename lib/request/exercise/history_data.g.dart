@@ -13,9 +13,10 @@ History _$HistoryFromJson(Map<String, dynamic> json) => History(
       score: (json['score'] as num?)?.toDouble() ?? 1,
       m_id: json['m_id'] as String,
       avgScore: (json['avgScore'] as num?)?.toDouble() ?? 1,
-      done: (json['done'] as List<dynamic>)
-          .map((e) => DoneItem.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      done: (json['done'] as List<dynamic>?)
+              ?.map((e) => DoneItem.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
       friend:
           (json['friend'] as List<dynamic>).map((e) => e as String).toList(),
       i_id: json['i_id'] as int,
@@ -42,9 +43,10 @@ HistoryDeep _$HistoryDeepFromJson(Map<String, dynamic> json) => HistoryDeep(
           .map((e) => DoneItem.fromJson(e as Map<String, dynamic>))
           .toList(),
       total_score: (json['total_score'] as num).toDouble(),
-      each_score: (json['each_score'] as List<dynamic>)
+      each_score: json["each_score"].toString().length>3?
+      (json['each_score'] as List<dynamic>)
           .map((e) => (e as num).toDouble())
-          .toList(),
+          .toList():[],
       age: json['age'] as int? ?? 0,
       i_id: json['i_id'] as int? ?? -1,
       sex: json['sex'] as String,
